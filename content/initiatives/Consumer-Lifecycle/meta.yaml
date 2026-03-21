@@ -1,0 +1,30 @@
+jira_key: TP-1858
+title: 'Consumer Lifecycle'
+description: 'Enhance the consumer experience from initial lead capture through package activation, upgrades, and ongoing management.'
+status: active
+epic_count: 8
+last_synced: '2025-11-09T04:22:50.014Z'
+
+# Strategic Context
+objective: 'Create a seamless, digital-first consumer journey that reduces time-to-service and improves conversion rates while maintaining high-touch care coordination.'
+aligns_to: 'Q1 2025 OKR - Consumer Satisfaction'
+target_quarter: 'Q2 2025'
+priority: high
+sponsor: 'Michael Chen (VP Consumer Experience)'
+
+leads:
+  discovery:
+    name: 'Tom Harrison'
+    email: tom.harrison@trilogycare.com
+  design:
+    name: 'Rachel Green'
+    email: rachel.green@trilogycare.com
+  development:
+    name: 'James Wilson'
+    email: james.wilson@trilogycare.com
+  qa:
+    name: 'Maria Garcia'
+    email: maria.garcia@trilogycare.com
+  release:
+    name: 'Chris Martinez'
+    email: chris.martinez@trilogycare.com

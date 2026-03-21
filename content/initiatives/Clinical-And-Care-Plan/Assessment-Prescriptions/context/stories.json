@@ -1,0 +1,151 @@
+{
+  "epic": "TP-1904",
+  "initiative": "TP-1859",
+  "generated": "2025-12-04",
+  "source": "spec.md",
+  "stories": [
+    {
+      "id": "US1",
+      "jiraKey": "TP-3283",
+      "title": "As a Care Partner, I can create an Assessment Request",
+      "description": "Care Partners need to initiate the assessment process by creating Assessment Requests for packages, selecting assessment types, and choosing onboarded suppliers (for OT assessments). This triggers the secure link generation and assessor notification workflow.",
+      "acceptanceCriteria": [
+        "CP can select assessment type (OT, Physio, Nurse, Contractor) when creating request",
+        "CP sees list of onboarded suppliers filtered by assessment type (for OT only)",
+        "System generates secure link and creates Assessment object on submission",
+        "Supplier receives notification with secure link",
+        "Dashboard shows Assessment Request with status tracking",
+        "CP can create multiple Assessment Requests with different types for same package"
+      ],
+      "persona": "Care Partner",
+      "priority": "P1"
+    },
+    {
+      "id": "US2",
+      "jiraKey": "TP-3284",
+      "title": "As an Assessor, I can upload assessment documents",
+      "description": "Assessors need to upload assessment documents (PDFs, images) through a secure authenticated workflow so the system can extract ATHM information. This digitizes assessment evidence and enables downstream AI extraction.",
+      "acceptanceCriteria": [
+        "Assessor can log in using existing Portal credentials via secure link",
+        "System handles account creation for unregistered assessors",
+        "Assessor can upload multiple files (PDFs and images)",
+        "System validates file size and format before accepting",
+        "System captures metadata (uploader, timestamp, document type, package)",
+        "System auto-classifies document type (report/quote/amendment) with manual override option"
+      ],
+      "persona": "Assessor",
+      "priority": "P1"
+    },
+    {
+      "id": "US3",
+      "jiraKey": "TP-3285",
+      "title": "As the System, I can extract and classify ATHM items",
+      "description": "The system needs to automatically extract product/modification details from uploaded documents and suggest Tier-5/Tier-3 classifications with pathway assignments (Low Risk/Advice/Prescribed). This reduces manual workload and enables efficient recommendation review.",
+      "acceptanceCriteria": [
+        "System extracts individual ATHM items with product/modification details",
+        "System suggests Tier-5 classification for products with confidence score",
+        "System suggests Tier-3 classification for services with confidence score",
+        "System assigns pathway classification (Low Risk, Advice, Prescribed)",
+        "Raw extraction output preserved in audit trail",
+        "System allows manual entry with warning when Tier-5 dataset unavailable"
+      ],
+      "persona": "System",
+      "priority": "P1"
+    },
+    {
+      "id": "US4",
+      "jiraKey": "TP-3286",
+      "title": "As an Assessor, I can review and confirm recommendations",
+      "description": "Assessors need to review AI-extracted recommendations, edit Tier codes using inline search, and confirm all items before submission. This mandatory human-in-the-loop ensures data quality and prevents submission of unconfirmed items.",
+      "acceptanceCriteria": [
+        "Assessor can edit Tier-5 codes using inline search and filtering",
+        "Visual indicators clearly show low-confidence extractions",
+        "System logs all edits in audit trail",
+        "Assessor can confirm each recommendation individually",
+        "Validation prevents submission when not all recommendations confirmed",
+        "CP receives automatic notification on submission",
+        "Submissions become immutable after completion"
+      ],
+      "persona": "Assessor",
+      "priority": "P1"
+    },
+    {
+      "id": "US5",
+      "jiraKey": "TP-3287",
+      "title": "As a Care Partner, I can review and accept recommendations",
+      "description": "Care Partners need to review submitted recommendations from all Assessments, view aggregated recommendations, and accept individual items to control budget allocation. Acceptance triggers Inclusion Seed creation for Advice/Prescribed pathways.",
+      "acceptanceCriteria": [
+        "CP can view all submitted recommendations with Tier-5 classifications and evidence links",
+        "CP sees aggregated view of Recommendations from all Assessments for an Assessment Request",
+        "CP can view and reconcile duplicate recommendations from multiple assessors",
+        "CP can accept individual recommendations (no reject action)",
+        "Recommendations remain visible with 'Accepted' status after acceptance",
+        "System creates Inclusion Seed for Advice/Prescribed pathways (not Low Risk)",
+        "Ignored recommendations remain in 'Submitted' state for later acceptance"
+      ],
+      "persona": "Care Partner",
+      "priority": "P2"
+    },
+    {
+      "id": "US6",
+      "jiraKey": "TP-3288",
+      "title": "As a Care Partner, I can add recommendations to Service Plan",
+      "description": "Care Partners need to add accepted recommendations to the Service Plan (budget) with terminal tier values prefilled. This enables funding allocation while maintaining bidirectional links between Service Plan items and source assessments.",
+      "acceptanceCriteria": [
+        "CP can use 'Add Service' action on accepted recommendations",
+        "System prefills only Tier-5 value for products or Tier-3 value for services",
+        "CP must enter description, quantity, cost following normal budget flow",
+        "System maintains bidirectional links (Service Plan Item ↔ Assessment ↔ Recommendation)",
+        "Source recommendation preserved when Service Plan item edited/removed",
+        "CP can view source assessment and recommendation IDs from Service Plan item"
+      ],
+      "persona": "Care Partner",
+      "priority": "P2"
+    },
+    {
+      "id": "US7",
+      "jiraKey": "TP-3289",
+      "title": "As a Billing Processor, I can view Tier context on invoices",
+      "description": "Billing Processors need to view Tier-5/Tier-3 context on Service Plan items and invoices to manually match invoices to budget lines. This improves billing efficiency without implementing automated matching logic.",
+      "acceptanceCriteria": [
+        "Tier-5 or Tier-3 values clearly displayed on Service Plan items",
+        "Invoice AI classifies uploaded invoice line items with Tier-5 values",
+        "Billing processors can view tier-coded items in existing Invoice UI (no new screen)",
+        "Tier context helps identify correct budget line when matching invoices",
+        "No auto-gating or auto-release logic (context only)"
+      ],
+      "persona": "Billing Processor",
+      "priority": "P3"
+    },
+    {
+      "id": "US8",
+      "jiraKey": "TP-3290",
+      "title": "As Compliance, I can access comprehensive audit logs",
+      "description": "Compliance users need comprehensive immutable audit logging across all state changes (uploads, edits, confirmations, submissions, acceptances) with export capabilities (CSV/JSON) and filtering by package, user, action type, and date range.",
+      "acceptanceCriteria": [
+        "All actions create immutable audit log entries",
+        "Audit logs can be filtered by package, user, action type, date range",
+        "Audit log entries show before/after state for modifications",
+        "Audit logs can be exported in standard formats (CSV, JSON)",
+        "System prevents modification of audit log entries (immutable)"
+      ],
+      "persona": "Compliance",
+      "priority": "P3"
+    },
+    {
+      "id": "US9",
+      "jiraKey": "TP-3291",
+      "title": "As a System Owner, I can manage Tier-5 dataset versions",
+      "description": "System Owners need a canonical versioned Tier-5 dataset to ensure consistent classification across all assessments. Historical classifications must remain valid after dataset updates, with graceful degradation when dataset unavailable.",
+      "acceptanceCriteria": [
+        "Assessors can search current versioned Tier-3 → Tier-4 → Tier-5 hierarchy",
+        "Assessors can view classification rules and descriptions",
+        "Historical classifications remain valid when dataset updated",
+        "System allows manual entry with warning when dataset unavailable",
+        "Historical recommendations show which dataset version was used"
+      ],
+      "persona": "System Owner",
+      "priority": "P3"
+    }
+  ]
+}

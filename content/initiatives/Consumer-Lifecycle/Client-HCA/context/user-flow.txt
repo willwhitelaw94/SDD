@@ -1,0 +1,434 @@
+================================================================================
+                    CLIENT HOME CARE AGREEMENT (HCA) - USER FLOWS
+================================================================================
+Epic: HCA | Generated: 2026-01-22
+
+This diagram shows the primary user journeys through the HCA feature.
+
+================================================================================
+FLOW 1: FIRST-LOGIN SIGNING JOURNEY (Recipient/Representative)
+================================================================================
+
+                              START: User Logs In
+                                      │
+                                      ▼
+                        ╔═══════════════════════════════╗
+                        ║   Does user have HCA to sign? ║
+                        ╚═══════════════════════════════╝
+                           │                    │
+                    HCA in "Sent"          No HCA or
+                       state              "Draft" only
+                           │                    │
+                           ▼                    ▼
+              [Redirect to Agreements]    [Go to Dashboard]
+              [Show signing explainer]         DONE ✓
+                           │
+                           ▼
+                ╔═════════════════════════╗
+                ║  User tries to leave?   ║
+                ╚═════════════════════════╝
+                     │              │
+                   Yes             No
+                     │              │
+                     ▼              ▼
+        [Show exit confirmation]   [Continue to signing]
+        [Log bypass if confirmed]         │
+                     │                    │
+                     ▼                    ▼
+              [Go to Dashboard]    ───────────────────────►  FLOW 2
+                   DONE ✓
+
+
+================================================================================
+FLOW 2: HCA SIGNING FLOW (Recipient/Representative)
+================================================================================
+
+                         START: View HCA in "Sent" State
+                                      │
+                                      ▼
+                     [Show Agreement Details & Terms]
+                                      │
+                                      ▼
+                     [Click "Sign Agreement" Button]
+                                      │
+                                      ▼
+                    ╔════════════════════════════════╗
+                    ║  Step 1: Management Option     ║
+                    ╚════════════════════════════════╝
+                           │                │
+              Coordinator               No Coordinator
+               predefined                 defined
+                   │                        │
+                   ▼                        ▼
+          [Show managed options     [Show all options:
+           only - no self-manage]    Self-Managed,
+                   │                 Self-Managed Plus,
+                   │                 Fully Managed]
+                   │                        │
+                   └────────────┬───────────┘
+                                │
+                                ▼
+                    ╔════════════════════════════════╗
+                    ║  Step 2: Coordinator Selection ║
+                    ║  (if managed option selected)  ║
+                    ╚════════════════════════════════╝
+                           │                │
+                   Coordinator         Self-Managed
+                    required           (no coordinator)
+                       │                    │
+                       ▼                    │
+            [Select Coordinator]            │
+            [Select Price Template          │
+             (20% / 25% loading)]           │
+                       │                    │
+                       └────────┬───────────┘
+                                │
+                                ▼
+                    ╔════════════════════════════════╗
+                    ║  Step 3: Commencement Date     ║
+                    ╚════════════════════════════════╝
+                                │
+                                ▼
+                    [Confirm or adjust start date]
+                                │
+                                ▼
+                    ╔════════════════════════════════╗
+                    ║  Step 4: Signature Capture     ║
+                    ╚════════════════════════════════╝
+                                │
+                                ▼
+                    [Digital signature interface]
+                    [Draw/type signature]
+                                │
+                                ▼
+                    ╔═════════════════════════╗
+                    ║  Signature successful?  ║
+                    ╚═════════════════════════╝
+                         │              │
+                       Yes             No (network error)
+                         │              │
+                         ▼              ▼
+                   [Capture:      [Show error message]
+                    - Identity    [Allow retry]
+                    - Timestamp         │
+                    - IP address        │
+                    - Auth rep          │
+                      declaration]      │
+                         │              │
+                         ▼              └──► [Retry] ──► (back to signature)
+                   [HCA → "Signed"]
+                         │
+                         ▼
+                ┌────────────────────────┐
+                │   POST-SIGNING         │
+                │   TRIGGERS             │
+                │                        │
+                │  • ACER lodgement job  │
+                │  • Coordinator assign  │
+                │  • Audit log entry     │
+                │  • Stakeholder notify  │
+                └────────────────────────┘
+                         │
+                         ▼
+                [Redirect to Dashboard]
+                [Show success message]
+                      DONE ✓
+
+
+================================================================================
+FLOW 3: STAFF CONSENT CAPTURE (Alternative Signing Methods)
+================================================================================
+
+                    START: Staff Views HCA in "Sent" State
+                                      │
+                                      ▼
+                    ╔════════════════════════════════╗
+                    ║    Select consent method       ║
+                    ╚════════════════════════════════╝
+                      │          │          │
+                      ▼          ▼          ▼
+               [Digital     [Upload      [Record
+                Sign]       Signed       Verbal
+                 │           PDF]        Consent]
+                 │            │             │
+                 │            │             │
+                 ▼            ▼             ▼
+          (User signs   [File upload  [Show form:
+           in Portal)    interface]    - Transcript (req)
+              │               │        - Call ID (req)
+              │               │        - Audio URL (opt)]
+              │               │             │
+              │               ▼             ▼
+              │      ╔══════════════╗  ╔══════════════╗
+              │      ║ Valid PDF?   ║  ║ Valid form?  ║
+              │      ╚══════════════╝  ╚══════════════╝
+              │        │        │        │        │
+              │       Yes      No       Yes      No
+              │        │        │        │        │
+              │        ▼        ▼        ▼        ▼
+              │   [Store    [Show     [Store   [Show
+              │    PDF]     error:    consent  validation
+              │      │      format/    data]   errors]
+              │      │      size]       │        │
+              │      │        │         │        │
+              │      │        ▼         │        ▼
+              │      │    [Retry]       │    [Fix & retry]
+              │      │                  │
+              └──────┴────────┬─────────┘
+                              │
+                              ▼
+                    [HCA → "Signed"]
+                    [Log: actor, timestamp, method]
+                              │
+                              ▼
+                         DONE ✓
+
+
+================================================================================
+FLOW 4: DRAFT → SENT STATE TRANSITION (Staff)
+================================================================================
+
+                    START: HCA in "Draft" State
+                              │
+                              ▼
+                    [HCA shows watermark:
+                     "Draft - Non-Offer"]
+                    [No signing controls]
+                              │
+                              ▼
+                    ╔═══════════════════════════════╗
+                    ║  Assessment meeting complete? ║
+                    ╚═══════════════════════════════╝
+                         │              │
+                        No             Yes
+                         │              │
+                         ▼              ▼
+                    [HCA stays    [Staff sets
+                     in Draft]    post-meeting flag]
+                         │              │
+                         │              ▼
+                         │        [HCA → "Sent"]
+                         │        [Watermark removed]
+                         │        [Signing enabled]
+                         │              │
+                         │              ▼
+                         │        [Magic link sent
+                         │         to recipient]
+                         │              │
+                         └──────────────┘
+                                  │
+                                  ▼
+                             DONE ✓
+
+
+================================================================================
+FLOW 5: SLA REMINDERS & ESCALATION (Automated)
+================================================================================
+
+                    START: HCA in "Sent" State
+                              │
+                              ▼
+                    [Clock starts: T=0]
+                              │
+         ┌────────────────────┼────────────────────┐
+         │                    │                    │
+         ▼                    ▼                    ▼
+    ╔═══════════╗       ╔═══════════╗       ╔═══════════╗
+    ║ T+24h     ║       ║ T+48h     ║       ║ T+7 days  ║
+    ║ Reminder  ║       ║ Escalate  ║       ║ Follow-up ║
+    ╚═══════════╝       ╚═══════════╝       ╚═══════════╝
+         │                    │                    │
+         ▼                    ▼                    ▼
+    [Send email +        [Send email +       [Send email +
+     in-app notif]        in-app notif]       in-app notif]
+         │                    │                    │
+         └────────────────────┼────────────────────┘
+                              │
+                              ▼                    ┌───────────┐
+                        ╔═══════════╗              │           │
+                        ║ T+14 days ║              │ At any    │
+                        ║ Final     ║              │ point:    │
+                        ╚═══════════╝              │           │
+                              │                    │ User      │
+                              ▼                    │ signs     │
+                        [Send final               │ HCA       │
+                         reminder]                │           │
+                              │                    │     │     │
+                              ▼                    └─────┼─────┘
+                        [Log all delivery               │
+                         statuses]                      ▼
+                              │                   [HCA → "Signed"]
+                              ▼                   [Stop reminders]
+                        [Manual follow-up              │
+                         if still unsigned]            ▼
+                              │                     DONE ✓
+                              ▼
+                         DONE ✓
+
+
+================================================================================
+FLOW 6: TERMINATION WORKFLOW (Staff)
+================================================================================
+
+                    START: Staff Views Signed HCA
+                              │
+                              ▼
+                    [Click "Terminate Agreement"]
+                              │
+                              ▼
+                    ╔═══════════════════════════════╗
+                    ║  Has permission to terminate? ║
+                    ╚═══════════════════════════════╝
+                         │              │
+                        No             Yes
+                         │              │
+                         ▼              ▼
+                    [Access denied]  [Show termination
+                     ✗ ERROR         wizard]
+                                        │
+                                        ▼
+                              ┌─────────────────────┐
+                              │  Termination Form:  │
+                              │  • Reason (dropdown)│
+                              │  • Effective date   │
+                              │  • Final statement  │
+                              │  • Notes            │
+                              └─────────────────────┘
+                                        │
+                              Reasons:  │
+                              • Transition to another provider
+                              • Entry to residential care
+                              • Death
+                              • Voluntary exit
+                              • Other (notes required)
+                                        │
+                                        ▼
+                              ╔═══════════════════╗
+                              ║  Form complete?   ║
+                              ╚═══════════════════╝
+                                   │        │
+                                  No       Yes
+                                   │        │
+                                   ▼        ▼
+                              [Show      [Submit]
+                               validation    │
+                               errors]       ▼
+                                   │    ┌─────────────────────┐
+                                   │    │  Downstream Actions │
+                                   │    │  • HCA → Terminated │
+                                   │    │  • Package updated  │
+                                   │    │  • ACI notification │
+                                   │    │  • Stakeholders     │
+                                   │    │    notified         │
+                                   │    │  • Audit logged     │
+                                   │    └─────────────────────┘
+                                   │              │
+                                   │              ▼
+                                   │         DONE ✓
+                                   │
+                                   └──► [Fix & retry]
+
+
+================================================================================
+FLOW 7: LTH CONVERSION WIZARD INTEGRATION
+================================================================================
+
+                    START: Lead Qualified in LES
+                              │
+                              ▼
+                    [Enter LTH Conversion Wizard]
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ▼                     ▼                     ▼
+   [Step 1:              [Step 2:              [Step 3:
+    Package Details]      Dates]                Recipients]
+        │                     │                     │
+        └─────────────────────┼─────────────────────┘
+                              │
+                              ▼
+                    [Step 4: ACAT/IAT]
+                    [Assessment data required]
+                              │
+                              ▼
+                    ╔════════════════════════════════╗
+                    ║  Step 5: Agreement Setup       ║
+                    ║  Send HCA for signing?         ║
+                    ╚════════════════════════════════╝
+                         │              │
+                        No             Yes
+                   (Prep only)    (Full conversion)
+                         │              │
+                         ▼              ▼
+                   [HCA created    [HCA created
+                    in "Draft"]     in "Sent"]
+                         │              │
+                         ▼              ▼
+                   [Portal invite  [Magic link sent]
+                    sent only]     [Package → Pending]
+                         │              │
+                         ▼              ▼
+                   [Client can    [First-login
+                    prep: update   redirect to
+                    contacts,      signing flow]
+                    review         (FLOW 1)
+                    profile]            │
+                         │              │
+                         └──────┬───────┘
+                                │
+                                ▼
+                    [Step 6: Confirmation]
+                    [Audit logged to Lead Timeline]
+                              │
+                              ▼
+                         DONE ✓
+
+
+================================================================================
+                              PATH SUMMARY
+================================================================================
+
+| Flow | Actor                  | Trigger                    | End State        |
+|------|------------------------|----------------------------|------------------|
+| 1    | Recipient/Rep          | First login                | Dashboard/Signed |
+| 2    | Recipient/Rep          | Sign HCA                   | HCA Signed       |
+| 3    | Staff                  | Alternative consent        | HCA Signed       |
+| 4    | Staff                  | Post-meeting flag          | HCA Sent         |
+| 5    | System                 | Time elapsed               | Reminders sent   |
+| 6    | Staff                  | Terminate agreement        | HCA Terminated   |
+| 7    | Staff                  | LTH conversion             | HCA Created      |
+
+================================================================================
+                           DECISION POINTS
+================================================================================
+
+| Decision                          | Options                              |
+|-----------------------------------|--------------------------------------|
+| HCA state on login                | Draft → Dashboard, Sent → Signing   |
+| Management option                 | Self, Self Plus, Fully Managed       |
+| Coordinator required              | Yes → Select, No → Skip              |
+| Consent method                    | Digital, PDF Upload, Verbal          |
+| Send HCA during conversion        | Yes → Sent state, No → Draft state   |
+| Termination reason                | 5 predefined + Other                 |
+
+================================================================================
+                        STATE TRANSITIONS
+================================================================================
+
+                    ┌───────────────────────────────────────┐
+                    │                                       │
+                    │    Draft ──────► Sent ──────► Signed  │
+                    │      │                          │     │
+                    │      │                          │     │
+                    │      └──────────────────────────┼─────┤
+                    │                                 │     │
+                    │                                 ▼     │
+                    │                            Terminated │
+                    │                                 │     │
+                    │                                 ▼     │
+                    │                            Reactivate │
+                    │                            (→ Draft)  │
+                    │                                       │
+                    └───────────────────────────────────────┘
+
+================================================================================

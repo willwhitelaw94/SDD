@@ -1,0 +1,13 @@
+jira_key: TP-1403
+title: 'Supplier Onboarding'
+status: Done
+prefix: SOP
+description: null
+priority: Medium
+assignee: Elton Fernando Doehnert
+last_synced: '2026-01-08T00:00:00.000Z'
+parent_initiative: TP-1857
+
+phases: []
+
+stories: []

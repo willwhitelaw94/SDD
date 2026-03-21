@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Needs Timeline — Margaret Thompson | Trilogy Care</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'tc-teal': { 500: '#43C0BE', 600: '#11998e', 700: '#007F7E' },
+                        'tc-blue': { 700: '#2C4C79' },
+                        'tier-1': { light: '#FEF2F2', DEFAULT: '#F43F5E', dark: '#E11D48' },
+                        'tier-2': { light: '#FFFBEB', DEFAULT: '#F59E0B', dark: '#D97706' },
+                        'tier-3': { light: '#ECFDF5', DEFAULT: '#10B981', dark: '#059669' },
+                        'tier-4': { light: '#EFF6FF', DEFAULT: '#3B82F6', dark: '#2563EB' },
+                        'tier-5': { light: '#F5F3FF', DEFAULT: '#8B5CF6', dark: '#7C3AED' },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .timeline-card {
+            transition: all 0.2s ease;
+        }
+        .timeline-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+        .timeline-dot {
+            transition: transform 0.2s ease;
+        }
+        .timeline-card:hover .timeline-dot {
+            transform: scale(1.3);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.4s ease forwards;
+        }
+        .service-card {
+            transition: all 0.15s ease;
+        }
+        .service-card:hover {
+            background-color: #F9FAFB;
+            border-color: #D1D5DB;
+        }
+        .activity-item {
+            position: relative;
+        }
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 18px;
+            bottom: -8px;
+            width: 1px;
+            background: #E5E7EB;
+        }
+        .activity-item:last-child::before {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex">
+<!-- ===== SIDEBAR (skeleton — framing only) ===== -->
+<aside class="w-60 bg-white border-r border-gray-200 flex flex-col shrink-0 h-screen sticky top-0">
+    <div class="px-4 py-4 border-b border-gray-100">
+        <div class="flex items-center gap-2.5">
+            <div class="h-8 w-8 rounded-lg bg-gray-200 animate-pulse"></div>
+            <div class="h-4 w-24 rounded bg-gray-200 animate-pulse"></div>
+        </div>
+        <p class="mt-2 text-[9px] text-gray-300 uppercase tracking-widest text-center">Framing only</p>
+    </div>
+    <div class="px-3 py-3"><div class="h-8 rounded-lg bg-gray-100 animate-pulse"></div></div>
+    <nav class="flex-1 overflow-y-auto px-3 py-2 space-y-1.5">
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-20 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-24 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-16 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-teal-50"><div class="h-4 w-4 rounded bg-teal-200 animate-pulse"></div><div class="h-3.5 w-18 rounded bg-teal-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-20 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-14 rounded bg-gray-200 animate-pulse"></div></div>
+    </nav>
+    <div class="border-t border-gray-100 px-3 py-3">
+        <div class="flex items-center gap-2.5"><div class="h-8 w-8 rounded-full bg-gray-200 animate-pulse"></div><div class="flex-1 space-y-1.5"><div class="h-3 w-24 rounded bg-gray-200 animate-pulse"></div><div class="h-2.5 w-20 rounded bg-gray-100 animate-pulse"></div></div></div>
+    </div>
+</aside>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main class="flex-1 flex flex-col min-h-screen">
+
+    <!-- Page Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="px-6 py-4">
+            <nav class="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
+                <a href="#" class="hover:text-tc-teal-700">Clients</a>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <a href="#" class="hover:text-tc-teal-700">Margaret Thompson</a>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <a href="#" class="hover:text-tc-teal-700">Package</a>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <span class="text-gray-900 font-medium">Needs</span>
+            </nav>
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-900">Margaret Thompson</h1>
+                    <p class="text-sm text-gray-500 mt-0.5">HCP Level 4 &middot; DOB: 12 Mar 1938 &middot; UR: MT-20241087</p>
+                </div>
+                <button class="inline-flex items-center gap-2 px-4 py-2.5 bg-tc-teal-700 text-white text-sm font-medium rounded-lg hover:bg-tc-teal-500 transition-colors shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Need
+                </button>
+            </div>
+        </div>
+        <div class="px-6">
+            <nav class="flex gap-6 -mb-px">
+                <a href="#" class="px-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Overview</a>
+                <a href="#" class="px-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Services</a>
+                <a href="#" class="px-1 py-3 text-sm font-medium text-tc-teal-700 border-b-2 border-tc-teal-700">Needs</a>
+                <a href="#" class="px-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Risks</a>
+                <a href="#" class="px-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Budget</a>
+                <a href="#" class="px-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Documents</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Content Area -->
+    <div class="flex-1 p-6">
+        <div class="max-w-2xl mx-auto">
+
+            <!-- TIER 1 — Essential Care -->
+            <div class="relative pl-8">
+                <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-rose-500 border-4 border-white shadow-md flex items-center justify-center z-10">
+                    <span class="text-[9px] font-bold text-white">T1</span>
+                </div>
+                <div class="ml-4 mb-4">
+                    <h3 class="text-sm font-semibold text-rose-700 uppercase tracking-wide">Essential Care</h3>
+                    <p class="text-xs text-gray-400">Physiological needs &middot; 3 active</p>
+                </div>
+            </div>
+
+            <!-- ===== EXPANDED CARD: Nutrition & Hydration ===== -->
+            <div class="relative pl-8 pb-6 animate-fade-in-up">
+                <div class="absolute left-0 top-3 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                <div class="absolute left-[5px] top-3 w-[18px] h-[18px] rounded-full bg-rose-500 z-10 border-3 border-white shadow-md flex items-center justify-center">
+                    <svg class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="4"/></svg>
+                </div>
+
+                <div class="ml-4 bg-white rounded-xl border border-gray-200 shadow-md p-5 ring-2 ring-tc-teal-500/20">
+                    <!-- Card Header -->
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-50 text-rose-600 border border-rose-200">Nutrition & Hydration</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        </div>
+                        <button onclick="window.location.href='01-needs-list.html'" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded hover:bg-gray-100" title="Collapse">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+                        </button>
+                    </div>
+
+                    <h4 class="text-base font-semibold text-gray-900 mb-2">Nutritional support & fluid monitoring</h4>
+
+                    <!-- Full Description -->
+                    <p class="text-sm text-gray-600 mb-4 leading-relaxed">Margaret needs soft/pureed food due to swallowing difficulties. Requires assistance with meal preparation and monitoring of fluid intake. Speech pathology has recommended thickened fluids. Daily fluid intake target is 1.5L minimum with documentation.</p>
+
+                    <!-- Metadata Grid -->
+                    <div class="grid grid-cols-2 gap-3 mb-5 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div>
+                            <span class="text-[10px] text-gray-400 uppercase tracking-wide">Created</span>
+                            <p class="text-xs font-medium text-gray-700 mt-0.5">15 Jan 2026</p>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-gray-400 uppercase tracking-wide">Updated</span>
+                            <p class="text-xs font-medium text-gray-700 mt-0.5">8 Mar 2026</p>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-gray-400 uppercase tracking-wide">Funding</span>
+                            <p class="text-xs font-medium text-gray-700 mt-0.5">HCP (Home Care Package)</p>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-gray-400 uppercase tracking-wide">Status</span>
+                            <p class="text-xs font-medium text-emerald-700 mt-0.5">Active</p>
+                        </div>
+                    </div>
+
+                    <!-- Linked Services -->
+                    <div class="mb-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <h5 class="text-xs font-semibold text-gray-700 uppercase tracking-wide">Linked Services</h5>
+                            <button class="inline-flex items-center gap-1 text-[11px] text-tc-teal-700 font-medium hover:text-tc-teal-600 transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                Link Service
+                            </button>
+                        </div>
+                        <div class="space-y-2.5">
+                            <!-- Service 1 -->
+                            <div class="service-card border border-gray-200 rounded-lg p-3 flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-rose-50 flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <h6 class="text-sm font-medium text-gray-900">Meal Preparation</h6>
+                                        <span class="text-xs font-medium text-gray-600">$185/week</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-0.5">Brightside Care</p>
+                                    <div class="flex items-center gap-3 mt-1.5">
+                                        <span class="inline-flex items-center gap-1 text-[10px] text-tc-teal-700">
+                                            <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="4"/></svg>
+                                            HCP funded
+                                        </span>
+                                        <span class="text-[10px] text-gray-400">Mon, Wed, Fri</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Service 2 -->
+                            <div class="service-card border border-gray-200 rounded-lg p-3 flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <h6 class="text-sm font-medium text-gray-900">Dietitian Review</h6>
+                                        <span class="text-xs font-medium text-gray-600">$95/session</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-0.5">Allied Health Co</p>
+                                    <div class="flex items-center gap-3 mt-1.5">
+                                        <span class="inline-flex items-center gap-1 text-[10px] text-tc-teal-700">
+                                            <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="4"/></svg>
+                                            HCP funded
+                                        </span>
+                                        <span class="text-[10px] text-gray-400">Next: 22 Mar 2026</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Log -->
+                    <div class="mb-5">
+                        <h5 class="text-xs font-semibold text-gray-700 uppercase tracking-wide mb-3">Recent Activity</h5>
+                        <div class="space-y-3 pl-1">
+                            <div class="activity-item flex gap-3">
+                                <div class="w-[11px] h-[11px] rounded-full bg-tc-teal-500 border-2 border-white shadow-sm shrink-0 mt-1"></div>
+                                <div>
+                                    <p class="text-xs text-gray-700"><span class="font-medium">Sarah Chen</span> updated fluid intake target to 1.5L</p>
+                                    <span class="text-[10px] text-gray-400">8 Mar 2026, 2:15 PM</span>
+                                </div>
+                            </div>
+                            <div class="activity-item flex gap-3">
+                                <div class="w-[11px] h-[11px] rounded-full bg-gray-300 border-2 border-white shadow-sm shrink-0 mt-1"></div>
+                                <div>
+                                    <p class="text-xs text-gray-700"><span class="font-medium">Dr. Patel</span> linked Dietitian Review service</p>
+                                    <span class="text-[10px] text-gray-400">22 Feb 2026, 10:30 AM</span>
+                                </div>
+                            </div>
+                            <div class="activity-item flex gap-3">
+                                <div class="w-[11px] h-[11px] rounded-full bg-gray-300 border-2 border-white shadow-sm shrink-0 mt-1"></div>
+                                <div>
+                                    <p class="text-xs text-gray-700"><span class="font-medium">Sarah Chen</span> created this need</p>
+                                    <span class="text-[10px] text-gray-400">15 Jan 2026, 9:00 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors border border-gray-200">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+                            Archive
+                        </button>
+                        <button class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-tc-teal-700 hover:bg-tc-teal-600 rounded-lg transition-colors shadow-sm">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            Edit Need
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== Remaining cards — compact, slightly dimmed ===== -->
+
+            <!-- Need 2: Personal Hygiene (compact, dimmed) -->
+            <div class="relative pl-8 pb-6 opacity-50">
+                <div class="absolute left-0 top-3 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                <div class="absolute left-[8px] top-3 w-3 h-3 rounded-full bg-rose-500 z-10 border-2 border-white shadow-sm"></div>
+                <div class="timeline-card ml-4 bg-white rounded-xl border border-gray-200 shadow-sm p-4 cursor-pointer">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-50 text-rose-600 border border-rose-200">Personal Hygiene & Continence</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">18 Jan 2026</span>
+                    </div>
+                    <h4 class="text-sm font-medium text-gray-900 mb-1">Daily personal care assistance</h4>
+                    <p class="text-xs text-gray-500 line-clamp-2">Requires support with showering, dressing, and continence management.</p>
+                    <div class="flex items-center gap-3 mt-3 pt-3 border-t border-gray-100">
+                        <span class="inline-flex items-center gap-1 text-[10px] text-gray-400">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"/></svg>
+                            1 service
+                        </span>
+                        <span class="ml-auto text-[10px] text-gray-400">Updated 2 Mar 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Need 3: Mobility (compact, dimmed) -->
+            <div class="relative pl-8 pb-8 opacity-50">
+                <div class="absolute left-0 top-3 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                <div class="absolute left-[8px] top-3 w-3 h-3 rounded-full bg-rose-500 z-10 border-2 border-white shadow-sm"></div>
+                <div class="timeline-card ml-4 bg-white rounded-xl border border-gray-200 shadow-sm p-4 cursor-pointer">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-rose-50 text-rose-600 border border-rose-200">Mobility & Transfers</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        </div>
+                        <span class="text-[10px] text-gray-400">20 Jan 2026</span>
+                    </div>
+                    <h4 class="text-sm font-medium text-gray-900 mb-1">Safe movement & transfer support</h4>
+                    <p class="text-xs text-gray-500 line-clamp-2">Uses a four-wheeled walker indoors. Requires standby assistance for transfers.</p>
+                    <div class="flex items-center gap-3 mt-3 pt-3 border-t border-gray-100">
+                        <span class="inline-flex items-center gap-1 text-[10px] text-gray-400">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101"/></svg>
+                            2 services
+                        </span>
+                        <span class="ml-auto text-[10px] text-gray-400">Updated 25 Feb 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TIER 2 — Safety & Health (dimmed) -->
+            <div class="opacity-50">
+                <div class="relative pl-8">
+                    <div class="absolute left-0 top-0 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                    <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-amber-500 border-4 border-white shadow-md flex items-center justify-center z-10">
+                        <span class="text-[9px] font-bold text-white">T2</span>
+                    </div>
+                    <div class="ml-4 mb-4">
+                        <h3 class="text-sm font-semibold text-amber-700 uppercase tracking-wide">Safety & Health</h3>
+                        <p class="text-xs text-gray-400">Protection & security &middot; 2 active</p>
+                    </div>
+                </div>
+
+                <!-- Need 4: Falls Prevention -->
+                <div class="relative pl-8 pb-6">
+                    <div class="absolute left-0 top-3 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                    <div class="absolute left-[8px] top-3 w-3 h-3 rounded-full bg-amber-500 z-10 border-2 border-white shadow-sm"></div>
+                    <div class="timeline-card ml-4 bg-white rounded-xl border border-gray-200 shadow-sm p-4 cursor-pointer">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-600 border border-amber-200">Falls Prevention & Home Safety</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        </div>
+                        <h4 class="text-sm font-medium text-gray-900">Home environment safety & fall risk reduction</h4>
+                    </div>
+                </div>
+
+                <!-- Need 5: Medication -->
+                <div class="relative pl-8 pb-8">
+                    <div class="absolute left-0 top-3 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                    <div class="absolute left-[8px] top-3 w-3 h-3 rounded-full bg-amber-500 z-10 border-2 border-white shadow-sm"></div>
+                    <div class="timeline-card ml-4 bg-white rounded-xl border border-gray-200 shadow-sm p-4 cursor-pointer">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-600 border border-amber-200">Medication Management</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        </div>
+                        <h4 class="text-sm font-medium text-gray-900">Medication compliance & administration</h4>
+                    </div>
+                </div>
+
+                <!-- TIER 3 -->
+                <div class="relative pl-8">
+                    <div class="absolute left-0 top-0 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                    <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-emerald-500 border-4 border-white shadow-md flex items-center justify-center z-10">
+                        <span class="text-[9px] font-bold text-white">T3</span>
+                    </div>
+                    <div class="ml-4 mb-4">
+                        <h3 class="text-sm font-semibold text-emerald-700 uppercase tracking-wide">Connection & Belonging</h3>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 pb-8">
+                    <div class="absolute left-0 top-3 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                    <div class="absolute left-[8px] top-3 w-3 h-3 rounded-full bg-emerald-500 z-10 border-2 border-white shadow-sm"></div>
+                    <div class="timeline-card ml-4 bg-white rounded-xl border border-gray-200 shadow-sm p-4 cursor-pointer">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-600 border border-emerald-200">Social Connection & Community</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        </div>
+                        <h4 class="text-sm font-medium text-gray-900">Community engagement & social participation</h4>
+                    </div>
+                </div>
+
+                <!-- TIER 4 -->
+                <div class="relative pl-8">
+                    <div class="absolute left-0 top-0 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                    <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-md flex items-center justify-center z-10">
+                        <span class="text-[9px] font-bold text-white">T4</span>
+                    </div>
+                    <div class="ml-4 mb-4">
+                        <h3 class="text-sm font-semibold text-blue-700 uppercase tracking-wide">Dignity & Independence</h3>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 pb-8">
+                    <div class="absolute left-0 top-3 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                    <div class="absolute left-[8px] top-3 w-3 h-3 rounded-full bg-blue-500 z-10 border-2 border-white shadow-sm"></div>
+                    <div class="timeline-card ml-4 bg-white rounded-xl border border-gray-200 shadow-sm p-4 cursor-pointer">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 text-blue-600 border border-blue-200">Cognitive Stimulation & Mental Health</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        </div>
+                        <h4 class="text-sm font-medium text-gray-900">Cognitive engagement & mental wellbeing</h4>
+                    </div>
+                </div>
+
+                <!-- TIER 5 -->
+                <div class="relative pl-8">
+                    <div class="absolute left-0 top-0 w-full h-full border-l-2 border-gray-200" style="left: 11px;"></div>
+                    <div class="absolute left-0 top-0 w-6 h-6 rounded-full bg-violet-500 border-4 border-white shadow-md flex items-center justify-center z-10">
+                        <span class="text-[9px] font-bold text-white">T5</span>
+                    </div>
+                    <div class="ml-4 mb-4">
+                        <h3 class="text-sm font-semibold text-violet-700 uppercase tracking-wide">Growth & Wellbeing</h3>
+                    </div>
+                </div>
+
+                <div class="relative pl-8 pb-8">
+                    <div class="absolute left-[8px] top-3 w-3 h-3 rounded-full bg-violet-500 z-10 border-2 border-white shadow-sm"></div>
+                    <div class="timeline-card ml-4 bg-white rounded-xl border border-gray-200 shadow-sm p-4 cursor-pointer">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-violet-50 text-violet-600 border border-violet-200">Goals & Life Enrichment</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700">Active</span>
+                        </div>
+                        <h4 class="text-sm font-medium text-gray-900">Personal goals & meaningful activities</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline End Marker -->
+            <div class="relative pl-8 pb-4">
+                <div class="absolute left-[9px] top-0 w-2.5 h-2.5 rounded-full bg-gray-300 border-2 border-white shadow-sm"></div>
+                <p class="ml-4 text-xs text-gray-400 italic">End of needs timeline &middot; 8 needs across 5 tiers</p>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+<script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Register — Clinical Chris</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+            'triage-1': '#DC2626',
+            'triage-2': '#EA580C',
+            'triage-3': '#CA8A04',
+            'triage-4': '#16A34A',
+            'triage-5': '#2563EB',
+          },
+          fontFamily: { sans: ['Roboto Flex', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto Flex', system-ui, sans-serif; }
+    .register-row:hover { background-color: #f8fafc; }
+    .register-row td { padding: 6px 10px; font-size: 12px; line-height: 1.4; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+    .register-row th { padding: 6px 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; border-bottom: 2px solid #cbd5e1; white-space: nowrap; background: #f8fafc; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <div class="flex min-h-screen">
+    <!-- Skeleton Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 flex-shrink-0 p-4 space-y-3">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-8 h-8 bg-tc-teal-700 rounded-lg"></div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <div class="h-3 w-32 bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-r animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="mt-6 h-3 w-28 bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col">
+      <!-- Clinical Header Banner -->
+      <div class="bg-tc-blue-700 text-white px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
+            <svg class="w-5 h-5 text-tc-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <h1 class="text-lg font-semibold tracking-tight">Feedback Register</h1>
+          </div>
+          <span class="text-white/50">|</span>
+          <span class="text-sm text-white/70">All Records</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-white/60 bg-white/10 px-2.5 py-1 rounded">
+            <span class="font-semibold text-white">47</span> total records
+          </span>
+          <span class="text-xs text-white/60 bg-red-500/20 text-red-300 px-2.5 py-1 rounded">
+            <span class="font-semibold">3</span> overdue
+          </span>
+          <button class="bg-tc-teal-700 hover:bg-tc-teal-500 text-white text-xs font-semibold px-4 py-2 rounded flex items-center gap-1.5 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            New Record
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="bg-white border-b border-gray-200 px-6 py-2.5 flex items-center gap-3">
+        <span class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mr-1">Filter:</span>
+        <select class="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white text-gray-700 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500">
+          <option>All Triage Categories</option>
+          <option>Cat 1 — Critical</option>
+          <option>Cat 2 — Urgent</option>
+          <option>Cat 3 — High</option>
+          <option>Cat 4 — Medium</option>
+          <option>Cat 5 — Low</option>
+        </select>
+        <select class="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white text-gray-700">
+          <option>All Types</option>
+          <option>Complaint</option>
+          <option>Remediation</option>
+        </select>
+        <select class="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white text-gray-700">
+          <option>All Stages</option>
+          <option>0. New</option>
+          <option>1. Received</option>
+          <option>2. Triage</option>
+          <option>3. Owner Accepted</option>
+          <option>4. Investigation</option>
+          <option>5. Resolution</option>
+          <option>6. Closed</option>
+        </select>
+        <select class="text-xs border border-gray-300 rounded px-2 py-1.5 bg-white text-gray-700">
+          <option>All Departments</option>
+          <option>Clinical</option>
+          <option>Care Management</option>
+          <option>Finance</option>
+          <option>Administration</option>
+        </select>
+        <div class="ml-auto flex items-center gap-2">
+          <input type="text" placeholder="Search REF# or subject..." class="text-xs border border-gray-300 rounded px-2.5 py-1.5 w-52 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500">
+          <button class="text-xs text-tc-teal-700 font-medium hover:underline">Clear</button>
+        </div>
+      </div>
+
+      <!-- Triage Legend -->
+      <div class="bg-gray-50 border-b border-gray-100 px-6 py-1.5 flex items-center gap-4">
+        <span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Triage:</span>
+        <span class="flex items-center gap-1 text-[10px] text-gray-500"><span class="w-2 h-2 rounded-full bg-triage-1 inline-block"></span> 1-Critical</span>
+        <span class="flex items-center gap-1 text-[10px] text-gray-500"><span class="w-2 h-2 rounded-full bg-triage-2 inline-block"></span> 2-Urgent</span>
+        <span class="flex items-center gap-1 text-[10px] text-gray-500"><span class="w-2 h-2 rounded-full bg-triage-3 inline-block"></span> 3-High</span>
+        <span class="flex items-center gap-1 text-[10px] text-gray-500"><span class="w-2 h-2 rounded-full bg-triage-4 inline-block"></span> 4-Medium</span>
+        <span class="flex items-center gap-1 text-[10px] text-gray-500"><span class="w-2 h-2 rounded-full bg-triage-5 inline-block"></span> 5-Low</span>
+      </div>
+
+      <!-- Clinical Register Table -->
+      <div class="flex-1 overflow-auto px-4 py-2">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="register-row">
+              <th class="text-left">REF #</th>
+              <th class="text-left">Type</th>
+              <th class="text-center">Cat</th>
+              <th class="text-left" style="min-width:220px">Subject</th>
+              <th class="text-left">Stage</th>
+              <th class="text-left">Dept</th>
+              <th class="text-left">Assigned</th>
+              <th class="text-left">Complainant</th>
+              <th class="text-left">Created</th>
+              <th class="text-left">Due</th>
+              <th class="text-center">Overdue</th>
+              <th class="text-center">CRM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1 — Cat 1 Critical, Overdue -->
+            <tr class="register-row bg-red-50/50">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="03-detail-view.html" class="hover:underline">REF-00312</a></td>
+              <td><span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Complaint</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-1" title="Cat 1 — Critical"></span></td>
+              <td class="text-gray-800 font-medium">Medication administered 4hrs late — fall risk</td>
+              <td><span class="text-[11px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">4. Investigation</span></td>
+              <td class="text-gray-600">Clinical</td>
+              <td class="text-gray-700">S. Chen</td>
+              <td class="text-gray-600">Margaret Thompson (Daughter)</td>
+              <td class="text-gray-500">28 Feb 2026</td>
+              <td class="text-red-600 font-medium">05 Mar 2026</td>
+              <td class="text-center"><span class="inline-flex items-center justify-center w-5 h-5 bg-red-100 text-red-600 rounded-full text-[10px] font-bold" title="5 days overdue">5d</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-green-500 inline-block" title="Synced"></span></td>
+            </tr>
+            <!-- Row 2 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00311</a></td>
+              <td><span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Complaint</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-2" title="Cat 2 — Urgent"></span></td>
+              <td class="text-gray-800 font-medium">Carer did not attend scheduled visit</td>
+              <td><span class="text-[11px] font-medium text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded">5. Resolution</span></td>
+              <td class="text-gray-600">Care Mgmt</td>
+              <td class="text-gray-700">J. Williams</td>
+              <td class="text-gray-600">Robert Chen (Self)</td>
+              <td class="text-gray-500">25 Feb 2026</td>
+              <td class="text-gray-500">10 Mar 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+            </tr>
+            <!-- Row 3 — Overdue -->
+            <tr class="register-row bg-red-50/50">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00310</a></td>
+              <td><span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Remediation</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-3" title="Cat 3 — High"></span></td>
+              <td class="text-gray-800 font-medium">Billing discrepancy on March statement</td>
+              <td><span class="text-[11px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">3. In Progress</span></td>
+              <td class="text-gray-600">Finance</td>
+              <td class="text-gray-700">A. Patel</td>
+              <td class="text-gray-600">Doris Lee (Son)</td>
+              <td class="text-gray-500">20 Feb 2026</td>
+              <td class="text-red-600 font-medium">06 Mar 2026</td>
+              <td class="text-center"><span class="inline-flex items-center justify-center w-5 h-5 bg-red-100 text-red-600 rounded-full text-[10px] font-bold">4d</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-gray-300 inline-block" title="Not synced"></span></td>
+            </tr>
+            <!-- Row 4 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00309</a></td>
+              <td><span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Complaint</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-4" title="Cat 4 — Medium"></span></td>
+              <td class="text-gray-800 font-medium">Request for different shower time preference</td>
+              <td><span class="text-[11px] font-medium text-green-700 bg-green-50 px-1.5 py-0.5 rounded">6a. Closed — Resolved</span></td>
+              <td class="text-gray-600">Care Mgmt</td>
+              <td class="text-gray-700">K. Nguyen</td>
+              <td class="text-gray-600">Frank Davis (Self)</td>
+              <td class="text-gray-500">18 Feb 2026</td>
+              <td class="text-gray-500">28 Feb 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+            </tr>
+            <!-- Row 5 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00308</a></td>
+              <td><span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Remediation</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-5" title="Cat 5 — Low"></span></td>
+              <td class="text-gray-800 font-medium">Positive feedback — care partner punctuality</td>
+              <td><span class="text-[11px] font-medium text-green-700 bg-green-50 px-1.5 py-0.5 rounded">4. Complete</span></td>
+              <td class="text-gray-600">Care Mgmt</td>
+              <td class="text-gray-700">S. Chen</td>
+              <td class="text-gray-600">Helen Park (Self)</td>
+              <td class="text-gray-500">15 Feb 2026</td>
+              <td class="text-gray-500">20 Feb 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+            </tr>
+            <!-- Row 6 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00307</a></td>
+              <td><span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Complaint</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-2" title="Cat 2 — Urgent"></span></td>
+              <td class="text-gray-800 font-medium">Aggressive behaviour from relief carer</td>
+              <td><span class="text-[11px] font-medium text-green-700 bg-green-50 px-1.5 py-0.5 rounded">6b. Closed — Referred</span></td>
+              <td class="text-gray-600">Clinical</td>
+              <td class="text-gray-700">J. Williams</td>
+              <td class="text-gray-600">Barbara Wong (Advocate)</td>
+              <td class="text-gray-500">10 Feb 2026</td>
+              <td class="text-gray-500">17 Feb 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+            </tr>
+            <!-- Row 7 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00306</a></td>
+              <td><span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Complaint</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-3" title="Cat 3 — High"></span></td>
+              <td class="text-gray-800 font-medium">Equipment not delivered within 48hr window</td>
+              <td><span class="text-[11px] font-medium text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded">3. Owner Accepted</span></td>
+              <td class="text-gray-600">Administration</td>
+              <td class="text-gray-700">A. Patel</td>
+              <td class="text-gray-600">James Murray (Spouse)</td>
+              <td class="text-gray-500">08 Feb 2026</td>
+              <td class="text-gray-500">15 Mar 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-gray-300 inline-block"></span></td>
+            </tr>
+            <!-- Row 8 — Overdue -->
+            <tr class="register-row bg-red-50/50">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00305</a></td>
+              <td><span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Complaint</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-1" title="Cat 1 — Critical"></span></td>
+              <td class="text-gray-800 font-medium">Alleged neglect — wound care missed twice</td>
+              <td><span class="text-[11px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">4. Investigation</span></td>
+              <td class="text-gray-600">Clinical</td>
+              <td class="text-gray-700">K. Nguyen</td>
+              <td class="text-gray-600">Patricia Green (Daughter)</td>
+              <td class="text-gray-500">05 Feb 2026</td>
+              <td class="text-red-600 font-medium">01 Mar 2026</td>
+              <td class="text-center"><span class="inline-flex items-center justify-center w-5 h-5 bg-red-100 text-red-600 rounded-full text-[10px] font-bold">9d</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+            </tr>
+            <!-- Row 9 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00304</a></td>
+              <td><span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Remediation</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-4" title="Cat 4 — Medium"></span></td>
+              <td class="text-gray-800 font-medium">Gardening service quality below standard</td>
+              <td><span class="text-[11px] font-medium text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded">2. Triage</span></td>
+              <td class="text-gray-600">Care Mgmt</td>
+              <td class="text-gray-700">S. Chen</td>
+              <td class="text-gray-600">Arthur Brooks (Self)</td>
+              <td class="text-gray-500">03 Feb 2026</td>
+              <td class="text-gray-500">17 Mar 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-gray-300 inline-block"></span></td>
+            </tr>
+            <!-- Row 10 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00303</a></td>
+              <td><span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Complaint</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-3" title="Cat 3 — High"></span></td>
+              <td class="text-gray-800 font-medium">Communication breakdown re: care plan changes</td>
+              <td><span class="text-[11px] font-medium text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded">1. Received</span></td>
+              <td class="text-gray-600">Clinical</td>
+              <td class="text-gray-700">J. Williams</td>
+              <td class="text-gray-600">Nancy Liu (Self)</td>
+              <td class="text-gray-500">01 Feb 2026</td>
+              <td class="text-gray-500">20 Mar 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+            </tr>
+            <!-- Row 11 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00302</a></td>
+              <td><span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Remediation</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-5" title="Cat 5 — Low"></span></td>
+              <td class="text-gray-800 font-medium">Transport driver late by 20 minutes</td>
+              <td><span class="text-[11px] font-medium text-green-700 bg-green-50 px-1.5 py-0.5 rounded">4. Complete</span></td>
+              <td class="text-gray-600">Administration</td>
+              <td class="text-gray-700">A. Patel</td>
+              <td class="text-gray-600">George Hall (Self)</td>
+              <td class="text-gray-500">28 Jan 2026</td>
+              <td class="text-gray-500">05 Feb 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span></td>
+            </tr>
+            <!-- Row 12 -->
+            <tr class="register-row">
+              <td class="font-mono font-semibold text-tc-blue-700"><a href="#" class="hover:underline">REF-00301</a></td>
+              <td><span class="bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded text-[11px] font-medium">Complaint</span></td>
+              <td class="text-center"><span class="inline-block w-3 h-3 rounded-full bg-triage-4" title="Cat 4 — Medium"></span></td>
+              <td class="text-gray-800 font-medium">Meal service not meeting dietary requirements</td>
+              <td><span class="text-[11px] font-medium text-violet-700 bg-violet-50 px-1.5 py-0.5 rounded">0. New</span></td>
+              <td class="text-gray-600">Care Mgmt</td>
+              <td class="text-gray-700">—</td>
+              <td class="text-gray-600">Edith Brown (Daughter)</td>
+              <td class="text-gray-500">25 Jan 2026</td>
+              <td class="text-gray-500">25 Mar 2026</td>
+              <td class="text-center"><span class="text-gray-300">—</span></td>
+              <td class="text-center"><span class="w-2 h-2 rounded-full bg-gray-300 inline-block"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-white border-t border-gray-200 px-6 py-2 flex items-center justify-between text-[11px] text-gray-400">
+        <span>Showing 12 of 47 records</span>
+        <div class="flex items-center gap-2">
+          <span>Page 1 of 4</span>
+          <button class="px-2 py-1 border border-gray-300 rounded text-gray-500 hover:bg-gray-50">Prev</button>
+          <button class="px-2 py-1 border border-gray-300 rounded bg-tc-teal-700 text-white">1</button>
+          <button class="px-2 py-1 border border-gray-300 rounded text-gray-500 hover:bg-gray-50">2</button>
+          <button class="px-2 py-1 border border-gray-300 rounded text-gray-500 hover:bg-gray-50">3</button>
+          <button class="px-2 py-1 border border-gray-300 rounded text-gray-500 hover:bg-gray-50">4</button>
+          <button class="px-2 py-1 border border-gray-300 rounded text-gray-500 hover:bg-gray-50">Next</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+{
+  "body": [
+  {
+    "title": "As an Internal User, I can view all documents for a Package or Supplier in a Documents tab so I can quickly find what I need",
+    "description": "Users need a unified view of all documents associated with a parent record (Package or Supplier) to eliminate time wasted searching across disconnected systems (email, file shares, Zoho). The Documents tab displays a paginated list with sortable columns showing key metadata: Name, Type, Stage, Expiry Date, Signed Date, Amended Date, and Created Date. Users can click on a document to view or download it.",
+    "acceptanceCriteria": [
+      "Documents tab is visible on Package and Supplier detail pages",
+      "Document list displays columns: Name, Type (DocumentTag), Stage (DocumentStageEnum), Expiry Date, Signed Date, Amended Date, Created Date",
+      "Pagination shows 25 documents per page",
+      "All columns are sortable (ascending/descending)",
+      "Clicking a document name opens it in browser (PDF) or downloads it (images)",
+      "Documents tab leverages existing polymorphic relationship (documentable_id/documentable_type)",
+      "Page load time is <1s (p95) for 100 documents"
+    ],
+    "persona": "Internal User",
+    "priority": "High"
+  },
+  {
+    "title": "As an Internal User, I can filter documents by metadata fields so I can narrow search results and find specific documents faster",
+    "description": "Users need to filter documents by metadata (Type, Stage, Expiry Date, Signed Date, Created Date) to quickly locate specific documents without scrolling through hundreds of entries. Filters use AND logic and support multi-select dropdowns for Type and Stage, date range pickers for date fields. A 'Clear All Filters' action resets the view.",
+    "acceptanceCriteria": [
+      "Filter panel includes: DocumentTag (multi-select dropdown), Stage (multi-select dropdown), Expiry Date Range, Signed Date Range, Created Date Range",
+      "Filters work in combination using AND logic",
+      "Filtered results update in real-time or on 'Apply Filters' click",
+      "Active filters are visually indicated in the UI",
+      "'Clear All Filters' action resets all filters and restores full document list",
+      "Filter response time is <500ms (p95)",
+      "No results state displays 'No documents match your filters' message"
+    ],
+    "persona": "Internal User",
+    "priority": "High"
+  },
+  {
+    "title": "As an Internal User, I can upload a document and set metadata so it's properly categorized and searchable",
+    "description": "Users need to upload documents (PDFs, JPGs, PNGs) and associate them with parent records (Package, Supplier) while setting metadata like Document Type, Stage, Expiry Date, and Identifier. The system stores files in S3, calculates file hash for duplicate detection, runs malware scanning, and creates an audit log entry capturing who uploaded the document and when.",
+    "acceptanceCriteria": [
+      "Upload modal/form includes: File picker (required), DocumentTag dropdown (required), Stage dropdown (optional, defaults to NEW), Expiry Date (conditional, shown only if DocumentTag.has_expiry = true), Identifier (conditional, shown only if DocumentTag.has_number = true)",
+      "Document is saved to S3 with hash calculation",
+      "Malware scanning runs asynchronously (existing global scope filters THREATS_FOUND)",
+      "created_by field is populated from authenticated user",
+      "Audit log entry is created via Spatie ActivityLog",
+      "Success message displays after upload, Documents tab list refreshes to show new document",
+      "Upload supports files up to 50MB",
+      "If malware is detected, document is soft-deleted, user is notified, and audit log entry is created",
+      "If duplicate file (same hash) is detected, system warns user with option to override or cancel"
+    ],
+    "persona": "Internal User",
+    "priority": "High"
+  },
+  {
+    "title": "As an Internal User, I can attach a call recording reference to a document so I can prove verbal consent was obtained",
+    "description": "Users need to attach call recording artifacts (Aircall/Databricks references) to documents to provide evidence of verbal consent for regulatory compliance. This is critical for HCA agreements, OT reports, and budget approvals. The system stores the call recording ID, optional transcript text, and signed date in a separate document_signatures table, and updates the document's signed_date field to enable filtering by signature date.",
+    "acceptanceCriteria": [
+      "'Add Signature Artifact' modal includes option for 'Call Recording'",
+      "Call Recording form includes fields: Call Recording ID (text, required), Transcript Text (textarea, optional), Signed Date (date picker, required)",
+      "System saves to document_signatures table with: document_id (FK), signature_type = CALL_RECORDING, call_recording_id, transcript_text, signed_date",
+      "System updates documents.signed_date to match signature artifact signed_date",
+      "Audit log entry is created for signature artifact attachment",
+      "Success message displays, modal closes, Documents tab shows signature icon/badge",
+      "If Call Recording ID is already attached to another document, system warns user with option to override or cancel"
+    ],
+    "persona": "Internal User",
+    "priority": "High"
+  },
+  {
+    "title": "As an Internal User, I can upload a scanned signature PDF to a document so I can attach physical signature evidence",
+    "description": "Users need to attach scanned signature PDFs (e.g., wet signatures on printed forms) to documents to provide evidence of signed agreements. The system uploads the PDF to S3 separately from the original document, stores the reference in document_signatures table, and updates the document's signed_date field.",
+    "acceptanceCriteria": [
+      "'Add Signature Artifact' modal includes option for 'PDF Upload'",
+      "PDF Upload form includes fields: PDF File (upload, required), Signed Date (date picker, required)",
+      "System uploads PDF to S3 in separate location from original document",
+      "System saves to document_signatures table with: document_id (FK), signature_type = PDF_UPLOAD, pdf_path (S3 path), signed_date",
+      "System updates documents.signed_date to match signature artifact signed_date",
+      "Audit log entry is created for signature artifact attachment",
+      "Success message displays, modal closes, Documents tab shows signature icon/badge"
+    ],
+    "persona": "Internal User",
+    "priority": "High"
+  },
+  {
+    "title": "As an Internal User, I can view signature artifacts attached to a document so I can verify signature evidence for compliance",
+    "description": "Users need to view signature artifacts (call recording references, scanned PDFs, digital signatures) to verify that documents were properly signed and meet compliance requirements. The signature display modal shows the signature type, signed date, and type-specific details (call recording ID with link, transcript excerpt, PDF preview/download, digital signature metadata).",
+    "acceptanceCriteria": [
+      "Documents tab displays 'Signature' column with icon/badge if signature artifact exists",
+      "Clicking signature icon opens modal showing: Signature Type (Call Recording, PDF Upload, Digital), Signed Date",
+      "For Call Recording type: displays Call Recording ID (with link to Aircall/Databricks if possible), Transcript excerpt (first 500 chars with 'Show More' option)",
+      "For PDF Upload type: displays PDF preview or download link",
+      "For Digital Signature type: displays formatted JSON metadata",
+      "Audit log entry is created for signature artifact access (read action)",
+      "Modal is keyboard accessible and screen reader compatible"
+    ],
+    "persona": "Internal User",
+    "priority": "Medium"
+  },
+  {
+    "title": "As an Internal User, I can change a document's stage so I can track lifecycle progress from submission to approval",
+    "description": "Users need to update document stages (NEW → SUBMITTED → IN_REVIEW → APPROVED, etc.) to track document lifecycle and workflow status. The system supports all 8 stages (NEW, SUBMITTED, IN_REVIEW, INFORMATION_REQUESTED, APPROVED, EXPIRING_SOON, EXPIRED, REJECTED) and creates audit log entries capturing before/after state, user, and timestamp.",
+    "acceptanceCriteria": [
+      "Inline stage dropdown or 'Change Stage' action is available on each document",
+      "Stage dropdown includes all valid stages: NEW, SUBMITTED, IN_REVIEW, INFORMATION_REQUESTED, APPROVED, EXPIRING_SOON, EXPIRED, REJECTED",
+      "System updates documents.stage field",
+      "Audit log entry is created with before/after state, authenticated user, and timestamp",
+      "Success message displays after stage change",
+      "Documents tab list reflects updated stage immediately",
+      "No stage transition validation in DOC epic (future epics may add workflow rules)"
+    ],
+    "persona": "Internal User",
+    "priority": "Medium"
+  },
+  {
+    "title": "As an Internal User, I can delete documents so I can remove duplicates or errors without permanently destroying records",
+    "description": "Users need to remove documents that are duplicates, uploaded in error, or no longer relevant. The system uses soft delete (sets deleted_at timestamp) to maintain audit trail and regulatory compliance. Deleted documents are hidden by default but can be revealed with a 'Show Deleted' toggle.",
+    "acceptanceCriteria": [
+      "Delete action is available on each document",
+      "Delete action soft-deletes document (sets deleted_at timestamp)",
+      "Deleted documents are hidden from Documents tab by default",
+      "Optional 'Show Deleted' toggle reveals soft-deleted documents",
+      "Audit log entry is created for deletion with user and timestamp",
+      "Confirmation prompt displays before deletion to prevent accidental deletes"
+    ],
+    "persona": "Internal User",
+    "priority": "Medium"
+  },
+  {
+    "title": "As an Internal User, I can record digital signature metadata so I can track portal-based signing events",
+    "description": "Users need to record digital signature events (e.g., when a document is signed via a future portal-based form or e-signature integration) to provide evidence of electronic consent. This story provides the storage mechanism only—actual digital signature capture UI (form signing, portal signing) is out of scope for DOC epic. The system stores signature metadata as JSON and updates the document's signed_date field.",
+    "acceptanceCriteria": [
+      "'Add Signature Artifact' modal includes option for 'Digital Signature'",
+      "Digital Signature form includes fields: Signature Metadata (JSON payload, required), Signed Date (auto-populated to current timestamp)",
+      "System saves to document_signatures table with: document_id (FK), signature_type = DIGITAL, digital_signature_metadata (JSON), signed_date",
+      "System updates documents.signed_date to match signature artifact signed_date",
+      "Audit log entry is created for signature artifact attachment",
+      "Success message displays, modal closes, Documents tab shows signature icon/badge",
+      "Note: Actual digital signature capture UI is deferred to future epics"
+    ],
+    "persona": "Internal User",
+    "priority": "Medium"
+  },
+  {
+    "title": "As a Compliance User, I can view audit logs for document actions so I can investigate changes and meet regulatory requirements",
+    "description": "Compliance staff need to view complete audit trails for document actions (upload, stage change, signature attachment, deletion) to investigate compliance issues, respond to audits, and meet regulatory requirements. The audit log displays action type, user, timestamp, and before/after state for updates, sorted by timestamp (newest first).",
+    "acceptanceCriteria": [
+      "'View Audit Log' action is available on each document",
+      "Audit log displays Spatie ActivityLog entries with: Action (created, updated, stage_changed, signature_added, deleted), User (createdBy), Timestamp, Before/After state (for updates)",
+      "Audit log is sortable by timestamp (newest first by default)",
+      "Audit log is keyboard accessible and screen reader compatible",
+      "Optional: CSV export capability (P2 priority)"
+    ],
+    "persona": "Internal User",
+    "priority": "Medium"
+  },
+  {
+    "title": "As an Internal User, I can view and download documents so I can review their contents for decision-making",
+    "description": "Users need to view documents in their browser (PDFs) or download them (images) to review content for care planning, billing verification, compliance checks, and other business processes. The system generates temporary S3 URLs (10min expiry) for secure access and creates audit log entries for document access.",
+    "acceptanceCriteria": [
+      "Clicking document name opens PDF in browser or downloads images",
+      "System uses S3 temporary URLs with 10-minute expiry (existing pattern)",
+      "Audit log entry is created for document access (read action) with user and timestamp",
+      "S3 temporary URL generation is <200ms (p95)",
+      "Document view/download works for all supported file types (PDF, JPG, PNG)"
+    ],
+    "persona": "Internal User",
+    "priority": "High"
+  },
+  {
+    "title": "As the System, I need to store signed_date and amended_date fields so users can filter documents by signature and amendment dates for compliance tracking",
+    "description": "The system requires two new timestamp fields on the documents table to support compliance workflows: signed_date (when document was signed) and amended_date (when document was last amended). These fields enable filtering by signature date (find all documents signed in Q4 2024) and amendment tracking (identify documents needing review). The signed_date field is automatically populated when signature artifacts are attached (FR 4.7-4.9). The amended_date field provides schema foundation for future document versioning features.",
+    "acceptanceCriteria": [
+      "documents table includes signed_date column (timestamp, nullable, indexed)",
+      "documents table includes amended_date column (timestamp, nullable, indexed)",
+      "signed_date is automatically populated when signature artifact is attached (FR 4.7-4.9)",
+      "Both fields are filterable in Documents tab metadata filters (FR 4.2)",
+      "Both fields are displayed in Documents tab list view (FR 4.1)",
+      "Migration is zero-downtime (columns nullable, no backfill required)",
+      "Migration is tested on staging with production-size dataset (100k+ records)",
+      "Note: Document versioning/replacement UI is out of scope—amended_date provides schema field only"
+    ],
+    "persona": "Internal User",
+    "priority": "High"
+  }
+]
+}

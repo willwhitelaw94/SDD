@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bill Edit IDE -- Notion Nick</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        teal: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',300:'#94DBDA',400:'#66CCCA',500:'#43C0BE',600:'#2F9E9C',700:'#007F7E',800:'#005656',900:'#003D3D' },
+        'primary-blue': { 50:'#F0F4FA',100:'#D6E1F0',200:'#BCCEE7',300:'#96B2D9',400:'#7197CC',500:'#4B7BBE',600:'#39639D',700:'#2C4C79',800:'#1E3452',900:'#101C2D' }
+      }
+    }
+  }
+}
+</script>
+<style>
+  .toggle-arrow { transition: transform 0.15s ease; }
+  .toggle-arrow.open { transform: rotate(90deg); }
+  .panel-section { overflow: hidden; transition: max-height 0.2s ease; }
+  .panel-section.collapsed { max-height: 0; }
+  .panel-section.expanded { max-height: 2000px; }
+  .property-value:hover { background: #F7F7F5; border-radius: 4px; }
+  .reason-row:hover { background: #F7F7F5; }
+  .line-item-row:hover { background: #FAFAF8; }
+  .editable:hover { background: #F0F0EE; border-radius: 3px; cursor: pointer; }
+  .notion-select { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: 500; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  .drag-handle { opacity: 0; transition: opacity 0.1s; cursor: grab; }
+  .reason-row:hover .drag-handle { opacity: 0.4; }
+  .drag-handle:hover { opacity: 1 !important; }
+</style>
+</head>
+<body class="bg-gray-50 flex">
+
+<!-- Skeleton Sidebar -->
+<aside class="w-60 bg-white border-r border-gray-200 flex flex-col shrink-0 h-screen sticky top-0">
+    <div class="px-4 py-4 border-b border-gray-100">
+        <div class="flex items-center gap-2.5">
+            <div class="h-8 w-8 rounded-lg bg-gray-200 animate-pulse"></div>
+            <div class="h-4 w-24 rounded bg-gray-200 animate-pulse"></div>
+        </div>
+        <p class="mt-2 text-[9px] text-gray-300 uppercase tracking-widest text-center">Framing only</p>
+    </div>
+    <div class="px-3 py-3">
+        <div class="h-8 rounded-lg bg-gray-100 animate-pulse"></div>
+    </div>
+    <nav class="flex-1 overflow-y-auto px-3 py-2 space-y-1.5">
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-20 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-24 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-16 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-teal-50"><div class="h-4 w-4 rounded bg-teal-200 animate-pulse"></div><div class="h-3.5 w-18 rounded bg-teal-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-20 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-14 rounded bg-gray-200 animate-pulse"></div></div>
+    </nav>
+    <div class="border-t border-gray-100 px-3 py-3">
+        <div class="flex items-center gap-2.5">
+            <div class="h-8 w-8 rounded-full bg-gray-200 animate-pulse"></div>
+            <div class="flex-1 space-y-1.5"><div class="h-3 w-24 rounded bg-gray-200 animate-pulse"></div><div class="h-2.5 w-20 rounded bg-gray-100 animate-pulse"></div></div>
+        </div>
+    </div>
+</aside>
+
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-h-screen">
+    <!-- Page Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-3">
+        <div class="flex items-center justify-between">
+            <div>
+                <nav class="text-xs text-gray-400 mb-1">
+                    <span>Bills</span>
+                    <span class="mx-1">/</span>
+                    <span>On Hold</span>
+                    <span class="mx-1">/</span>
+                    <span class="text-gray-700 font-medium">INV-2024-08742</span>
+                </nav>
+                <div class="flex items-center gap-3">
+                    <span class="text-lg">&#x1F4C4;</span>
+                    <h1 class="text-xl font-semibold text-gray-900">INV-2024-08742</h1>
+                    <span class="notion-select bg-amber-100 text-amber-800">
+                        <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
+                        ON HOLD
+                    </span>
+                    <span class="notion-select bg-red-50 text-red-700 border border-red-200">Day 7</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- Assigned to -->
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-md hover:bg-gray-100 cursor-pointer">
+                    <div class="w-6 h-6 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-medium">SM</div>
+                    <span class="text-sm text-gray-700">Sarah Mitchell</span>
+                    <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="h-5 w-px bg-gray-200"></div>
+                <button class="text-gray-400 hover:text-gray-600 p-1.5 rounded hover:bg-gray-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01"/></svg>
+                </button>
+                <button class="text-gray-400 hover:text-gray-600 p-1.5 rounded hover:bg-gray-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Three Panel Layout -->
+    <div class="flex-1 flex overflow-hidden">
+
+        <!-- LEFT PANEL: Documents / Notes / Activity -->
+        <aside class="w-72 border-r border-gray-200 bg-white overflow-y-auto flex flex-col">
+            <div class="px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Page Sidebar</span>
+                    <button class="text-gray-400 hover:text-gray-600 text-xs" title="Collapse sidebar">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Documents Toggle -->
+            <div class="border-b border-gray-100">
+                <button class="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 text-left" onclick="toggleSection('docs')">
+                    <svg id="docs-arrow" class="w-3 h-3 text-gray-400 toggle-arrow open" fill="currentColor" viewBox="0 0 6 10"><path d="M1.4.3L5.7 4.6a.5.5 0 010 .8L1.4 9.7a.5.5 0 01-.9-.4V.7A.5.5 0 011.4.3z"/></svg>
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                    <span class="text-sm font-medium text-gray-700 flex-1">Documents</span>
+                    <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">2</span>
+                </button>
+                <div id="docs-section" class="panel-section expanded px-4 pb-3">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2.5 px-2 py-2 rounded-md hover:bg-gray-50 cursor-pointer group">
+                            <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zM13 9V3.5L18.5 9H13z"/></svg>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-gray-700 truncate">Invoice_08742.pdf</p>
+                                <p class="text-xs text-gray-400">Uploaded 28 Feb 2026</p>
+                            </div>
+                            <button class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-teal-600">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2.5 px-2 py-2 rounded-md hover:bg-gray-50 cursor-pointer group">
+                            <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zM13 9V3.5L18.5 9H13z"/></svg>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-gray-700 truncate">Supporting_Statement.docx</p>
+                                <p class="text-xs text-gray-400">Uploaded 28 Feb 2026</p>
+                            </div>
+                            <button class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-teal-600">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Toggle -->
+            <div class="border-b border-gray-100">
+                <button class="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 text-left" onclick="toggleSection('notes')">
+                    <svg id="notes-arrow" class="w-3 h-3 text-gray-400 toggle-arrow open" fill="currentColor" viewBox="0 0 6 10"><path d="M1.4.3L5.7 4.6a.5.5 0 010 .8L1.4 9.7a.5.5 0 01-.9-.4V.7A.5.5 0 011.4.3z"/></svg>
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    <span class="text-sm font-medium text-gray-700 flex-1">Notes</span>
+                    <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">3</span>
+                </button>
+                <div id="notes-section" class="panel-section expanded px-4 pb-3">
+                    <div class="space-y-2">
+                        <div class="p-2.5 rounded-md bg-yellow-50 border border-yellow-100">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs font-medium text-yellow-800">Sarah M.</span>
+                                <span class="text-[10px] text-yellow-600">Today 9:42am</span>
+                            </div>
+                            <p class="text-xs text-yellow-900 leading-relaxed">Supplier contacted via phone -- confirmed they will resubmit with corrected ABN. Expected by EOD Friday.</p>
+                        </div>
+                        <div class="p-2.5 rounded-md bg-gray-50 border border-gray-100">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700">James K.</span>
+                                <span class="text-[10px] text-gray-500">5 Mar 2:15pm</span>
+                            </div>
+                            <p class="text-xs text-gray-700 leading-relaxed">Rate exceeds schedule maximum for Item 01_300. Flagged for compliance review.</p>
+                        </div>
+                        <div class="p-2.5 rounded-md bg-gray-50 border border-gray-100">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-xs font-medium text-gray-700">AI Detection</span>
+                                <span class="text-[10px] text-gray-500">28 Feb auto</span>
+                            </div>
+                            <p class="text-xs text-gray-700 leading-relaxed">Duplicate line item detected: Item 01_300 appears twice with different unit counts. Confidence: 94%</p>
+                        </div>
+                    </div>
+                    <button class="mt-2 w-full flex items-center justify-center gap-1 px-2 py-1.5 text-xs text-gray-500 hover:bg-gray-100 rounded border border-dashed border-gray-300 hover:border-gray-400">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add note
+                    </button>
+                </div>
+            </div>
+
+            <!-- Activity Toggle -->
+            <div class="border-b border-gray-100">
+                <button class="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 text-left" onclick="toggleSection('activity')">
+                    <svg id="activity-arrow" class="w-3 h-3 text-gray-400 toggle-arrow" fill="currentColor" viewBox="0 0 6 10"><path d="M1.4.3L5.7 4.6a.5.5 0 010 .8L1.4 9.7a.5.5 0 01-.9-.4V.7A.5.5 0 011.4.3z"/></svg>
+                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span class="text-sm font-medium text-gray-700 flex-1">Activity</span>
+                    <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">8</span>
+                </button>
+                <div id="activity-section" class="panel-section collapsed px-4 pb-3">
+                    <div class="space-y-2 mt-1">
+                        <div class="flex items-start gap-2">
+                            <div class="w-1 h-1 rounded-full bg-gray-300 mt-1.5 shrink-0"></div>
+                            <div>
+                                <p class="text-xs text-gray-600"><span class="font-medium">Sarah M.</span> changed status to <span class="notion-select bg-amber-100 text-amber-700 text-[10px]">ON HOLD</span></p>
+                                <p class="text-[10px] text-gray-400">Today 9:40am</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <div class="w-1 h-1 rounded-full bg-gray-300 mt-1.5 shrink-0"></div>
+                            <div>
+                                <p class="text-xs text-gray-600"><span class="font-medium">System</span> sent Day 7 reminder to supplier</p>
+                                <p class="text-[10px] text-gray-400">Today 8:00am</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <div class="w-1 h-1 rounded-full bg-gray-300 mt-1.5 shrink-0"></div>
+                            <div>
+                                <p class="text-xs text-gray-600"><span class="font-medium">James K.</span> added reason <span class="text-red-600 font-medium">Rate Exceeds Schedule</span></p>
+                                <p class="text-[10px] text-gray-400">5 Mar 2:15pm</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <div class="w-1 h-1 rounded-full bg-gray-300 mt-1.5 shrink-0"></div>
+                            <div>
+                                <p class="text-xs text-gray-600"><span class="font-medium">AI</span> detected duplicate line item (94% confidence)</p>
+                                <p class="text-[10px] text-gray-400">28 Feb auto</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <div class="w-1 h-1 rounded-full bg-gray-300 mt-1.5 shrink-0"></div>
+                            <div>
+                                <p class="text-xs text-gray-600"><span class="font-medium">System</span> placed bill on hold (3 issues detected)</p>
+                                <p class="text-[10px] text-gray-400">28 Feb auto</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="mt-auto px-4 py-3 border-t border-gray-100">
+                <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Quick Actions</p>
+                <div class="space-y-1">
+                    <button class="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        Send to supplier
+                    </button>
+                    <button class="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                        Transfer bill
+                    </button>
+                    <button class="w-full flex items-center gap-2 px-2 py-1.5 text-xs text-red-500 hover:bg-red-50 rounded">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        Reject bill
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER PANEL: Bill Canvas (Notion Page Style) -->
+        <section class="flex-1 overflow-y-auto bg-white" style="scroll-padding-bottom: 80px;">
+            <div class="max-w-3xl mx-auto px-8 py-6 pb-32">
+
+                <!-- Page Properties (Notion-style property table) -->
+                <div class="mb-6">
+                    <div class="grid grid-cols-[140px_1fr] gap-y-1">
+                        <!-- Supplier -->
+                        <div class="flex items-center py-1.5 text-xs text-gray-500">
+                            <svg class="w-3.5 h-3.5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            Supplier
+                        </div>
+                        <div class="py-1.5 text-sm text-gray-900 property-value px-2 editable">
+                            Sunrise Home Care Services Pty Ltd
+                        </div>
+
+                        <!-- Recipient -->
+                        <div class="flex items-center py-1.5 text-xs text-gray-500">
+                            <svg class="w-3.5 h-3.5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            Recipient
+                        </div>
+                        <div class="py-1.5 text-sm text-gray-900 property-value px-2 editable">
+                            Margaret Thompson (NDIS #4312887654)
+                        </div>
+
+                        <!-- Invoice Date -->
+                        <div class="flex items-center py-1.5 text-xs text-gray-500">
+                            <svg class="w-3.5 h-3.5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            Invoice Date
+                        </div>
+                        <div class="py-1.5 text-sm text-gray-900 property-value px-2 editable">
+                            25 February 2026
+                        </div>
+
+                        <!-- Service Period -->
+                        <div class="flex items-center py-1.5 text-xs text-gray-500">
+                            <svg class="w-3.5 h-3.5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                            Service Period
+                        </div>
+                        <div class="py-1.5 text-sm text-gray-900 property-value px-2 editable">
+                            1 Feb -- 14 Feb 2026
+                        </div>
+
+                        <!-- Comms Type -->
+                        <div class="flex items-center py-1.5 text-xs text-gray-500">
+                            <svg class="w-3.5 h-3.5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            Comms Type
+                        </div>
+                        <div class="py-1.5 property-value px-2">
+                            <span class="notion-select bg-amber-100 text-amber-800 cursor-pointer hover:ring-2 hover:ring-amber-300">ON HOLD</span>
+                        </div>
+
+                        <!-- ABN -->
+                        <div class="flex items-center py-1.5 text-xs text-gray-500">
+                            <svg class="w-3.5 h-3.5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+                            ABN
+                        </div>
+                        <div class="py-1.5 text-sm text-gray-900 property-value px-2 editable">
+                            51 824 753 556
+                        </div>
+
+                        <!-- NDIS Registration -->
+                        <div class="flex items-center py-1.5 text-xs text-gray-500">
+                            <svg class="w-3.5 h-3.5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            NDIS Reg.
+                        </div>
+                        <div class="py-1.5 property-value px-2">
+                            <span class="notion-select bg-green-100 text-green-700">Registered</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 my-4"></div>
+
+                <!-- Line Items -- Linked Database -->
+                <div class="mb-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            <h2 class="text-sm font-semibold text-gray-900">Line Items</h2>
+                            <span class="text-xs text-gray-400">&larr; Linked Database</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button class="text-xs text-gray-500 hover:bg-gray-100 px-2 py-1 rounded">Filter</button>
+                            <button class="text-xs text-gray-500 hover:bg-gray-100 px-2 py-1 rounded">Sort</button>
+                            <button class="text-xs text-teal-600 hover:bg-teal-50 px-2 py-1 rounded font-medium">+ New</button>
+                        </div>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-lg overflow-hidden">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-200">
+                                    <th class="text-left px-3 py-2 text-xs font-medium text-gray-500 w-10"></th>
+                                    <th class="text-left px-3 py-2 text-xs font-medium text-gray-500">Item Code</th>
+                                    <th class="text-left px-3 py-2 text-xs font-medium text-gray-500">Description</th>
+                                    <th class="text-right px-3 py-2 text-xs font-medium text-gray-500">Qty</th>
+                                    <th class="text-right px-3 py-2 text-xs font-medium text-gray-500">Rate</th>
+                                    <th class="text-right px-3 py-2 text-xs font-medium text-gray-500">GST</th>
+                                    <th class="text-right px-3 py-2 text-xs font-medium text-gray-500">Total</th>
+                                    <th class="text-center px-3 py-2 text-xs font-medium text-gray-500">Issues</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="line-item-row border-b border-gray-100">
+                                    <td class="px-3 py-2.5 text-gray-300">
+                                        <svg class="w-3 h-3 drag-handle" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h2v2H8zm6 0h2v2h-2zM8 11h2v2H8zm6 0h2v2h-2zm-6 5h2v2H8zm6 0h2v2h-2z"/></svg>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-gray-900 font-mono text-xs editable">01_300</td>
+                                    <td class="px-3 py-2.5 text-gray-700 editable">Assistance with daily personal activities</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">4.5 hrs</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">$62.83</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-500">$0.00</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 font-medium">$282.74</td>
+                                    <td class="px-3 py-2.5 text-center">
+                                        <div class="flex items-center justify-center gap-1">
+                                            <span class="w-2 h-2 rounded-full bg-red-500" title="Rate Exceeds Schedule"></span>
+                                            <span class="w-2 h-2 rounded-full bg-amber-500" title="Duplicate Detected"></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="line-item-row border-b border-gray-100">
+                                    <td class="px-3 py-2.5 text-gray-300">
+                                        <svg class="w-3 h-3 drag-handle" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h2v2H8zm6 0h2v2h-2zM8 11h2v2H8zm6 0h2v2h-2zm-6 5h2v2H8zm6 0h2v2h-2z"/></svg>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-gray-900 font-mono text-xs editable">01_300</td>
+                                    <td class="px-3 py-2.5 text-gray-700 editable">Assistance with daily personal activities</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">2.0 hrs</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">$62.83</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-500">$0.00</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 font-medium">$125.66</td>
+                                    <td class="px-3 py-2.5 text-center">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500 inline-block" title="Duplicate Detected"></span>
+                                    </td>
+                                </tr>
+                                <tr class="line-item-row border-b border-gray-100">
+                                    <td class="px-3 py-2.5 text-gray-300">
+                                        <svg class="w-3 h-3 drag-handle" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h2v2H8zm6 0h2v2h-2zM8 11h2v2H8zm6 0h2v2h-2zm-6 5h2v2H8zm6 0h2v2h-2z"/></svg>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-gray-900 font-mono text-xs editable">04_104</td>
+                                    <td class="px-3 py-2.5 text-gray-700 editable">Community nursing care</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">1.0 hrs</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">$85.00</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-500">$0.00</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 font-medium">$85.00</td>
+                                    <td class="px-3 py-2.5 text-center">
+                                        <span class="text-gray-300">&mdash;</span>
+                                    </td>
+                                </tr>
+                                <tr class="line-item-row border-b border-gray-100">
+                                    <td class="px-3 py-2.5 text-gray-300">
+                                        <svg class="w-3 h-3 drag-handle" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h2v2H8zm6 0h2v2h-2zM8 11h2v2H8zm6 0h2v2h-2zm-6 5h2v2H8zm6 0h2v2h-2z"/></svg>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-gray-900 font-mono text-xs editable">01_020</td>
+                                    <td class="px-3 py-2.5 text-gray-700 editable">Transport -- community access</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">45 km</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">$0.97</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-500">$0.00</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 font-medium">$43.65</td>
+                                    <td class="px-3 py-2.5 text-center">
+                                        <span class="text-gray-300">&mdash;</span>
+                                    </td>
+                                </tr>
+                                <tr class="line-item-row">
+                                    <td class="px-3 py-2.5 text-gray-300">
+                                        <svg class="w-3 h-3 drag-handle" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h2v2H8zm6 0h2v2h-2zM8 11h2v2H8zm6 0h2v2h-2zm-6 5h2v2H8zm6 0h2v2h-2z"/></svg>
+                                    </td>
+                                    <td class="px-3 py-2.5 text-gray-900 font-mono text-xs editable">01_015</td>
+                                    <td class="px-3 py-2.5 text-gray-700 editable">Meal preparation</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">3.0 hrs</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 editable">$55.47</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-500">$0.00</td>
+                                    <td class="px-3 py-2.5 text-right text-gray-900 font-medium">$166.41</td>
+                                    <td class="px-3 py-2.5 text-center">
+                                        <span class="text-gray-300">&mdash;</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- Add row -->
+                        <button class="w-full flex items-center gap-2 px-6 py-2 text-xs text-gray-400 hover:bg-gray-50 hover:text-gray-600 border-t border-gray-100">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            New line item
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Totals Summary -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                    <div class="grid grid-cols-4 gap-4 text-sm">
+                        <div>
+                            <p class="text-xs text-gray-500 mb-0.5">Subtotal</p>
+                            <p class="font-semibold text-gray-900">$703.46</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-0.5">GST</p>
+                            <p class="font-semibold text-gray-900">$0.00</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-0.5">Adjustments</p>
+                            <p class="font-semibold text-red-600">-$125.66</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 mb-0.5">Invoice Total</p>
+                            <p class="font-bold text-lg text-gray-900">$577.80</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Communication Block -->
+                <div class="mb-6">
+                    <h2 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                        Communication Draft
+                    </h2>
+                    <div class="border border-gray-200 rounded-lg p-4 bg-white">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="text-xs text-gray-500">Template:</span>
+                            <span class="notion-select bg-amber-100 text-amber-800 cursor-pointer hover:ring-2 hover:ring-amber-300">ON HOLD -- Day 7 Follow-up</span>
+                        </div>
+                        <div class="text-sm text-gray-700 leading-relaxed space-y-2 border-l-2 border-gray-200 pl-4">
+                            <p>Dear Sunrise Home Care Services,</p>
+                            <p>This is a follow-up regarding invoice INV-2024-08742 dated 25 February 2026, which remains on hold due to the following unresolved issues:</p>
+                            <ul class="list-disc pl-5 space-y-1">
+                                <li><strong>Rate exceeds schedule maximum</strong> for Item 01_300 ($62.83 vs max $57.10)</li>
+                                <li><strong>Duplicate line item</strong> detected for Item 01_300</li>
+                                <li><strong>Invalid ABN format</strong> -- current ABN does not pass validation</li>
+                            </ul>
+                            <p>Please address these items and resubmit, or respond within 3 business days.</p>
+                        </div>
+                        <div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+                            <button class="px-3 py-1.5 text-xs bg-teal-700 text-white rounded hover:bg-teal-800 font-medium">Send Communication</button>
+                            <button class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded border border-gray-200">Edit Draft</button>
+                            <button class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded border border-gray-200">Preview</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL: Issues / Reasons Checklist -->
+        <aside class="w-80 border-l border-gray-200 bg-white overflow-y-auto flex flex-col">
+            <div class="px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                        <span class="text-sm font-semibold text-gray-900">Issues</span>
+                        <span class="text-xs text-gray-400">&larr; Linked DB</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-medium">2 Blocking</span>
+                        <span class="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">1 Warning</span>
+                    </div>
+                </div>
+                <!-- Progress bar -->
+                <div class="mt-2 flex items-center gap-2">
+                    <div class="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div class="h-full rounded-full" style="width: 33%; background: linear-gradient(90deg, #16a34a 0%, #16a34a 100%);"></div>
+                    </div>
+                    <span class="text-[10px] text-gray-500">1/3 resolved</span>
+                </div>
+            </div>
+
+            <!-- Reason Cards -->
+            <div class="flex-1 overflow-y-auto p-3 space-y-2">
+                <!-- Reason 1: BLOCKING -->
+                <div class="reason-row border border-red-200 rounded-lg p-3 bg-red-50/50 cursor-pointer hover:border-red-300 transition-colors" onclick="window.open('02-reason-modal.html','_self')">
+                    <div class="flex items-start gap-2">
+                        <div class="drag-handle mt-1">
+                            <svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h2v2H8zm6 0h2v2h-2zM8 11h2v2H8zm6 0h2v2h-2zm-6 5h2v2H8zm6 0h2v2h-2z"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <svg class="w-3.5 h-3.5 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                <span class="text-sm font-medium text-gray-900 truncate">Rate Exceeds Schedule</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="notion-select bg-red-100 text-red-700 text-[10px]">BLOCKING</span>
+                                <span class="notion-select bg-blue-100 text-blue-700 text-[10px]">Compliance</span>
+                                <span class="notion-select bg-purple-100 text-purple-700 text-[10px]">AI Detected</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1.5 line-clamp-2">Item 01_300 rate of $62.83 exceeds schedule maximum of $57.10 (+10.03%)</p>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-300 shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+
+                <!-- Reason 2: BLOCKING -->
+                <div class="reason-row border border-red-200 rounded-lg p-3 bg-red-50/50 cursor-pointer hover:border-red-300 transition-colors">
+                    <div class="flex items-start gap-2">
+                        <div class="drag-handle mt-1">
+                            <svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h2v2H8zm6 0h2v2h-2zM8 11h2v2H8zm6 0h2v2h-2zm-6 5h2v2H8zm6 0h2v2h-2z"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <svg class="w-3.5 h-3.5 text-red-500 shrink-0" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+                                <span class="text-sm font-medium text-gray-900 truncate">Invalid ABN</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="notion-select bg-red-100 text-red-700 text-[10px]">BLOCKING</span>
+                                <span class="notion-select bg-teal-100 text-teal-700 text-[10px]">Accounts</span>
+                                <span class="notion-select bg-gray-200 text-gray-600 text-[10px]">Human</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1.5 line-clamp-2">ABN 51 824 753 556 fails ATO validation. Last 3 digits may be transposed.</p>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-300 shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+
+                <!-- Reason 3: WARNING (COMPLETE) -->
+                <div class="reason-row border border-green-200 rounded-lg p-3 bg-green-50/30 cursor-pointer hover:border-green-300 transition-colors">
+                    <div class="flex items-start gap-2">
+                        <div class="drag-handle mt-1">
+                            <svg class="w-3 h-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h2v2H8zm6 0h2v2h-2zM8 11h2v2H8zm6 0h2v2h-2zm-6 5h2v2H8zm6 0h2v2h-2z"/></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1.5">
+                                <svg class="w-3.5 h-3.5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                <span class="text-sm font-medium text-gray-500 truncate line-through">Duplicate Line Item</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <span class="notion-select bg-green-100 text-green-700 text-[10px]">COMPLETE</span>
+                                <span class="notion-select bg-orange-100 text-orange-700 text-[10px]">Care</span>
+                                <span class="notion-select bg-purple-100 text-purple-700 text-[10px]">AI Detected</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1.5 line-clamp-2">Resolved: Duplicate confirmed, line 2 removed. Adjustment of -$125.66 applied.</p>
+                        </div>
+                        <svg class="w-4 h-4 text-gray-300 shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Issue Button -->
+            <div class="p-3 border-t border-gray-100">
+                <button class="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs text-gray-500 hover:bg-gray-50 rounded-md border border-dashed border-gray-300 hover:border-gray-400">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Issue
+                </button>
+
+                <!-- Can Coexist indicator -->
+                <div class="mt-2 flex items-center gap-2 px-2 py-1.5 bg-amber-50 rounded border border-amber-100">
+                    <svg class="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span class="text-[10px] text-amber-700">2 blocking issues prevent processing. Resolve all to continue.</span>
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Sticky Footer -->
+    <footer class="bg-white border-t border-gray-200 px-6 py-3 sticky bottom-0 z-10 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-6 text-sm">
+                <div>
+                    <span class="text-xs text-gray-500">Invoice Total</span>
+                    <span class="ml-2 font-bold text-gray-900">$577.80</span>
+                </div>
+                <div class="h-4 w-px bg-gray-200"></div>
+                <div>
+                    <span class="text-xs text-gray-500">Issues</span>
+                    <span class="ml-2 font-medium text-red-600">2 blocking</span>
+                    <span class="text-gray-400 mx-1">&#183;</span>
+                    <span class="font-medium text-green-600">1 resolved</span>
+                </div>
+                <div class="h-4 w-px bg-gray-200"></div>
+                <div>
+                    <span class="text-xs text-gray-500">Cadence</span>
+                    <span class="ml-2 font-medium text-amber-600">Day 7 of 10</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md border border-gray-200">Save Draft</button>
+                <button class="px-4 py-2 text-sm text-white bg-amber-600 hover:bg-amber-700 rounded-md font-medium">Send ON HOLD Notice</button>
+                <button class="px-4 py-2 text-sm text-white bg-teal-700 hover:bg-teal-800 rounded-md font-medium" disabled title="Resolve all blocking issues first" style="opacity:0.5; cursor:not-allowed;">Approve Bill</button>
+            </div>
+        </div>
+    </footer>
+</main>
+
+<script>
+function toggleSection(id) {
+    const section = document.getElementById(id + '-section');
+    const arrow = document.getElementById(id + '-arrow');
+    if (section.classList.contains('expanded')) {
+        section.classList.remove('expanded');
+        section.classList.add('collapsed');
+        arrow.classList.remove('open');
+    } else {
+        section.classList.remove('collapsed');
+        section.classList.add('expanded');
+        arrow.classList.add('open');
+    }
+}
+</script>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</body>
+</html>

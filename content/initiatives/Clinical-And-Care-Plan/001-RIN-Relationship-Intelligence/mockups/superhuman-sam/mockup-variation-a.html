@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variation A: Split-Pane Briefing - Superhuman Sam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: {
+              50: '#F0FAFA', 100: '#D5F1F0', 200: '#BAE8E7', 300: '#94DBDA',
+              400: '#66CCCA', 500: '#43C0BE', 600: '#2F9E9C', 700: '#007F7E',
+              800: '#005656', 900: '#003D3D'
+            },
+            'primary-blue': {
+              50: '#F0F4FA', 100: '#D6E1F0', 200: '#BCCEE7', 300: '#96B2D9',
+              400: '#7197CC', 500: '#4B7BBE', 600: '#39639D', 700: '#2C4C79',
+              800: '#1E3452', 900: '#101C2D'
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(67, 192, 190, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(67, 192, 190, 0); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
+    .slide-in-right { animation: slideInRight 0.35s ease-out forwards; }
+    .pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+    .count-up { animation: countUp 0.4s ease-out forwards; }
+    .badge-pulse { animation: badgePulse 0.6s ease-in-out; }
+    .stagger-1 { animation-delay: 0.05s; opacity: 0; }
+    .stagger-2 { animation-delay: 0.1s; opacity: 0; }
+    .stagger-3 { animation-delay: 0.15s; opacity: 0; }
+    .stagger-4 { animation-delay: 0.2s; opacity: 0; }
+    .stagger-5 { animation-delay: 0.25s; opacity: 0; }
+
+    /* Custom scrollbar */
+    .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+    /* Glassmorphism */
+    .glass { background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(55, 65, 81, 0.5); }
+    .glass-subtle { background: rgba(17, 24, 39, 0.4); backdrop-filter: blur(8px); border: 1px solid rgba(55, 65, 81, 0.3); }
+
+    /* Client row hover */
+    .client-row { transition: all 0.15s ease; }
+    .client-row:hover { background: rgba(67, 192, 190, 0.05); }
+    .client-row.active { background: rgba(67, 192, 190, 0.08); border-left: 2px solid #43C0BE; }
+
+    /* Kbd styling */
+    kbd {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 20px; height: 20px; padding: 0 5px;
+      font-family: ui-monospace, monospace; font-size: 10px; font-weight: 600;
+      background: #1f2937; border: 1px solid #374151; border-radius: 4px;
+      color: #9ca3af; box-shadow: 0 1px 0 #111827;
+    }
+
+    /* Command palette */
+    .cmd-palette { transition: all 0.2s ease; }
+    .cmd-palette.open { opacity: 1; transform: scale(1); pointer-events: auto; }
+    .cmd-palette.closed { opacity: 0; transform: scale(0.97); pointer-events: none; }
+
+    /* Completion ring */
+    .completion-ring { transition: stroke-dashoffset 0.6s ease; }
+
+    /* Gradient accent line */
+    .accent-gradient { background: linear-gradient(90deg, #007F7E, #43C0BE, #2C4C79); }
+
+    /* Prompt card hover */
+    .prompt-card { transition: all 0.15s ease; }
+    .prompt-card:hover { background: rgba(67, 192, 190, 0.1); border-color: rgba(67, 192, 190, 0.3); }
+
+    /* Speed metric */
+    .speed-metric { background: linear-gradient(135deg, rgba(67, 192, 190, 0.1), rgba(44, 76, 121, 0.1)); }
+  </style>
+</head>
+<body class="bg-gray-950 text-white font-sans h-screen overflow-hidden">
+
+  <!-- Top Bar: Package Header -->
+  <header class="h-12 bg-gray-900 border-b border-gray-800 flex items-center px-4 justify-between z-50 relative">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 bg-teal-700 rounded-md flex items-center justify-center text-xs font-bold">TC</div>
+      <div class="flex items-center gap-2">
+        <span class="text-sm font-semibold text-white">Margaret Chen</span>
+        <span class="text-xs text-gray-500 font-mono">TC-4821</span>
+        <span class="h-4 w-px bg-gray-700"></span>
+        <span class="text-xs text-gray-400">Home Care Level 4</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <nav class="flex items-center gap-1 h-full">
+      <a href="#" class="h-full flex items-center px-3 text-xs text-gray-400 hover:text-gray-300 border-b-2 border-transparent hover:border-gray-600 transition">Overview</a>
+      <a href="#" class="h-full flex items-center px-3 text-xs text-gray-400 hover:text-gray-300 border-b-2 border-transparent hover:border-gray-600 transition">Care Plan</a>
+      <a href="#" class="h-full flex items-center px-3 text-xs text-gray-400 hover:text-gray-300 border-b-2 border-transparent hover:border-gray-600 transition">Services</a>
+      <a href="#" class="h-full flex items-center px-3 text-xs text-gray-400 hover:text-gray-300 border-b-2 border-transparent hover:border-gray-600 transition">Bills</a>
+      <a href="#" class="h-full flex items-center px-3 text-xs text-teal-400 font-medium border-b-2 border-teal-500 transition">Relationship</a>
+      <a href="#" class="h-full flex items-center px-3 text-xs text-gray-400 hover:text-gray-300 border-b-2 border-transparent hover:border-gray-600 transition">Documents</a>
+    </nav>
+
+    <!-- Speed Metric + Cmd K -->
+    <div class="flex items-center gap-3">
+      <div class="speed-metric rounded-md px-2.5 py-1 flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span class="text-[11px] text-teal-300 font-medium">2m saved</span>
+      </div>
+      <button onclick="openCommandPalette()" class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-gray-800 hover:bg-gray-700 border border-gray-700 transition text-xs text-gray-400">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <span>Actions</span>
+        <div class="flex items-center gap-0.5 ml-1"><kbd>&#8984;</kbd><kbd>K</kbd></div>
+      </button>
+    </div>
+  </header>
+
+  <!-- Accent line -->
+  <div class="accent-gradient h-px"></div>
+
+  <!-- Split Pane Layout -->
+  <div class="flex h-[calc(100vh-49px)]">
+
+    <!-- LEFT PANE: Caseload List -->
+    <div class="w-72 bg-gray-900 border-r border-gray-800 flex flex-col">
+      <!-- Caseload Header -->
+      <div class="p-3 border-b border-gray-800">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">My Caseload</h2>
+          <span class="text-[10px] text-gray-500 font-mono">12 clients</span>
+        </div>
+        <!-- Search -->
+        <div class="relative">
+          <svg class="w-3.5 h-3.5 text-gray-500 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Filter clients..." class="w-full bg-gray-800 border border-gray-700 rounded-md pl-8 pr-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-teal-600 focus:border-teal-600 transition">
+          <kbd class="absolute right-2 top-1/2 -translate-y-1/2">/</kbd>
+        </div>
+      </div>
+
+      <!-- Client List -->
+      <div class="flex-1 overflow-y-auto custom-scroll">
+        <!-- Active Client (Margaret) -->
+        <div class="client-row active px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-white">Margaret Chen</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-amber-400" title="18 days since contact"></span>
+              <span class="text-[10px] text-amber-400 font-mono">18d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-gray-500">HCL4</span>
+            <span class="text-[10px] text-gray-600">|</span>
+            <span class="text-[10px] text-amber-400 flex items-center gap-0.5">
+              <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              2 bills held
+            </span>
+          </div>
+        </div>
+
+        <!-- Other clients -->
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Robert Williams</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-[10px] text-green-400 font-mono">3d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-gray-500">HCL3</span>
+          </div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Dorothy Nguyen</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-red-400 pulse-glow"></span>
+              <span class="text-[10px] text-red-400 font-mono">27d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-gray-500">HCL2</span>
+            <span class="text-[10px] text-gray-600">|</span>
+            <span class="text-[10px] text-red-400 flex items-center gap-0.5">
+              <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              1 complaint
+            </span>
+          </div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">James Park</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-[10px] text-green-400 font-mono">7d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">HCL4</span></div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Edith Thompson</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span class="text-[10px] text-amber-400 font-mono">22d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">HCL1</span></div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Frank Ito</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-[10px] text-green-400 font-mono">5d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">HCL3</span></div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Patricia Adams</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-[10px] text-green-400 font-mono">2d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">HCL2</span></div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Gail Morrison</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span class="text-[10px] text-amber-400 font-mono">19d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] text-gray-500">HCL4</span>
+            <span class="text-[10px] text-gray-600">|</span>
+            <span class="text-[10px] text-amber-400">1 bill held</span>
+          </div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Harold Singh</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-[10px] text-green-400 font-mono">9d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">HCL1</span></div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Agnes Liu</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-[10px] text-green-400 font-mono">1d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">HCL3</span></div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Victor Petrov</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-red-400 pulse-glow"></span>
+              <span class="text-[10px] text-red-400 font-mono">31d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">HCL2</span></div>
+        </div>
+
+        <div class="client-row px-3 py-2.5 cursor-pointer border-b border-gray-800/50">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-sm font-medium text-gray-300">Betty O'Neill</span>
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-[10px] text-green-400 font-mono">11d</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2"><span class="text-[10px] text-gray-500">HCL4</span></div>
+        </div>
+      </div>
+
+      <!-- Caseload Summary -->
+      <div class="p-3 border-t border-gray-800 bg-gray-900/80">
+        <div class="flex items-center justify-between text-[10px] text-gray-500">
+          <span>3 overdue</span>
+          <span class="text-gray-600">|</span>
+          <span>4 due this week</span>
+          <span class="text-gray-600">|</span>
+          <span>5 OK</span>
+        </div>
+        <div class="flex gap-0.5 mt-1.5">
+          <div class="h-1 rounded-l bg-red-500" style="width: 25%"></div>
+          <div class="h-1 bg-amber-400" style="width: 33%"></div>
+          <div class="h-1 rounded-r bg-green-500" style="width: 42%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANE: Relationship Intelligence Briefing -->
+    <div class="flex-1 overflow-y-auto custom-scroll bg-gray-950">
+      <div class="max-w-3xl mx-auto p-6">
+
+        <!-- Client Identity + Last Touchpoint -->
+        <div class="flex items-start justify-between mb-6 fade-in-up stagger-1">
+          <div>
+            <div class="flex items-center gap-3 mb-1">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-teal-600 to-primary-blue-700 flex items-center justify-center text-base font-bold">MC</div>
+              <div>
+                <h1 class="text-xl font-bold text-white">Margaret Chen</h1>
+                <div class="flex items-center gap-2 text-xs text-gray-400">
+                  <span class="font-mono">TC-4821</span>
+                  <span class="text-gray-600">&middot;</span>
+                  <span>Home Care Level 4</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Last Touchpoint Badge -->
+          <div class="glass rounded-lg px-3 py-2 text-right">
+            <div class="text-[10px] text-gray-400 uppercase tracking-wider mb-0.5">Last Contact</div>
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-semibold text-amber-400">18 days ago</span>
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            </div>
+            <div class="text-[10px] text-gray-500 mt-0.5">Phone call by Romy</div>
+          </div>
+        </div>
+
+        <!-- Conversation Prompts (most prominent) -->
+        <div class="mb-5 fade-in-up stagger-2">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Conversation Starters</h2>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="prompt-card glass-subtle rounded-lg p-3 cursor-pointer group">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-base">🏉</span>
+                <span class="text-xs font-medium text-teal-300">Sports</span>
+              </div>
+              <p class="text-sm text-gray-300">Swans played on the weekend &mdash; ask how they went</p>
+              <div class="flex items-center gap-1 mt-1.5 opacity-0 group-hover:opacity-100 transition">
+                <kbd>C</kbd>
+                <span class="text-[10px] text-gray-500">to copy</span>
+              </div>
+            </div>
+            <div class="prompt-card glass-subtle rounded-lg p-3 cursor-pointer group">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-base">🎂</span>
+                <span class="text-xs font-medium text-teal-300">Upcoming</span>
+              </div>
+              <p class="text-sm text-gray-300">Birthday coming up on 15 March</p>
+              <div class="flex items-center gap-1 mt-1.5 opacity-0 group-hover:opacity-100 transition">
+                <kbd>C</kbd>
+                <span class="text-[10px] text-gray-500">to copy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Context -->
+        <div class="mb-5 fade-in-up stagger-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+              <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Personal Context</h2>
+            </div>
+            <!-- Completion ring -->
+            <div class="flex items-center gap-2">
+              <svg width="24" height="24" class="-rotate-90">
+                <circle cx="12" cy="12" r="9" stroke="#1f2937" stroke-width="2.5" fill="none"/>
+                <circle cx="12" cy="12" r="9" stroke="#43C0BE" stroke-width="2.5" fill="none"
+                  stroke-dasharray="56.5" stroke-dashoffset="14.1" stroke-linecap="round" class="completion-ring"/>
+              </svg>
+              <span class="text-[10px] text-gray-500">4 of 5 filled</span>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="glass-subtle rounded-lg px-3 py-2 flex items-center gap-2.5">
+              <span class="text-base">🌱</span>
+              <div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider">Interests</div>
+                <div class="text-sm text-gray-200">Loves gardening &mdash; grows tomatoes</div>
+              </div>
+            </div>
+            <div class="glass-subtle rounded-lg px-3 py-2 flex items-center gap-2.5">
+              <span class="text-base">🏉</span>
+              <div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider">Supports</div>
+                <div class="text-sm text-gray-200">Sydney Swans</div>
+              </div>
+            </div>
+            <div class="glass-subtle rounded-lg px-3 py-2 flex items-center gap-2.5">
+              <span class="text-base">👨‍👩‍👧</span>
+              <div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider">Family</div>
+                <div class="text-sm text-gray-200">Grandkids visit every Sunday</div>
+              </div>
+            </div>
+            <div class="glass-subtle rounded-lg px-3 py-2 flex items-center gap-2.5">
+              <span class="text-base">☀️</span>
+              <div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-wider">Preferences</div>
+                <div class="text-sm text-gray-200">Morning calls before 10am</div>
+              </div>
+            </div>
+          </div>
+          <!-- Add context quick-add -->
+          <button onclick="openQuickAdd()" class="mt-2 w-full border border-dashed border-gray-700 hover:border-teal-600 rounded-lg px-3 py-2 text-xs text-gray-500 hover:text-teal-400 transition flex items-center justify-center gap-1.5 group">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Context
+            <kbd class="opacity-0 group-hover:opacity-100 transition ml-1">N</kbd>
+          </button>
+        </div>
+
+        <!-- Operational Summary -->
+        <div class="mb-5 fade-in-up stagger-4">
+          <div class="flex items-center gap-2 mb-2">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Operations</h2>
+          </div>
+          <div class="grid grid-cols-4 gap-2">
+            <!-- Bills on Hold -->
+            <div class="glass-subtle rounded-lg p-3 text-center">
+              <div class="text-2xl font-bold text-amber-400 count-up">2</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">Bills on Hold</div>
+              <div class="mt-1.5 inline-flex items-center px-1.5 py-0.5 rounded bg-amber-400/10 text-amber-400 text-[10px] font-medium badge-pulse">Action</div>
+            </div>
+            <!-- Active Complaints -->
+            <div class="glass-subtle rounded-lg p-3 text-center">
+              <div class="text-2xl font-bold text-green-400 count-up">0</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">Complaints</div>
+              <div class="mt-1.5 inline-flex items-center px-1.5 py-0.5 rounded bg-green-400/10 text-green-400 text-[10px] font-medium">Clear</div>
+            </div>
+            <!-- Recent Incidents -->
+            <div class="glass-subtle rounded-lg p-3 text-center">
+              <div class="text-2xl font-bold text-primary-blue-400 count-up">1</div>
+              <div class="text-[10px] text-gray-500 mt-0.5">Incidents</div>
+              <div class="mt-1.5 inline-flex items-center px-1.5 py-0.5 rounded bg-primary-blue-400/10 text-primary-blue-400 text-[10px] font-medium">12d ago</div>
+            </div>
+            <!-- Care Plan -->
+            <div class="glass-subtle rounded-lg p-3 text-center">
+              <div class="flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div class="text-[10px] text-gray-500 mt-0.5">Care Plan</div>
+              <div class="mt-1.5 inline-flex items-center px-1.5 py-0.5 rounded bg-green-400/10 text-green-400 text-[10px] font-medium">Active</div>
+            </div>
+          </div>
+
+          <!-- Incident detail -->
+          <div class="mt-2 glass-subtle rounded-lg px-3 py-2 flex items-center gap-3">
+            <svg class="w-4 h-4 text-primary-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.072 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+            <div class="flex-1">
+              <div class="text-xs text-gray-300">Fall risk assessment</div>
+              <div class="text-[10px] text-gray-500">12 days ago &middot; Care plan review due 15 March</div>
+            </div>
+            <kbd>V</kbd>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="fade-in-up stagger-5">
+          <div class="flex items-center gap-2">
+            <button class="flex-1 bg-teal-700 hover:bg-teal-600 text-white font-medium text-sm rounded-lg px-4 py-2.5 transition flex items-center justify-center gap-2 group">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              Log Touchpoint
+              <kbd class="opacity-0 group-hover:opacity-100 transition">L</kbd>
+            </button>
+            <button class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium text-sm rounded-lg px-4 py-2.5 transition border border-gray-700 flex items-center justify-center gap-2 group">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              Add Context
+              <kbd class="opacity-0 group-hover:opacity-100 transition">N</kbd>
+            </button>
+            <button class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium text-sm rounded-lg px-4 py-2.5 transition border border-gray-700 flex items-center justify-center gap-2 group">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+              Next Client
+              <kbd class="opacity-0 group-hover:opacity-100 transition">J</kbd>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Palette Overlay -->
+  <div id="cmd-overlay" class="fixed inset-0 z-[200] bg-black/60 backdrop-blur-sm hidden" onclick="closeCommandPalette()">
+    <div class="max-w-lg mx-auto mt-[15vh]" onclick="event.stopPropagation()">
+      <div id="cmd-palette" class="cmd-palette closed glass rounded-xl shadow-2xl overflow-hidden">
+        <!-- Search input -->
+        <div class="flex items-center gap-3 px-4 py-3 border-b border-gray-700">
+          <svg class="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input id="cmd-input" type="text" placeholder="Type a command or search..." class="flex-1 bg-transparent text-white text-sm placeholder-gray-500 focus:outline-none">
+          <kbd>Esc</kbd>
+        </div>
+        <!-- Quick actions -->
+        <div class="py-2 max-h-72 overflow-y-auto custom-scroll">
+          <div class="px-3 py-1 text-[10px] text-gray-500 uppercase tracking-wider">Quick Actions</div>
+          <button class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 transition text-left">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <span class="flex-1">Log Touchpoint</span>
+            <kbd>L</kbd>
+          </button>
+          <button class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 transition text-left">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <span class="flex-1">Add Personal Context</span>
+            <kbd>N</kbd>
+          </button>
+          <button class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 transition text-left">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            <span class="flex-1">View Incident Detail</span>
+            <kbd>V</kbd>
+          </button>
+          <button class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 transition text-left">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <span class="flex-1">View Care Plan</span>
+            <kbd>P</kbd>
+          </button>
+          <button class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 transition text-left">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="flex-1">View Held Bills</span>
+            <kbd>B</kbd>
+          </button>
+          <div class="px-3 py-1 mt-1 text-[10px] text-gray-500 uppercase tracking-wider">Navigation</div>
+          <button class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 transition text-left">
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            <span class="flex-1">Next Client</span>
+            <kbd>J</kbd>
+          </button>
+          <button class="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 transition text-left">
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+            <span class="flex-1">Previous Client</span>
+            <kbd>K</kbd>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Hints Bar -->
+  <div class="fixed bottom-0 left-72 right-0 bg-gray-900/90 backdrop-blur border-t border-gray-800 px-4 py-1.5 flex items-center justify-center gap-4 text-[10px] text-gray-500 z-40">
+    <span><kbd>J</kbd>/<kbd>K</kbd> Navigate</span>
+    <span class="text-gray-700">|</span>
+    <span><kbd>L</kbd> Log Touchpoint</span>
+    <span class="text-gray-700">|</span>
+    <span><kbd>N</kbd> Add Context</span>
+    <span class="text-gray-700">|</span>
+    <span><kbd>V</kbd> View Incident</span>
+    <span class="text-gray-700">|</span>
+    <span><kbd>/</kbd> Search</span>
+    <span class="text-gray-700">|</span>
+    <span><kbd>&#8984;</kbd><kbd>K</kbd> Commands</span>
+  </div>
+
+  <script>
+    function openCommandPalette() {
+      const overlay = document.getElementById('cmd-overlay');
+      const palette = document.getElementById('cmd-palette');
+      overlay.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        palette.classList.remove('closed');
+        palette.classList.add('open');
+        document.getElementById('cmd-input').focus();
+      });
+    }
+
+    function closeCommandPalette() {
+      const overlay = document.getElementById('cmd-overlay');
+      const palette = document.getElementById('cmd-palette');
+      palette.classList.remove('open');
+      palette.classList.add('closed');
+      setTimeout(() => overlay.classList.add('hidden'), 200);
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.matches('input, textarea, select')) {
+        if (e.key === 'Escape') {
+          closeCommandPalette();
+          e.target.blur();
+        }
+        return;
+      }
+
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const overlay = document.getElementById('cmd-overlay');
+        if (overlay.classList.contains('hidden')) {
+          openCommandPalette();
+        } else {
+          closeCommandPalette();
+        }
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        closeCommandPalette();
+        return;
+      }
+    });
+  </script>
+</body>
+</html>

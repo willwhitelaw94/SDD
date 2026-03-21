@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LES Challenge — Superhuman Sam — Profile Overview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',300:'#94DBDA',400:'#66CCCA',500:'#43C0BE',600:'#2F9E9C',700:'#007F7E',800:'#005656',900:'#003D3D' },
+            'primary-blue': { 50:'#F0F4FA',100:'#D6E1F0',200:'#BCCEE7',300:'#96B2D9',400:'#7197CC',500:'#4B7BBE',600:'#39639D',700:'#2C4C79',800:'#1E3452',900:'#101C2D' },
+            info: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',500:'#43C0BE',700:'#007F7E',900:'#003D3D' },
+            success: { 50:'#F6FBFE',100:'#DBEFFA',200:'#BCE2F6',500:'#35A8E4',700:'#156F9D' },
+            warning: { 50:'#FFF9F5',100:'#FFDAC6',200:'#FFC19F',500:'#E0763C',700:'#9C481A' },
+            danger: { 50:'#FFF5F5',100:'#FFCCCE',200:'#FFA8AC',500:'#E04B51',700:'#9C262A' },
+          },
+          fontFamily: { sans: ['"Roboto Flex"', 'system-ui', 'sans-serif'] },
+          borderRadius: { 'input': '8px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    .text-primary { color: #13171D; }
+    .text-secondary { color: #666666; }
+    .text-tertiary { color: #808080; }
+
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; background: #0f1117; color: #e4e4e7; }
+
+    /* Split pane */
+    .split-pane { display: flex; height: 100vh; }
+    .list-pane { width: 280px; min-width: 280px; border-right: 1px solid #27272a; background: #18181b; overflow-y: auto; }
+    .detail-pane { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: #0f1117; }
+
+    /* List rows */
+    .lead-row { padding: 12px 16px; border-bottom: 1px solid #27272a; cursor: pointer; transition: background 0.1s; border-left: 3px solid transparent; }
+    .lead-row:hover { background: #1f1f23; }
+    .lead-row.active { background: #1a2332; border-left-color: #007F7E; }
+
+    /* Stage dots */
+    .stage-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .stage-pre-care { background: #808080; }
+    .stage-acat-booked { background: #E0763C; }
+    .stage-approved { background: #43C0BE; }
+    .stage-allocated { background: #4B7BBE; }
+    .stage-active { background: #35A8E4; }
+    .stage-converted { background: #007F7E; }
+
+    /* Badges */
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+    .badge-stage { background: rgba(0, 127, 126, 0.15); color: #43C0BE; }
+    .badge-status { background: rgba(67, 192, 190, 0.1); color: #94DBDA; }
+    .badge-status-not-contacted { background: rgba(128, 128, 128, 0.15); color: #a1a1aa; }
+    .badge-status-attempted { background: rgba(224, 118, 60, 0.15); color: #FFC19F; }
+    .badge-status-made-contact { background: rgba(67, 192, 190, 0.15); color: #43C0BE; }
+
+    /* Action bar */
+    .action-key { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; background: #27272a; color: #a1a1aa; font-size: 11px; font-weight: 600; font-family: 'Roboto Flex', monospace; }
+    .action-btn { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.1s; color: #a1a1aa; font-size: 13px; border: none; background: transparent; }
+    .action-btn:hover { background: #27272a; color: #e4e4e7; }
+    .action-btn:hover .action-key { background: #3f3f46; color: #e4e4e7; }
+
+    /* Timeline entry */
+    .timeline-entry { padding: 12px 0; border-bottom: 1px solid #1f1f23; }
+
+    /* Kbd hints bar */
+    .hints-bar { background: #18181b; border-top: 1px solid #27272a; padding: 8px 16px; font-size: 12px; color: #52525b; display: flex; gap: 16px; align-items: center; }
+    .hints-bar kbd { background: #27272a; padding: 2px 6px; border-radius: 3px; font-size: 11px; color: #71717a; font-family: 'Roboto Flex', monospace; }
+
+    /* Quick note */
+    .quick-note-input { background: #18181b; border: 1px solid #27272a; border-radius: 8px; padding: 10px 14px; color: #e4e4e7; font-size: 13px; width: 100%; outline: none; transition: border-color 0.15s; }
+    .quick-note-input:focus { border-color: #007F7E; }
+    .quick-note-input::placeholder { color: #52525b; }
+
+    /* Undo toast */
+    .undo-toast { position: fixed; bottom: 56px; left: 50%; transform: translateX(-50%); background: #27272a; color: #e4e4e7; padding: 10px 20px; border-radius: 8px; font-size: 13px; display: none; align-items: center; gap: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); z-index: 50; }
+    .undo-toast.show { display: flex; animation: slideUp 0.2s cubic-bezier(0.25, 0.1, 0.25, 1.0); }
+    .undo-toast kbd { background: #3f3f46; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-family: 'Roboto Flex', monospace; }
+
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+    /* Command palette */
+    .cmd-palette-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: flex-start; justify-content: center; padding-top: 120px; }
+    .cmd-palette-overlay.show { display: flex; }
+    .cmd-palette { background: #18181b; border: 1px solid #27272a; border-radius: 12px; width: 480px; box-shadow: 0 8px 48px rgba(0,0,0,0.6); overflow: hidden; }
+    .cmd-palette input { width: 100%; background: transparent; border: none; padding: 16px 20px; color: #e4e4e7; font-size: 15px; outline: none; }
+    .cmd-palette input::placeholder { color: #52525b; }
+    .cmd-result { padding: 10px 20px; display: flex; align-items: center; justify-content: between; cursor: pointer; transition: background 0.05s; }
+    .cmd-result:hover, .cmd-result.active { background: #27272a; }
+    .cmd-result-key { font-size: 11px; color: #52525b; background: #1f1f23; padding: 2px 6px; border-radius: 3px; font-family: 'Roboto Flex', monospace; margin-left: auto; }
+  </style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <!-- Split Pane Layout -->
+  <div class="split-pane">
+
+    <!-- LEFT: Compact Lead List -->
+    <div class="list-pane" id="listPane">
+      <div style="padding: 16px; border-bottom: 1px solid #27272a;">
+        <div style="font-size: 13px; font-weight: 600; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em;">Leads</div>
+      </div>
+
+      <div class="lead-row" data-index="0" onclick="selectLead(0)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-acat-booked"></span>
+          <span style="font-size: 14px; font-weight: 500; color: #e4e4e7;">Margaret Chen</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">ACAT Booked &middot; 2h ago</div>
+      </div>
+
+      <div class="lead-row" data-index="1" onclick="selectLead(1)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-approved"></span>
+          <span style="font-size: 14px; font-weight: 500; color: #e4e4e7;">Dorothy Wilson</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">Approved &middot; Yesterday</div>
+      </div>
+
+      <div class="lead-row active" data-index="2" onclick="selectLead(2)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-allocated"></span>
+          <span style="font-size: 14px; font-weight: 600; color: #ffffff;">Harold Patterson</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">Allocated &middot; 45m ago</div>
+      </div>
+
+      <div class="lead-row" data-index="3" onclick="selectLead(3)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-pre-care"></span>
+          <span style="font-size: 14px; font-weight: 600; color: #ffffff;">Betty Nakamura</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">Pre-Care &middot; Just now</div>
+      </div>
+
+      <div class="lead-row" data-index="4" onclick="selectLead(4)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-active"></span>
+          <span style="font-size: 14px; font-weight: 500; color: #e4e4e7;">Robert Fitzgerald</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">Active &middot; 3d ago</div>
+      </div>
+
+      <div class="lead-row" data-index="5" onclick="selectLead(5)">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-acat-booked"></span>
+          <span style="font-size: 14px; font-weight: 500; color: #e4e4e7;">Evelyn O'Brien</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">ACAT Booked &middot; 5h ago</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Detail Pane -->
+    <div class="detail-pane" id="detailPane">
+
+      <!-- Header -->
+      <div style="padding: 20px 28px 0; flex-shrink: 0;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+          <div>
+            <h1 style="font-size: 24px; font-weight: 600; color: #ffffff; margin-bottom: 8px;">Harold Patterson</h1>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span class="badge badge-stage">
+                <span class="stage-dot stage-allocated"></span>
+                Allocated
+              </span>
+              <span class="badge badge-status-made-contact">Made Contact</span>
+              <span style="font-size: 12px; color: #52525b;">Created 14 days ago</span>
+            </div>
+          </div>
+          <div style="font-size: 13px; color: #52525b;">TC-3847</div>
+        </div>
+
+        <!-- Quick Action Bar -->
+        <div style="display: flex; gap: 4px; margin-top: 20px; padding: 8px 0; border-top: 1px solid #1f1f23; border-bottom: 1px solid #1f1f23;">
+          <button class="action-btn" onclick="handleAction('call')" title="Call">
+            <span class="action-key">C</span>
+            <span>Call</span>
+          </button>
+          <button class="action-btn" onclick="handleAction('note')" title="Add Note">
+            <span class="action-key">N</span>
+            <span>Note</span>
+          </button>
+          <button class="action-btn" onclick="handleAction('snooze')" title="Snooze">
+            <span class="action-key">H</span>
+            <span>Snooze</span>
+          </button>
+          <button class="action-btn" onclick="handleAction('done')" title="Mark Done">
+            <span class="action-key">E</span>
+            <span>Done</span>
+          </button>
+          <button class="action-btn" onclick="handleAction('stage')" title="Change Stage">
+            <span class="action-key">G</span>
+            <span>Stage</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main content area (scrollable) -->
+      <div style="flex: 1; overflow-y: auto; display: flex;">
+
+        <!-- Content column -->
+        <div style="flex: 1; padding: 20px 28px;">
+
+          <!-- Contact Details Section -->
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 11px; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">Contact Details</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+              <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #18181b; border-radius: 8px; cursor: pointer; transition: background 0.1s;" onmouseenter="this.style.background='#1f1f23'" onmouseleave="this.style.background='#18181b'" onclick="copyToClipboard('(02) 9876 5432', this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#43C0BE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <div>
+                  <div style="font-size: 13px; color: #e4e4e7;">(02) 9876 5432</div>
+                  <div style="font-size: 11px; color: #52525b;">Click to copy</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #18181b; border-radius: 8px; cursor: pointer; transition: background 0.1s;" onmouseenter="this.style.background='#1f1f23'" onmouseleave="this.style.background='#18181b'" onclick="copyToClipboard('h.patterson@email.com.au', this)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#43C0BE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <div>
+                  <div style="font-size: 13px; color: #e4e4e7;">h.patterson@email.com.au</div>
+                  <div style="font-size: 11px; color: #52525b;">Click to copy</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #18181b; border-radius: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <div>
+                  <div style="font-size: 13px; color: #e4e4e7;">12 Mar 1941</div>
+                  <div style="font-size: 11px; color: #52525b;">DOB (84 years)</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #18181b; border-radius: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <div>
+                  <div style="font-size: 13px; color: #e4e4e7;">14 Willow St, Chatswood NSW 2067</div>
+                  <div style="font-size: 11px; color: #52525b;">Home address</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Care Needs Section -->
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 11px; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">Care Needs</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+              <div style="padding: 12px; background: #18181b; border-radius: 8px;">
+                <div style="font-size: 11px; color: #52525b; margin-bottom: 4px;">Care Type</div>
+                <div style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Home Care Package</div>
+              </div>
+              <div style="padding: 12px; background: #18181b; border-radius: 8px;">
+                <div style="font-size: 11px; color: #52525b; margin-bottom: 4px;">Preferred Services</div>
+                <div style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Personal Care, Transport</div>
+              </div>
+              <div style="padding: 12px; background: #18181b; border-radius: 8px;">
+                <div style="font-size: 11px; color: #52525b; margin-bottom: 4px;">Funding</div>
+                <div style="font-size: 13px; color: #e4e4e7; font-weight: 500;">HCP Level 3</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity Section -->
+          <div style="margin-bottom: 24px;">
+            <div style="font-size: 11px; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">Recent Activity</div>
+
+            <div class="timeline-entry">
+              <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: #43C0BE; margin-top: 6px; flex-shrink: 0;"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Stage changed to Allocated</span>
+                    <span style="font-size: 12px; color: #52525b;">45m ago</span>
+                  </div>
+                  <div style="font-size: 12px; color: #71717a; margin-top: 2px;">by Sarah Chen &mdash; HCP Level 3 approved, allocated to Chatswood region</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-entry">
+              <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: #4B7BBE; margin-top: 6px; flex-shrink: 0;"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Phone call — Made Contact</span>
+                    <span style="font-size: 12px; color: #52525b;">2 days ago</span>
+                  </div>
+                  <div style="font-size: 12px; color: #71717a; margin-top: 2px;">by Sarah Chen &mdash; Spoke with son David. Father needs help with daily living, keen to proceed.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-entry">
+              <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: #E0763C; margin-top: 6px; flex-shrink: 0;"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">ACAT assessment completed</span>
+                    <span style="font-size: 12px; color: #52525b;">5 days ago</span>
+                  </div>
+                  <div style="font-size: 12px; color: #71717a; margin-top: 2px;">Assessed for Home Care Package Level 3. Approval expected within 48 hours.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-entry">
+              <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: #71717a; margin-top: 6px; flex-shrink: 0;"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Note added</span>
+                    <span style="font-size: 12px; color: #52525b;">8 days ago</span>
+                  </div>
+                  <div style="font-size: 12px; color: #71717a; margin-top: 2px;">by David Williams &mdash; Initial enquiry from son David Patterson. Father Harold lives alone, mobility issues after hip replacement.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-entry" style="border-bottom: none;">
+              <div style="display: flex; align-items: flex-start; gap: 12px;">
+                <div style="width: 6px; height: 6px; border-radius: 50%; background: #71717a; margin-top: 6px; flex-shrink: 0;"></div>
+                <div style="flex: 1;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Lead created</span>
+                    <span style="font-size: 12px; color: #52525b;">14 days ago</span>
+                  </div>
+                  <div style="font-size: 12px; color: #71717a; margin-top: 2px;">Web enquiry &mdash; Assigned to Sarah Chen</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Note Input -->
+          <div style="margin-bottom: 20px;">
+            <input type="text" class="quick-note-input" id="quickNoteInput" placeholder="Add a note..." />
+            <div style="font-size: 11px; color: #3f3f46; margin-top: 6px;">Press <kbd style="background: #27272a; padding: 1px 5px; border-radius: 3px; font-size: 10px;">N</kbd> for note &middot; <kbd style="background: #27272a; padding: 1px 5px; border-radius: 3px; font-size: 10px;">E</kbd> to mark done</div>
+          </div>
+        </div>
+
+        <!-- Contact Sidebar (right side of detail pane) -->
+        <div style="width: 240px; min-width: 240px; border-left: 1px solid #1f1f23; padding: 20px 16px; overflow-y: auto; background: #141418;">
+          <div style="font-size: 11px; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">Quick Reference</div>
+
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">Journey Stage</div>
+            <div style="display: flex; align-items: center; gap: 6px; cursor: pointer;" onclick="handleAction('stage')">
+              <span class="stage-dot stage-allocated"></span>
+              <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Allocated</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">Lead Status</div>
+            <div style="font-size: 13px; color: #43C0BE; font-weight: 500;">Made Contact</div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">Assigned Agent</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 24px; height: 24px; border-radius: 50%; background: #2C4C79; display: flex; align-items: center; justify-content: center; font-size: 11px; color: white; font-weight: 600;">SC</div>
+              <span style="font-size: 13px; color: #e4e4e7;">Sarah Chen</span>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #1f1f23; margin: 16px 0;"></div>
+
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">Phone</div>
+            <div style="font-size: 13px; color: #43C0BE; cursor: pointer;" onclick="copyToClipboard('(02) 9876 5432')">(02) 9876 5432</div>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">Email</div>
+            <div style="font-size: 13px; color: #43C0BE; cursor: pointer; word-break: break-all;" onclick="copyToClipboard('h.patterson@email.com.au')">h.patterson@email.com.au</div>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">DOB</div>
+            <div style="font-size: 13px; color: #a1a1aa;">12 Mar 1941 (84)</div>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">Address</div>
+            <div style="font-size: 13px; color: #a1a1aa;">14 Willow St, Chatswood NSW 2067</div>
+          </div>
+
+          <div style="border-top: 1px solid #1f1f23; margin: 16px 0;"></div>
+
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">Care Type</div>
+            <div style="font-size: 13px; color: #a1a1aa;">Home Care Package</div>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">Funding</div>
+            <div style="font-size: 13px; color: #a1a1aa;">HCP Level 3</div>
+          </div>
+
+          <div>
+            <div style="font-size: 11px; color: #3f3f46; margin-bottom: 4px;">TC Number</div>
+            <div style="font-size: 13px; color: #a1a1aa;">TC-3847</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Hints Bar -->
+      <div class="hints-bar" id="hintsBar">
+        <span><kbd>C</kbd> Call</span>
+        <span><kbd>N</kbd> Note</span>
+        <span><kbd>H</kbd> Snooze</span>
+        <span><kbd>E</kbd> Done</span>
+        <span><kbd>G</kbd> Stage</span>
+        <span><kbd>J</kbd><kbd>K</kbd> Navigate</span>
+        <span><kbd>&#8984;K</kbd> Command</span>
+        <span><kbd>?</kbd> Shortcuts</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Undo Toast -->
+  <div class="undo-toast" id="undoToast">
+    <span id="undoToastMessage"></span>
+    <span>Press <kbd>Z</kbd> to undo</span>
+    <span id="undoCountdown" style="color: #52525b;">(5s)</span>
+  </div>
+
+  <!-- Command Palette -->
+  <div class="cmd-palette-overlay" id="cmdPalette">
+    <div class="cmd-palette">
+      <div style="border-bottom: 1px solid #27272a;">
+        <input type="text" id="cmdInput" placeholder="Type a command..." />
+      </div>
+      <div id="cmdResults" style="max-height: 320px; overflow-y: auto;">
+        <div class="cmd-result active" data-action="stage">
+          <span style="font-size: 13px; color: #e4e4e7;">Change Journey Stage</span>
+          <span class="cmd-result-key">G</span>
+        </div>
+        <div class="cmd-result" data-action="note">
+          <span style="font-size: 13px; color: #e4e4e7;">Add Note</span>
+          <span class="cmd-result-key">N</span>
+        </div>
+        <div class="cmd-result" data-action="call">
+          <span style="font-size: 13px; color: #e4e4e7;">Call Lead</span>
+          <span class="cmd-result-key">C</span>
+        </div>
+        <div class="cmd-result" data-action="done">
+          <span style="font-size: 13px; color: #e4e4e7;">Mark as Done</span>
+          <span class="cmd-result-key">E</span>
+        </div>
+        <div class="cmd-result" data-action="snooze">
+          <span style="font-size: 13px; color: #e4e4e7;">Snooze Lead</span>
+          <span class="cmd-result-key">H</span>
+        </div>
+        <div class="cmd-result" data-action="assign">
+          <span style="font-size: 13px; color: #e4e4e7;">Reassign Lead</span>
+          <span class="cmd-result-key">A</span>
+        </div>
+        <div class="cmd-result" data-action="status">
+          <span style="font-size: 13px; color: #e4e4e7;">Change Lead Status</span>
+          <span class="cmd-result-key">S</span>
+        </div>
+        <div class="cmd-result" data-action="search">
+          <span style="font-size: 13px; color: #e4e4e7;">Search Leads</span>
+          <span class="cmd-result-key">/</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State
+    let activeLeadIndex = 2;
+    let cmdOpen = false;
+    let undoTimer = null;
+    let noteInputFocused = false;
+
+    // Lead data
+    const leads = [
+      { name: 'Margaret Chen', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', time: '2h ago', tc: 'TC-2198' },
+      { name: 'Dorothy Wilson', stage: 'Approved', stageClass: 'stage-approved', time: 'Yesterday', tc: 'TC-5021' },
+      { name: 'Harold Patterson', stage: 'Allocated', stageClass: 'stage-allocated', time: '45m ago', tc: 'TC-3847' },
+      { name: 'Betty Nakamura', stage: 'Pre-Care', stageClass: 'stage-pre-care', time: 'Just now', tc: 'TC-6733' },
+      { name: 'Robert Fitzgerald', stage: 'Active', stageClass: 'stage-active', time: '3d ago', tc: 'TC-1456' },
+      { name: 'Evelyn O\'Brien', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', time: '5h ago', tc: 'TC-4102' },
+    ];
+
+    function selectLead(index) {
+      document.querySelectorAll('.lead-row').forEach(row => row.classList.remove('active'));
+      const row = document.querySelector(`.lead-row[data-index="${index}"]`);
+      if (row) row.classList.add('active');
+      activeLeadIndex = index;
+    }
+
+    function handleAction(action) {
+      const lead = leads[activeLeadIndex];
+      switch(action) {
+        case 'done':
+          showUndo(`Marked "${lead.name}" as Done.`);
+          // Auto-advance
+          if (activeLeadIndex < leads.length - 1) {
+            setTimeout(() => selectLead(activeLeadIndex + 1), 150);
+          }
+          break;
+        case 'snooze':
+          showUndo(`Snoozed "${lead.name}" until tomorrow morning.`);
+          if (activeLeadIndex < leads.length - 1) {
+            setTimeout(() => selectLead(activeLeadIndex + 1), 150);
+          }
+          break;
+        case 'note':
+          document.getElementById('quickNoteInput').focus();
+          break;
+        case 'call':
+          showUndo(`Initiating call to ${lead.name}...`);
+          break;
+        case 'stage':
+          showUndo(`Stage change initiated for ${lead.name}.`);
+          break;
+      }
+    }
+
+    function showUndo(message) {
+      const toast = document.getElementById('undoToast');
+      const msgEl = document.getElementById('undoToastMessage');
+      const countdown = document.getElementById('undoCountdown');
+
+      msgEl.textContent = message;
+      toast.classList.add('show');
+
+      let seconds = 5;
+      countdown.textContent = `(${seconds}s)`;
+
+      if (undoTimer) clearInterval(undoTimer);
+      undoTimer = setInterval(() => {
+        seconds--;
+        countdown.textContent = `(${seconds}s)`;
+        if (seconds <= 0) {
+          clearInterval(undoTimer);
+          toast.classList.remove('show');
+        }
+      }, 1000);
+    }
+
+    function hideUndo() {
+      const toast = document.getElementById('undoToast');
+      toast.classList.remove('show');
+      if (undoTimer) clearInterval(undoTimer);
+    }
+
+    function openCmdPalette() {
+      cmdOpen = true;
+      document.getElementById('cmdPalette').classList.add('show');
+      const input = document.getElementById('cmdInput');
+      input.value = '';
+      input.focus();
+      filterCmdResults('');
+    }
+
+    function closeCmdPalette() {
+      cmdOpen = false;
+      document.getElementById('cmdPalette').classList.remove('show');
+    }
+
+    function filterCmdResults(query) {
+      const results = document.querySelectorAll('.cmd-result');
+      let firstVisible = null;
+      results.forEach(r => {
+        const text = r.querySelector('span').textContent.toLowerCase();
+        const match = !query || text.includes(query.toLowerCase());
+        r.style.display = match ? 'flex' : 'none';
+        if (match && !firstVisible) {
+          firstVisible = r;
+        }
+      });
+      results.forEach(r => r.classList.remove('active'));
+      if (firstVisible) firstVisible.classList.add('active');
+    }
+
+    function copyToClipboard(text, el) {
+      navigator.clipboard.writeText(text).then(() => {
+        showUndo(`Copied "${text}" to clipboard.`);
+      }).catch(() => {
+        showUndo(`Copied "${text}" to clipboard.`);
+      });
+    }
+
+    // Keyboard handlers
+    document.addEventListener('keydown', function(e) {
+      // Check if note input is focused
+      noteInputFocused = document.activeElement === document.getElementById('quickNoteInput');
+
+      // Command palette
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (cmdOpen) closeCmdPalette();
+        else openCmdPalette();
+        return;
+      }
+
+      if (cmdOpen) {
+        if (e.key === 'Escape') {
+          closeCmdPalette();
+          return;
+        }
+        if (e.key === 'Enter') {
+          const activeResult = document.querySelector('.cmd-result.active');
+          if (activeResult) {
+            const action = activeResult.dataset.action;
+            closeCmdPalette();
+            handleAction(action);
+          }
+          return;
+        }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const results = [...document.querySelectorAll('.cmd-result')].filter(r => r.style.display !== 'none');
+          const activeIdx = results.findIndex(r => r.classList.contains('active'));
+          results.forEach(r => r.classList.remove('active'));
+          let newIdx = e.key === 'ArrowDown' ? activeIdx + 1 : activeIdx - 1;
+          if (newIdx >= results.length) newIdx = 0;
+          if (newIdx < 0) newIdx = results.length - 1;
+          results[newIdx].classList.add('active');
+          return;
+        }
+        return;
+      }
+
+      // Don't process keyboard shortcuts when typing in input
+      if (noteInputFocused) {
+        if (e.key === 'Escape') {
+          document.getElementById('quickNoteInput').blur();
+        }
+        return;
+      }
+
+      switch(e.key.toLowerCase()) {
+        case 'j':
+          e.preventDefault();
+          if (activeLeadIndex < leads.length - 1) selectLead(activeLeadIndex + 1);
+          break;
+        case 'k':
+          e.preventDefault();
+          if (activeLeadIndex > 0) selectLead(activeLeadIndex - 1);
+          break;
+        case 'e':
+          e.preventDefault();
+          handleAction('done');
+          break;
+        case 'h':
+          e.preventDefault();
+          handleAction('snooze');
+          break;
+        case 'n':
+          e.preventDefault();
+          handleAction('note');
+          break;
+        case 'c':
+          e.preventDefault();
+          handleAction('call');
+          break;
+        case 'g':
+          e.preventDefault();
+          handleAction('stage');
+          break;
+        case 'z':
+          e.preventDefault();
+          hideUndo();
+          showUndo('Action undone.');
+          break;
+        case 'escape':
+          // nothing special outside cmd palette
+          break;
+      }
+    });
+
+    // Command palette input
+    document.getElementById('cmdInput').addEventListener('input', function(e) {
+      filterCmdResults(e.target.value);
+    });
+
+    // Click outside command palette to close
+    document.getElementById('cmdPalette').addEventListener('click', function(e) {
+      if (e.target === this) closeCmdPalette();
+    });
+  </script>
+</body>
+</html>

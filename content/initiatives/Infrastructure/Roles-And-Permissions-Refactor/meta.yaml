@@ -1,0 +1,68 @@
+jira_key: TP-2403
+title: 'Roles & Permissions Refactor'
+status: 'In Progress'
+prefix: RAP
+summary: "Streamlined role-based access control"
+linear_project_id: a3d5a8ac-bc3d-4e11-87ba-365006f7c5a1
+linear_url: https://linear.app/trilogycare/project/rap-roles-and-permissions-refactor-tp-2141-adf43da1f657
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+phases:
+  -
+    key: TP-3015
+    name: 'RAP - Discovery'
+    type: Phases
+    status: Done
+    assignee:
+      accountId: acc1
+      displayName: 'Sarah Chen'
+      email: null
+    parent: TP-2403
+    created: '2025-01-15T00:00:00Z'
+    updated: '2025-01-22T00:00:00Z'
+  -
+    key: TP-3016
+    name: 'RAP - Design'
+    type: Phases
+    status: Done
+    assignee:
+      accountId: acc2
+      displayName: 'Mike Rodriguez'
+      email: null
+    parent: TP-2403
+    created: '2025-01-29T00:00:00Z'
+    updated: '2025-02-05T00:00:00Z'
+  -
+    key: TP-3017
+    name: 'RAP - Development'
+    type: Phases
+    status: 'In Progress'
+    assignee:
+      accountId: acc3
+      displayName: 'Emily Watson'
+      email: null
+    parent: TP-2403
+    created: '2025-02-12T00:00:00Z'
+    updated: '2025-02-19T00:00:00Z'
+  -
+    key: TP-3018
+    name: 'RAP - QA'
+    type: Phases
+    status: 'To Do'
+    assignee:
+      accountId: acc4
+      displayName: 'David Kim'
+      email: null
+    parent: TP-2403
+    created: '2025-02-26T00:00:00Z'
+    updated: '2025-03-05T00:00:00Z'
+  -
+    key: TP-3019
+    name: 'RAP - Release'
+    type: Phases
+    status: 'To Do'
+    assignee: null
+    parent: TP-2403
+    created: '2025-03-12T00:00:00Z'
+    updated: '2025-03-19T00:00:00Z'

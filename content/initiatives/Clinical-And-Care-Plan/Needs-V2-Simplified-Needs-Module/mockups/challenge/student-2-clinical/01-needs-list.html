@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Needs Assessment Register — Margaret Thompson</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontSize: { 'xs2': '0.6875rem', 'xs3': '0.625rem' },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-size: 13px; line-height: 1.4; }
+        .tier-group.collapsed .tier-rows { display: none; }
+        .tier-group.collapsed .chevron { transform: rotate(-90deg); }
+        .chevron { transition: transform 0.15s; }
+        @media print {
+            aside { display: none !important; }
+            main { margin: 0 !important; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex">
+<aside class="w-60 bg-white border-r border-gray-200 flex flex-col shrink-0 h-screen sticky top-0">
+    <div class="px-4 py-4 border-b border-gray-100">
+        <div class="flex items-center gap-2.5"><div class="h-8 w-8 rounded-lg bg-gray-200 animate-pulse"></div><div class="h-4 w-24 rounded bg-gray-200 animate-pulse"></div></div>
+        <p class="mt-2 text-[9px] text-gray-300 uppercase tracking-widest text-center">Framing only</p>
+    </div>
+    <div class="px-3 py-3"><div class="h-8 rounded-lg bg-gray-100 animate-pulse"></div></div>
+    <nav class="flex-1 overflow-y-auto px-3 py-2 space-y-1.5">
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-20 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-24 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-16 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-teal-50"><div class="h-4 w-4 rounded bg-teal-200 animate-pulse"></div><div class="h-3.5 w-18 rounded bg-teal-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-20 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-14 rounded bg-gray-200 animate-pulse"></div></div>
+    </nav>
+    <div class="border-t border-gray-100 px-3 py-3"><div class="flex items-center gap-2.5"><div class="h-8 w-8 rounded-full bg-gray-200 animate-pulse"></div><div class="flex-1 space-y-1.5"><div class="h-3 w-24 rounded bg-gray-200 animate-pulse"></div><div class="h-2.5 w-20 rounded bg-gray-100 animate-pulse"></div></div></div></div>
+</aside>
+<main class="flex-1 flex flex-col min-h-screen">
+
+    <!-- Page Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-3">
+        <nav class="text-xs2 text-gray-400 mb-1.5">
+            <span class="hover:text-gray-600 cursor-pointer">Clients</span>
+            <span class="mx-1">/</span>
+            <span class="hover:text-gray-600 cursor-pointer">Margaret Thompson</span>
+            <span class="mx-1">/</span>
+            <span class="hover:text-gray-600 cursor-pointer">Package</span>
+            <span class="mx-1">/</span>
+            <span class="text-gray-700 font-medium">Needs Assessment</span>
+        </nav>
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-lg font-semibold text-slate-800 leading-tight">Needs Assessment Register</h1>
+                <p class="text-xs2 text-gray-400 mt-0.5">HCP Level 4 &mdash; URN: TC-2024-00847 &mdash; Last assessed: 12 Feb 2026</p>
+            </div>
+            <div class="flex items-center gap-2 no-print">
+                <button class="px-3 py-1.5 text-xs border border-gray-300 rounded text-gray-600 hover:bg-gray-50 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    Print
+                </button>
+                <button class="px-3 py-1.5 text-xs border border-gray-300 rounded text-gray-600 hover:bg-gray-50 flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Export PDF
+                </button>
+                <button class="px-3 py-1.5 text-xs bg-slate-700 text-white rounded hover:bg-slate-800 flex items-center gap-1.5 font-medium">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    New Assessment
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tab Bar -->
+    <div class="bg-white border-b border-gray-200 px-6">
+        <nav class="flex gap-0 -mb-px text-xs">
+            <a href="#" class="px-4 py-2.5 text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Overview</a>
+            <a href="#" class="px-4 py-2.5 text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Services</a>
+            <a href="#" class="px-4 py-2.5 text-slate-800 font-semibold border-b-2 border-slate-700">Needs</a>
+            <a href="#" class="px-4 py-2.5 text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Risks</a>
+            <a href="#" class="px-4 py-2.5 text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Budget</a>
+            <a href="#" class="px-4 py-2.5 text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Documents</a>
+        </nav>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 px-6 py-4">
+
+        <!-- Summary Bar -->
+        <div class="grid grid-cols-5 gap-3 mb-4">
+            <div class="bg-white border border-gray-200 rounded px-3 py-2.5">
+                <div class="text-xs3 text-gray-400 uppercase tracking-wider font-medium">Total Needs</div>
+                <div class="text-xl font-bold text-slate-800 leading-tight mt-0.5">8</div>
+            </div>
+            <div class="bg-white border border-gray-200 rounded px-3 py-2.5">
+                <div class="text-xs3 text-gray-400 uppercase tracking-wider font-medium">Active</div>
+                <div class="text-xl font-bold text-green-700 leading-tight mt-0.5">6</div>
+            </div>
+            <div class="bg-white border border-gray-200 rounded px-3 py-2.5">
+                <div class="text-xs3 text-gray-400 uppercase tracking-wider font-medium">Draft</div>
+                <div class="text-xl font-bold text-amber-600 leading-tight mt-0.5">2</div>
+            </div>
+            <div class="bg-white border border-gray-200 rounded px-3 py-2.5">
+                <div class="text-xs3 text-gray-400 uppercase tracking-wider font-medium">High Priority</div>
+                <div class="text-xl font-bold text-red-600 leading-tight mt-0.5">3</div>
+            </div>
+            <div class="bg-white border border-gray-200 rounded px-3 py-2.5">
+                <div class="text-xs3 text-gray-400 uppercase tracking-wider font-medium">Services Linked</div>
+                <div class="text-xl font-bold text-slate-700 leading-tight mt-0.5">12</div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="bg-white border border-gray-200 rounded px-3 py-2 flex items-center gap-3 mb-3 no-print">
+            <div class="flex items-center gap-1.5">
+                <label class="text-xs3 text-gray-500 uppercase tracking-wider font-medium">Maslow Level</label>
+                <select class="text-xs border border-gray-200 rounded px-2 py-1 text-gray-700 bg-white">
+                    <option>All Levels</option>
+                    <option>Tier 1 — Essential Care</option>
+                    <option>Tier 2 — Safety & Health</option>
+                    <option>Tier 3 — Connection</option>
+                    <option>Tier 4 — Dignity</option>
+                    <option>Tier 5 — Growth</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <label class="text-xs3 text-gray-500 uppercase tracking-wider font-medium">Priority</label>
+                <select class="text-xs border border-gray-200 rounded px-2 py-1 text-gray-700 bg-white">
+                    <option>All</option>
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <label class="text-xs3 text-gray-500 uppercase tracking-wider font-medium">Status</label>
+                <select class="text-xs border border-gray-200 rounded px-2 py-1 text-gray-700 bg-white">
+                    <option>All</option>
+                    <option>Active</option>
+                    <option>Draft</option>
+                    <option>Archived</option>
+                </select>
+            </div>
+            <div class="flex-1"></div>
+            <div class="relative">
+                <svg class="w-3.5 h-3.5 text-gray-400 absolute left-2 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" placeholder="Search needs..." class="text-xs border border-gray-200 rounded pl-7 pr-3 py-1 w-48 text-gray-700">
+            </div>
+            <div class="border-l border-gray-200 pl-3 flex items-center gap-2">
+                <button class="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Review All
+                </button>
+            </div>
+        </div>
+
+        <!-- Needs Assessment Table -->
+        <div class="bg-white border border-gray-200 rounded overflow-hidden">
+            <table class="w-full text-xs">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-gray-200">
+                        <th class="text-left px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider w-16">ID</th>
+                        <th class="text-left px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider">Category</th>
+                        <th class="text-left px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider w-20">Level</th>
+                        <th class="text-left px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider">Description</th>
+                        <th class="text-center px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider w-16">Priority</th>
+                        <th class="text-left px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider w-20">Funding</th>
+                        <th class="text-center px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider w-14">Svcs</th>
+                        <th class="text-center px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider w-16">Status</th>
+                        <th class="text-left px-3 py-2 text-xs3 font-semibold text-slate-500 uppercase tracking-wider w-24">Reviewed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Tier 1 — Essential Care (Physiological) -->
+                    <tr class="tier-header bg-slate-100 cursor-pointer hover:bg-slate-150" onclick="this.closest('.tier-group')?.classList.toggle('collapsed')">
+                        <td colspan="9" class="px-3 py-1.5">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3 h-3 text-slate-500 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                <span class="text-xs3 font-bold text-slate-600 uppercase tracking-wider">Tier 1 &mdash; Essential Care (Physiological)</span>
+                                <span class="text-xs3 text-slate-400 ml-1">3 needs</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody class="tier-rows">
+                    <tr class="border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer" onclick="window.location='03-need-detail.html'">
+                        <td class="px-3 py-2 text-slate-500 font-mono text-xs3">NV2-001</td>
+                        <td class="px-3 py-2 text-slate-700 font-medium">Nutrition & Hydration</td>
+                        <td class="px-3 py-2"><span class="inline-flex items-center text-xs3 text-slate-500">T1</span></td>
+                        <td class="px-3 py-2 text-slate-600">Requires modified texture diet (soft/minced) due to dysphagia; inadequate fluid intake <1.2L/day; weight loss 3.2kg over 8 weeks</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-100 text-red-700 text-xs3 font-bold" title="High">H</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-500">HCP</td>
+                        <td class="px-3 py-2 text-center text-slate-600">3</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex px-1.5 py-0.5 rounded text-xs3 font-medium bg-green-100 text-green-700">Active</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-400">12 Feb 2026</td>
+                    </tr>
+                    <tr class="border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer">
+                        <td class="px-3 py-2 text-slate-500 font-mono text-xs3">NV2-002</td>
+                        <td class="px-3 py-2 text-slate-700 font-medium">Personal Hygiene & Continence</td>
+                        <td class="px-3 py-2"><span class="inline-flex items-center text-xs3 text-slate-500">T1</span></td>
+                        <td class="px-3 py-2 text-slate-600">Requires assistance with showering and dressing; urinary incontinence (functional) requiring continence aids and scheduled toileting regime</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-xs3 font-bold" title="Medium">M</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-500">HCP</td>
+                        <td class="px-3 py-2 text-center text-slate-600">2</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex px-1.5 py-0.5 rounded text-xs3 font-medium bg-green-100 text-green-700">Active</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-400">12 Feb 2026</td>
+                    </tr>
+                    <tr class="border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer">
+                        <td class="px-3 py-2 text-slate-500 font-mono text-xs3">NV2-003</td>
+                        <td class="px-3 py-2 text-slate-700 font-medium">Mobility & Transfers</td>
+                        <td class="px-3 py-2"><span class="inline-flex items-center text-xs3 text-slate-500">T1</span></td>
+                        <td class="px-3 py-2 text-slate-600">Reduced mobility secondary to osteoarthritis (bilateral knees); uses 4-wheel walker; requires standby assist for transfers; TUG score 18s</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-100 text-red-700 text-xs3 font-bold" title="High">H</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-500">HCP</td>
+                        <td class="px-3 py-2 text-center text-slate-600">2</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex px-1.5 py-0.5 rounded text-xs3 font-medium bg-green-100 text-green-700">Active</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-400">12 Feb 2026</td>
+                    </tr>
+                </tbody>
+
+                <!-- Tier 2 — Safety & Health -->
+                <tbody class="tier-group">
+                    <tr class="tier-header bg-slate-100 cursor-pointer hover:bg-slate-150" onclick="this.closest('.tier-group')?.classList.toggle('collapsed')">
+                        <td colspan="9" class="px-3 py-1.5">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3 h-3 text-slate-500 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                <span class="text-xs3 font-bold text-slate-600 uppercase tracking-wider">Tier 2 &mdash; Safety & Health</span>
+                                <span class="text-xs3 text-slate-400 ml-1">2 needs</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="tier-rows border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer">
+                        <td class="px-3 py-2 text-slate-500 font-mono text-xs3">NV2-004</td>
+                        <td class="px-3 py-2 text-slate-700 font-medium">Falls Prevention & Home Safety</td>
+                        <td class="px-3 py-2"><span class="inline-flex items-center text-xs3 text-slate-500">T2</span></td>
+                        <td class="px-3 py-2 text-slate-600">High falls risk (3 falls in 6 months); home environment requires modification — grab rails, non-slip mats, sensor lighting; FRAT score: 28/45</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-red-100 text-red-700 text-xs3 font-bold" title="High">H</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-500">HCP</td>
+                        <td class="px-3 py-2 text-center text-slate-600">2</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex px-1.5 py-0.5 rounded text-xs3 font-medium bg-green-100 text-green-700">Active</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-400">12 Feb 2026</td>
+                    </tr>
+                    <tr class="tier-rows border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer">
+                        <td class="px-3 py-2 text-slate-500 font-mono text-xs3">NV2-005</td>
+                        <td class="px-3 py-2 text-slate-700 font-medium">Medication Management</td>
+                        <td class="px-3 py-2"><span class="inline-flex items-center text-xs3 text-slate-500">T2</span></td>
+                        <td class="px-3 py-2 text-slate-600">Polypharmacy (9 medications); requires Webster pack and medication prompting; recent non-adherence identified with antihypertensive regime</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-xs3 font-bold" title="Medium">M</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-500">HCP</td>
+                        <td class="px-3 py-2 text-center text-slate-600">1</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex px-1.5 py-0.5 rounded text-xs3 font-medium bg-green-100 text-green-700">Active</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-400">05 Feb 2026</td>
+                    </tr>
+                </tbody>
+
+                <!-- Tier 3 — Connection & Belonging -->
+                <tbody class="tier-group">
+                    <tr class="tier-header bg-slate-100 cursor-pointer hover:bg-slate-150" onclick="this.closest('.tier-group')?.classList.toggle('collapsed')">
+                        <td colspan="9" class="px-3 py-1.5">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3 h-3 text-slate-500 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                <span class="text-xs3 font-bold text-slate-600 uppercase tracking-wider">Tier 3 &mdash; Connection & Belonging</span>
+                                <span class="text-xs3 text-slate-400 ml-1">1 need</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="tier-rows border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer">
+                        <td class="px-3 py-2 text-slate-500 font-mono text-xs3">NV2-006</td>
+                        <td class="px-3 py-2 text-slate-700 font-medium">Social Connection & Community</td>
+                        <td class="px-3 py-2"><span class="inline-flex items-center text-xs3 text-slate-500">T3</span></td>
+                        <td class="px-3 py-2 text-slate-600">Social isolation risk — lives alone, limited community engagement post-hip fracture; GDS-5 score: 3/5 (mild depressive symptoms)</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-xs3 font-bold" title="Medium">M</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-500">HCP</td>
+                        <td class="px-3 py-2 text-center text-slate-600">1</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex px-1.5 py-0.5 rounded text-xs3 font-medium bg-green-100 text-green-700">Active</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-400">12 Feb 2026</td>
+                    </tr>
+                </tbody>
+
+                <!-- Tier 4 — Dignity & Independence -->
+                <tbody class="tier-group">
+                    <tr class="tier-header bg-slate-100 cursor-pointer hover:bg-slate-150" onclick="this.closest('.tier-group')?.classList.toggle('collapsed')">
+                        <td colspan="9" class="px-3 py-1.5">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3 h-3 text-slate-500 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                <span class="text-xs3 font-bold text-slate-600 uppercase tracking-wider">Tier 4 &mdash; Dignity & Independence</span>
+                                <span class="text-xs3 text-slate-400 ml-1">1 need</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="tier-rows border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer">
+                        <td class="px-3 py-2 text-slate-500 font-mono text-xs3">NV2-007</td>
+                        <td class="px-3 py-2 text-slate-700 font-medium">Daily Living & Independence</td>
+                        <td class="px-3 py-2"><span class="inline-flex items-center text-xs3 text-slate-500">T4</span></td>
+                        <td class="px-3 py-2 text-slate-600">Requires support with meal preparation, laundry and light household tasks; IADL score: 4/8; client expresses strong preference to remain at home</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-100 text-green-700 text-xs3 font-bold" title="Low">L</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-500">HCP</td>
+                        <td class="px-3 py-2 text-center text-slate-600">1</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex px-1.5 py-0.5 rounded text-xs3 font-medium bg-amber-100 text-amber-700">Draft</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-400">&mdash;</td>
+                    </tr>
+                </tbody>
+
+                <!-- Tier 5 — Growth & Wellbeing -->
+                <tbody class="tier-group">
+                    <tr class="tier-header bg-slate-100 cursor-pointer hover:bg-slate-150" onclick="this.closest('.tier-group')?.classList.toggle('collapsed')">
+                        <td colspan="9" class="px-3 py-1.5">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-3 h-3 text-slate-500 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                                <span class="text-xs3 font-bold text-slate-600 uppercase tracking-wider">Tier 5 &mdash; Growth & Wellbeing</span>
+                                <span class="text-xs3 text-slate-400 ml-1">1 need</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="tier-rows border-b border-gray-100 hover:bg-blue-50/30 cursor-pointer">
+                        <td class="px-3 py-2 text-slate-500 font-mono text-xs3">NV2-008</td>
+                        <td class="px-3 py-2 text-slate-700 font-medium">Goals & Life Enrichment</td>
+                        <td class="px-3 py-2"><span class="inline-flex items-center text-xs3 text-slate-500">T5</span></td>
+                        <td class="px-3 py-2 text-slate-600">Client goal: attend weekly art class at Southbank Community Centre; secondary goal: maintain garden independently through spring</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex h-5 w-5 items-center justify-center rounded-full bg-green-100 text-green-700 text-xs3 font-bold" title="Low">L</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-500">HCP</td>
+                        <td class="px-3 py-2 text-center text-slate-600">0</td>
+                        <td class="px-3 py-2 text-center"><span class="inline-flex px-1.5 py-0.5 rounded text-xs3 font-medium bg-amber-100 text-amber-700">Draft</span></td>
+                        <td class="px-3 py-2 text-xs3 text-slate-400">&mdash;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer info -->
+        <div class="mt-3 flex items-center justify-between text-xs3 text-gray-400">
+            <span>Showing 8 of 8 assessed needs &mdash; Grouped by Maslow hierarchy tier</span>
+            <span>Assessment by: Sarah Chen (RN) &mdash; 12 Feb 2026 14:32 AEST</span>
+        </div>
+
+    </div>
+</main>
+<script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

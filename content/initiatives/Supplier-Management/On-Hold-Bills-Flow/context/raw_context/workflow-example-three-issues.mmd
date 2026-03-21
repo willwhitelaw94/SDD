@@ -1,0 +1,102 @@
+%% EXAMPLE: Bill with 3 Issues - ABN Error, Client Approval, Insufficient Balance
+%% This diagram shows a concrete scenario flowing through the OHB workflow
+
+flowchart TD
+    subgraph Scenario["📋 SCENARIO: Invoice #INV-2026-001"]
+        ScenarioDesc["Supplier: Acme Care Services<br/>Client: Jane Smith<br/>Amount: $2,450.00<br/>Service: Home Care - 15 hours"]
+    end
+
+    Start["📨 Bill Submission Received<br/><br/>Invoice #INV-2026-001<br/>$2,450.00"]
+
+    Start --> AutoReject{Auto-Reject Check<br/>AI 99% accuracy}
+
+    AutoReject -->|"NO<br/>(ABN error not auto-rejectable<br/>in this case - needs human<br/>verification)"| Diagnosis
+
+    subgraph DiagnosisPhase["🔍 MULTI-ISSUE DIAGNOSIS"]
+        Diagnosis["Bill Processor + AI identifies<br/>THREE issues:"]
+
+        Issue1["🔴 Issue 1: ABN/GST Error<br/>━━━━━━━━━━━━━━━━━<br/>Touches Invoice: YES<br/>Dept Action: NO<br/>Dept Owner: Compliance<br/>Resolution Outreach: NO<br/><br/>→ Supplier must fix ABN"]
+
+        Issue2["🟡 Issue 2: Client Approval Required<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>Touches Invoice: NO<br/>Dept Action: YES<br/>Dept Owner: Care<br/>Resolution Outreach: YES<br/><br/>→ Jane must approve service"]
+
+        Issue3["🟠 Issue 3: Insufficient Balance<br/>━━━━━━━━━━━━━━━━━━━<br/>Touches Invoice: NO<br/>Dept Action: YES<br/>Dept Owner: Care<br/>Resolution Outreach: YES<br/><br/>→ $800 shortfall, needs<br/>   voluntary contribution discussion"]
+
+        Diagnosis --> Issue1
+        Diagnosis --> Issue2
+        Diagnosis --> Issue3
+    end
+
+    subgraph Routing["📬 ROUTE TO DEPARTMENTS (Parallel)"]
+        Issue1 --> External["External Reason<br/>(No dept work needed)<br/><br/>ABN/GST Error<br/>Status: UNRESOLVED"]
+
+        Issue2 --> CareTeam["Care Team<br/>━━━━━━━━<br/>Contact Jane Smith<br/>Request approval"]
+
+        Issue3 --> CareTeam
+
+        subgraph ResolutionOutreach["📤 RESOLUTION OUTREACH (Day 0)"]
+           cv CareTeam --> ROComms["Send to Jane Smith:<br/><br/>'Hi Jane, we've received an invoice<br/>from Acme Care Services for $2,450.<br/><br/>We need your approval to proceed.<br/>Also, there's an $800 funding shortfall -<br/>would you like to discuss a voluntary<br/>contribution?<br/><br/>Please respond within 24 hours.'"]
+        end
+
+        subgraph ResolutionWindow["⏱️ 1-DAY RESOLUTION WINDOW"]
+            ROComms --> WindowCheck{Resolved<br/>within 1 day?}
+
+            WindowCheck -->|"YES<br/>(Jane approves +<br/>agrees to VC)"| ResolvedQuick["✅ Issues 2 & 3 RESOLVED<br/><br/>Supplier Acme NEVER KNOWS<br/>there was a client issue"]
+
+            WindowCheck -->|"NO<br/>(Jane hasn't responded)"| WindowExpired["⏰ Window Expired<br/><br/>Supplier notified:<br/>'Other processes required'<br/>(privacy preserved)"]
+        end
+    end
+
+    External --> Temporal
+    ResolvedQuick --> Temporal
+    WindowExpired --> Temporal
+
+    subgraph TemporalPhase["🕐 TEMPORAL RE-VALIDATION"]
+        Temporal["Re-check time-sensitive qualifiers:<br/><br/>✓ Funding period: Still active<br/>✓ Authorization: Valid<br/>✓ Supplier status: Active<br/><br/>No new reasons added"]
+    end
+
+    Temporal --> AnyUnresolved{Any Reason<br/>Still Unresolved?}
+
+    %% PATH A: Quick Resolution (Jane approved in 1 day)
+    subgraph PathA["PATH A: Jane approved within 1 day"]
+        AnyUnresolved -->|"YES<br/>(ABN error still<br/>unresolved)"| PathACheck["Unresolved Reasons BATCH:<br/>━━━━━━━━━━━━━━━━━━━━<br/>🔴 ABN/GST Error<br/><br/>(Issues 2 & 3 resolved by Jane)"]
+
+        PathACheck --> CoexistA["Can Coexist Filter<br/><br/>Only 1 reason - no filtering needed"]
+
+        CoexistA --> BatchDecisionA["BATCH DECISION CASCADE<br/>━━━━━━━━━━━━━━━━━━━━━<br/><br/>Q1: Any reason disqualifies<br/>    future attempts?<br/>    → NO (ABN can be fixed)<br/><br/>Q2: Any reason touches invoice?<br/>    → YES (ABN error does)<br/><br/>∴ COMMS TYPE = REJECT-RESUBMIT"]
+
+        BatchDecisionA --> CommsA["📧 SINGLE COMMUNIQUE to Acme:<br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/><br/>'Your invoice #INV-2026-001 for<br/>$2,450.00 has been rejected.<br/><br/>Issue: ABN/GST Error<br/>The ABN provided is inactive.<br/><br/>Action: Please resubmit with<br/>correct ABN details.<br/><br/>[Resubmit Link]'<br/><br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/>NOTE: No mention of client<br/>approval or funding - they<br/>were resolved internally!"]
+
+        CommsA --> OutcomeA["📋 OUTCOME A:<br/>REJECTED RESUBMIT<br/><br/>Acme fixes ABN and resubmits.<br/>Jane's approval already captured.<br/>VC already arranged.<br/><br/>Resubmission likely PAID<br/>on first pass!"]
+    end
+
+    %% PATH B: Jane didn't respond (Window expired)
+    subgraph PathB["PATH B: Jane didn't respond in 1 day"]
+        AnyUnresolved -->|"YES<br/>(All 3 issues still<br/>unresolved)"| PathBCheck["Unresolved Reasons BATCH:<br/>━━━━━━━━━━━━━━━━━━━━<br/>🔴 ABN/GST Error<br/>🟡 Client Approval Required<br/>🟠 Insufficient Balance"]
+
+        PathBCheck --> CoexistB["Can Coexist Filter<br/><br/>All 3 can coexist - include all<br/>in communication payload"]
+
+        CoexistB --> BatchDecisionB["BATCH DECISION CASCADE<br/>━━━━━━━━━━━━━━━━━━━━━<br/><br/>Q1: Any reason disqualifies<br/>    future attempts?<br/>    → NO (none are permanent)<br/><br/>Q2: Any reason touches invoice?<br/>    → YES (ABN error does)<br/><br/>∴ COMMS TYPE = REJECT-RESUBMIT<br/><br/>Payload = ALL 3 reasons<br/>(filtered for privacy)"]
+
+        BatchDecisionB --> CommsB["📧 SINGLE COMMUNIQUE to Acme:<br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/><br/>'Your invoice #INV-2026-001 for<br/>$2,450.00 has been rejected.<br/><br/>Issues identified:<br/>1. ABN/GST Error - inactive ABN<br/>2. Other processes required<br/><br/>Action: Please correct ABN and<br/>resubmit. We'll continue working<br/>on other processes in parallel.<br/><br/>[Resubmit Link]'<br/><br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/>NOTE: 'Other processes' covers<br/>both client approval + funding.<br/>Privacy preserved - Acme doesn't<br/>know Jane hasn't approved."]
+
+        CommsB --> OutcomeB["📋 OUTCOME B:<br/>REJECTED RESUBMIT<br/><br/>Acme fixes ABN and resubmits.<br/>Meanwhile, Care continues<br/>Resolution Outreach to Jane<br/>(Day 3, Day 7, Day 10).<br/><br/>Resubmission may be ON HOLD<br/>waiting for Jane's approval."]
+    end
+
+    %% Styling
+    style Scenario fill:#e0f2fe,stroke:#0284c7,stroke-width:2px
+    style Start fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+    style Issue1 fill:#fee2e2,stroke:#dc2626,stroke-width:2px
+    style Issue2 fill:#fef9c3,stroke:#ca8a04,stroke-width:2px
+    style Issue3 fill:#ffedd5,stroke:#ea580c,stroke-width:2px
+    style External fill:#fee2e2,stroke:#dc2626,stroke-width:1px
+    style CareTeam fill:#dbeafe,stroke:#2563eb,stroke-width:2px
+    style ROComms fill:#d1fae5,stroke:#059669,stroke-width:2px
+    style ResolvedQuick fill:#bbf7d0,stroke:#16a34a,stroke-width:2px
+    style WindowExpired fill:#fed7aa,stroke:#ea580c,stroke-width:2px
+    style Temporal fill:#fecaca,stroke:#dc2626,stroke-width:2px
+    style RejectResubmitA fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style RejectResubmitB fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style CommsA fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style CommsB fill:#fef08a,stroke:#ca8a04,stroke-width:2px
+    style OutcomeA fill:#bbf7d0,stroke:#16a34a,stroke-width:3px
+    style OutcomeB fill:#fed7aa,stroke:#ea580c,stroke-width:3px

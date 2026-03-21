@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REF-00142 — Notes Timeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .tl-line { position: absolute; left: 19px; top: 0; bottom: 0; width: 2px; background: #e5e7eb; }
+    .tl-dot { position: absolute; left: 12px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; z-index: 1; background: #f59e0b; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 min-h-screen">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="fixed left-0 top-0 bottom-0 w-60 bg-white border-r border-gray-200 z-40" style="padding-top: var(--toolbar-h, 0px);">
+    <div class="p-4">
+      <div class="flex items-center gap-2 mb-8">
+        <div class="w-8 h-8 bg-tc-teal-700 rounded-lg"></div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <nav class="space-y-1">
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-lg flex items-center px-3">
+          <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+        </div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-60" style="padding-top: var(--toolbar-h, 0px);">
+    <!-- Record Header -->
+    <div class="bg-white border-b border-gray-200 px-8 py-5">
+      <div class="flex items-center gap-2 text-xs text-gray-400 mb-2">
+        <a href="01-index.html" class="hover:text-tc-teal-700">Feedback Records</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <a href="03-detail-view.html" class="hover:text-tc-teal-700">REF-00142</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-600">Notes</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <h1 class="text-lg font-bold text-gray-900">Medication administration error — wrong dosage</h1>
+        <span class="text-xs font-mono font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">REF-00142</span>
+        <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-amber-100 text-amber-800">Investigation</span>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="bg-white border-b border-gray-200 px-8">
+      <div class="flex items-center gap-0">
+        <a href="03-detail-view.html" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">All Events</a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-tc-teal-700 border-b-2 border-tc-teal-700">
+          Notes Only
+          <span class="ml-1 px-1.5 py-0.5 text-xs bg-tc-teal-700 text-white rounded-full">5</span>
+        </a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Stage Changes</a>
+        <a href="06-action-plan.html" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Action Items</a>
+      </div>
+    </div>
+
+    <div class="p-8 max-w-3xl">
+      <!-- Add Note Form (at top of timeline) -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-xs font-bold">JP</div>
+          <div>
+            <p class="text-sm font-medium text-gray-900">James Patel</p>
+            <p class="text-xs text-gray-400">Coordinator</p>
+          </div>
+        </div>
+        <textarea rows="3" placeholder="Add a note to the timeline..." class="w-full px-4 py-3 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 focus:border-tc-teal-500 resize-none mb-3"></textarea>
+        <div class="flex items-center justify-between">
+          <button class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+            Attach file
+          </button>
+          <button class="bg-tc-teal-700 hover:bg-tc-teal-700/90 text-white px-4 py-2 rounded-lg text-sm font-medium">Add Note</button>
+        </div>
+      </div>
+
+      <!-- Notes Timeline -->
+      <div class="relative pl-10">
+        <div class="tl-line"></div>
+
+        <!-- Note 5 (newest) -->
+        <div class="relative mb-6">
+          <div class="tl-dot" style="top: 8px;"></div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm group">
+            <div class="p-5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center text-white text-xs font-bold">PS</div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">Priya Sharma</p>
+                    <p class="text-xs text-gray-400">Care Partner</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-gray-400">28 Feb 2026 · 4:15 PM</span>
+                </div>
+              </div>
+              <div class="mt-3 text-sm text-gray-700 leading-relaxed">
+                Spoke with Lisa Thompson to provide an update on the investigation. She appreciates the transparency and is satisfied with the pharmacy's corrective action plan. Requested a written summary of findings once the investigation concludes. Margaret is doing well and has had no further medication issues.
+              </div>
+              <div class="mt-3 flex items-center gap-2">
+                <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer">
+                  <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8" fill="none" stroke="white" stroke-width="1.5"/></svg>
+                  <span class="text-xs text-gray-600">phone-call-notes-28feb.pdf</span>
+                  <span class="text-xs text-gray-400">42 KB</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 4 -->
+        <div class="relative mb-6">
+          <div class="tl-dot" style="top: 8px;"></div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm group">
+            <div class="p-5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-xs font-bold">JP</div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">James Patel</p>
+                    <p class="text-xs text-gray-400">Coordinator</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-gray-400">25 Feb 2026 · 2:00 PM</span>
+                  <!-- Hover actions for own notes -->
+                  <div class="opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
+                    <button class="p-1 rounded hover:bg-gray-100" title="Edit">
+                      <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                    <button class="p-1 rounded hover:bg-gray-100" title="Delete">
+                      <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 text-sm text-gray-700 leading-relaxed">
+                Received the pharmacy's incident report. Key finding: blister pack labelling system had a software update on 8 Feb that caused dose timing labels to swap for patients with split-dose regimens. The pharmacy has rolled back the update and is manually verifying all affected packs. They've identified 3 other patients who were affected — all have been corrected. Will compile the final investigation summary this week.
+              </div>
+              <div class="mt-3 flex items-center gap-2">
+                <div class="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 cursor-pointer">
+                  <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8" fill="none" stroke="white" stroke-width="1.5"/></svg>
+                  <span class="text-xs text-gray-600">pharmacy-incident-report.pdf</span>
+                  <span class="text-xs text-gray-400">156 KB</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 3 -->
+        <div class="relative mb-6">
+          <div class="tl-dot" style="top: 8px;"></div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm group">
+            <div class="p-5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-xs font-bold">JP</div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">James Patel</p>
+                    <p class="text-xs text-gray-400">Coordinator</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-gray-400">20 Feb 2026 · 11:00 AM</span>
+                  <div class="opacity-0 group-hover:opacity-100 transition flex items-center gap-1">
+                    <button class="p-1 rounded hover:bg-gray-100" title="Edit">
+                      <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                    <button class="p-1 rounded hover:bg-gray-100" title="Delete">
+                      <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3 text-sm text-gray-700 leading-relaxed">
+                Contacted the pharmacy to review dispensing records for 10 Feb. Pharmacy confirmed a labelling error on the blister pack — the evening dose was marked as morning dose. Have requested the pharmacy's incident report and will follow up with their quality team by end of week.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 2 -->
+        <div class="relative mb-6">
+          <div class="tl-dot" style="top: 8px;"></div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm group">
+            <div class="p-5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">SC</div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">Sarah Chen</p>
+                    <p class="text-xs text-gray-400">Coordinator</p>
+                  </div>
+                </div>
+                <span class="text-xs text-gray-400">16 Feb 2026 · 10:40 AM</span>
+              </div>
+              <div class="mt-3 text-sm text-gray-700 leading-relaxed">
+                Initial triage complete. Spoke with Lisa Thompson who reported that her mother Margaret received the wrong dosage of blood pressure medication on the morning of 10 Feb. Margaret felt dizzy and nauseous for several hours. Lisa found the blister pack label was incorrect when checking that evening. Marking as Urgent due to medication safety concern. Assigning to James Patel for investigation.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 1 (oldest) -->
+        <div class="relative mb-6">
+          <div class="tl-dot" style="top: 8px;"></div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="p-5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">SC</div>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">Sarah Chen</p>
+                    <p class="text-xs text-gray-400">Coordinator</p>
+                  </div>
+                </div>
+                <span class="text-xs text-gray-400">15 Feb 2026 · 9:20 AM</span>
+              </div>
+              <div class="mt-3 text-sm text-gray-700 leading-relaxed">
+                Received call from Lisa Thompson regarding medication concern for her mother Margaret. Lisa was quite distressed. Logged the complaint and acknowledged receipt. Will begin triage tomorrow morning.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- End marker -->
+        <div class="relative mb-4">
+          <div class="tl-dot" style="top: 4px; background: #d1d5db; width: 10px; height: 10px; left: 15px;"></div>
+          <p class="text-xs text-gray-400 italic py-2">Beginning of notes for this record</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

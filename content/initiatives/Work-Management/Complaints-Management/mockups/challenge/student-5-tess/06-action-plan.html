@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REF-00142 — Action Items Timeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .tl-line { position: absolute; left: 19px; top: 0; bottom: 0; width: 2px; background: #e5e7eb; }
+    .tl-dot { position: absolute; left: 12px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; z-index: 1; }
+    .tl-dot-complete { background: #10b981; }
+    .tl-dot-overdue { background: #ef4444; }
+    .tl-dot-pending { background: #9ca3af; }
+    @keyframes pulse-red { 0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); } 50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); } }
+    .pulse-red { animation: pulse-red 2s ease-in-out infinite; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 min-h-screen">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="fixed left-0 top-0 bottom-0 w-60 bg-white border-r border-gray-200 z-40" style="padding-top: var(--toolbar-h, 0px);">
+    <div class="p-4">
+      <div class="flex items-center gap-2 mb-8">
+        <div class="w-8 h-8 bg-tc-teal-700 rounded-lg"></div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <nav class="space-y-1">
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-lg flex items-center px-3">
+          <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+        </div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-60" style="padding-top: var(--toolbar-h, 0px);">
+    <!-- Record Header -->
+    <div class="bg-white border-b border-gray-200 px-8 py-5">
+      <div class="flex items-center gap-2 text-xs text-gray-400 mb-2">
+        <a href="01-index.html" class="hover:text-tc-teal-700">Feedback Records</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <a href="03-detail-view.html" class="hover:text-tc-teal-700">REF-00142</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-600">Action Items</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <h1 class="text-lg font-bold text-gray-900">Medication administration error — wrong dosage</h1>
+          <span class="text-xs font-mono font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">REF-00142</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="bg-white border-b border-gray-200 px-8">
+      <div class="flex items-center gap-0">
+        <a href="03-detail-view.html" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">All Events</a>
+        <a href="05-notes-section.html" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Notes</a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Stage Changes</a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-tc-teal-700 border-b-2 border-tc-teal-700">
+          Action Items
+          <span class="ml-1 px-1.5 py-0.5 text-xs bg-tc-teal-700 text-white rounded-full">5</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="p-8 max-w-3xl">
+      <!-- Progress Summary -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-8">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h2 class="text-sm font-bold text-gray-900">Action Plan Progress</h2>
+            <p class="text-xs text-gray-500 mt-0.5">3 of 5 items complete</p>
+          </div>
+          <button class="bg-tc-teal-700 hover:bg-tc-teal-700/90 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Action Item
+          </button>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-2.5">
+          <div class="bg-tc-teal-700 h-2.5 rounded-full" style="width: 60%"></div>
+        </div>
+        <div class="flex items-center gap-4 mt-2 text-xs text-gray-500">
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> 3 Complete</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> 1 Overdue</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-400 inline-block"></span> 1 Pending</span>
+        </div>
+      </div>
+
+      <!-- Action Items Timeline -->
+      <div class="relative pl-10">
+        <div class="tl-line"></div>
+
+        <!-- Action 1: Overdue (pulsing red) -->
+        <div class="relative mb-6">
+          <div class="tl-dot tl-dot-overdue pulse-red" style="top: 12px;"></div>
+          <div class="bg-white rounded-xl border border-red-200 shadow-sm p-5">
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5">
+                <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-tc-teal-700 focus:ring-tc-teal-500">
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold text-gray-900">Compile final investigation summary report</p>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-700">Overdue</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Written summary of investigation findings for complainant and internal records</p>
+                <div class="flex items-center gap-4 mt-3 text-xs">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-5 h-5 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-[8px] font-bold">JP</div>
+                    <span class="text-gray-600">James Patel</span>
+                  </div>
+                  <span class="text-gray-300">|</span>
+                  <span class="text-gray-500">Clinical Care</span>
+                  <span class="text-gray-300">|</span>
+                  <span class="text-red-600 font-medium">Due: 7 Mar 2026 (3 days overdue)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action 2: Pending -->
+        <div class="relative mb-6">
+          <div class="tl-dot tl-dot-pending" style="top: 12px;"></div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5">
+                <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-tc-teal-700 focus:ring-tc-teal-500">
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold text-gray-900">Send written findings to Lisa Thompson</p>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Pending</span>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Complainant requested a written summary — depends on investigation report completion</p>
+                <div class="flex items-center gap-4 mt-3 text-xs">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-5 h-5 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-[8px] font-bold">JP</div>
+                    <span class="text-gray-600">James Patel</span>
+                  </div>
+                  <span class="text-gray-300">|</span>
+                  <span class="text-gray-500">Clinical Care</span>
+                  <span class="text-gray-300">|</span>
+                  <span class="text-gray-500">Due: 14 Mar 2026</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action 3: Complete -->
+        <div class="relative mb-6">
+          <div class="tl-dot tl-dot-complete" style="top: 12px;"></div>
+          <div class="bg-white rounded-xl border border-green-100 shadow-sm p-5 bg-green-50/30">
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5">
+                <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-tc-teal-700 focus:ring-tc-teal-500">
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold text-gray-500 line-through">Contact pharmacy for incident report</p>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700">Complete</span>
+                </div>
+                <p class="text-xs text-gray-400 mt-1 line-through">Request formal incident report from dispensing pharmacy</p>
+                <div class="flex items-center gap-4 mt-3 text-xs">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-5 h-5 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-[8px] font-bold">JP</div>
+                    <span class="text-gray-400">James Patel</span>
+                  </div>
+                  <span class="text-gray-200">|</span>
+                  <span class="text-green-600 font-medium flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    Completed 25 Feb by James Patel
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action 4: Complete -->
+        <div class="relative mb-6">
+          <div class="tl-dot tl-dot-complete" style="top: 12px;"></div>
+          <div class="bg-white rounded-xl border border-green-100 shadow-sm p-5 bg-green-50/30">
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5">
+                <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-tc-teal-700 focus:ring-tc-teal-500">
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold text-gray-500 line-through">Review Margaret's medication chart for discrepancies</p>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700">Complete</span>
+                </div>
+                <p class="text-xs text-gray-400 mt-1 line-through">Cross-reference blister pack labels with prescribed medication schedule</p>
+                <div class="flex items-center gap-4 mt-3 text-xs">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center text-white text-[8px] font-bold">PS</div>
+                    <span class="text-gray-400">Priya Sharma</span>
+                  </div>
+                  <span class="text-gray-200">|</span>
+                  <span class="text-green-600 font-medium flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    Completed 22 Feb by Priya Sharma
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action 5: Complete -->
+        <div class="relative mb-6">
+          <div class="tl-dot tl-dot-complete" style="top: 12px;"></div>
+          <div class="bg-white rounded-xl border border-green-100 shadow-sm p-5 bg-green-50/30">
+            <div class="flex items-start gap-3">
+              <div class="mt-0.5">
+                <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300 text-tc-teal-700 focus:ring-tc-teal-500">
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold text-gray-500 line-through">Acknowledge complaint to Lisa Thompson</p>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700">Complete</span>
+                </div>
+                <p class="text-xs text-gray-400 mt-1 line-through">Contact complainant to confirm receipt and outline next steps</p>
+                <div class="flex items-center gap-4 mt-3 text-xs">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-5 h-5 rounded-full bg-purple-600 flex items-center justify-center text-white text-[8px] font-bold">SC</div>
+                    <span class="text-gray-400">Sarah Chen</span>
+                  </div>
+                  <span class="text-gray-200">|</span>
+                  <span class="text-green-600 font-medium flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    Completed 16 Feb by Sarah Chen
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- End marker -->
+        <div class="relative mb-4">
+          <div class="tl-dot" style="top: 4px; background: #d1d5db; width: 10px; height: 10px; left: 15px;"></div>
+          <p class="text-xs text-gray-400 italic py-2">Beginning of action plan</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

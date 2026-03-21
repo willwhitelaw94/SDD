@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec Explorer — Lead Essential (LES)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--surface:#1e293b;--surface-hover:#263548;--border:#334155;--text:#e2e8f0;--text-muted:#94a3b8;--text-dim:#64748b;--teal:#43C0BE;--teal-dark:#007F7E;--blue:#2C4C79;--orange:#f59e0b;--red:#ef4444;--green:#22c55e;--purple:#a78bfa;--pink:#f472b6;--cyan:#22d3ee;--amber:#fbbf24;--slate:#64748b}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden}
+.sidebar{width:280px;min-width:280px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--border)}
+.sidebar-header h1{font-size:16px;font-weight:700;color:var(--teal);margin-bottom:2px}
+.sidebar-header .subtitle{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 0}
+.nav-section{padding:0 16px;margin-bottom:8px}
+.nav-section-title{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-dim);padding:8px 4px 4px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;cursor:pointer;transition:all .15s;font-size:13px;color:var(--text-muted)}
+.nav-item:hover{background:var(--surface-hover);color:var(--text)}
+.nav-item.active{background:rgba(67,192,190,.12);color:var(--teal);font-weight:600}
+.nav-icon{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+.priority-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-left:auto}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--text-dim)}
+.main{flex:1;overflow-y:auto;padding:32px 40px}
+.main::-webkit-scrollbar{width:6px}
+.main::-webkit-scrollbar-track{background:transparent}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.sidebar-nav::-webkit-scrollbar{width:4px}
+.sidebar-nav::-webkit-scrollbar-track{background:transparent}
+.sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:15px;font-weight:700}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center}
+.stat-value{font-size:28px;font-weight:800;color:var(--teal)}
+.stat-label{font-size:12px;color:var(--text-muted);margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;background:rgba(67,192,190,.06);color:var(--teal);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top}
+tr:hover td{background:var(--surface-hover)}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:4px;font-weight:600}
+.badge-teal{background:rgba(67,192,190,.15);color:var(--teal)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red)}
+.badge-amber{background:rgba(251,191,36,.15);color:var(--amber)}
+.badge-slate{background:rgba(100,116,139,.15);color:var(--slate)}
+.badge-green{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-blue{background:rgba(44,76,121,.3);color:#7dade6}
+.badge-purple{background:rgba(167,139,250,.15);color:var(--purple)}
+.badge-pink{background:rgba(244,114,182,.15);color:var(--pink)}
+.badge-cyan{background:rgba(34,211,238,.15);color:var(--cyan)}
+.badge-orange{background:rgba(245,158,11,.15);color:var(--orange)}
+.section-title{font-size:22px;font-weight:800;margin-bottom:6px}
+.section-subtitle{font-size:13px;color:var(--text-muted);margin-bottom:24px}
+.filter-bar{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text-muted);transition:all .15s}
+.filter-btn:hover{border-color:var(--teal);color:var(--text)}
+.filter-btn.active{background:rgba(67,192,190,.12);border-color:var(--teal);color:var(--teal)}
+.dep-flow{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.dep-node{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s}
+.dep-node:hover{border-color:var(--teal);color:var(--teal)}
+.dep-node.current{background:rgba(67,192,190,.15);border-color:var(--teal);color:var(--teal)}
+.dep-arrow{color:var(--text-dim);font-size:16px}
+.story-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.story-card:hover{border-color:var(--teal);transform:translateY(-2px)}
+.story-card .story-num{position:absolute;top:12px;right:12px;font-size:28px;font-weight:900;opacity:.1}
+.story-card h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.story-card .story-actor{font-size:11px;color:var(--text-dim);margin-bottom:8px}
+.story-card .story-tags{display:flex;flex-wrap:wrap;gap:4px}
+.story-card .story-tags span{font-size:10px;padding:1px 6px;background:rgba(67,192,190,.08);border-radius:3px;color:var(--text-dim)}
+.scenario-block{margin-bottom:16px;padding:16px;background:var(--bg);border-radius:8px;border:1px solid var(--border)}
+.scenario-block h4{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text)}
+.scenario-step{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:4px}
+.kw-given{color:#43C0BE;font-weight:700}
+.kw-when{color:#fbbf24;font-weight:700}
+.kw-then{color:#a78bfa;font-weight:700}
+.kw-and{font-weight:700}
+.edge-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;border-left:3px solid var(--teal)}
+.edge-card h3{font-size:13px;font-weight:700;margin-bottom:6px}
+.edge-card p{font-size:12px;color:var(--text-muted);line-height:1.5}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+.metric-id{font-size:10px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.metric-target{font-size:20px;font-weight:800;margin-bottom:4px}
+.metric-desc{font-size:12px;color:var(--text-muted)}
+.prompt-area{width:100%;min-height:300px;padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:12px;font-family:'SF Mono',Menlo,monospace;line-height:1.6;resize:vertical}
+.copy-btn{padding:8px 20px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--teal);background:rgba(67,192,190,.12);color:var(--teal);transition:all .15s}
+.copy-btn:hover{background:rgba(67,192,190,.25)}
+.fr-cat{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+select{padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;outline:none;width:100%;margin-bottom:16px}
+select:focus{border-color:var(--teal)}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h1>Lead Essential (LES)</h1>
+    <div class="subtitle">Spec Explorer &middot; TP-2315</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-title">Overview</div>
+      <div class="nav-item active" data-panel="dashboard"><span class="nav-icon">&#9673;</span>Dashboard</div>
+      <div class="nav-item" data-panel="priority-map"><span class="nav-icon">&#9632;</span>Priority Map</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Stories</div>
+      <div class="nav-item" data-panel="story-1"><span class="nav-icon">&#9654;</span>US1: Staff Leads List<span class="priority-dot" style="background:var(--red)"></span></div>
+      <div class="nav-item" data-panel="story-2"><span class="nav-icon">&#9654;</span>US2: Staff Profile View<span class="priority-dot" style="background:var(--red)"></span></div>
+      <div class="nav-item" data-panel="story-3"><span class="nav-icon">&#9654;</span>US3: Overview Tab<span class="priority-dot" style="background:var(--red)"></span></div>
+      <div class="nav-item" data-panel="story-4"><span class="nav-icon">&#9654;</span>US4: Journey Stage<span class="priority-dot" style="background:var(--red)"></span></div>
+      <div class="nav-item" data-panel="story-5"><span class="nav-icon">&#9654;</span>US5: Lead Status<span class="priority-dot" style="background:var(--red)"></span></div>
+      <div class="nav-item" data-panel="story-6"><span class="nav-icon">&#9654;</span>US6: Timeline & Notes<span class="priority-dot" style="background:var(--amber)"></span></div>
+      <div class="nav-item" data-panel="story-7"><span class="nav-icon">&#9654;</span>US7: Assignment<span class="priority-dot" style="background:var(--amber)"></span></div>
+      <div class="nav-item" data-panel="story-8"><span class="nav-icon">&#9654;</span>US8: Consumer Profile<span class="priority-dot" style="background:var(--amber)"></span></div>
+      <div class="nav-item" data-panel="story-9"><span class="nav-icon">&#9654;</span>US9: Internal Creation<span class="priority-dot" style="background:var(--amber)"></span></div>
+      <div class="nav-item" data-panel="story-10"><span class="nav-icon">&#9654;</span>US10: Attribution<span class="priority-dot" style="background:var(--slate)"></span></div>
+      <div class="nav-item" data-panel="story-11"><span class="nav-icon">&#9654;</span>US11: Traits<span class="priority-dot" style="background:var(--slate)"></span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Requirements</div>
+      <div class="nav-item" data-panel="fr-trace"><span class="nav-icon">&#9745;</span>FR Traceability</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Quality</div>
+      <div class="nav-item" data-panel="edges"><span class="nav-icon">&#9888;</span>Edge Cases</div>
+      <div class="nav-item" data-panel="metrics"><span class="nav-icon">&#9662;</span>Success Criteria</div>
+      <div class="nav-item" data-panel="oos"><span class="nav-icon">&#10005;</span>Out of Scope</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Tools</div>
+      <div class="nav-item" data-panel="prompt"><span class="nav-icon">&#9998;</span>Prompt Builder</div>
+    </div>
+  </div>
+  <div class="sidebar-footer">Approved &middot; Gate 1 passed 2026-02-21</div>
+</div>
+
+<div class="main">
+
+<!-- DASHBOARD -->
+<div class="panel active" id="dashboard">
+  <div class="section-title">Spec Dashboard</div>
+  <div class="section-subtitle">Lead Essential &mdash; specification summary at a glance</div>
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="stat-card"><div class="stat-value">11</div><div class="stat-label">User Stories</div></div>
+    <div class="stat-card"><div class="stat-value">49</div><div class="stat-label">Acceptance Scenarios</div></div>
+    <div class="stat-card"><div class="stat-value">53</div><div class="stat-label">Functional Requirements</div></div>
+    <div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Edge Cases</div></div>
+  </div>
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="stat-card"><div class="stat-value" style="color:var(--red)">5</div><div class="stat-label">P1 Critical</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--amber)">4</div><div class="stat-label">P2 Important</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--slate)">2</div><div class="stat-label">P3 Nice-to-have</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Dependency Graph</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-1')">US1: List</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-9')">US9: Creation</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-3')">US3: Overview</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-4')">US4: Journey Stage</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-5')">US5: Lead Status</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-6')">US6: Timeline</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-7')">US7: Assignment</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-10')">US10: Attribution</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-11')">US11: Traits</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Overview</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Lead Essential establishes the native lead management module in the Portal &mdash; replacing Zoho CRM as the primary workspace for viewing, managing, and progressing leads through the sales funnel.</p>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:12px"><strong style="color:var(--text)">Key Actors:</strong> Sales Staff, Sales Team Leader / Head of Sales, Lead Owner (consumer/representative)</p>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6"><strong style="color:var(--text)">Epic Dependencies:</strong> LTH (depends on), LGI (blocks), LDS (blocks)</p>
+  </div>
+</div>
+
+<!-- PRIORITY MAP -->
+<div class="panel" id="priority-map">
+  <div class="section-title">Priority Map</div>
+  <div class="section-subtitle">Stories grouped by priority &mdash; click to navigate</div>
+  <h3 style="color:var(--red);font-size:14px;margin-bottom:12px">P1 &mdash; Critical (5 stories)</h3>
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="story-card" style="border-left:3px solid var(--red)" onclick="nav('story-1')"><div class="story-num" style="color:var(--red)">01</div><span class="badge badge-red">P1</span><h3>Staff Leads List View</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>5 scenarios</span><span>6 FRs</span></div></div>
+    <div class="story-card" style="border-left:3px solid var(--red)" onclick="nav('story-2')"><div class="story-num" style="color:var(--red)">02</div><span class="badge badge-red">P1</span><h3>Staff Lead Profile View</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>4 scenarios</span><span>4 FRs</span></div></div>
+    <div class="story-card" style="border-left:3px solid var(--red)" onclick="nav('story-3')"><div class="story-num" style="color:var(--red)">03</div><span class="badge badge-red">P1</span><h3>Overview Tab: Lead Summary</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>5 scenarios</span><span>4 FRs</span></div></div>
+    <div class="story-card" style="border-left:3px solid var(--red)" onclick="nav('story-4')"><div class="story-num" style="color:var(--red)">04</div><span class="badge badge-red">P1</span><h3>Journey Stage Tracking</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>5 scenarios</span><span>4 FRs</span></div></div>
+    <div class="story-card" style="border-left:3px solid var(--red)" onclick="nav('story-5')"><div class="story-num" style="color:var(--red)">05</div><span class="badge badge-red">P1</span><h3>Lead Status Tracking</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>5 scenarios</span><span>7 FRs</span></div></div>
+  </div>
+  <h3 style="color:var(--amber);font-size:14px;margin-bottom:12px">P2 &mdash; Important (4 stories)</h3>
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="story-card" style="border-left:3px solid var(--amber)" onclick="nav('story-6')"><div class="story-num" style="color:var(--amber)">06</div><span class="badge badge-amber">P2</span><h3>Timeline & Notes</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>4 scenarios</span><span>3 FRs</span></div></div>
+    <div class="story-card" style="border-left:3px solid var(--amber)" onclick="nav('story-7')"><div class="story-num" style="color:var(--amber)">07</div><span class="badge badge-amber">P2</span><h3>Staff Assignment</h3><div class="story-actor">Sales Team Leader</div><div class="story-tags"><span>4 scenarios</span><span>5 FRs</span></div></div>
+    <div class="story-card" style="border-left:3px solid var(--amber)" onclick="nav('story-8')"><div class="story-num" style="color:var(--amber)">08</div><span class="badge badge-amber">P2</span><h3>Consumer Profile</h3><div class="story-actor">Lead Owner</div><div class="story-tags"><span>5 scenarios</span><span>4 FRs</span></div></div>
+    <div class="story-card" style="border-left:3px solid var(--amber)" onclick="nav('story-9')"><div class="story-num" style="color:var(--amber)">09</div><span class="badge badge-amber">P2</span><h3>Internal Lead Creation</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>5 scenarios</span><span>4 FRs</span></div></div>
+  </div>
+  <h3 style="color:var(--slate);font-size:14px;margin-bottom:12px">P3 &mdash; Nice-to-have (2 stories)</h3>
+  <div class="grid-3">
+    <div class="story-card" style="border-left:3px solid var(--slate)" onclick="nav('story-10')"><div class="story-num" style="color:var(--slate)">10</div><span class="badge badge-slate">P3</span><h3>Marketing Attribution</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>2 scenarios</span><span>2 FRs</span></div></div>
+    <div class="story-card" style="border-left:3px solid var(--slate)" onclick="nav('story-11')"><div class="story-num" style="color:var(--slate)">11</div><span class="badge badge-slate">P3</span><h3>Lead Traits</h3><div class="story-actor">Sales Staff</div><div class="story-tags"><span>3 scenarios</span><span>3 FRs</span></div></div>
+  </div>
+</div>
+
+<!-- US1 -->
+<div class="panel" id="story-1">
+  <div class="section-title">US1: Staff Leads List View</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-red">P1 Critical</span></div>
+  <div class="card" style="border-left:3px solid var(--red);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">The list view is the primary workspace for sales staff. Without it, there is no central place to manage leads. The conversion dashboard (already built) provides a starting point, but LES requires additional columns and capabilities beyond conversion tracking.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Dependencies</div></div>
+    <div class="dep-flow"><div class="dep-node current">US1: List</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-9')">US9: Creation</div></div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (5)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am a sales staff member, <span class="kw-when">When</span> I navigate to the Leads page, <span class="kw-then">Then</span> I see a table displaying: Lead Name, Contact Name, Email, Phone, Journey Stage, Lead Status, Assigned Agent, Created Date, and Conversion status.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing the leads list, <span class="kw-when">When</span> I apply filters for Journey Stage, Lead Status, Assigned Agent, or Conversion status, <span class="kw-then">Then</span> the list updates to show only matching leads.</div></div>
+    <div class="scenario-block"><h4>Scenario 3</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing the leads list, <span class="kw-when">When</span> I click on a lead name, <span class="kw-then">Then</span> I am navigated to that lead's profile view.</div></div>
+    <div class="scenario-block"><h4>Scenario 4</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing the leads list, <span class="kw-when">When</span> I click "Create Lead", <span class="kw-then">Then</span> a lead creation form appears with mandatory fields (Lead Name, Email) and optional fields, and upon save the new lead appears in the list.</div></div>
+    <div class="scenario-block"><h4>Scenario 5</h4><div class="scenario-step"><span class="kw-given">Given</span> I am a Sales Team Leader, <span class="kw-when">When</span> I select multiple leads using checkboxes, <span class="kw-then">Then</span> I can perform bulk actions (assign agent, export).</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs (6)</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-001</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Display all leads in structured table with columns</td></tr>
+      <tr><td><span class="badge badge-teal">FR-002</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Support filtering by Journey Stage, Lead Status, Assigned Agent, Conversion status, Created Date</td></tr>
+      <tr><td><span class="badge badge-teal">FR-003</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Support sorting by any sortable column</td></tr>
+      <tr><td><span class="badge badge-teal">FR-004</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Support full-text search across lead name, email, phone, TC Customer Number</td></tr>
+      <tr><td><span class="badge badge-teal">FR-005</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Support bulk actions: assign agent and export (CSV)</td></tr>
+      <tr><td><span class="badge badge-teal">FR-006</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Provide a "Create Lead" action from the list view</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US2 -->
+<div class="panel" id="story-2">
+  <div class="section-title">US2: Staff Lead Profile View</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-red">P1 Critical</span></div>
+  <div class="card" style="border-left:3px solid var(--red);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">The profile view is where all lead management happens. It replaces the current basic show page with a rich, tabbed layout that surfaces all lead data and actions in context.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Dependencies</div></div>
+    <div class="dep-flow"><div class="dep-node current">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node" onclick="nav('story-3')">US3</div><span class="dep-arrow">,</span><div class="dep-node" onclick="nav('story-4')">US4</div><span class="dep-arrow">,</span><div class="dep-node" onclick="nav('story-5')">US5</div><span class="dep-arrow">,</span><div class="dep-node" onclick="nav('story-6')">US6</div><span class="dep-arrow">,</span><div class="dep-node" onclick="nav('story-7')">US7</div><span class="dep-arrow">,</span><div class="dep-node" onclick="nav('story-10')">US10</div><span class="dep-arrow">,</span><div class="dep-node" onclick="nav('story-11')">US11</div></div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (4)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I navigate to a lead's profile, <span class="kw-when">When</span> the page loads, <span class="kw-then">Then</span> I see a sidebar with: avatar/initials, full name, TC Customer Number, Journey Stage badge, profile completion percentage, email (with copy), phone (with copy), date of birth, and assigned agent.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing a lead's profile, <span class="kw-when">When</span> I look at the tab navigation, <span class="kw-then">Then</span> I see tabs for: Overview, Timeline, and Other (Attribution, Traits).</div></div>
+    <div class="scenario-block"><h4>Scenario 3</h4><div class="scenario-step"><span class="kw-given">Given</span> I am on any tab within the lead profile, <span class="kw-then">Then</span> the sidebar with key identification details remains visible and accessible.</div></div>
+    <div class="scenario-block"><h4>Scenario 4</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing the lead profile sidebar, <span class="kw-when">When</span> I click the assigned agent dropdown, <span class="kw-then">Then</span> I can search for and select a different staff member to assign.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs (4)</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-007</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Display lead profile with persistent sidebar</td></tr>
+      <tr><td><span class="badge badge-teal">FR-008</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Organise profile into tabs: Overview, Timeline, Other</td></tr>
+      <tr><td><span class="badge badge-teal">FR-009</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Allow inline card expansion editing (ACRM pattern)</td></tr>
+      <tr><td><span class="badge badge-teal">FR-010</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Support section-level editing for all profile sections</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US3 -->
+<div class="panel" id="story-3">
+  <div class="section-title">US3: Overview Tab &mdash; Lead Summary</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-red">P1 Critical</span></div>
+  <div class="card" style="border-left:3px solid var(--red);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">The overview tab is the most-used view &mdash; it provides the lead's complete profile at a glance and allows staff to update any section independently.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Dependencies</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node current">US3: Overview</div></div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (5)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am on the Overview tab, <span class="kw-when">When</span> the page loads, <span class="kw-then">Then</span> I see the following sections as read-only cards: Lead Information, Contact Information, Personal Details, Living Situation, Support Needs, and Cultural Background.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing any section, <span class="kw-when">When</span> I click "Edit", <span class="kw-then">Then</span> the card expands inline to show the edit form for just that section's fields, pre-filled with current data (ACRM inline expansion pattern &mdash; no modal).</div></div>
+    <div class="scenario-block"><h4>Scenario 3</h4><div class="scenario-step"><span class="kw-given">Given</span> I have edited a section and click "Save", <span class="kw-when">When</span> the save completes, <span class="kw-then">Then</span> only the fields in that section are updated, the card refreshes with the new data, and other sections remain unchanged.</div></div>
+    <div class="scenario-block"><h4>Scenario 4</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing the Contact Information section, <span class="kw-when">When</span> I click "Add Contact", <span class="kw-then">Then</span> I can add a new contact with name, relationship, email, phone, and contact type, and delete secondary contacts.</div></div>
+    <div class="scenario-block"><h4>Scenario 5</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing the Lead Information section, <span class="kw-when">When</span> I click "Edit", <span class="kw-then">Then</span> I can update: journey stage, lead status, purchase intent, and lead attribution. The lead name remains read-only for staff.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-009</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Inline card expansion editing (ACRM pattern)</td></tr>
+      <tr><td><span class="badge badge-teal">FR-010</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Section-level editing for all profile sections</td></tr>
+      <tr><td><span class="badge badge-teal">FR-028</span></td><td><span class="fr-cat" style="background:#06b6d4"></span>Contacts</td><td>Primary and secondary contacts per lead</td></tr>
+      <tr><td><span class="badge badge-teal">FR-029</span></td><td><span class="fr-cat" style="background:#06b6d4"></span>Contacts</td><td>Enforce exactly one Primary Contact</td></tr>
+      <tr><td><span class="badge badge-teal">FR-030</span></td><td><span class="fr-cat" style="background:#06b6d4"></span>Contacts</td><td>Allow adding/deleting contacts</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US4 -->
+<div class="panel" id="story-4">
+  <div class="section-title">US4: Journey Stage Tracking</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-red">P1 Critical</span></div>
+  <div class="card" style="border-left:3px solid var(--red);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Journey Stage is the core sales pipeline metric. Every reporting dashboard, forecast, and SLA depends on accurate stage tracking. Without it, there is no funnel visibility.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Dependencies</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node current">US4: Journey Stage</div></div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (5)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing a lead's profile, <span class="kw-when">When</span> I look at the Journey Stage indicator, <span class="kw-then">Then</span> I see the lead's current position along the funnel: Pre-Care &rarr; ACAT Booked &rarr; Approved &rarr; Allocated &rarr; Active &rarr; Converted, with the current stage highlighted.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> I click to update the Journey Stage, <span class="kw-when">When</span> the wizard opens, <span class="kw-then">Then</span> I can select any stage (forward or backward) and see mandatory fields that must be completed for the target stage.</div></div>
+    <div class="scenario-block"><h4>Scenario 3</h4><div class="scenario-step"><span class="kw-given">Given</span> I complete all mandatory fields and confirm, <span class="kw-when">When</span> the wizard saves, <span class="kw-then">Then</span> the Journey Stage is updated, a history entry is recorded with previous stage, new stage, timestamp, and who made the change.</div></div>
+    <div class="scenario-block"><h4>Scenario 4</h4><div class="scenario-step"><span class="kw-given">Given</span> a lead's Journey Stage is updated, <span class="kw-when">When</span> I view the timeline, <span class="kw-then">Then</span> I see an entry showing the stage transition with before/after values.</div></div>
+    <div class="scenario-block"><h4>Scenario 5</h4><div class="scenario-step"><span class="kw-given">Given</span> a lead's status is set to "Lost", <span class="kw-when">When</span> I view the Journey Stage, <span class="kw-then">Then</span> the Journey Stage remains frozen at its current position. If the lead is re-engaged, they resume from the same stage.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-011</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>Display 6 primary stages with optional substages</td></tr>
+      <tr><td><span class="badge badge-teal">FR-011a</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>Journey Stage independent of Lead Status</td></tr>
+      <tr><td><span class="badge badge-teal">FR-012</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>Require stage-specific mandatory fields</td></tr>
+      <tr><td><span class="badge badge-teal">FR-013</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>Record history entry for every stage change</td></tr>
+      <tr><td><span class="badge badge-teal">FR-047</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>Substage mapping for 6 primary stages</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US5 -->
+<div class="panel" id="story-5">
+  <div class="section-title">US5: Lead Status Tracking</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-red">P1 Critical</span></div>
+  <div class="card" style="border-left:3px solid var(--red);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Lead Status captures engagement quality &mdash; it's how staff communicate progress on individual leads and how managers identify leads going cold. Each status has different required context.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Dependencies</div></div>
+    <div class="dep-flow"><div class="dep-node" onclick="nav('story-2')">US2: Profile</div><span class="dep-arrow">&rarr;</span><div class="dep-node current">US5: Lead Status</div></div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (5)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing a lead's profile, <span class="kw-when">When</span> I see the Lead Status actions, <span class="kw-then">Then</span> I can select from: Not Contacted, Attempted Contact, Made Contact, and Lost.</div></div>
+    <div class="scenario-block"><h4>Scenario 2 &mdash; Made Contact</h4><div class="scenario-step"><span class="kw-given">Given</span> I update status to "Made Contact", <span class="kw-when">When</span> the wizard opens, <span class="kw-then">Then</span> I see mandatory fields: Journey Stage, Lead Attribution, Purchase Intent; optional: contact method, outcome, follow-up date, notes.</div></div>
+    <div class="scenario-block"><h4>Scenario 3 &mdash; Attempted Contact</h4><div class="scenario-step"><span class="kw-given">Given</span> I update status to "Attempted Contact", <span class="kw-when">When</span> the wizard opens, <span class="kw-then">Then</span> I see mandatory: Contact Method, Contact Outcome (No Answer, Left Voicemail, Line Busy, Wrong Number, Email Bounced, Other); optional: notes.</div></div>
+    <div class="scenario-block"><h4>Scenario 4 &mdash; Lost</h4><div class="scenario-step"><span class="kw-given">Given</span> I update status to "Lost", <span class="kw-when">When</span> the wizard opens, <span class="kw-then">Then</span> I see mandatory: Lost Type + dynamic Reason dropdown. Lost Lead (Chose competitor, Too expensive, Not ready, Changed mind, Other), Junk (Spam, Test entry, Duplicate, Invalid data), Uncontactable (No response after 5 attempts, Wrong number, Deceased, Moved overseas).</div></div>
+    <div class="scenario-block"><h4>Scenario 5</h4><div class="scenario-step"><span class="kw-given">Given</span> any status update is saved, <span class="kw-when">When</span> I view the timeline, <span class="kw-then">Then</span> I see a chronological entry with old status, new status, timestamp, agent name, and any notes captured.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-014</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Support statuses: Not Contacted, Attempted Contact, Made Contact, Lost</td></tr>
+      <tr><td><span class="badge badge-teal">FR-015</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Status-specific wizard for each transition</td></tr>
+      <tr><td><span class="badge badge-teal">FR-016</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Made Contact wizard fields</td></tr>
+      <tr><td><span class="badge badge-teal">FR-017</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Attempted Contact wizard fields</td></tr>
+      <tr><td><span class="badge badge-teal">FR-018</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Lost wizard with dynamic reasons</td></tr>
+      <tr><td><span class="badge badge-teal">FR-019</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Converted out of LES scope (LTH)</td></tr>
+      <tr><td><span class="badge badge-teal">FR-020</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Record history entry for every status change</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US6 -->
+<div class="panel" id="story-6">
+  <div class="section-title">US6: Lead Timeline & Notes</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-amber">P2 Important</span></div>
+  <div class="card" style="border-left:3px solid var(--amber);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">The timeline is the lead's history &mdash; it enables handoffs between agents, provides context for follow-ups, and creates an audit trail. Notes are the most common day-to-day action.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (4)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am on a lead's Timeline tab, <span class="kw-when">When</span> the page loads, <span class="kw-then">Then</span> I see a chronological list of all events: lead creation, status changes, journey stage updates, notes added, and agent assignments &mdash; each with timestamp, event type, description, and who performed it.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> I want to add a note, <span class="kw-when">When</span> I type in the "Add Note" panel and click save, <span class="kw-then">Then</span> the note is added to the timeline with my name, the current date/time, and the note content.</div></div>
+    <div class="scenario-block"><h4>Scenario 3</h4><div class="scenario-step"><span class="kw-given">Given</span> a status change or stage update occurs, <span class="kw-when">When</span> I view the timeline, <span class="kw-then">Then</span> I see an auto-generated entry showing the change details (before &rarr; after values, the wizard fields captured).</div></div>
+    <div class="scenario-block"><h4>Scenario 4</h4><div class="scenario-step"><span class="kw-given">Given</span> the timeline has many entries, <span class="kw-when">When</span> I navigate through pages, <span class="kw-then">Then</span> entries are grouped by date and paginated.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-021</span></td><td><span class="fr-cat" style="background:#a855f7"></span>Timeline</td><td>Chronological timeline of all lead events</td></tr>
+      <tr><td><span class="badge badge-teal">FR-022</span></td><td><span class="fr-cat" style="background:#a855f7"></span>Timeline</td><td>Allow staff to add free-text notes</td></tr>
+      <tr><td><span class="badge badge-teal">FR-023</span></td><td><span class="fr-cat" style="background:#a855f7"></span>Timeline</td><td>Every entry: event type, description, timestamp, agent name</td></tr>
+      <tr><td><span class="badge badge-teal">FR-048</span></td><td><span class="fr-cat" style="background:#a855f7"></span>Timeline</td><td>Timeline entries immutable after creation</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US7 -->
+<div class="panel" id="story-7">
+  <div class="section-title">US7: Staff Assignment</div>
+  <div class="section-subtitle">As a Sales Team Leader &mdash; <span class="badge badge-amber">P2 Important</span></div>
+  <div class="card" style="border-left:3px solid var(--amber);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Without assignment, leads have no accountability. Team Leaders need both individual and bulk assignment to manage pipelines effectively.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (4)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am viewing a lead's profile sidebar, <span class="kw-when">When</span> I click the Assigned Agent dropdown, <span class="kw-then">Then</span> I can search for any internal staff member and select them to assign.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> I select the new assigned agent, <span class="kw-when">When</span> the assignment saves, <span class="kw-then">Then</span> the lead's assigned agent is updated immediately and a timeline entry is recorded.</div></div>
+    <div class="scenario-block"><h4>Scenario 3</h4><div class="scenario-step"><span class="kw-given">Given</span> I am on the leads list view, <span class="kw-when">When</span> I select multiple leads and click "Bulk Assign", <span class="kw-then">Then</span> a modal appears where I can search and select a staff member, and all selected leads are assigned in one action.</div></div>
+    <div class="scenario-block"><h4>Scenario 4</h4><div class="scenario-step"><span class="kw-given">Given</span> a lead was created by a sales agent directly, <span class="kw-when">When</span> the lead is saved, <span class="kw-then">Then</span> the creating agent is automatically assigned as the lead owner.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-024</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Assign any staff member from profile sidebar</td></tr>
+      <tr><td><span class="badge badge-teal">FR-025</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Bulk assignment from list view</td></tr>
+      <tr><td><span class="badge badge-teal">FR-026</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Auto-assign creating agent</td></tr>
+      <tr><td><span class="badge badge-teal">FR-026a</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Round-robin for public/Zoho leads</td></tr>
+      <tr><td><span class="badge badge-teal">FR-027</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Timeline entry for every assignment change</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US8 -->
+<div class="panel" id="story-8">
+  <div class="section-title">US8: Consumer Profile Management</div>
+  <div class="section-subtitle">As a Lead Owner &mdash; <span class="badge badge-amber">P2 Important</span></div>
+  <div class="card" style="border-left:3px solid var(--amber);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">The existing 6-step wizard forces consumers through a linear flow even when they only need to update one field. Section-based editing improves the experience and encourages profile completion.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (5)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am a lead owner viewing my profile, <span class="kw-when">When</span> the page loads, <span class="kw-then">Then</span> I see my information organised into sections: My Details, Living Situation, Support Needs, Cultural Background, and Management Option &mdash; each with an "Edit" action.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> I click "Edit" on any section, <span class="kw-when">When</span> the edit form appears, <span class="kw-then">Then</span> only the fields for that section are shown, pre-filled with my current data.</div></div>
+    <div class="scenario-block"><h4>Scenario 3</h4><div class="scenario-step"><span class="kw-given">Given</span> I save changes to a section, <span class="kw-when">When</span> the save completes, <span class="kw-then">Then</span> the section card refreshes with updated data and my profile completion percentage updates.</div></div>
+    <div class="scenario-block"><h4>Scenario 4</h4><div class="scenario-step"><span class="kw-given">Given</span> my profile is incomplete, <span class="kw-when">When</span> I view the profile page, <span class="kw-then">Then</span> incomplete sections are visually indicated encouraging me to fill them in.</div></div>
+    <div class="scenario-block"><h4>Scenario 5</h4><div class="scenario-step"><span class="kw-given">Given</span> I am a representative, <span class="kw-when">When</span> I view the profile, <span class="kw-then">Then</span> I see the recipient's information (not my own) and can edit their details.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-031</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Lead owners view profile in discrete sections</td></tr>
+      <tr><td><span class="badge badge-teal">FR-032</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Edit any section independently</td></tr>
+      <tr><td><span class="badge badge-teal">FR-033</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Profile completion indicator</td></tr>
+      <tr><td><span class="badge badge-teal">FR-034</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Visually indicate incomplete sections</td></tr>
+      <tr><td><span class="badge badge-teal">FR-053</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Consumer sees only own 5 sections</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US9 -->
+<div class="panel" id="story-9">
+  <div class="section-title">US9: Internal Lead Creation</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-amber">P2 Important</span></div>
+  <div class="card" style="border-left:3px solid var(--amber);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Staff need to capture leads in real-time during calls. A quick create path (modal) for minimal capture and a guided stepper for detailed intake gives flexibility without friction.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (5)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am on the leads list view, <span class="kw-when">When</span> I click "Create Lead", <span class="kw-then">Then</span> I see two options: "Quick Create" (modal) and "Guided Create" (stepper).</div></div>
+    <div class="scenario-block"><h4>Scenario 2 &mdash; Quick Create</h4><div class="scenario-step"><span class="kw-given">Given</span> I choose "Quick Create", <span class="kw-when">When</span> the modal opens, <span class="kw-then">Then</span> I see mandatory: Lead Name, Email; optional: phone, relationship, notes. On save, lead is created and I remain on the list view.</div></div>
+    <div class="scenario-block"><h4>Scenario 3 &mdash; Guided Create</h4><div class="scenario-step"><span class="kw-given">Given</span> I choose "Guided Create", <span class="kw-when">When</span> the stepper opens, <span class="kw-then">Then</span> I'm walked through 3 steps: Personal Details, Aged Care Stage, Contact Information. On completion, navigated to new lead's profile.</div></div>
+    <div class="scenario-block"><h4>Scenario 4</h4><div class="scenario-step"><span class="kw-given">Given</span> I fill mandatory fields via either path, <span class="kw-when">When</span> the lead is created, <span class="kw-then">Then</span> it appears in the list with me as assigned agent, default Journey Stage "Pre-Care", default Lead Status "Not Contacted".</div></div>
+    <div class="scenario-block"><h4>Scenario 5</h4><div class="scenario-step"><span class="kw-given">Given</span> a lead with the same email exists, <span class="kw-when">When</span> I attempt to save, <span class="kw-then">Then</span> the system warns of potential duplicate and allows me to proceed or navigate to existing lead.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-035</span></td><td><span class="fr-cat" style="background:#fb923c"></span>Creation</td><td>Two creation paths: Quick Create + Guided Create</td></tr>
+      <tr><td><span class="badge badge-teal">FR-035a</span></td><td><span class="fr-cat" style="background:#fb923c"></span>Creation</td><td>Quick = stay on list, Guided = navigate to profile</td></tr>
+      <tr><td><span class="badge badge-teal">FR-036</span></td><td><span class="fr-cat" style="background:#fb923c"></span>Creation</td><td>Default Pre-Care + Not Contacted</td></tr>
+      <tr><td><span class="badge badge-teal">FR-037</span></td><td><span class="fr-cat" style="background:#fb923c"></span>Creation</td><td>Duplicate email warning</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US10 -->
+<div class="panel" id="story-10">
+  <div class="section-title">US10: Marketing Attribution Display</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-slate">P3 Nice-to-have</span></div>
+  <div class="card" style="border-left:3px solid var(--slate);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Attribution data is already captured during public lead creation (UTM tracking). Displaying it gives sales context on lead quality and source without requiring separate analytics tools.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (2)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am on a lead's Other tab &rarr; Attribution section, <span class="kw-when">When</span> the page loads, <span class="kw-then">Then</span> I see three columns: Traffic Source, UTM Parameters, and Session Data.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> a lead was created without tracking data, <span class="kw-when">When</span> I view Attribution, <span class="kw-then">Then</span> I see an empty state indicating no attribution data available.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-038</span></td><td><span class="fr-cat" style="background:#6366f1"></span>Attribution</td><td>Display marketing attribution data when available</td></tr>
+      <tr><td><span class="badge badge-teal">FR-039</span></td><td><span class="fr-cat" style="background:#6366f1"></span>Attribution</td><td>Empty state when no attribution data</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- US11 -->
+<div class="panel" id="story-11">
+  <div class="section-title">US11: Lead Traits</div>
+  <div class="section-subtitle">As a Sales Staff member &mdash; <span class="badge badge-slate">P3 Nice-to-have</span></div>
+  <div class="card" style="border-left:3px solid var(--slate);margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Why This Priority</div></div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Soft data that helps agents personalise conversations. Low effort to build (simple key-value section) but high impact on sales quality.</p>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-header"><div class="card-title">Acceptance Scenarios (3)</div></div>
+    <div class="scenario-block"><h4>Scenario 1</h4><div class="scenario-step"><span class="kw-given">Given</span> I am on a lead's Other tab &rarr; Traits section, <span class="kw-when">When</span> the page loads, <span class="kw-then">Then</span> I see editable fields for: preferred communication method, best time to call, preferred days, personal interests, technology comfort level, and additional notes.</div></div>
+    <div class="scenario-block"><h4>Scenario 2</h4><div class="scenario-step"><span class="kw-given">Given</span> I edit any trait field, <span class="kw-when">When</span> I save, <span class="kw-then">Then</span> the value persists and a timeline entry is recorded.</div></div>
+    <div class="scenario-block"><h4>Scenario 3</h4><div class="scenario-step"><span class="kw-given">Given</span> a lead has no traits set, <span class="kw-when">When</span> I view the Traits section, <span class="kw-then">Then</span> I see fields with empty/default states and encouragement to complete them.</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Linked FRs</div></div>
+    <table><thead><tr><th>FR</th><th>Category</th><th>Requirement</th></tr></thead><tbody>
+      <tr><td><span class="badge badge-teal">FR-040</span></td><td><span class="fr-cat" style="background:#8b5cf6"></span>Traits</td><td>Traits section with communication/preference fields</td></tr>
+      <tr><td><span class="badge badge-teal">FR-041</span></td><td><span class="fr-cat" style="background:#8b5cf6"></span>Traits</td><td>Stored as flexible JSON</td></tr>
+      <tr><td><span class="badge badge-teal">FR-042</span></td><td><span class="fr-cat" style="background:#8b5cf6"></span>Traits</td><td>Timeline entry on traits update</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- FR TRACEABILITY -->
+<div class="panel" id="fr-trace">
+  <div class="section-title">Functional Requirements</div>
+  <div class="section-subtitle">All 53 FRs grouped by category</div>
+  <div class="filter-bar" id="fr-filters">
+    <button class="filter-btn active" data-filter="all">All (53)</button>
+    <button class="filter-btn" data-filter="list-view" style="border-color:#f59e0b44">List View (6)</button>
+    <button class="filter-btn" data-filter="profile" style="border-color:#3b82f644">Profile (4)</button>
+    <button class="filter-btn" data-filter="journey-stage" style="border-color:#22c55e44">Journey Stage (5)</button>
+    <button class="filter-btn" data-filter="lead-status" style="border-color:#ef444444">Lead Status (7)</button>
+    <button class="filter-btn" data-filter="timeline" style="border-color:#a855f744">Timeline (4)</button>
+    <button class="filter-btn" data-filter="assignment" style="border-color:#ec489944">Assignment (5)</button>
+    <button class="filter-btn" data-filter="contacts" style="border-color:#06b6d444">Contacts (3)</button>
+    <button class="filter-btn" data-filter="consumer" style="border-color:#14b8a644">Consumer (5)</button>
+    <button class="filter-btn" data-filter="creation" style="border-color:#fb923c44">Creation (4)</button>
+    <button class="filter-btn" data-filter="attribution" style="border-color:#6366f144">Attribution (2)</button>
+    <button class="filter-btn" data-filter="traits" style="border-color:#8b5cf644">Traits (3)</button>
+    <button class="filter-btn" data-filter="other" style="border-color:#64748b44">Other (5)</button>
+  </div>
+  <div class="card">
+    <table id="fr-table"><thead><tr><th>FR</th><th>Category</th><th>Requirement</th><th>Stories</th></tr></thead><tbody>
+      <tr data-cat="list-view"><td><span class="badge badge-teal">FR-001</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Display leads in structured table with all columns</td><td>US1</td></tr>
+      <tr data-cat="list-view"><td><span class="badge badge-teal">FR-002</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Filtering by Journey Stage, Lead Status, Assigned Agent, Conversion, Date</td><td>US1</td></tr>
+      <tr data-cat="list-view"><td><span class="badge badge-teal">FR-003</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Sorting by any sortable column</td><td>US1</td></tr>
+      <tr data-cat="list-view"><td><span class="badge badge-teal">FR-004</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Full-text search across name, email, phone, TC number</td><td>US1</td></tr>
+      <tr data-cat="list-view"><td><span class="badge badge-teal">FR-005</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>Bulk actions: assign agent, export CSV</td><td>US1, US7</td></tr>
+      <tr data-cat="list-view"><td><span class="badge badge-teal">FR-006</span></td><td><span class="fr-cat" style="background:#f59e0b"></span>List View</td><td>"Create Lead" action from list view</td><td>US1, US9</td></tr>
+      <tr data-cat="profile"><td><span class="badge badge-teal">FR-007</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Persistent sidebar with avatar, name, TC#, stage, completion, contacts</td><td>US2</td></tr>
+      <tr data-cat="profile"><td><span class="badge badge-teal">FR-008</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Tab organisation: Overview, Timeline, Other</td><td>US2</td></tr>
+      <tr data-cat="profile"><td><span class="badge badge-teal">FR-009</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Inline card expansion editing (ACRM pattern)</td><td>US2, US3</td></tr>
+      <tr data-cat="profile"><td><span class="badge badge-teal">FR-010</span></td><td><span class="fr-cat" style="background:#3b82f6"></span>Profile</td><td>Section-level editing for all profile sections</td><td>US2, US3</td></tr>
+      <tr data-cat="journey-stage"><td><span class="badge badge-teal">FR-011</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>6 primary stages with optional substages, any direction</td><td>US4</td></tr>
+      <tr data-cat="journey-stage"><td><span class="badge badge-teal">FR-011a</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>Independent of Lead Status</td><td>US4</td></tr>
+      <tr data-cat="journey-stage"><td><span class="badge badge-teal">FR-012</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>Stage-specific mandatory fields before transition</td><td>US4</td></tr>
+      <tr data-cat="journey-stage"><td><span class="badge badge-teal">FR-013</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>History entry for every stage change</td><td>US4</td></tr>
+      <tr data-cat="journey-stage"><td><span class="badge badge-teal">FR-047</span></td><td><span class="fr-cat" style="background:#22c55e"></span>Journey Stage</td><td>Substage mapping for all 6 primary stages</td><td>US4</td></tr>
+      <tr data-cat="lead-status"><td><span class="badge badge-teal">FR-014</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Statuses: Not Contacted, Attempted Contact, Made Contact, Lost</td><td>US5</td></tr>
+      <tr data-cat="lead-status"><td><span class="badge badge-teal">FR-015</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Status-specific wizard per transition</td><td>US5</td></tr>
+      <tr data-cat="lead-status"><td><span class="badge badge-teal">FR-016</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Made Contact: Journey Stage + Attribution + Purchase Intent</td><td>US5</td></tr>
+      <tr data-cat="lead-status"><td><span class="badge badge-teal">FR-017</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Attempted Contact: Method + Outcome</td><td>US5</td></tr>
+      <tr data-cat="lead-status"><td><span class="badge badge-teal">FR-018</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Lost: Type + dynamic Reason dropdown</td><td>US5</td></tr>
+      <tr data-cat="lead-status"><td><span class="badge badge-teal">FR-019</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>Converted out of LES scope</td><td>US5</td></tr>
+      <tr data-cat="lead-status"><td><span class="badge badge-teal">FR-020</span></td><td><span class="fr-cat" style="background:#ef4444"></span>Lead Status</td><td>History entry for every status change</td><td>US5</td></tr>
+      <tr data-cat="timeline"><td><span class="badge badge-teal">FR-021</span></td><td><span class="fr-cat" style="background:#a855f7"></span>Timeline</td><td>Chronological timeline of all events</td><td>US6</td></tr>
+      <tr data-cat="timeline"><td><span class="badge badge-teal">FR-022</span></td><td><span class="fr-cat" style="background:#a855f7"></span>Timeline</td><td>Staff can add free-text notes</td><td>US6</td></tr>
+      <tr data-cat="timeline"><td><span class="badge badge-teal">FR-023</span></td><td><span class="fr-cat" style="background:#a855f7"></span>Timeline</td><td>Event type, description, timestamp, agent name</td><td>US6</td></tr>
+      <tr data-cat="timeline"><td><span class="badge badge-teal">FR-048</span></td><td><span class="fr-cat" style="background:#a855f7"></span>Timeline</td><td>Entries immutable after creation</td><td>US6</td></tr>
+      <tr data-cat="assignment"><td><span class="badge badge-teal">FR-024</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Assign any staff from profile sidebar</td><td>US7</td></tr>
+      <tr data-cat="assignment"><td><span class="badge badge-teal">FR-025</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Bulk assignment from list view</td><td>US7</td></tr>
+      <tr data-cat="assignment"><td><span class="badge badge-teal">FR-026</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Auto-assign creating agent</td><td>US7, US9</td></tr>
+      <tr data-cat="assignment"><td><span class="badge badge-teal">FR-026a</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Round-robin for public/Zoho leads</td><td>US7</td></tr>
+      <tr data-cat="assignment"><td><span class="badge badge-teal">FR-027</span></td><td><span class="fr-cat" style="background:#ec4899"></span>Assignment</td><td>Timeline entry for assignment changes</td><td>US7</td></tr>
+      <tr data-cat="contacts"><td><span class="badge badge-teal">FR-028</span></td><td><span class="fr-cat" style="background:#06b6d4"></span>Contacts</td><td>Primary + secondary contacts per lead</td><td>US3</td></tr>
+      <tr data-cat="contacts"><td><span class="badge badge-teal">FR-029</span></td><td><span class="fr-cat" style="background:#06b6d4"></span>Contacts</td><td>Enforce exactly one Primary Contact</td><td>US3</td></tr>
+      <tr data-cat="contacts"><td><span class="badge badge-teal">FR-030</span></td><td><span class="fr-cat" style="background:#06b6d4"></span>Contacts</td><td>Add new / delete secondary contacts</td><td>US3</td></tr>
+      <tr data-cat="consumer"><td><span class="badge badge-teal">FR-031</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>View profile in discrete sections</td><td>US8</td></tr>
+      <tr data-cat="consumer"><td><span class="badge badge-teal">FR-032</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Edit any section independently</td><td>US8</td></tr>
+      <tr data-cat="consumer"><td><span class="badge badge-teal">FR-033</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Profile completion indicator</td><td>US8</td></tr>
+      <tr data-cat="consumer"><td><span class="badge badge-teal">FR-034</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Visually indicate incomplete sections</td><td>US8</td></tr>
+      <tr data-cat="consumer"><td><span class="badge badge-teal">FR-053</span></td><td><span class="fr-cat" style="background:#14b8a6"></span>Consumer</td><td>Consumer sees only own 5 sections</td><td>US8</td></tr>
+      <tr data-cat="creation"><td><span class="badge badge-teal">FR-035</span></td><td><span class="fr-cat" style="background:#fb923c"></span>Creation</td><td>Quick Create (modal) + Guided Create (stepper)</td><td>US9</td></tr>
+      <tr data-cat="creation"><td><span class="badge badge-teal">FR-035a</span></td><td><span class="fr-cat" style="background:#fb923c"></span>Creation</td><td>Quick = stay on list, Guided = navigate to profile</td><td>US9</td></tr>
+      <tr data-cat="creation"><td><span class="badge badge-teal">FR-036</span></td><td><span class="fr-cat" style="background:#fb923c"></span>Creation</td><td>Default Pre-Care + Not Contacted</td><td>US9</td></tr>
+      <tr data-cat="creation"><td><span class="badge badge-teal">FR-037</span></td><td><span class="fr-cat" style="background:#fb923c"></span>Creation</td><td>Duplicate email warning</td><td>US9</td></tr>
+      <tr data-cat="attribution"><td><span class="badge badge-teal">FR-038</span></td><td><span class="fr-cat" style="background:#6366f1"></span>Attribution</td><td>Display marketing attribution data</td><td>US10</td></tr>
+      <tr data-cat="attribution"><td><span class="badge badge-teal">FR-039</span></td><td><span class="fr-cat" style="background:#6366f1"></span>Attribution</td><td>Empty state for no attribution data</td><td>US10</td></tr>
+      <tr data-cat="traits"><td><span class="badge badge-teal">FR-040</span></td><td><span class="fr-cat" style="background:#8b5cf6"></span>Traits</td><td>Traits section with comm/preference fields</td><td>US11</td></tr>
+      <tr data-cat="traits"><td><span class="badge badge-teal">FR-041</span></td><td><span class="fr-cat" style="background:#8b5cf6"></span>Traits</td><td>Stored as flexible JSON</td><td>US11</td></tr>
+      <tr data-cat="traits"><td><span class="badge badge-teal">FR-042</span></td><td><span class="fr-cat" style="background:#8b5cf6"></span>Traits</td><td>Timeline entry on traits update</td><td>US11</td></tr>
+      <tr data-cat="other"><td><span class="badge badge-teal">FR-043</span></td><td><span class="fr-cat" style="background:#64748b"></span>Permissions</td><td>Two permission tiers: Agent + Team Leader</td><td>US1, US7</td></tr>
+      <tr data-cat="other"><td><span class="badge badge-teal">FR-044</span></td><td><span class="fr-cat" style="background:#475569"></span>Data Defs</td><td>Purchase Intent: Hot / Warm / Cold</td><td>US5</td></tr>
+      <tr data-cat="other"><td><span class="badge badge-teal">FR-045</span></td><td><span class="fr-cat" style="background:#475569"></span>Data Defs</td><td>Lead Attribution mirrors Zoho values</td><td>US5, US10</td></tr>
+      <tr data-cat="other"><td><span class="badge badge-teal">FR-046</span></td><td><span class="fr-cat" style="background:#475569"></span>Data Defs</td><td>Portal access independent of contact hierarchy</td><td>US3</td></tr>
+      <tr data-cat="other"><td><span class="badge badge-teal">FR-049</span></td><td><span class="fr-cat" style="background:#334155"></span>Computed</td><td>Follow-up date stored + displayed, no reminders</td><td>US5</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- EDGE CASES -->
+<div class="panel" id="edges">
+  <div class="section-title">Edge Cases</div>
+  <div class="section-subtitle">6 edge cases identified in the spec</div>
+  <div class="grid-2">
+    <div class="edge-card"><h3>Duplicate email on create</h3><p>System warns staff of potential duplicate. Staff can proceed (different person, same email) or navigate to existing lead.</p></div>
+    <div class="edge-card"><h3>Staff edits unassigned lead</h3><p>All staff with <code>view-all-leads</code> permission can view and edit any lead. Assignment is for accountability, not access control.</p></div>
+    <div class="edge-card"><h3>Section validation errors</h3><p>Form shows inline validation errors. Section not saved until all required fields within that section are valid.</p></div>
+    <div class="edge-card"><h3>Legacy leads from old wizard</h3><p>Appear in staff list with whatever data they have. Missing sections show as incomplete in profile completion indicator.</p></div>
+    <div class="edge-card"><h3>Lost lead re-engagement</h3><p>Staff can change status back from "Lost" to "Not Contacted" or "Attempted Contact" with a required note explaining re-engagement.</p></div>
+    <div class="edge-card"><h3>Zoho sync data conflict</h3><p>Portal is source of truth for fields edited in Portal. Zoho-synced fields manually overridden in Portal are not overwritten by subsequent syncs.</p></div>
+  </div>
+</div>
+
+<!-- SUCCESS CRITERIA -->
+<div class="panel" id="metrics">
+  <div class="section-title">Success Criteria</div>
+  <div class="section-subtitle">8 measurable outcomes from the spec</div>
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="metric-card"><div class="metric-id">SC-001</div><div class="metric-target" style="color:var(--teal)">&lt; 30s</div><div class="metric-desc">Create a new lead with mandatory fields</div></div>
+    <div class="metric-card"><div class="metric-id">SC-002</div><div class="metric-target" style="color:var(--green)">100%</div><div class="metric-desc">Leads with valid Journey Stage + Lead Status</div></div>
+    <div class="metric-card"><div class="metric-id">SC-003</div><div class="metric-target" style="color:var(--teal)">&lt; 60s</div><div class="metric-desc">Update any individual profile section</div></div>
+  </div>
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="metric-card"><div class="metric-id">SC-004</div><div class="metric-target" style="color:var(--green)">100%</div><div class="metric-desc">Status/stage transitions with audit metadata</div></div>
+    <div class="metric-card"><div class="metric-id">SC-005</div><div class="metric-target" style="color:var(--green)">0%</div><div class="metric-desc">Leads with no assignment after 24h</div></div>
+    <div class="metric-card"><div class="metric-id">SC-006</div><div class="metric-target" style="color:var(--teal)">Yes</div><div class="metric-desc">Lead owners can edit any section independently</div></div>
+  </div>
+  <div class="grid-3">
+    <div class="metric-card"><div class="metric-id">SC-007</div><div class="metric-target" style="color:var(--teal)">&lt; 2s</div><div class="metric-desc">List view load for 10,000 leads</div></div>
+    <div class="metric-card"><div class="metric-id">SC-008</div><div class="metric-target" style="color:var(--green)">+15%</div><div class="metric-desc">Profile completion in first month</div></div>
+  </div>
+</div>
+
+<!-- OUT OF SCOPE -->
+<div class="panel" id="oos">
+  <div class="section-title">Out of Scope</div>
+  <div class="section-subtitle">Explicitly excluded from this epic</div>
+  <div class="card">
+    <table><thead><tr><th>Item</th><th>Handled By</th><th>Reason</th></tr></thead><tbody>
+      <tr><td style="font-weight:600;color:var(--text)">Lead-to-HCA conversion wizard</td><td>LTH (already built)</td><td>Separate epic</td></tr>
+      <tr><td style="font-weight:600;color:var(--text)">Automated lead capture from forms/marketing</td><td>LGI</td><td>External integrations</td></tr>
+      <tr><td style="font-weight:600;color:var(--text)">Lead Settings</td><td>LDS</td><td>Future configuration</td></tr>
+      <tr><td style="font-weight:600;color:var(--text)">AI/predictive workflows</td><td>Future roadmap</td><td>Not in planning horizon</td></tr>
+      <tr><td style="font-weight:600;color:var(--text)">Timeline enrichment (calls, emails)</td><td>LDS</td><td>Requires communication tool integration</td></tr>
+      <tr><td style="font-weight:600;color:var(--text)">Linked Leads (family cross-ref)</td><td>LDS</td><td>Complex relationship model</td></tr>
+      <tr><td style="font-weight:600;color:var(--text)">Zoho CRM deprecation/migration</td><td>Separate initiative</td><td>Org-wide rollout plan</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- PROMPT BUILDER -->
+<div class="panel" id="prompt">
+  <div class="section-title">Implementation Prompt Builder</div>
+  <div class="section-subtitle">Generate a ready-to-paste prompt for any story</div>
+  <select id="story-select" onchange="buildPrompt()">
+    <option value="">Select a story...</option>
+    <option value="1">US1: Staff Leads List View (P1)</option>
+    <option value="2">US2: Staff Lead Profile View (P1)</option>
+    <option value="3">US3: Overview Tab (P1)</option>
+    <option value="4">US4: Journey Stage Tracking (P1)</option>
+    <option value="5">US5: Lead Status Tracking (P1)</option>
+    <option value="6">US6: Timeline & Notes (P2)</option>
+    <option value="7">US7: Staff Assignment (P2)</option>
+    <option value="8">US8: Consumer Profile (P2)</option>
+    <option value="9">US9: Internal Lead Creation (P2)</option>
+    <option value="10">US10: Marketing Attribution (P3)</option>
+    <option value="11">US11: Lead Traits (P3)</option>
+  </select>
+  <textarea class="prompt-area" id="prompt-output" readonly placeholder="Select a story above to generate an implementation prompt..."></textarea>
+  <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+    <button class="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+    <span id="copy-feedback" style="font-size:12px;color:var(--green);opacity:0;transition:opacity .3s"></span>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+function nav(panelId){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const panel=document.getElementById(panelId);
+  const navItem=document.querySelector('.nav-item[data-panel="'+panelId+'"]');
+  if(panel)panel.classList.add('active');
+  if(navItem){navItem.classList.add('active');navItem.scrollIntoView({block:'nearest'})}
+  document.querySelector('.main').scrollTop=0;
+}
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click',()=>nav(item.dataset.panel));
+});
+document.querySelectorAll('#fr-filters .filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('#fr-filters .filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('#fr-table tbody tr').forEach(r=>{
+      r.style.display=(f==='all'||r.dataset.cat===f)?'':'none';
+    });
+  });
+});
+
+const STORIES={
+1:{title:'Staff Leads List View',actor:'Sales Staff',priority:'P1',why:'The list view is the primary workspace for sales staff. Without it, there is no central place to manage leads.',scenarios:['Given I am a sales staff member, When I navigate to the Leads page, Then I see a table displaying: Lead Name, Contact Name, Email, Phone, Journey Stage, Lead Status, Assigned Agent, Created Date, and Conversion status.','Given I am viewing the leads list, When I apply filters for Journey Stage, Lead Status, Assigned Agent, or Conversion status, Then the list updates to show only matching leads.','Given I am viewing the leads list, When I click on a lead name, Then I am navigated to that lead\'s profile view.','Given I am viewing the leads list, When I click "Create Lead", Then a lead creation form appears with mandatory fields and optional fields.','Given I am a Sales Team Leader, When I select multiple leads using checkboxes, Then I can perform bulk actions (assign agent, export).'],frs:['FR-001: Display leads in structured table','FR-002: Filtering by Journey Stage, Lead Status, etc.','FR-003: Sorting by any column','FR-004: Full-text search','FR-005: Bulk actions (assign, export CSV)','FR-006: Create Lead action'],deps:['US9: Internal Creation']},
+2:{title:'Staff Lead Profile View',actor:'Sales Staff',priority:'P1',why:'The profile view is where all lead management happens. It replaces the current basic show page with a rich, tabbed layout.',scenarios:['Given I navigate to a lead\'s profile, When the page loads, Then I see a sidebar with avatar, name, TC#, Journey Stage, completion %, email, phone, DOB, assigned agent.','Given I am viewing a lead\'s profile, When I look at tabs, Then I see: Overview, Timeline, Other.','Given I am on any tab, Then the sidebar remains visible.','Given I view the sidebar, When I click assigned agent dropdown, Then I can search and select a different agent.'],frs:['FR-007: Persistent sidebar','FR-008: Tab organisation','FR-009: Inline card expansion editing','FR-010: Section-level editing'],deps:['US3, US4, US5, US6, US7, US10, US11 depend on this']},
+3:{title:'Overview Tab: Lead Summary',actor:'Sales Staff',priority:'P1',why:'The overview tab is the most-used view — complete profile at a glance with independent section editing.',scenarios:['Given I am on Overview tab, When page loads, Then I see read-only cards for all sections.','Given any section, When I click Edit, Then inline expansion shows edit form (ACRM pattern).','Given I edit and Save, Then only that section updates.','Given Contact Info section, When I click Add Contact, Then I can add/delete contacts.','Given Lead Info section, When I click Edit, Then I can update journey stage, lead status, purchase intent, attribution.'],frs:['FR-009: ACRM inline editing','FR-010: Section-level editing','FR-028: Primary+secondary contacts','FR-029: Exactly one Primary','FR-030: Add/delete contacts'],deps:['Depends on US2']},
+4:{title:'Journey Stage Tracking',actor:'Sales Staff',priority:'P1',why:'Journey Stage is the core sales pipeline metric. Every dashboard, forecast, and SLA depends on it.',scenarios:['Given a lead profile, When I view Journey Stage, Then I see 6 stages with current highlighted.','Given I click to update, When wizard opens, Then I can select any stage with mandatory fields.','Given I complete fields, When wizard saves, Then stage updates with history entry.','Given stage updated, When I view timeline, Then I see transition entry.','Given lead is Lost, Then Journey Stage stays frozen.'],frs:['FR-011: 6 primary stages with substages','FR-011a: Independent of Lead Status','FR-012: Mandatory fields per transition','FR-013: History entry per change','FR-047: Substage mapping'],deps:['Depends on US2']},
+5:{title:'Lead Status Tracking',actor:'Sales Staff',priority:'P1',why:'Lead Status captures engagement quality — how staff communicate progress and managers identify cold leads.',scenarios:['Given profile, When I see status actions, Then options: Not Contacted, Attempted Contact, Made Contact, Lost.','Made Contact wizard: mandatory Journey Stage, Attribution, Purchase Intent.','Attempted Contact wizard: mandatory Contact Method + Outcome.','Lost wizard: mandatory Lost Type + dynamic Reason.','Given status saved, When timeline viewed, Then chronological entry.'],frs:['FR-014 through FR-020: Status definitions and wizards'],deps:['Depends on US2']},
+6:{title:'Timeline & Notes',actor:'Sales Staff',priority:'P2',why:'The timeline is the lead\'s history — enables handoffs, follow-ups, and audit trail.',scenarios:['Given Timeline tab, When loaded, Then chronological events with metadata.','Given Add Note, When saved, Then appears in timeline.','Given status/stage change, Then auto-generated entry.','Given many entries, Then paginated by date.'],frs:['FR-021: Chronological timeline','FR-022: Free-text notes','FR-023: Event metadata','FR-048: Entries immutable'],deps:['Depends on US2']},
+7:{title:'Staff Assignment',actor:'Sales Team Leader',priority:'P2',why:'Without assignment, leads have no accountability.',scenarios:['Given sidebar, When click agent dropdown, Then search and assign.','Given assignment saved, Then updated + timeline entry.','Given list view, When bulk select + assign, Then modal for batch assignment.','Given staff-created lead, Then auto-assigned.'],frs:['FR-024: Assign from sidebar','FR-025: Bulk assignment','FR-026: Auto-assign creator','FR-026a: Round-robin','FR-027: Timeline entry'],deps:['Depends on US2']},
+8:{title:'Consumer Profile Management',actor:'Lead Owner',priority:'P2',why:'6-step wizard is too rigid. Section-based editing improves UX and completion.',scenarios:['Given lead owner profile, Then sections: My Details, Living Situation, Support Needs, Cultural Background, Management Option.','Given Edit on section, Then only that section\'s fields shown.','Given save, Then section refreshes + completion updates.','Given incomplete profile, Then visual indicators.','Given representative, Then sees recipient\'s info.'],frs:['FR-031 through FR-034: Section viewing/editing','FR-053: Consumer sees own 5 sections'],deps:['Independent']},
+9:{title:'Internal Lead Creation',actor:'Sales Staff',priority:'P2',why:'Staff need real-time capture during calls — quick modal + guided stepper.',scenarios:['Given list view, When Create Lead, Then Quick Create + Guided Create options.','Quick Create: modal with name + email, stay on list.','Guided Create: 3-step stepper, navigate to profile.','Given creation, Then defaults: Pre-Care + Not Contacted + auto-assigned.','Given duplicate email, Then warning with proceed or navigate.'],frs:['FR-035: Two creation paths','FR-035a: Navigation behavior','FR-036: Default values','FR-037: Duplicate warning'],deps:['Depends on US1']},
+10:{title:'Marketing Attribution Display',actor:'Sales Staff',priority:'P3',why:'Attribution data already captured. Displaying it gives sales context without separate analytics.',scenarios:['Given Other tab Attribution, Then Traffic Source + UTM + Session Data columns.','Given no tracking data, Then empty state.'],frs:['FR-038: Display attribution','FR-039: Empty state'],deps:['Depends on US2']},
+11:{title:'Lead Traits',actor:'Sales Staff',priority:'P3',why:'Soft data for personalisation. Low effort, high impact on sales quality.',scenarios:['Given Other tab Traits, Then editable fields for preferences.','Given edit + save, Then persists + timeline entry.','Given no traits, Then empty/default states.'],frs:['FR-040: Traits fields','FR-041: JSON storage','FR-042: Timeline entry'],deps:['Depends on US2']}
+};
+
+function buildPrompt(){
+  const sel=document.getElementById('story-select').value;
+  const out=document.getElementById('prompt-output');
+  if(!sel){out.value='';return}
+  const s=STORIES[sel];
+  let p=`Implement US${sel}: ${s.title}\n\n`;
+  p+=`Actor: ${s.actor}\nPriority: ${s.priority}\n\n`;
+  p+=`Purpose: ${s.why}\n\n`;
+  p+=`Acceptance Criteria:\n`;
+  s.scenarios.forEach((sc,i)=>{p+=`${i+1}. ${sc}\n`});
+  p+=`\nFunctional Requirements:\n`;
+  s.frs.forEach(fr=>{p+=`- ${fr}\n`});
+  p+=`\nDependencies: ${s.deps.join(', ')}\n\n`;
+  p+=`Tech Context: This is part of the Lead Essential (LES) epic in TC Portal. Uses Inertia v2 + Vue 3 + Tailwind v3. Lead domain code is in domain/Lead/. Vue pages in resources/js/Pages/Staff/Leads/. Follow existing Common components from resources/js/Components/Common/.`;
+  out.value=p;
+}
+
+function copyPrompt(){
+  const out=document.getElementById('prompt-output');
+  if(!out.value)return;
+  navigator.clipboard.writeText(out.value);
+  const fb=document.getElementById('copy-feedback');
+  fb.textContent='Copied!';fb.style.opacity='1';
+  setTimeout(()=>{fb.style.opacity='0'},2000);
+}
+</script>
+</body>
+</html>

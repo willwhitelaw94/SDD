@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec Explorer — Calls Uplift - Call Bridge UI</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--border:#334155;
+  --teal:#007F7E;--teal-light:#43C0BE;--blue:#2C4C79;
+  --p1:#ef4444;--p2:#fbbf24;--p3:#64748b;
+  --given:#43C0BE;--when:#fbbf24;--then:#a78bfa;
+  --text:#e2e8f0;--text-dim:#94a3b8;--text-bright:#f8fafc;
+  --cat-detection:#3b82f6;--cat-activity:#22c55e;--cat-notes:#f59e0b;
+  --cat-recordings:#a855f7;--cat-review:#ef4444;--cat-teamlead:#ec4899;
+  --cat-linking:#14b8a6;--cat-nav:#06b6d4;--cat-integration:#6366f1;
+  --cat-filtering:#fb923c;
+}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}
+
+/* Layout */
+.app{display:flex;height:100vh;width:100vw}
+.sidebar{width:340px;min-width:340px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:10}
+.canvas-container{flex:1;position:relative;overflow:hidden}
+.detail-panel{width:440px;min-width:440px;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;display:none;z-index:10}
+.detail-panel.open{display:flex;flex-direction:column}
+.prompt-bar{position:fixed;bottom:0;left:340px;right:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 16px;z-index:20;display:none}
+.prompt-bar.open{display:flex;gap:12px;align-items:flex-start}
+.prompt-bar.with-detail{right:440px}
+
+/* Sidebar */
+.sidebar-header{padding:16px;border-bottom:1px solid var(--border)}
+.sidebar-header h1{font-size:14px;font-weight:700;color:var(--teal-light);margin-bottom:2px}
+.sidebar-header .epic-name{font-size:18px;font-weight:800;color:var(--text-bright)}
+.sidebar-header .counts{font-size:12px;color:var(--text-dim);margin-top:8px;display:flex;gap:12px;flex-wrap:wrap}
+.sidebar-header .counts span{background:var(--bg);padding:2px 8px;border-radius:4px}
+
+.search-box{padding:8px 16px}
+.search-box input{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;outline:none}
+.search-box input:focus{border-color:var(--teal)}
+.search-box input::placeholder{color:var(--text-dim)}
+
+.sidebar-tabs{display:flex;border-bottom:1px solid var(--border)}
+.sidebar-tabs button{flex:1;padding:10px 8px;background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid transparent;transition:all 0.2s}
+.sidebar-tabs button.active{color:var(--teal-light);border-bottom-color:var(--teal)}
+.sidebar-tabs button:hover{color:var(--text)}
+
+.sidebar-content{flex:1;overflow-y:auto;padding:8px}
+
+.stats-bar{display:flex;gap:6px;padding:8px 16px;border-bottom:1px solid var(--border)}
+.stats-bar .stat{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600}
+.stats-bar .stat .dot{width:8px;height:8px;border-radius:50%}
+
+/* Sidebar Story Cards */
+.sidebar-card{padding:10px 12px;margin:4px 0;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all 0.15s}
+.sidebar-card:hover{background:rgba(67,192,190,0.08);border-color:var(--border)}
+.sidebar-card.selected{background:rgba(67,192,190,0.12);border-color:var(--teal)}
+.sidebar-card .card-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.sidebar-card .story-num{font-size:11px;font-weight:700;color:var(--text-dim)}
+.sidebar-card .story-title{font-size:13px;font-weight:600;color:var(--text-bright);flex:1}
+.sidebar-card .priority-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;color:#000}
+.sidebar-card .card-meta{display:flex;gap:10px;font-size:11px;color:var(--text-dim)}
+
+/* FR Cards in sidebar */
+.fr-group{margin:8px 0}
+.fr-group-header{padding:6px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border-radius:4px;margin-bottom:4px}
+.fr-card{padding:8px 12px;margin:2px 0;border-radius:4px;cursor:pointer;font-size:12px;color:var(--text);border:1px solid transparent;transition:all 0.15s}
+.fr-card:hover{background:rgba(67,192,190,0.08);border-color:var(--border)}
+.fr-card .fr-id{font-weight:700;color:var(--teal-light);margin-right:6px}
+
+/* Scenario cards in sidebar */
+.scenario-card{padding:8px 12px;margin:2px 0;border-radius:4px;cursor:pointer;font-size:12px;border:1px solid transparent;transition:all 0.15s}
+.scenario-card:hover{background:rgba(67,192,190,0.08);border-color:var(--border)}
+.scenario-card .scenario-parent{font-size:10px;font-weight:600;color:var(--text-dim);margin-bottom:2px}
+
+/* Canvas */
+.canvas{width:100%;height:100%;cursor:grab}
+.canvas:active{cursor:grabbing}
+.canvas-controls{position:absolute;top:12px;right:12px;display:flex;gap:6px;z-index:5}
+.canvas-controls button{padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:12px;font-weight:600;transition:all 0.15s}
+.canvas-controls button:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
+.phase-legend{position:absolute;top:12px;left:12px;display:flex;gap:8px;z-index:5}
+.phase-legend .legend-item{display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:11px;font-weight:600}
+.phase-legend .legend-dot{width:10px;height:10px;border-radius:50%}
+
+/* Story card on canvas */
+.story-node{position:absolute;width:240px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;user-select:none;transition:box-shadow 0.15s,border-color 0.15s}
+.story-node:hover{border-color:var(--teal);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.story-node.selected{border-color:var(--teal-light);box-shadow:0 0 0 2px rgba(67,192,190,0.3)}
+.story-node.dragging{z-index:100;opacity:0.9}
+.story-node .priority-stripe{height:4px;border-radius:8px 8px 0 0}
+.story-node .node-body{padding:12px}
+.story-node .node-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.story-node .node-num{font-size:11px;font-weight:700;color:var(--text-dim)}
+.story-node .node-priority{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;color:#000}
+.story-node .node-title{font-size:12px;font-weight:600;color:var(--text-bright);line-height:1.4;margin-bottom:8px}
+.story-node .node-actor{font-size:10px;color:var(--text-dim);margin-bottom:6px}
+.story-node .node-stats{display:flex;gap:8px;font-size:10px;color:var(--text-dim)}
+.story-node .node-stats span{display:flex;align-items:center;gap:3px}
+
+/* Swim lane labels */
+.swim-lane-label{position:absolute;left:0;width:100%;text-align:center;font-size:12px;font-weight:700;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;pointer-events:none;opacity:0.3}
+.swim-lane-separator{position:absolute;left:40px;right:40px;border-top:1px dashed var(--border);pointer-events:none;opacity:0.4}
+
+/* Detail panel */
+.detail-header{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.detail-header .close-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:20px;padding:4px;line-height:1}
+.detail-header .close-btn:hover{color:var(--text)}
+.detail-body{padding:16px;flex:1;overflow-y:auto}
+.detail-body h2{font-size:16px;font-weight:700;color:var(--text-bright);margin-bottom:4px}
+.detail-body .detail-actor{font-size:13px;color:var(--text-dim);margin-bottom:12px}
+.detail-body .detail-section{margin-bottom:16px}
+.detail-body .detail-section h3{font-size:12px;font-weight:700;color:var(--teal-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.detail-body .rationale{font-size:13px;color:var(--text);line-height:1.5;padding:8px 12px;background:var(--bg);border-radius:6px;border-left:3px solid var(--teal)}
+.detail-body .dep-tags{display:flex;flex-wrap:wrap;gap:4px}
+.detail-body .dep-tag{font-size:11px;padding:3px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--teal-light);transition:all 0.15s}
+.detail-body .dep-tag:hover{border-color:var(--teal);background:rgba(67,192,190,0.1)}
+.detail-body .scenario-block{padding:10px 12px;background:var(--bg);border-radius:6px;margin-bottom:6px;font-size:12px;line-height:1.6}
+.detail-body .scenario-block .kw-given{color:var(--given);font-weight:700}
+.detail-body .scenario-block .kw-when{color:var(--when);font-weight:700}
+.detail-body .scenario-block .kw-then{color:var(--then);font-weight:700}
+.detail-body .fr-badge{display:inline-block;font-size:11px;padding:3px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;margin:2px;color:var(--teal-light);font-weight:600;transition:all 0.15s}
+.detail-body .fr-badge:hover{border-color:var(--teal);background:rgba(67,192,190,0.1)}
+.detail-body .edge-case{padding:8px 12px;background:var(--bg);border-radius:6px;margin-bottom:4px;font-size:12px;line-height:1.5}
+.detail-body .sc-item{padding:8px 12px;background:var(--bg);border-radius:6px;margin-bottom:4px;font-size:12px;line-height:1.5}
+.detail-body .sc-id{font-weight:700;color:var(--teal-light);margin-right:6px}
+
+/* Prompt bar */
+.prompt-text{flex:1;font-size:12px;color:var(--text);line-height:1.5;max-height:80px;overflow-y:auto;padding:8px 12px;background:var(--bg);border-radius:6px;font-family:monospace;white-space:pre-wrap}
+.copy-btn{padding:8px 16px;background:var(--teal);border:none;border-radius:6px;color:#fff;cursor:pointer;font-weight:600;font-size:12px;white-space:nowrap;transition:all 0.15s}
+.copy-btn:hover{background:var(--teal-light)}
+.copy-btn.copied{background:#22c55e}
+
+/* Tooltip */
+.tooltip{position:fixed;padding:12px 16px;background:#0f172aee;border:1px solid var(--border);border-radius:8px;max-width:320px;z-index:1000;pointer-events:none;font-size:12px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+.tooltip .tt-title{font-weight:700;color:var(--text-bright);margin-bottom:4px}
+.tooltip .tt-actor{color:var(--text-dim);margin-bottom:4px}
+.tooltip .tt-rationale{color:var(--text);margin-bottom:6px;font-style:italic}
+.tooltip .tt-stats{display:flex;gap:10px;color:var(--text-dim);font-size:11px}
+
+/* SVG arrows */
+.arrows-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* Scrollbar styling */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
+
+/* Empty / hidden helper */
+.hidden{display:none!important}
+.no-results{padding:20px;text-align:center;color:var(--text-dim);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h1>SPEC EXPLORER</h1>
+      <div class="epic-name">CALLS-UPLIFT &mdash; Call Bridge UI</div>
+      <div class="counts">
+        <span>6 Stories</span>
+        <span>36 FRs</span>
+        <span>22 Scenarios</span>
+        <span>7 Success Criteria</span>
+        <span>8 Edge Cases</span>
+      </div>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search stories, FRs, scenarios...">
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><div class="dot" style="background:var(--p1)"></div>P1: 2</div>
+      <div class="stat"><div class="dot" style="background:var(--p2)"></div>P2: 2</div>
+      <div class="stat"><div class="dot" style="background:var(--p3)"></div>P3: 2</div>
+      <div class="stat" style="margin-left:auto">FRs: 36</div>
+    </div>
+    <div class="sidebar-tabs">
+      <button class="active" data-tab="stories">Stories</button>
+      <button data-tab="requirements">Requirements</button>
+      <button data-tab="scenarios">Scenarios</button>
+    </div>
+    <div class="sidebar-content" id="sidebarContent"></div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="canvas-container">
+    <div class="phase-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--p1)"></div>P1 &mdash; Must Have</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--p2)"></div>P2 &mdash; Should Have</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--p3)"></div>P3 &mdash; Nice to Have</div>
+    </div>
+    <div class="canvas-controls">
+      <button onclick="zoomIn()">+</button>
+      <button onclick="zoomOut()">&minus;</button>
+      <button onclick="fitAll()">Fit All</button>
+      <button onclick="resetLayout()">Reset</button>
+    </div>
+    <svg class="arrows-svg" id="arrowsSvg"></svg>
+    <div class="canvas" id="canvas"></div>
+  </div>
+
+  <!-- Detail Panel -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <div></div>
+      <button class="close-btn" onclick="closeDetail()">&times;</button>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+  </div>
+</div>
+
+<!-- Prompt Bar -->
+<div class="prompt-bar" id="promptBar">
+  <div class="prompt-text" id="promptText"></div>
+  <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Copy</button>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip hidden" id="tooltip"></div>
+
+<script>
+// ======================================================================
+// DATA - parsed from spec.md
+// ======================================================================
+
+const STORIES = [
+  {
+    id: 'US1', num: 1, title: 'View Package Context During Call',
+    actor: 'Care Coordinator', priority: 'P2',
+    rationale: 'Core value proposition \u2014 reducing the 66% untagged call rate by showing context. Coordinators waste time searching for package information while on calls, leading to missed attribution and lost revenue.',
+    scenarios: [
+      'Given a coordinator is logged into the Portal, When they receive an inbound call from a phone number matching a package\'s care circle contact, Then a call notification banner appears showing the recipient\'s name, package number, and key details within 3 seconds.',
+      'Given a coordinator initiates an outbound call to a number matching a package contact, When the call connects, Then the call context panel displays the package overview including recent notes and open tasks.',
+      'Given a call is matched to multiple packages (shared phone number), When the context panel loads, Then the coordinator sees a list of matching packages and can select the correct one.',
+      'Given no package match is found for the caller\'s phone number, When the call begins, Then the panel shows "No package match found" with a search option.'
+    ],
+    frs: ['FR-001','FR-002','FR-003','FR-004'],
+    deps: ['US2']
+  },
+  {
+    id: 'US2', num: 2, title: 'Manually Link Unmatched Calls',
+    actor: 'Care Coordinator / Care Partner', priority: 'P1',
+    rationale: 'Fallback when auto-matching fails. Critical for reaching the 95%+ attribution target. Without manual linking, a significant portion of calls remain unattributed, directly impacting care management revenue.',
+    scenarios: [
+      'Given a call with no automatic package match, When the coordinator clicks "Link to Package", Then a search interface appears allowing search by recipient name, package number, or TC customer number.',
+      'Given the coordinator searches for a package, When they select the correct package from results, Then the call is immediately linked and the context panel updates to show package details.',
+      'Given a coordinator links a call to a package, When a future call arrives from the same phone number, Then the previously-linked entity appears at the top of the match list (highlighted as suggested) but the coordinator must still explicitly select it.'
+    ],
+    frs: ['FR-003','FR-024','FR-025','FR-026'],
+    deps: []
+  },
+  {
+    id: 'US3', num: 3, title: 'Complete Call Reviews from Inbox',
+    actor: 'Care Coordinator', priority: 'P1',
+    rationale: 'Directly addresses revenue loss from unattributed time. The Calls Inbox provides a structured post-call review workflow enabling coordinators to log call duration as care management activities, with transcription support from Trilogy Graph.',
+    scenarios: [
+      'Given a call has ended and transcription is available, When the coordinator opens their Calls Inbox, Then the call appears with transcription text, duration, caller info, and linked package (if matched).',
+      'Given a coordinator views a call in the inbox, When they click "Complete Call Review", Then the call duration (adjustable, defaults to full Aircall duration + 15 min wrap-up time) is logged as a care management activity and the call is marked as reviewed.',
+      'Given a coordinator has multiple unreviewed calls, When they open the Calls Inbox, Then they can review calls one-by-one or select multiple for batch review.',
+      'Given a call is NOT linked to any package, When the coordinator completes a Call Review, Then they are prompted to link it to a package first, or mark as "Non-package call".',
+      'Given a coordinator prefers immediate review, When a new call transcription arrives, Then they receive a flash alert with option to review immediately.'
+    ],
+    frs: ['FR-005','FR-006','FR-007','FR-008','FR-015','FR-016','FR-017','FR-018','FR-019','FR-020','FR-027','FR-028','FR-029','FR-030','FR-033','FR-034','FR-035','FR-036'],
+    deps: ['US2']
+  },
+  {
+    id: 'US4', num: 4, title: 'Add Call Notes',
+    actor: 'Care Coordinator', priority: 'P2',
+    rationale: 'Enhances existing notes by integrating with calls. Reduces context switching between Aircall and the Portal, allowing coordinators to capture important call information in real-time without leaving their workflow.',
+    scenarios: [
+      'Given a coordinator is on an active call linked to a package, When they enter text in the "Call notes" field, Then the text is auto-saved every 30 seconds.',
+      'Given a call ends with notes entered, When the call context panel closes, Then the notes are saved as a package note tagged with "Phone Call" and the call timestamp.',
+      'Given a coordinator is viewing a package\'s notes, When they see a call-related note, Then it shows the call duration, direction (inbound/outbound), and linked recording if available.'
+    ],
+    frs: ['FR-009','FR-010','FR-011'],
+    deps: ['US1']
+  },
+  {
+    id: 'US5', num: 5, title: 'Access Call Recordings',
+    actor: 'Care Coordinator / Team Leader', priority: 'P3',
+    rationale: 'Recordings are already stored in S3 with 7-year retention for compliance. This story provides a better interface for accessing existing data, improving audit capability and quality assurance workflows.',
+    scenarios: [
+      'Given a coordinator views a past call in the package timeline, When they click "Play recording", Then an audio player loads and plays the call recording.',
+      'Given a call recording is available, When the coordinator views call details, Then they see the recording duration and can download the audio file.',
+      'Given a user without recording access permission views a call, When they attempt to play the recording, Then they see "Recording access restricted" message.'
+    ],
+    frs: ['FR-012','FR-013','FR-014'],
+    deps: []
+  },
+  {
+    id: 'US6', num: 6, title: 'View Call History (External Coordinators)',
+    actor: 'External Coordinator', priority: 'P3',
+    rationale: 'External coordinators need visibility into package communication for continuity of care. They need to see what calls have been made but should not have access to the full inbox or review workflow.',
+    scenarios: [
+      'Given an external coordinator views a package they coordinate, When they navigate to the call history section, Then they see a list of past calls with date, duration, direction, and caller/recipient info.',
+      'Given an external coordinator views call history, When they click on a call record, Then they see call details but NOT the Calls Inbox or Call Review options.',
+      'Given an external coordinator without recording permissions views a call, When they attempt to access the recording, Then they see "Recording access restricted" message.'
+    ],
+    frs: ['FR-031','FR-013'],
+    deps: ['US5']
+  }
+];
+
+const FR_CATEGORIES = {
+  'Call Detection & Context': { colour: '#3b82f6', frs: ['FR-001','FR-002','FR-003','FR-004'] },
+  'Activity Capture':        { colour: '#22c55e', frs: ['FR-005','FR-006','FR-007','FR-008'] },
+  'Notes Integration':       { colour: '#f59e0b', frs: ['FR-009','FR-010','FR-011'] },
+  'Recordings':              { colour: '#a855f7', frs: ['FR-012','FR-013','FR-014'] },
+  'Call Review Workflow':     { colour: '#ef4444', frs: ['FR-015','FR-016','FR-017','FR-018','FR-019','FR-020'] },
+  'Team Leader Capabilities':{ colour: '#ec4899', frs: ['FR-021','FR-022','FR-023'] },
+  'Entity Linking':          { colour: '#14b8a6', frs: ['FR-024','FR-025','FR-026'] },
+  'Navigation & Notifications':{ colour: '#06b6d4', frs: ['FR-027','FR-028','FR-029'] },
+  'Integration':             { colour: '#6366f1', frs: ['FR-030','FR-031','FR-032'] },
+  'Inbox Filtering':         { colour: '#fb923c', frs: ['FR-033','FR-034','FR-035','FR-036'] },
+};
+
+const FRS = {
+  'FR-001': 'System MUST detect when a coordinator is on an active call within 5 seconds of the call starting.',
+  'FR-002': 'System MUST display package context for calls matching a known phone number in the recipient\'s care circle.',
+  'FR-003': 'System MUST allow coordinators to manually search and link calls to packages when no automatic match exists.',
+  'FR-004': 'System MUST handle calls matching multiple packages by presenting a selection interface.',
+  'FR-005': 'System MUST automatically log call duration as care management activity when a call is linked to a package.',
+  'FR-006': 'System MUST attribute call activities to the coordinator who handled the call.',
+  'FR-007': 'System MUST track both inbound and outbound call direction in activity records.',
+  'FR-008': 'System MUST NOT create duplicate activities for the same call.',
+  'FR-009': 'System MUST allow coordinators to add notes during an active call.',
+  'FR-010': 'System MUST auto-save call notes to prevent data loss.',
+  'FR-011': 'System MUST tag call-generated notes with the associated call metadata (date, duration, direction).',
+  'FR-012': 'System MUST provide access to call recordings for authorised users.',
+  'FR-013': 'System MUST respect recording access permissions based on user roles.',
+  'FR-014': 'System MUST retain call recordings for 7 years per aged care compliance requirements.',
+  'FR-015': 'System MUST default call activity duration to Aircall call duration + 15 minutes wrap-up time, adjustable by coordinator before completing review.',
+  'FR-016': 'System MUST support 6 review statuses: pending_transcription \u2192 pending_review \u2192 in_review \u2192 reviewed | archived | escalated.',
+  'FR-017': 'System MUST auto-transition calls from pending_transcription to pending_review after 24 hours if no transcription arrives. Fallback: poll Graph/Aircall API.',
+  'FR-018': 'System MUST prevent concurrent reviews by tracking in_review status (lock to reviewing coordinator).',
+  'FR-019': 'System MUST support escalation to a specific team leader with a required note. Escalated TL receives toast + browser push notification.',
+  'FR-020': 'System MUST pre-populate AI-suggested case note (from Graph) in an editable field during review. Nothing saved until explicit confirm.',
+  'FR-021': 'Team leaders MUST be able to view all their team members\' calls in the inbox, filterable by coordinator.',
+  'FR-022': 'Team leaders MUST be able to complete reviews on behalf of coordinators. Review attributed to TL as reviewed_by.',
+  'FR-023': 'Team leader inbox access MUST be role-based (team leader permission), not requiring Aircall account.',
+  'FR-024': 'System MUST support linking calls to Packages, Coordinator profiles, and Provider profiles via polymorphic aircall_aircallables pivot.',
+  'FR-025': 'System MUST provide unified search across all linkable entity types, with results grouped by type.',
+  'FR-026': 'System MUST show previously-linked entity at top of match list for repeat phone numbers (suggested, not auto-linked).',
+  'FR-027': 'System MUST display a badge with total pending_review count in the top navigation bar.',
+  'FR-028': 'System MUST provide a sidebar menu item for the full Calls Inbox page.',
+  'FR-029': 'System MUST deliver flash alerts via in-app toast AND browser push notification when transcriptions arrive.',
+  'FR-030': 'System MUST receive transcription data from Trilogy Graph webhook (Graph owns the API contract).',
+  'FR-031': 'System MUST display call history in the package timeline alongside other activities.',
+  'FR-032': 'System MUST show missed calls in the inbox with follow-up indicators (exact UX deferred to design).',
+  'FR-033': 'System MUST support filtering by: review status, date range, direction (in/out), linked/unlinked.',
+  'FR-034': 'System MUST support sorting by: date (default newest first), duration.',
+  'FR-035': 'System MUST support search by phone number or package/entity name.',
+  'FR-036': 'System MUST allow batch "Complete All" for multiple linked calls (no individual review in batch mode).',
+};
+
+const EDGE_CASES = [
+  { q: 'User without Aircall account accesses Calls Inbox', a: 'Show friendly error state prompting user to link/attach their Aircall account.', keywords: ['aircall','account','inbox','access'] },
+  { q: 'Multiple packages sharing the same phone number', a: 'Display a selection list; remember the coordinator\'s most recent choice.', keywords: ['multiple','packages','phone','number','shared'] },
+  { q: 'Coordinator receives calls while already on a call', a: 'Queue additional call notifications; show "2 active calls" indicator.', keywords: ['multiple','calls','active','queue','concurrent'] },
+  { q: 'Network interruption during call', a: 'Persist call context locally; sync notes and activity when connection resumes.', keywords: ['network','interruption','offline','sync','notes'] },
+  { q: 'Call transferred between coordinators', a: 'Original coordinator\'s time is logged; receiving coordinator sees fresh context panel.', keywords: ['transfer','coordinator','context','time'] },
+  { q: 'Very short calls (under 30 seconds)', a: 'Still log as activity but flag for review if unusually high frequency.', keywords: ['short','call','duration','flag','review'] },
+  { q: 'Coordinator declines to link a call', a: 'Call remains in unlinked history; can be linked later from call log.', keywords: ['decline','link','unlinked','history'] },
+  { q: 'Transcription never arrives (Graph timeout)', a: 'After 24 hours in pending_transcription, auto-transition to pending_review. Show "Transcription unavailable" indicator.', keywords: ['transcription','timeout','graph','pending','unavailable'] },
+];
+
+const SUCCESS_CRITERIA = [
+  { id: 'SC-001', text: 'Call attribution rate increases from 34% to 95%+ within 3 months of launch.' },
+  { id: 'SC-002', text: 'Coordinators can view package context within 3 seconds of a call connecting.' },
+  { id: 'SC-003', text: 'Coordinators can link an unmatched call to a package in under 10 seconds using search.' },
+  { id: 'SC-004', text: '100% of linked calls automatically generate care management activities.' },
+  { id: 'SC-005', text: 'Call notes are successfully saved (no data loss) in 99.9% of attempts.' },
+  { id: 'SC-006', text: 'Coordinator time spent context-switching between Aircall and Portal reduces by 80%.' },
+  { id: 'SC-007', text: 'Care management revenue attributed to phone calls increases proportionally with improved attribution rate.' },
+];
+
+const OUT_OF_SCOPE = [
+  'AI-powered call transcription/sentiment analysis on Portal side (displaying Graph-provided AI IS in scope)',
+  'Real-time call coaching or prompts',
+  'Outbound call initiation from within Portal',
+  'Changes to Aircall configuration or phone system setup',
+  'Reporting dashboards for call metrics (separate initiative)',
+  'Mobile app call integration (desktop Portal only for MVP)',
+];
+
+const DEPENDENCIES = [
+  { name: 'Trilogy Graph phone matching API', owner: 'Graph Team', status: 'Ready' },
+  { name: 'Care Management Activities module', owner: 'CM Activities Epic', status: 'Complete' },
+  { name: 'Package Notes functionality', owner: 'Work Management', status: 'Complete' },
+  { name: 'Call recording S3 storage', owner: 'Infrastructure', status: 'Complete' },
+  { name: 'Aircall account provisioning', owner: 'Operations', status: 'Not started' },
+];
+
+// Build FR->Story reverse map
+const frToStories = {};
+Object.keys(FRS).forEach(frId => { frToStories[frId] = []; });
+STORIES.forEach(s => {
+  s.frs.forEach(frId => {
+    if (frToStories[frId]) frToStories[frId].push(s.id);
+  });
+});
+
+// Priority colour map
+const PRIORITY_COLOURS = { P1: 'var(--p1)', P2: 'var(--p2)', P3: 'var(--p3)' };
+const PRIORITY_BG = { P1: '#ef4444', P2: '#fbbf24', P3: '#64748b' };
+
+// ======================================================================
+// STATE
+// ======================================================================
+
+let selectedStory = null;
+let currentTab = 'stories';
+let canvasOffset = { x: 0, y: 0 };
+let canvasScale = 1;
+let isDragging = false;
+let isPanning = false;
+let dragTarget = null;
+let dragStartPos = { x: 0, y: 0 };
+let panStartPos = { x: 0, y: 0 };
+let panStartOffset = { x: 0, y: 0 };
+let nodePositions = {};
+let tooltipTimeout = null;
+
+// ======================================================================
+// LAYOUT
+// ======================================================================
+
+function calculateLayout() {
+  const containerW = document.querySelector('.canvas-container').clientWidth;
+  const containerH = document.querySelector('.canvas-container').clientHeight;
+  const cardW = 240;
+  const cardH = 150;
+  const hGap = 50;
+  const vGap = 30;
+  const laneGap = 60;
+
+  // Group stories by priority
+  const lanes = { P1: [], P2: [], P3: [] };
+  STORIES.forEach(s => lanes[s.priority].push(s));
+
+  let currentY = 80;
+  const laneYs = {};
+
+  ['P1','P2','P3'].forEach(p => {
+    const stories = lanes[p];
+    if (stories.length === 0) return;
+    laneYs[p] = { start: currentY };
+    const cols = stories.length;
+    const totalW = cols * cardW + (cols - 1) * hGap;
+    const startX = Math.max(60, (containerW - totalW) / 2);
+
+    stories.forEach((s, i) => {
+      nodePositions[s.id] = {
+        x: startX + i * (cardW + hGap),
+        y: currentY + 30
+      };
+    });
+
+    currentY += cardH + vGap + 30;
+    laneYs[p] = { ...laneYs[p], end: currentY };
+    currentY += laneGap;
+  });
+
+  return laneYs;
+}
+
+// ======================================================================
+// CANVAS RENDERING
+// ======================================================================
+
+function renderCanvas() {
+  const canvas = document.getElementById('canvas');
+  canvas.innerHTML = '';
+
+  const laneYs = calculateLayout();
+
+  // Render swim lane labels + separators
+  ['P1','P2','P3'].forEach(p => {
+    if (!laneYs[p]) return;
+    const label = document.createElement('div');
+    label.className = 'swim-lane-label';
+    label.style.top = (laneYs[p].start - 5) + 'px';
+    label.textContent = p === 'P1' ? 'Priority 1 \u2014 Must Have' : p === 'P2' ? 'Priority 2 \u2014 Should Have' : 'Priority 3 \u2014 Nice to Have';
+    canvas.appendChild(label);
+
+    if (p !== 'P1') {
+      const sep = document.createElement('div');
+      sep.className = 'swim-lane-separator';
+      sep.style.top = (laneYs[p].start - 30) + 'px';
+      canvas.appendChild(sep);
+    }
+  });
+
+  // Render story nodes
+  STORIES.forEach(s => {
+    const node = document.createElement('div');
+    node.className = 'story-node' + (selectedStory === s.id ? ' selected' : '');
+    node.dataset.id = s.id;
+    const pos = nodePositions[s.id];
+    node.style.left = pos.x + 'px';
+    node.style.top = pos.y + 'px';
+
+    node.innerHTML = `
+      <div class="priority-stripe" style="background:${PRIORITY_BG[s.priority]}"></div>
+      <div class="node-body">
+        <div class="node-header">
+          <span class="node-num">${s.id}</span>
+          <span class="node-priority" style="background:${PRIORITY_BG[s.priority]}">${s.priority}</span>
+        </div>
+        <div class="node-title">${s.title}</div>
+        <div class="node-actor">${s.actor}</div>
+        <div class="node-stats">
+          <span>\u{1F4CB} ${s.scenarios.length} scenarios</span>
+          <span>\u2699 ${s.frs.length} FRs</span>
+          <span>${s.deps.length > 0 ? '\u{1F517} ' + s.deps.length + ' deps' : ''}</span>
+        </div>
+      </div>
+    `;
+
+    // Events
+    node.addEventListener('mousedown', e => startDrag(e, s.id));
+    node.addEventListener('click', e => {
+      if (!isDragging) selectStory(s.id);
+    });
+    node.addEventListener('mouseenter', e => showTooltip(e, s));
+    node.addEventListener('mouseleave', hideTooltip);
+
+    canvas.appendChild(node);
+  });
+
+  drawArrows();
+  applyTransform();
+}
+
+function drawArrows() {
+  const svg = document.getElementById('arrowsSvg');
+  svg.innerHTML = '';
+
+  // Define arrowhead marker
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+  marker.setAttribute('id', 'arrowhead');
+  marker.setAttribute('markerWidth', '10');
+  marker.setAttribute('markerHeight', '7');
+  marker.setAttribute('refX', '10');
+  marker.setAttribute('refY', '3.5');
+  marker.setAttribute('orient', 'auto');
+  const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  polygon.setAttribute('points', '0 0, 10 3.5, 0 7');
+  polygon.setAttribute('fill', '#43C0BE55');
+  marker.appendChild(polygon);
+  defs.appendChild(marker);
+
+  const markerHi = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+  markerHi.setAttribute('id', 'arrowhead-hi');
+  markerHi.setAttribute('markerWidth', '10');
+  markerHi.setAttribute('markerHeight', '7');
+  markerHi.setAttribute('refX', '10');
+  markerHi.setAttribute('refY', '3.5');
+  markerHi.setAttribute('orient', 'auto');
+  const polygonHi = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  polygonHi.setAttribute('points', '0 0, 10 3.5, 0 7');
+  polygonHi.setAttribute('fill', '#43C0BE88');
+  markerHi.appendChild(polygonHi);
+  defs.appendChild(markerHi);
+  svg.appendChild(defs);
+
+  const cardW = 240;
+  const cardH = 150;
+
+  STORIES.forEach(s => {
+    s.deps.forEach(depId => {
+      const fromPos = nodePositions[depId];
+      const toPos = nodePositions[s.id];
+      if (!fromPos || !toPos) return;
+
+      // Calculate connection points
+      const fromCx = fromPos.x + cardW / 2;
+      const fromCy = fromPos.y + cardH / 2;
+      const toCx = toPos.x + cardW / 2;
+      const toCy = toPos.y + cardH / 2;
+
+      // Determine best edge connection
+      let x1, y1, x2, y2;
+      const dx = toCx - fromCx;
+      const dy = toCy - fromCy;
+
+      if (Math.abs(dy) > Math.abs(dx)) {
+        // Vertical connection
+        if (dy > 0) {
+          x1 = fromCx; y1 = fromPos.y + cardH;
+          x2 = toCx; y2 = toPos.y;
+        } else {
+          x1 = fromCx; y1 = fromPos.y;
+          x2 = toCx; y2 = toPos.y + cardH;
+        }
+      } else {
+        // Horizontal connection
+        if (dx > 0) {
+          x1 = fromPos.x + cardW; y1 = fromCy;
+          x2 = toPos.x; y2 = toCy;
+        } else {
+          x1 = fromPos.x; y1 = fromCy;
+          x2 = toPos.x + cardW; y2 = toCy;
+        }
+      }
+
+      // Apply canvas transform
+      const tx1 = x1 * canvasScale + canvasOffset.x;
+      const ty1 = y1 * canvasScale + canvasOffset.y;
+      const tx2 = x2 * canvasScale + canvasOffset.x;
+      const ty2 = y2 * canvasScale + canvasOffset.y;
+
+      const midX = (tx1 + tx2) / 2;
+      const cpx1 = tx1 + (midX - tx1) * 0.5;
+      const cpy1 = ty1;
+      const cpx2 = tx2 - (tx2 - midX) * 0.5;
+      const cpy2 = ty2;
+
+      const isHighlighted = selectedStory && (s.id === selectedStory || depId === selectedStory);
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${tx1} ${ty1} C ${cpx1} ${cpy1}, ${cpx2} ${cpy2}, ${tx2} ${ty2}`);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', isHighlighted ? '#43C0BE88' : '#43C0BE33');
+      path.setAttribute('stroke-width', isHighlighted ? '2.5' : '1.5');
+      path.setAttribute('marker-end', isHighlighted ? 'url(#arrowhead-hi)' : 'url(#arrowhead)');
+
+      svg.appendChild(path);
+    });
+  });
+}
+
+function applyTransform() {
+  const canvas = document.getElementById('canvas');
+  canvas.style.transform = `translate(${canvasOffset.x}px, ${canvasOffset.y}px) scale(${canvasScale})`;
+  canvas.style.transformOrigin = '0 0';
+  drawArrows();
+}
+
+// ======================================================================
+// INTERACTION - Drag, Pan, Zoom
+// ======================================================================
+
+function startDrag(e, storyId) {
+  if (e.button !== 0) return;
+  dragTarget = storyId;
+  const pos = nodePositions[storyId];
+  dragStartPos = { x: e.clientX - pos.x * canvasScale, y: e.clientY - pos.y * canvasScale };
+  isDragging = false;
+
+  const onMove = (ev) => {
+    isDragging = true;
+    const node = document.querySelector(`[data-id="${storyId}"]`);
+    if (node) node.classList.add('dragging');
+    nodePositions[storyId] = {
+      x: (ev.clientX - dragStartPos.x) / canvasScale,
+      y: (ev.clientY - dragStartPos.y) / canvasScale
+    };
+    node.style.left = nodePositions[storyId].x + 'px';
+    node.style.top = nodePositions[storyId].y + 'px';
+    drawArrows();
+  };
+
+  const onUp = () => {
+    const node = document.querySelector(`[data-id="${storyId}"]`);
+    if (node) node.classList.remove('dragging');
+    dragTarget = null;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    setTimeout(() => { isDragging = false; }, 50);
+  };
+
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+  e.stopPropagation();
+}
+
+// Pan
+document.querySelector('.canvas-container').addEventListener('mousedown', e => {
+  if (e.target.closest('.story-node') || e.target.closest('.canvas-controls') || e.target.closest('.phase-legend')) return;
+  isPanning = true;
+  panStartPos = { x: e.clientX, y: e.clientY };
+  panStartOffset = { ...canvasOffset };
+});
+
+document.addEventListener('mousemove', e => {
+  if (isPanning) {
+    canvasOffset.x = panStartOffset.x + (e.clientX - panStartPos.x);
+    canvasOffset.y = panStartOffset.y + (e.clientY - panStartPos.y);
+    applyTransform();
+  }
+});
+
+document.addEventListener('mouseup', () => { isPanning = false; });
+
+// Zoom
+document.querySelector('.canvas-container').addEventListener('wheel', e => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  const newScale = Math.max(0.3, Math.min(2, canvasScale * delta));
+
+  // Zoom towards cursor
+  const rect = document.querySelector('.canvas-container').getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  canvasOffset.x = mx - (mx - canvasOffset.x) * (newScale / canvasScale);
+  canvasOffset.y = my - (my - canvasOffset.y) * (newScale / canvasScale);
+  canvasScale = newScale;
+
+  applyTransform();
+}, { passive: false });
+
+function zoomIn() { canvasScale = Math.min(2, canvasScale * 1.2); applyTransform(); }
+function zoomOut() { canvasScale = Math.max(0.3, canvasScale * 0.8); applyTransform(); }
+
+function fitAll() {
+  const container = document.querySelector('.canvas-container');
+  const cw = container.clientWidth;
+  const ch = container.clientHeight;
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  STORIES.forEach(s => {
+    const p = nodePositions[s.id];
+    if (p.x < minX) minX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.x + 240 > maxX) maxX = p.x + 240;
+    if (p.y + 150 > maxY) maxY = p.y + 150;
+  });
+
+  const contentW = maxX - minX + 100;
+  const contentH = maxY - minY + 100;
+  canvasScale = Math.min(cw / contentW, ch / contentH, 1.2);
+  canvasOffset.x = (cw - contentW * canvasScale) / 2 - minX * canvasScale + 50 * canvasScale;
+  canvasOffset.y = (ch - contentH * canvasScale) / 2 - minY * canvasScale + 50 * canvasScale;
+  applyTransform();
+}
+
+function resetLayout() {
+  nodePositions = {};
+  canvasOffset = { x: 0, y: 0 };
+  canvasScale = 1;
+  renderCanvas();
+  setTimeout(fitAll, 50);
+}
+
+// ======================================================================
+// TOOLTIP
+// ======================================================================
+
+function showTooltip(e, story) {
+  clearTimeout(tooltipTimeout);
+  tooltipTimeout = setTimeout(() => {
+    const tt = document.getElementById('tooltip');
+    tt.innerHTML = `
+      <div class="tt-title">${story.id}: ${story.title}</div>
+      <div class="tt-actor">${story.actor} &bull; ${story.priority}</div>
+      <div class="tt-rationale">${story.rationale}</div>
+      <div class="tt-stats">
+        <span>${story.scenarios.length} scenarios</span>
+        <span>${story.frs.length} FRs</span>
+        <span>${story.deps.length} dependencies</span>
+      </div>
+    `;
+    tt.classList.remove('hidden');
+
+    const rect = tt.getBoundingClientRect();
+    let left = e.clientX + 16;
+    let top = e.clientY + 16;
+    if (left + rect.width > window.innerWidth) left = e.clientX - rect.width - 16;
+    if (top + rect.height > window.innerHeight) top = e.clientY - rect.height - 16;
+    tt.style.left = left + 'px';
+    tt.style.top = top + 'px';
+  }, 400);
+}
+
+function hideTooltip() {
+  clearTimeout(tooltipTimeout);
+  document.getElementById('tooltip').classList.add('hidden');
+}
+
+// ======================================================================
+// SELECTION & DETAIL PANEL
+// ======================================================================
+
+function selectStory(storyId) {
+  selectedStory = storyId;
+  const story = STORIES.find(s => s.id === storyId);
+
+  // Update canvas selection
+  document.querySelectorAll('.story-node').forEach(n => n.classList.remove('selected'));
+  const node = document.querySelector(`[data-id="${storyId}"]`);
+  if (node) node.classList.add('selected');
+
+  // Update sidebar selection
+  document.querySelectorAll('.sidebar-card').forEach(c => c.classList.remove('selected'));
+  const sc = document.querySelector(`.sidebar-card[data-id="${storyId}"]`);
+  if (sc) { sc.classList.add('selected'); sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+  // Render detail panel
+  renderDetailPanel(story);
+
+  // Render prompt bar
+  renderPromptBar(story);
+
+  // Redraw arrows
+  drawArrows();
+}
+
+function renderDetailPanel(story) {
+  const panel = document.getElementById('detailPanel');
+  const body = document.getElementById('detailBody');
+  panel.classList.add('open');
+
+  // Match edge cases by keyword
+  const relatedEdgeCases = EDGE_CASES.filter(ec => {
+    const titleWords = story.title.toLowerCase().split(/\s+/);
+    return ec.keywords.some(kw => titleWords.some(tw => tw.includes(kw.toLowerCase())) || story.title.toLowerCase().includes(kw.toLowerCase()));
+  });
+
+  // Match success criteria by keyword overlap with story
+  const storyKeywords = (story.title + ' ' + story.rationale).toLowerCase();
+  const relatedSC = SUCCESS_CRITERIA.filter(sc => {
+    const scWords = sc.text.toLowerCase();
+    // Check for meaningful keyword overlap
+    const checkTerms = ['attribution', 'context', 'link', 'notes', 'recording', 'revenue', 'call', 'activity', 'search', 'history'];
+    return checkTerms.some(t => storyKeywords.includes(t) && scWords.includes(t));
+  });
+
+  body.innerHTML = `
+    <h2>${story.id}: ${story.title}</h2>
+    <div class="detail-actor">${story.actor} &bull; <span style="color:${PRIORITY_BG[story.priority]};font-weight:700">${story.priority}</span> &bull; ${story.scenarios.length} scenarios &bull; ${story.frs.length} FRs</div>
+
+    <div class="detail-section">
+      <h3>Why This Priority</h3>
+      <div class="rationale">${story.rationale}</div>
+    </div>
+
+    ${story.deps.length > 0 ? `
+    <div class="detail-section">
+      <h3>Dependencies</h3>
+      <div class="dep-tags">
+        ${story.deps.map(d => {
+          const dep = STORIES.find(s => s.id === d);
+          return `<span class="dep-tag" onclick="selectStory('${d}');flyTo('${d}')">${d}: ${dep ? dep.title : d}</span>`;
+        }).join('')}
+      </div>
+    </div>
+    ` : ''}
+
+    <div class="detail-section">
+      <h3>Acceptance Scenarios (${story.scenarios.length})</h3>
+      ${story.scenarios.map((sc, i) => `
+        <div class="scenario-block">
+          <strong style="color:var(--text-dim);font-size:11px">Scenario ${i + 1}</strong><br>
+          ${highlightGWT(sc)}
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="detail-section">
+      <h3>Functional Requirements (${story.frs.length})</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${story.frs.map(fr => `<span class="fr-badge" title="${escHtml(FRS[fr] || '')}">${fr}</span>`).join('')}
+      </div>
+      <div style="margin-top:8px">
+        ${story.frs.map(fr => `
+          <div style="font-size:11px;margin:4px 0;padding:6px 8px;background:var(--bg);border-radius:4px">
+            <strong style="color:var(--teal-light)">${fr}</strong>: ${FRS[fr] || ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    ${relatedEdgeCases.length > 0 ? `
+    <div class="detail-section">
+      <h3>Related Edge Cases (${relatedEdgeCases.length})</h3>
+      ${relatedEdgeCases.map(ec => `
+        <div class="edge-case">
+          <strong style="color:var(--when)">Q:</strong> ${ec.q}<br>
+          <strong style="color:var(--given)">A:</strong> ${ec.a}
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+
+    ${relatedSC.length > 0 ? `
+    <div class="detail-section">
+      <h3>Related Success Criteria (${relatedSC.length})</h3>
+      ${relatedSC.map(sc => `
+        <div class="sc-item">
+          <span class="sc-id">${sc.id}</span>${sc.text}
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+  `;
+
+  // Update prompt bar positioning
+  const promptBar = document.getElementById('promptBar');
+  promptBar.classList.add('with-detail');
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.getElementById('promptBar').classList.remove('with-detail');
+  document.getElementById('promptBar').classList.remove('open');
+  selectedStory = null;
+  document.querySelectorAll('.story-node').forEach(n => n.classList.remove('selected'));
+  document.querySelectorAll('.sidebar-card').forEach(c => c.classList.remove('selected'));
+  drawArrows();
+}
+
+function highlightGWT(text) {
+  return text
+    .replace(/\bGiven\b/g, '<span class="kw-given">Given</span>')
+    .replace(/\bWhen\b/g, '<span class="kw-when">When</span>')
+    .replace(/\bThen\b/g, '<span class="kw-then">Then</span>');
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ======================================================================
+// PROMPT BAR
+// ======================================================================
+
+function renderPromptBar(story) {
+  const bar = document.getElementById('promptBar');
+  const text = document.getElementById('promptText');
+  bar.classList.add('open');
+
+  const depsText = story.deps.length > 0
+    ? `\nDependencies: ${story.deps.map(d => { const dep = STORIES.find(s => s.id === d); return d + (dep ? ' (' + dep.title + ')' : ''); }).join(', ')}`
+    : '';
+
+  const prompt = `Implement ${story.id}: ${story.title}
+
+Actor: ${story.actor}
+Priority: ${story.priority}
+Purpose: ${story.rationale}${depsText}
+
+Acceptance Criteria:
+${story.scenarios.map((sc, i) => `${i + 1}. ${sc}`).join('\n')}
+
+Functional Requirements:
+${story.frs.map(fr => `- ${fr}: ${FRS[fr] || ''}`).join('\n')}
+
+This is part of the Calls Uplift - Call Bridge UI epic in TC Portal. Uses Inertia v2 + Vue 3 + Tailwind v3. Aircall domain code is in app-modules/aircall/ and domain/. Vue pages in resources/js/Pages/. Follow existing Common components from resources/js/Components/Common/.`;
+
+  text.textContent = prompt;
+}
+
+function copyPrompt() {
+  const text = document.getElementById('promptText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ======================================================================
+// SIDEBAR
+// ======================================================================
+
+function renderSidebar() {
+  const container = document.getElementById('sidebarContent');
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  if (currentTab === 'stories') {
+    renderStoriesTab(container, query);
+  } else if (currentTab === 'requirements') {
+    renderRequirementsTab(container, query);
+  } else if (currentTab === 'scenarios') {
+    renderScenariosTab(container, query);
+  }
+}
+
+function renderStoriesTab(container, query) {
+  const filtered = STORIES.filter(s => {
+    if (!query) return true;
+    return s.title.toLowerCase().includes(query) ||
+           s.actor.toLowerCase().includes(query) ||
+           s.id.toLowerCase().includes(query) ||
+           s.rationale.toLowerCase().includes(query);
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="no-results">No stories match your search</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(s => `
+    <div class="sidebar-card ${selectedStory === s.id ? 'selected' : ''}" data-id="${s.id}" onclick="selectStory('${s.id}');flyTo('${s.id}')">
+      <div class="card-header">
+        <span class="story-num">${s.id}</span>
+        <span class="story-title">${s.title}</span>
+        <span class="priority-badge" style="background:${PRIORITY_BG[s.priority]}">${s.priority}</span>
+      </div>
+      <div class="card-meta">
+        <span>${s.actor}</span>
+        <span>${s.scenarios.length} scenarios</span>
+        <span>${s.frs.length} FRs</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRequirementsTab(container, query) {
+  let html = '';
+  Object.entries(FR_CATEGORIES).forEach(([cat, { colour, frs }]) => {
+    const filteredFrs = frs.filter(frId => {
+      if (!query) return true;
+      return frId.toLowerCase().includes(query) ||
+             (FRS[frId] || '').toLowerCase().includes(query) ||
+             cat.toLowerCase().includes(query);
+    });
+    if (filteredFrs.length === 0) return;
+
+    html += `<div class="fr-group">
+      <div class="fr-group-header" style="background:${colour}22;color:${colour}">${cat} (${filteredFrs.length})</div>
+      ${filteredFrs.map(frId => `
+        <div class="fr-card" onclick="showFrDetail('${frId}')">
+          <span class="fr-id">${frId}</span>${FRS[frId] || ''}
+          <div style="margin-top:4px;font-size:10px;color:var(--text-dim)">Stories: ${(frToStories[frId] || []).join(', ')}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  });
+
+  container.innerHTML = html || '<div class="no-results">No requirements match your search</div>';
+}
+
+function renderScenariosTab(container, query) {
+  let html = '';
+  STORIES.forEach(s => {
+    s.scenarios.forEach((sc, i) => {
+      if (query && !sc.toLowerCase().includes(query) && !s.title.toLowerCase().includes(query)) return;
+      html += `
+        <div class="scenario-card" onclick="selectStory('${s.id}');flyTo('${s.id}')">
+          <div class="scenario-parent">${s.id}: ${s.title}</div>
+          ${highlightGWT(sc)}
+        </div>
+      `;
+    });
+  });
+
+  container.innerHTML = html || '<div class="no-results">No scenarios match your search</div>';
+}
+
+function showFrDetail(frId) {
+  // Find first story that uses this FR and select it
+  const stories = frToStories[frId] || [];
+  if (stories.length > 0) {
+    selectStory(stories[0]);
+    flyTo(stories[0]);
+  }
+}
+
+function flyTo(storyId) {
+  const pos = nodePositions[storyId];
+  if (!pos) return;
+
+  const container = document.querySelector('.canvas-container');
+  const cw = container.clientWidth;
+  const ch = container.clientHeight;
+  const detailOpen = document.getElementById('detailPanel').classList.contains('open');
+  const effectiveW = detailOpen ? cw - 440 : cw;
+
+  canvasScale = 1;
+  canvasOffset.x = effectiveW / 2 - pos.x * canvasScale - 120;
+  canvasOffset.y = ch / 2 - pos.y * canvasScale - 75;
+  applyTransform();
+}
+
+// Tab switching
+document.querySelectorAll('.sidebar-tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-tabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    renderSidebar();
+  });
+});
+
+// Search
+document.getElementById('searchInput').addEventListener('input', () => renderSidebar());
+
+// ======================================================================
+// INIT
+// ======================================================================
+
+function init() {
+  renderCanvas();
+  renderSidebar();
+  setTimeout(fitAll, 100);
+}
+
+window.addEventListener('resize', () => {
+  drawArrows();
+});
+
+init();
+</script>
+</body>
+</html>

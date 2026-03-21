@@ -1,0 +1,7 @@
+jira_key: TP-XXXX
+title: 'Service Delivery Verification'
+status: Draft
+prefix: SDV
+description: 'QR-based check-in system with voice notes, wellbeing surveys, and AI-powered incident detection for service delivery verification'
+due_date: null
+last_synced: null

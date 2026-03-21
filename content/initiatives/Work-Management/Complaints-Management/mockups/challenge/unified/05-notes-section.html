@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REF-00142 — Notes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          },
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 flex">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="w-60 bg-white border-r border-gray-200 min-h-screen flex-shrink-0 p-4 space-y-3">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-8 h-8 rounded-lg bg-tc-teal-700 flex items-center justify-center text-white text-xs font-bold">TC</div>
+      <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+    <div class="space-y-1">
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-md flex items-center px-3">
+        <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+      </div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col min-h-screen">
+    <!-- Abbreviated Triage Banner -->
+    <div class="bg-gradient-to-r from-amber-500 to-amber-400 px-6 py-2.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+        <span class="text-white font-bold text-sm">Medium</span>
+        <span class="text-white/60">|</span>
+        <span class="text-white font-mono text-sm font-bold">REF-00142</span>
+        <span class="text-white/60">|</span>
+        <span class="text-white text-sm">Incorrect medication administration — wrong dosage</span>
+      </div>
+      <a href="03-detail-view.html" class="text-white/80 hover:text-white text-sm flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        Back to Record
+      </a>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-auto">
+      <div class="max-w-4xl mx-auto p-6 space-y-6">
+        <!-- Breadcrumb -->
+        <div class="flex items-center gap-2 text-sm text-gray-400">
+          <a href="01-index.html" class="hover:text-tc-teal-700">Feedback Records</a>
+          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <a href="03-detail-view.html" class="hover:text-tc-teal-700">REF-00142</a>
+          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+          <span class="text-gray-600">Notes</span>
+        </div>
+
+        <!-- Action Plan Summary -->
+        <a href="06-action-plan.html" class="block bg-white rounded-xl border border-gray-200 p-4 hover:border-tc-teal-500/50 transition">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 rounded-lg bg-tc-teal-700 flex items-center justify-center">
+                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+              </div>
+              <span class="text-sm font-semibold text-gray-700">Action Plan</span>
+              <span class="text-sm text-gray-500">3/5 complete</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-32 h-2 bg-gray-200 rounded-full overflow-hidden"><div class="h-full bg-tc-teal-700 rounded-full" style="width:60%"></div></div>
+              <span class="text-sm font-bold text-tc-teal-700">60%</span>
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
+          </div>
+        </a>
+
+        <!-- Notes Section -->
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+              Notes
+              <span class="bg-gray-100 text-gray-600 text-xs font-bold px-2 py-0.5 rounded-full">5</span>
+            </h2>
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+              <span>Sorted by newest first</span>
+            </div>
+          </div>
+
+          <div class="space-y-6">
+            <!-- Note 1 — Most recent -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <span class="w-9 h-9 rounded-full bg-tc-blue-700 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">JP</span>
+                <div class="w-px flex-1 bg-gray-200 mt-2"></div>
+              </div>
+              <div class="flex-1 pb-6">
+                <div class="flex items-center justify-between mb-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-semibold text-gray-900">James Patel</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-50 text-purple-600">Coordinator</span>
+                    <span class="text-xs text-gray-400">2 hours ago</span>
+                  </div>
+                  <div class="hidden group-hover:flex items-center gap-1">
+                    <button class="p-1 rounded hover:bg-gray-100 text-gray-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                    <button class="p-1 rounded hover:bg-gray-100 text-gray-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">Pharmacy confirmed the prescription is for 5mg Ramipril. They have no record of any changes to the dosage. Waiting on shift records from the evening of 28 Feb.</p>
+              </div>
+            </div>
+
+            <!-- Note 2 -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <span class="w-9 h-9 rounded-full bg-pink-600 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">KJ</span>
+                <div class="w-px flex-1 bg-gray-200 mt-2"></div>
+              </div>
+              <div class="flex-1 pb-6">
+                <div class="flex items-center justify-between mb-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-semibold text-gray-900">Karen Jones</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600">Nurse</span>
+                    <span class="text-xs text-gray-400">1 day ago</span>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">Medication chart reviewed. The 10mg entry appears to be a transcription error — the blister pack contained the correct 5mg tablets. Margaret received the correct dose but the documentation was incorrect.</p>
+              </div>
+            </div>
+
+            <!-- Note 3 — With attachment -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <span class="w-9 h-9 rounded-full bg-tc-blue-700 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">JP</span>
+                <div class="w-px flex-1 bg-gray-200 mt-2"></div>
+              </div>
+              <div class="flex-1 pb-6">
+                <div class="flex items-center justify-between mb-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-semibold text-gray-900">James Patel</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-50 text-purple-600">Coordinator</span>
+                    <span class="text-xs text-gray-400">3 days ago</span>
+                  </div>
+                  <div class="hidden group-hover:flex items-center gap-1">
+                    <button class="p-1 rounded hover:bg-gray-100 text-gray-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                    <button class="p-1 rounded hover:bg-gray-100 text-gray-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                  </div>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">Initial investigation started. Spoke with David Thompson (son) by phone. He is concerned about the pattern as this is the second medication-related issue. Attached the photo he sent of the medication chart entry.</p>
+                <!-- Attachment -->
+                <div class="flex items-center gap-2 p-2.5 bg-gray-50 rounded-lg border border-gray-200 w-fit">
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  <div>
+                    <p class="text-xs font-medium text-gray-700">med-chart-28feb.jpg</p>
+                    <p class="text-[10px] text-gray-400">128 KB</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Note 4 -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <span class="w-9 h-9 rounded-full bg-purple-600 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">SC</span>
+                <div class="w-px flex-1 bg-gray-200 mt-2"></div>
+              </div>
+              <div class="flex-1 pb-6">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-sm font-semibold text-gray-900">Sarah Chen</span>
+                  <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-600">Quality</span>
+                  <span class="text-xs text-gray-400">5 days ago</span>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">Flagged this as a potential reportable incident under the Serious Incident Response Scheme. Awaiting clinical assessment from James before determining if SIRS notification is required.</p>
+              </div>
+            </div>
+
+            <!-- Note 5 — System note -->
+            <div class="flex gap-4">
+              <div class="flex flex-col items-center">
+                <span class="w-9 h-9 rounded-full bg-gray-200 text-gray-500 text-[10px] font-bold flex items-center justify-center flex-shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </span>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-sm font-medium text-gray-500">System</span>
+                  <span class="text-xs text-gray-400">8 days ago</span>
+                </div>
+                <p class="text-sm text-gray-500 italic">Record created and assigned to James Patel. Stage set to 0. New. Triage level: Medium.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Note Form -->
+          <div class="mt-8 pt-6 border-t border-gray-200">
+            <div class="flex gap-4">
+              <span class="w-9 h-9 rounded-full bg-gray-300 text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0">You</span>
+              <div class="flex-1">
+                <textarea rows="3" placeholder="Write a note..." class="w-full text-sm border border-gray-200 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 resize-none"></textarea>
+                <div class="flex items-center justify-between mt-3">
+                  <button class="text-gray-400 hover:text-gray-600 text-sm flex items-center gap-1.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                    Attach file
+                  </button>
+                  <button class="px-5 py-2 bg-tc-teal-700 text-white text-sm font-medium rounded-lg hover:bg-tc-teal-700/90 transition shadow-sm">Post Note</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

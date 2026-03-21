@@ -1,0 +1,363 @@
+# Document Review Interface - UI Variations
+
+## OPTION A: Modal with Document Viewer
+
+[Triggered from Works Dashboard when clicking on a pending document]
+
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│ Review Document: Completion Certificate.pdf                              [✕ Close]     │
+├──────────────────────────────────────────────────────────────┬──────────────────────────┤
+│                                                              │ Document Details         │
+│  [PDF Viewer Area]                                           │                          │
+│                                                              │ Work: Bathroom Mods      │
+│  ┌────────────────────────────────────────────────────────┐ │ Client: Maggie Smith     │
+│  │                                                        │ │ Contractor: ABC Home     │
+│  │   [PDF Document Preview]                               │ │ State: VIC               │
+│  │                                                        │ │                          │
+│  │   COMPLETION CERTIFICATE                               │ │ Type: Completion Cert    │
+│  │   Work completed: 2025-12-03                           │ │ Uploaded: 2025-12-03     │
+│  │   Contractor: ABC Home Modifications                   │ │ By: Contractor           │
+│  │   ...                                                  │ │ Size: 2.3 MB             │
+│  │                                                        │ │                          │
+│  │                                                        │ │ Version History:         │
+│  │                                                        │ │ v1 (current)             │
+│  │   [Page 1 of 1]                                        │ │ 2025-12-03               │
+│  │                                                        │ │                          │
+│  └────────────────────────────────────────────────────────┘ │ Previous Reviews:        │
+│                                                              │ None                     │
+│  [← Previous Page]  [Zoom -] [100%] [Zoom +]  [Next Page →] │                          │
+│                                                              ├──────────────────────────┤
+│  [📥 Download]  [🖨 Print]                                  │ Approval Decision        │
+│                                                              │                          │
+├──────────────────────────────────────────────────────────────┤ ⚪ Approve               │
+│ Rejection Reason (if rejecting):                            │ ⚪ Reject                │
+│ ┌──────────────────────────────────────────────────────────┐ │                          │
+│ │ [Optional - only required if rejecting]                 │ │ Rejection Reason:        │
+│ │                                                          │ │ (required if rejecting)  │
+│ │ Example reasons:                                         │ │                          │
+│ │ • Document expired                                       │ │ [Text area...]           │
+│ │ • Information incomplete                                 │ │                          │
+│ │ • Does not meet state requirements                       │ │                          │
+│ │ • Incorrect document type submitted                      │ │                          │
+│ └──────────────────────────────────────────────────────────┘ │                          │
+│                                                              │                          │
+│                                            [Cancel] [Submit →]│                          │
+└──────────────────────────────────────────────────────────────┴──────────────────────────┘
+
+**Pros:**
+- Full document preview inline with approval actions
+- All context visible (work details, document metadata)
+- Version history tracked
+- Clear approve/reject choice with reason field
+
+**Cons:**
+- Large modal may feel overwhelming
+- PDF viewer may not work well on mobile
+- Slow to load large documents
+
+---
+
+## OPTION B: Side-by-Side Document List with Quick Actions
+
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│ Review Documents: Bathroom Modifications • Maggie Smith                      [✕ Close]  │
+├──────────────────────────────────────┬──────────────────────────────────────────────────┤
+│ Documents (2 of 4 approved)          │ Completion Certificate.pdf                       │
+│                                      │                                                  │
+│ ☑ Quote.pdf                          │ [PDF Preview Area]                               │
+│   ✓ Approved 2025-12-01              │ ┌────────────────────────────────────────────┐   │
+│   by J.Smith                         │ │                                            │   │
+│   [View]                             │ │   COMPLETION CERTIFICATE                   │   │
+│                                      │ │                                            │   │
+│ ☑ Building Permit - VIC.pdf          │ │   Work completed: 2025-12-03               │   │
+│   ✓ Approved 2025-12-02              │ │   Contractor: ABC Home Modifications       │   │
+│   by J.Smith                         │ │   ...                                      │   │
+│   [View]                             │ │                                            │   │
+│                                      │ │   [Page 1 of 1]                            │   │
+│ ☐ Completion Certificate.pdf  ◄      │ └────────────────────────────────────────────┘   │
+│   Pending review                     │                                                  │
+│   Uploaded 2025-12-03                │ [📥 Download] [🖨 Print] [↔ Fullscreen]         │
+│   by Contractor                      │                                                  │
+│   [View] [✓ Approve] [✗ Reject]     │                                                  │
+│                                      │ Quick Actions:                                   │
+│ ☐ Progress Photos                    │ ┌────────────────────────────────────────────┐   │
+│   Not submitted                      │ │ ✓ Document meets requirements              │   │
+│                                      │ │                                            │   │
+│                                      │ │ [✓ Approve Document]                       │   │
+│                                      │ │                                            │   │
+│                                      │ │ or                                         │   │
+│                                      │ │                                            │   │
+│                                      │ │ ✗ Reject with reason:                      │   │
+│                                      │ │ ┌────────────────────────────────────────┐ │   │
+│                                      │ │ │ Select reason or enter custom...       │ │   │
+│                                      │ │ │ ▼ Document expired                     │ │   │
+│                                      │ │ │   Information incomplete               │ │   │
+│                                      │ │ │   Does not meet state requirements     │ │   │
+│                                      │ │ │   Custom reason...                     │ │   │
+│                                      │ │ └────────────────────────────────────────┘ │   │
+│                                      │ │                                            │   │
+│                                      │ │ [✗ Reject Document]                        │   │
+│                                      │ └────────────────────────────────────────────┘   │
+│                                      │                                                  │
+│                                      │ Notes (optional):                                │
+│                                      │ [Internal notes visible to compliance team...]   │
+│                                      │                                                  │
+└──────────────────────────────────────┴──────────────────────────────────────────────────┘
+
+**Pros:**
+- See all documents and their status at once
+- Quick navigation between documents
+- Approve/reject actions immediately visible
+- Dropdown for common rejection reasons speeds workflow
+- Notes field for compliance team communication
+
+**Cons:**
+- Split view may feel cramped
+- Can't see full document detail at once
+- Side panel scrolling may be needed
+
+---
+
+## OPTION C: Full-Screen Review Mode with Keyboard Shortcuts
+
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│ [✕ Exit Review Mode]                                         Document 3 of 4 • Pending  │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                         │
+│                        [PDF Full-Screen Viewer]                                         │
+│                                                                                         │
+│ ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+│ │                                                                                   │   │
+│ │                                                                                   │   │
+│ │                       COMPLETION CERTIFICATE                                      │   │
+│ │                                                                                   │   │
+│ │                       Work completed: 2025-12-03                                  │   │
+│ │                       Contractor: ABC Home Modifications Pty Ltd                  │   │
+│ │                       Location: 123 Smith St, Melbourne VIC 3000                  │   │
+│ │                                                                                   │   │
+│ │                       Scope of work:                                              │   │
+│ │                       - Installation of grab rails                                │   │
+│ │                       - Accessible shower conversion                              │   │
+│ │                       - Slip-resistant flooring                                   │   │
+│ │                                                                                   │   │
+│ │                       Completed by: John Builder (License #BL123456)              │   │
+│ │                       Inspected by: Building Inspector (Cert #INS789)             │   │
+│ │                                                                                   │   │
+│ │                       Certificate issued: 2025-12-03                              │   │
+│ │                                                                                   │   │
+│ │                       [Signature]                                                 │   │
+│ │                                                                                   │   │
+│ │                                                                                   │   │
+│ │                       Page 1 of 1                                                 │   │
+│ │                                                                                   │   │
+│ └───────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                         │
+│ ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+│ │ Completion Certificate.pdf • Bathroom Modifications • Maggie Smith • VIC          │   │
+│ │ Uploaded: 2025-12-03 by Contractor • Size: 2.3 MB                                 │   │
+│ └───────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                         │
+│ [← Previous Doc (2)]  [Zoom -] [Fit] [Zoom +]  [↻ Rotate]  [Next Doc (4) →]           │
+│                                                                                         │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                         │
+│ [A] Approve    [R] Reject    [N] Next    [P] Previous    [ESC] Exit                    │
+│                                                                                         │
+│                         [✓ Approve]                    [✗ Reject]                       │
+│                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+
+[If Reject is clicked, show inline reason input:]
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│ Rejection Reason:                                                                       │
+│ ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+│ │ [Type reason or select from suggestions...]                                       │   │
+│ │                                                                                   │   │
+│ │ Suggestions:                                                                      │   │
+│ │ • Certificate has expired                                                         │   │
+│ │ • Building inspector details not legible                                          │   │
+│ │ • Scope of work does not match quote                                             │   │
+│ └───────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                         │
+│                         [Cancel]              [Confirm Rejection →]                     │
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:**
+- Full-screen focus maximizes document visibility
+- Keyboard shortcuts enable very fast review
+- Minimal UI distractions
+- Good for power users processing many documents
+- Next/previous navigation keeps flow
+
+**Cons:**
+- Keyboard shortcuts require learning
+- Minimal context (no work details visible)
+- May feel stark/bare for occasional users
+- Rejection reason requires extra step
+
+---
+
+## OPTION D: Batch Review Checklist Mode
+
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│ Batch Review: Bathroom Modifications • Maggie Smith • VIC                  [✕ Close]   │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                         │
+│ Review Progress: 2 of 4 documents reviewed  ▓▓▓▓▓░░░░░ 50%                            │
+│                                                                                         │
+│ ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+│ │ ☑ 1. Quote.pdf                                                  ✓ APPROVED        │   │
+│ │    Approved by J.Smith on 2025-12-01                            [View] [Undo]     │   │
+│ └───────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                         │
+│ ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+│ │ ☑ 2. Building Permit - VIC.pdf                                  ✓ APPROVED        │   │
+│ │    Approved by J.Smith on 2025-12-02                            [View] [Undo]     │   │
+│ └───────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                         │
+│ ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+│ │ ☐ 3. Completion Certificate.pdf                                🔍 REVIEWING       │   │
+│ │    Uploaded 2025-12-03 by Contractor                                              │   │
+│ │                                                                                   │   │
+│ │    [PDF Preview - Click to view full size]                                        │   │
+│ │    ┌─────────────────────────────────────────────────────────────────────────┐    │   │
+│ │    │                                                                         │    │   │
+│ │    │   [Thumbnail preview of certificate]                                    │    │   │
+│ │    │                                                                         │    │   │
+│ │    └─────────────────────────────────────────────────────────────────────────┘    │   │
+│ │                                                                                   │   │
+│ │    Checklist:                                                                     │   │
+│ │    ☑ Certificate is current (not expired)                                         │   │
+│ │    ☑ Building inspector details legible                                           │   │
+│ │    ☑ Scope of work matches quote                                                  │   │
+│ │    ☑ Signature present                                                            │   │
+│ │    ☑ Meets VIC state requirements                                                 │   │
+│ │                                                                                   │   │
+│ │    Decision:                                                                      │   │
+│ │    ⚫ Approve  ⚪ Reject                                                           │   │
+│ │                                                                                   │   │
+│ │    [If rejecting, reason]:                                                        │   │
+│ │    [___________________________________________________________________]          │   │
+│ │                                                                                   │   │
+│ │    [← Previous]                        [Save Decision] [Next →]                   │   │
+│ └───────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                         │
+│ ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+│ │ ☐ 4. Progress Photos                                            ⏸ PENDING         │   │
+│ │    Not yet submitted                                                              │   │
+│ └───────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                         │
+│                                      [Complete Review & Notify Contractor]             │
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:**
+- Checklist format guides thorough review
+- Progress bar shows completion
+- All documents visible with status
+- Inline preview + checklist reduces clicks
+- Undo option for mistakes
+
+**Cons:**
+- Checklist may feel prescriptive
+- Thumbnail previews may not be sufficient
+- Long page for many documents
+- May be overkill for simple documents
+
+---
+
+## OPTION E: Comparison View (For Multiple Quotes)
+
+[Specific to works requiring multiple independent quotes]
+
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│ Compare Quotes: Ramp Installation • John Doe • NSW                         [✕ Close]   │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                         │
+│ Requirement: 2 independent contractor quotes                                           │
+│ Status: 2 of 2 quotes received • Ready for comparison                                  │
+│                                                                                         │
+├──────────────────────────────────────┬─────────────────────────────────────────────────┤
+│ Quote 1: ABC Home Modifications      │ Quote 2: XYZ Contractors                        │
+├──────────────────────────────────────┼─────────────────────────────────────────────────┤
+│ Status: ☐ Pending                    │ Status: ☐ Pending                               │
+│                                      │                                                 │
+│ [PDF Preview - Quote1.pdf]           │ [PDF Preview - Quote2.pdf]                      │
+│ ┌────────────────────────────────┐   │ ┌─────────────────────────────────────────┐     │
+│ │                                │   │ │                                         │     │
+│ │  QUOTE                         │   │ │  QUOTATION                              │     │
+│ │  ABC Home Modifications        │   │ │  XYZ Contractors Pty Ltd                │     │
+│ │                                │   │ │                                         │     │
+│ │  Ramp Installation             │   │ │  Entry Ramp - Residential               │     │
+│ │  Entry & Internal Access       │   │ │                                         │     │
+│ │                                │   │ │  Materials: $8,500                      │     │
+│ │  Materials: $9,000             │   │ │  Labour: $4,000                         │     │
+│ │  Labour: $4,500                │   │ │  Permit fees: $300                      │     │
+│ │  Permit & Compliance: $500     │   │ │                                         │     │
+│ │                                │   │ │  TOTAL: $12,800 (inc GST)               │     │
+│ │  TOTAL: $14,000 (inc GST)      │   │ │                                         │     │
+│ │                                │   │ │  Timeline: 3 weeks                      │     │
+│ │  Timeline: 2-3 weeks           │   │ │                                         │     │
+│ │                                │   │ │                                         │     │
+│ └────────────────────────────────┘   │ └─────────────────────────────────────────┘     │
+│                                      │                                                 │
+│ Total: $14,000 (inc GST)             │ Total: $12,800 (inc GST)                        │
+│ Timeline: 2-3 weeks                  │ Timeline: 3 weeks                               │
+│ Submitted: 2025-11-28                │ Submitted: 2025-11-29                           │
+│                                      │                                                 │
+│ [View Full PDF]                      │ [View Full PDF]                                 │
+│                                      │                                                 │
+│ ⚪ Approve  ⚪ Reject                 │ ⚪ Approve  ⚪ Reject                            │
+│                                      │                                                 │
+└──────────────────────────────────────┴─────────────────────────────────────────────────┘
+│                                                                                         │
+│ ┌───────────────────────────────────────────────────────────────────────────────────┐   │
+│ │ ⓘ Both quotes are from different suppliers ✓                                     │   │
+│ │ ⓘ Price difference: $1,200 (9.4%)                                                 │   │
+│ │                                                                                   │   │
+│ │ Recommendation: Review scope of work to ensure both quotes cover same items      │   │
+│ └───────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                         │
+│ Notes (internal):                                                                       │
+│ [Optional notes for compliance team...]                                                 │
+│                                                                                         │
+│                                              [Approve Selected] [Reject Selected]       │
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:**
+- Side-by-side comparison perfect for multiple quotes
+- Validation that quotes are from different suppliers
+- Price difference highlighted
+- Can approve/reject individually or in batch
+- Internal notes for team communication
+
+**Cons:**
+- Only useful for multi-quote scenarios
+- Side-by-side may be cramped for detailed documents
+- Horizontal scrolling if quotes are long
+
+---
+
+## Recommendation
+
+**Primary Interface: OPTION B - Side-by-Side Document List with Quick Actions**
+
+Recommended because:
+1. **Efficient workflow**: See all documents + current document in one view
+2. **Quick actions**: Approve/reject without navigation
+3. **Dropdown reasons**: Common rejection reasons speed decisions
+4. **Context visible**: Document list shows overall progress
+5. **Scalable**: Works for 3 documents or 10 documents
+
+**For Multi-Quote Scenarios: OPTION E - Comparison View**
+- Critical for validating independent quotes requirement
+- Side-by-side comparison prevents errors
+- Price difference highlighted for CP decision-making
+
+**For Power Users: OPTION C - Full-Screen Review Mode**
+- Keyboard shortcuts enable very fast batch processing
+- Good for compliance team members who review 50+ documents/day
+
+**For First-Time/Occasional Users: OPTION D - Batch Review Checklist Mode**
+- Guided checklist reduces training time
+- Clear progress indicator
+- Inline previews + checklists build confidence

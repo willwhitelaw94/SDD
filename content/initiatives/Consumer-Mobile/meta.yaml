@@ -1,0 +1,17 @@
+jira_key: TP-2686
+title: 'Consumer Mobile'
+icon: i-heroicons-device-phone-mobile
+description: 'Build mobile-first experiences for consumers to access their care services, budgets, and communication on the go.'
+status: active
+epic_count: 1
+last_synced: '2025-01-15T00:00:00.000Z'
+leads:
+  discovery:
+    name: 'Will Whitelaw'
+    email: willw@trilogycare.com.au
+  design:
+    name: 'Beth Poultney'
+    email: beth.poultney@trilogycare.com.au
+  development:
+    name: 'Vishal Asai'
+    email: vishala@trilogycare.com.au

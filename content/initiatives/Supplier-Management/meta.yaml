@@ -1,0 +1,30 @@
+jira_key: TP-1857
+title: 'Supplier Management'
+description: 'Streamline and optimize the supplier management process, from onboarding to service delivery confirmation and audit procedures.'
+status: active
+epic_count: 8
+last_synced: '2025-11-09T04:22:50.014Z'
+
+# Strategic Context
+objective: 'Enable TC Portal to manage the full supplier lifecycle with minimal manual intervention, reducing operational overhead and improving service quality.'
+aligns_to: 'Q1 2025 OKR - Operational Excellence'
+target_quarter: 'Q2 2025'
+priority: high
+sponsor: 'Jane Smith (VP Operations)'
+
+leads:
+  discovery:
+    name: 'Sarah Chen'
+    email: sarah.chen@trilogycare.com
+  design:
+    name: 'Mike Rodriguez'
+    email: mike.rodriguez@trilogycare.com
+  development:
+    name: 'Emily Watson'
+    email: emily.watson@trilogycare.com
+  qa:
+    name: 'David Kim'
+    email: david.kim@trilogycare.com
+  release:
+    name: 'Jessica Lee'
+    email: jessica.lee@trilogycare.com

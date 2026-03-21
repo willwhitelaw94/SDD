@@ -1,0 +1,9 @@
+prefix: SDOC
+summary: "AI document classification and extraction"
+status: Draft
+brp_priority: P2
+title: 'Supplier Docs AI'
+linear_project_id: c5758a33-4625-4f32-b04f-f2a107d20c69
+linear_url: https://linear.app/trilogycare/project/sdoc-supplier-docs-ai-9907e59b2a5b
+description: AI-powered supplier document classification and data extraction
+bounty_value: 10000

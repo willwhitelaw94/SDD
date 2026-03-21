@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Bill — Notion Nick</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: { 50: '#F0FAFA', 100: '#D5F1F0', 200: '#BAE8E7', 300: '#94DBDA', 400: '#66CCCA', 500: '#43C0BE', 600: '#2F9E9C', 700: '#007F7E', 800: '#005656', 900: '#003D3D' },
+                        'primary-blue': { 50: '#F0F4FA', 100: '#D6E1F0', 200: '#BCCEE7', 300: '#96B2D9', 400: '#7197CC', 500: '#4B7BBE', 600: '#39639D', 700: '#2C4C79', 800: '#1E3452', 900: '#101C2D' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Roboto Flex', sans-serif; }
+        .dropzone { transition: all 0.2s ease; }
+        .dropzone:hover { border-color: #43C0BE; background-color: #F0FAFA; }
+        .service-tag { transition: all 0.15s ease; cursor: pointer; }
+        .service-tag:hover { opacity: 0.8; }
+        .service-tag.selected { ring: 2px; box-shadow: 0 0 0 2px rgba(0, 127, 126, 0.4); }
+    </style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- NO SIDEBAR — Public unauthenticated page -->
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-2xl mx-auto px-6 py-5 flex items-center gap-3">
+            <div class="w-9 h-9 bg-teal-700 rounded-lg flex items-center justify-center">
+                <span class="text-white font-bold text-sm">TC</span>
+            </div>
+            <div>
+                <p class="text-sm font-semibold text-gray-900">Trilogy Care</p>
+                <p class="text-[10px] text-gray-400 uppercase tracking-wider">Supplier Portal</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-6 py-10">
+
+        <!-- Page Title (Notion-style large heading) -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-semibold text-gray-900 mb-2">Submit a Bill</h1>
+            <p class="text-sm text-gray-500 leading-relaxed">
+                Use this form to submit an invoice for services provided to a Trilogy Care client.
+                No account required. You'll receive a reference number upon submission.
+            </p>
+        </div>
+
+        <!-- Form as Notion-style property blocks -->
+        <form class="space-y-0" onsubmit="event.preventDefault(); showSuccess();">
+
+            <!-- Supplier Details Block -->
+            <div class="bg-white rounded-t-lg border border-gray-200 border-b-0">
+                <div class="px-5 py-3 border-b border-gray-100">
+                    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Supplier Details</h2>
+                </div>
+                <div class="divide-y divide-gray-50">
+                    <div class="px-5 py-3 flex items-center gap-4">
+                        <label class="text-xs text-gray-500 w-32 flex-shrink-0">ABN <span class="text-red-400">*</span></label>
+                        <input type="text" placeholder="e.g. 51 824 753 556" required
+                               pattern="[\d\s]+"
+                               class="flex-1 text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                    </div>
+                    <div class="px-5 py-3 flex items-center gap-4">
+                        <label class="text-xs text-gray-500 w-32 flex-shrink-0">Supplier Name <span class="text-red-400">*</span></label>
+                        <input type="text" placeholder="Your business or trading name" required
+                               class="flex-1 text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                    </div>
+                    <div class="px-5 py-3 flex items-center gap-4">
+                        <label class="text-xs text-gray-500 w-32 flex-shrink-0">Contact Email</label>
+                        <input type="email" placeholder="you@example.com"
+                               class="flex-1 text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client Details Block -->
+            <div class="bg-white border border-gray-200 border-b-0">
+                <div class="px-5 py-3 border-b border-gray-100">
+                    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Client Details</h2>
+                </div>
+                <div class="divide-y divide-gray-50">
+                    <div class="px-5 py-3 flex items-center gap-4">
+                        <label class="text-xs text-gray-500 w-32 flex-shrink-0">Client Name <span class="text-red-400">*</span></label>
+                        <input type="text" placeholder="Full name of the Trilogy Care client" required
+                               class="flex-1 text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                    </div>
+                    <div class="px-5 py-3 flex items-center gap-4">
+                        <label class="text-xs text-gray-500 w-32 flex-shrink-0">Date of Birth</label>
+                        <input type="date"
+                               class="flex-1 text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice Details Block -->
+            <div class="bg-white border border-gray-200 border-b-0">
+                <div class="px-5 py-3 border-b border-gray-100">
+                    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Invoice Details</h2>
+                </div>
+                <div class="divide-y divide-gray-50">
+                    <div class="px-5 py-3 flex items-center gap-4">
+                        <label class="text-xs text-gray-500 w-32 flex-shrink-0">Invoice Number</label>
+                        <input type="text" placeholder="Your invoice reference"
+                               class="flex-1 text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                    </div>
+                    <div class="px-5 py-3 flex items-center gap-4">
+                        <label class="text-xs text-gray-500 w-32 flex-shrink-0">Total Amount <span class="text-red-400">*</span></label>
+                        <div class="relative flex-1">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-gray-400">$</span>
+                            <input type="number" step="0.01" placeholder="0.00" required
+                                   class="w-full text-sm border border-gray-200 rounded-md pl-7 pr-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                        </div>
+                    </div>
+                    <div class="px-5 py-3 flex items-center gap-4">
+                        <label class="text-xs text-gray-500 w-32 flex-shrink-0">Service Period <span class="text-red-400">*</span></label>
+                        <div class="flex items-center gap-2 flex-1">
+                            <input type="date" required class="flex-1 text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                            <span class="text-xs text-gray-400">to</span>
+                            <input type="date" required class="flex-1 text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Block (Multi-select Tags) -->
+            <div class="bg-white border border-gray-200 border-b-0">
+                <div class="px-5 py-3 border-b border-gray-100">
+                    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Services Provided <span class="text-red-400">*</span></h2>
+                    <p class="text-[10px] text-gray-400 mt-0.5">Select all that apply</p>
+                </div>
+                <div class="px-5 py-4">
+                    <div class="flex flex-wrap gap-2">
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="personal_care">
+                            Personal Care
+                        </label>
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="domestic">
+                            Domestic Assistance
+                        </label>
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="nursing">
+                            Nursing
+                        </label>
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="allied_health">
+                            Allied Health
+                        </label>
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="transport">
+                            Transport
+                        </label>
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="meals">
+                            Meals
+                        </label>
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="gardening">
+                            Gardening
+                        </label>
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="equipment">
+                            Equipment
+                        </label>
+                        <label class="service-tag inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border border-gray-200 bg-white hover:border-teal-300 has-[:checked]:bg-teal-50 has-[:checked]:border-teal-400 has-[:checked]:text-teal-700 transition-all">
+                            <input type="checkbox" class="sr-only" name="services[]" value="other">
+                            Other
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Block -->
+            <div class="bg-white border border-gray-200 border-b-0">
+                <div class="px-5 py-3 border-b border-gray-100">
+                    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Invoice Document <span class="text-red-400">*</span></h2>
+                </div>
+                <div class="p-5">
+                    <div class="dropzone border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer"
+                         ondragover="event.preventDefault(); this.classList.add('drag-over')"
+                         ondragleave="this.classList.remove('drag-over')">
+                        <svg class="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                        <p class="text-xs text-gray-600">Drop your invoice here or <span class="text-teal-700 font-medium">browse</span></p>
+                        <p class="text-[10px] text-gray-400 mt-1">PDF, PNG, or JPG up to 10MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Block -->
+            <div class="bg-white border border-gray-200 border-b-0">
+                <div class="px-5 py-3 border-b border-gray-100">
+                    <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Additional Notes</h2>
+                </div>
+                <div class="px-5 py-3">
+                    <textarea rows="3" placeholder="Any additional information about this invoice..."
+                              class="w-full text-sm border border-gray-200 rounded-md px-3 py-1.5 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- reCAPTCHA + Submit -->
+            <div class="bg-white rounded-b-lg border border-gray-200 p-5">
+                <div class="flex items-start gap-3 mb-5">
+                    <!-- reCAPTCHA placeholder -->
+                    <div class="border border-gray-200 rounded p-3 bg-gray-50 flex items-center gap-3">
+                        <div class="w-6 h-6 border-2 border-gray-300 rounded cursor-pointer hover:border-teal-400"></div>
+                        <span class="text-xs text-gray-600">I'm not a robot</span>
+                        <div class="text-[8px] text-gray-300 text-right leading-tight ml-4">
+                            <div>reCAPTCHA</div>
+                            <div>Privacy - Terms</div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="w-full px-4 py-2.5 text-sm font-medium text-white bg-teal-700 rounded-md hover:bg-teal-800 transition-colors">
+                    Submit Bill
+                </button>
+                <p class="text-[10px] text-gray-400 text-center mt-3">
+                    By submitting, you confirm the information provided is accurate and the services were delivered as stated.
+                </p>
+            </div>
+
+        </form>
+
+        <!-- Success Callout (hidden by default) -->
+        <div id="success-callout" class="hidden mt-8">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <h3 class="text-lg font-semibold text-green-800 mb-1">Bill Submitted Successfully</h3>
+                <p class="text-sm text-green-700 mb-3">Your invoice has been received and will be processed shortly.</p>
+                <div class="bg-white border border-green-200 rounded-lg px-4 py-3 inline-block">
+                    <p class="text-xs text-gray-500 mb-0.5">Your Reference Number</p>
+                    <p class="text-lg font-mono font-semibold text-green-800">#TC-20260307-0048</p>
+                </div>
+                <p class="text-xs text-green-600 mt-4">
+                    Save this reference number for your records. You'll receive a confirmation email if you provided one.
+                </p>
+                <button onclick="location.reload()" class="mt-4 px-4 py-2 text-sm font-medium text-green-700 border border-green-300 rounded-md hover:bg-green-50 transition-colors">
+                    Submit Another Bill
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 mt-16">
+        <div class="max-w-2xl mx-auto px-6 py-6 flex items-center justify-between text-xs text-gray-400">
+            <p>Trilogy Care Pty Ltd</p>
+            <div class="flex items-center gap-4">
+                <a href="#" class="hover:text-gray-600">Privacy Policy</a>
+                <a href="#" class="hover:text-gray-600">Terms of Service</a>
+                <a href="#" class="hover:text-gray-600">Contact Support</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function showSuccess() {
+            document.querySelector('form').classList.add('hidden');
+            document.getElementById('success-callout').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+<script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

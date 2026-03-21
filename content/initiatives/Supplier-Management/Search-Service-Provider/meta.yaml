@@ -1,0 +1,11 @@
+jira_key: TP-2292
+title: 'Search Service Provider'
+status: Backlog
+prefix: SSP
+summary: "Find and compare service providers"
+linear_project_id: 5566cb81-3415-4d28-a5fb-46716b4d0a1e
+linear_url: https://linear.app/trilogycare/project/ssp-search-service-provider-tp-2292-760661f56303
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+bounty_value: 10000

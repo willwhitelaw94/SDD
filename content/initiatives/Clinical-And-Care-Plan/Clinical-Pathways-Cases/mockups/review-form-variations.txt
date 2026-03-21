@@ -1,0 +1,224 @@
+## Review Form — 5 Variations
+
+Context: Right-slide Inertia modal for completing a scheduled review.
+Fields: Outcome (Continue/Close/Escalate), Clinical notes, Closure reason
+         (conditional on Close outcome).
+Conditional: Mandatory cases require clinical justification for closure (min 20 chars).
+State feedback: Clear confirmation of what changed after save.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION A: Simple Stacked — Dropdown + Textarea
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Complete Review                     │
+                                    │  Post-fall monitoring · ●Mandatory  │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  Review Outcome *                    │
+                                    │  [▼ Select outcome...           ]   │
+                                    │                                      │
+                                    │  Clinical Notes *                    │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │  Record your clinical observations  │
+                                    │                                      │
+                                    │  ┌──────────┐  ┌────────────────┐   │
+                                    │  │  Cancel   │  │ Save Review →  │   │
+                                    │  └──────────┘  └────────────────┘   │
+                                    └──────────────────────────────────────┘
+
+When "Close" selected + Mandatory case:
+
+                                    │  Closure Reason *                    │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │  ℹ Mandatory cases require clinical │
+                                    │    justification for closure         │
+                                    │    (minimum 20 characters)           │
+
+Pros: Minimal. 2-3 fields. Fast to complete during a call. Standard pattern.
+Cons: Dropdown for 3 options feels heavy. No visual cue about what each
+      outcome does before selecting.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION B: Radio Cards for Outcome (Consequences Visible)
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Complete Review                     │
+                                    │  Post-fall monitoring · ●Mandatory  │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  Review Outcome *                    │
+                                    │                                      │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ ◉ Continue                   │   │
+                                    │  │   Case remains Active. Next  │   │
+                                    │  │   review advances by 14 days │   │
+                                    │  ├──────────────────────────────┤   │
+                                    │  │ ○ Close                      │   │
+                                    │  │   Case closed. No further    │   │
+                                    │  │   reviews scheduled          │   │
+                                    │  ├──────────────────────────────┤   │
+                                    │  │ ○ Escalate                   │   │
+                                    │  │   Case → Mandatory, review   │   │
+                                    │  │   interval resets to weekly   │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  Clinical Notes *                    │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  ┌──────────┐  ┌────────────────┐   │
+                                    │  │  Cancel   │  │ Save Review →  │   │
+                                    │  └──────────┘  └────────────────┘   │
+                                    └──────────────────────────────────────┘
+
+Pros: Consequences of each outcome visible upfront — "Escalate" clearly
+      states "→ Mandatory, weekly reviews". Prevents surprises. Aligns
+      with "Transparency" principle. Radio cards natural for 3 options.
+Cons: More vertical space than a dropdown. Descriptions may be redundant
+      for experienced users.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION C: Button Group for Outcome (Fastest)
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Complete Review                     │
+                                    │  Post-fall monitoring · ●Mandatory  │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  Clinical Notes *                    │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │  Record your clinical observations  │
+                                    │                                      │
+                                    │  ┌──────────┐ ┌────────┐ ┌───────┐ │
+                                    │  │ Continue  │ │ Close  │ │Escalate│ │
+                                    │  │    →      │ │   ✓    │ │   ⬆   │ │
+                                    │  └──────────┘ └────────┘ └───────┘ │
+                                    │     green       gray      red      │
+                                    │                                      │
+                                    └──────────────────────────────────────┘
+
+When "Close" clicked on Mandatory case, closure reason field appears
+before final confirmation:
+
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ You're closing a Mandatory   │   │
+                                    │  │ case. Provide clinical       │   │
+                                    │  │ justification:               │   │
+                                    │  │                               │   │
+                                    │  │ ┌────────────────────────┐   │   │
+                                    │  │ │                        │   │   │
+                                    │  │ └────────────────────────┘   │   │
+                                    │  │                               │   │
+                                    │  │ [Cancel]  [Confirm Close →]  │   │
+                                    │  └──────────────────────────────┘   │
+
+Pros: Notes-first, action-second. Natural flow — write notes, then decide.
+      Button group is fastest (one click). Colour-coded buttons signal
+      severity (green=safe, red=escalate). Two-step confirmation for Close.
+Cons: Outcome descriptions not visible before clicking. User might click
+      wrong button. No undo. Mandatory closure is a second step (more clicks).
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION D: Context Panel + Form (Current State Visible)
+═══════════════════════════════════════════════════════════════════════════════
+
+                  ┌────────────────────────┬───────────────────────────────────┐
+                  │                        │                       ✕ Close    │
+                  │  Case Summary          │  Complete Review                  │
+                  │  ─────────────────     │  ─────────────────               │
+                  │                         │                                  │
+                  │  ●Mandatory  ●Active    │  Review Outcome *                │
+                  │                         │                                  │
+                  │  Post-fall monitoring   │  ┌──────────────────────────┐   │
+                  │  — fell on 10 Feb       │  │ ◉ Continue              │   │
+                  │                         │  │ ○ Close                  │   │
+                  │  Last Review: 8 Feb     │  │ ○ Escalate              │   │
+                  │  Outcome: Continue      │  └──────────────────────────┘   │
+                  │                         │                                  │
+                  │  Reviews: 1             │  Clinical Notes *                │
+                  │  Interval: 14 days      │  ┌──────────────────────────┐   │
+                  │  Assigned: Ian S.       │  │                          │   │
+                  │                         │  │                          │   │
+                  │  ── Risks ──────        │  │                          │   │
+                  │  • Falls Risk (High)    │  └──────────────────────────┘   │
+                  │                         │                                  │
+                  │                         │  ┌────────┐ ┌──────────────┐   │
+                  │                         │  │ Cancel  │ │ Save Review →│   │
+                  │                         │  └────────┘ └──────────────┘   │
+                  └────────────────────────┴───────────────────────────────────┘
+
+Pros: Case context visible alongside review form. Reviewer can reference
+      concern, last review, and risks while writing notes. Best for
+      informed decision-making. Supports "Transparency" principle fully.
+Cons: Wide modal (1000px+). Complex layout. May be overkill for a 2-field
+      form. Clinical leads know the case context already if coming from detail.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION E: Outcome-First with Inline Consequences
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Complete Review                     │
+                                    │  Post-fall monitoring · ●Mandatory  │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  What's the outcome of this review?  │
+                                    │                                      │
+                                    │  [ Continue ✓ ]  [ Close ]  [Escal.]│
+                                    │                                      │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ ✓ Case remains Active        │   │
+                                    │  │ ✓ Next review: 15 Feb 2026   │   │
+                                    │  │ ✓ Interval: Fortnightly      │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  Clinical Notes *                    │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  ┌──────────┐  ┌────────────────┐   │
+                                    │  │  Cancel   │  │ Save Review →  │   │
+                                    │  └──────────┘  └────────────────┘   │
+                                    └──────────────────────────────────────┘
+
+When "Escalate" tab selected:
+
+                                    │  [ Continue ]  [ Close ]  [Escal.✓] │
+                                    │                                      │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ ⚠ Case type → Mandatory      │   │
+                                    │  │ ⚠ Review interval → Weekly   │   │
+                                    │  │ ⚠ Status → Escalated         │   │
+                                    │  └──────────────────────────────┘   │
+
+Pros: Tab-style toggle shows consequences inline per outcome. Very clear
+      what will happen. Outcome visible before committing. Lightweight.
+Cons: Tab toggle for a selection is non-standard — could confuse. The
+      consequence box changes content on toggle which may feel unstable.

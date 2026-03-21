@@ -1,0 +1,22 @@
+jira_key: TP-2290
+title: 'Partner Management'
+description: 'Develop tools and processes for managing care coordinators and ensuring quality coordination services.'
+status: active
+epic_count: 2
+last_synced: '2025-11-09T04:22:50.014Z'
+leads:
+  discovery:
+    name: 'Karen Phillips'
+    email: karen.phillips@trilogycare.com
+  design:
+    name: 'Steven Baker'
+    email: steven.baker@trilogycare.com
+  development:
+    name: 'Laura Adams'
+    email: laura.adams@trilogycare.com
+  qa:
+    name: 'Ryan Mitchell'
+    email: ryan.mitchell@trilogycare.com
+  release:
+    name: 'Angela Roberts'
+    email: angela.roberts@trilogycare.com

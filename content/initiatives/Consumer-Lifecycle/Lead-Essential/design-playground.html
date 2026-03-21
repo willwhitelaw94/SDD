@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Playground — Lead Essential (LES)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface-hover: #263548;
+    --border: #334155;
+    --border-light: #475569;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --teal: #43C0BE;
+    --teal-dark: #007F7E;
+    --blue: #2C4C79;
+    --blue-light: #3b6baa;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --green: #22c55e;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+    --cyan: #22d3ee;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+
+  /* Sidebar */
+  .sidebar { width: 280px; min-width: 280px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+  .sidebar-header { padding: 20px; border-bottom: 1px solid var(--border); }
+  .sidebar-header h1 { font-size: 16px; font-weight: 700; color: var(--teal); margin-bottom: 2px; }
+  .sidebar-header .subtitle { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .sidebar-nav { flex: 1; overflow-y: auto; padding: 12px 0; }
+  .nav-section { padding: 0 16px; margin-bottom: 8px; }
+  .nav-section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-dim); padding: 8px 4px 4px; font-weight: 600; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.15s; font-size: 13px; color: var(--text-muted); }
+  .nav-item:hover { background: var(--surface-hover); color: var(--text); }
+  .nav-item.active { background: rgba(67,192,190,0.12); color: var(--teal); font-weight: 600; }
+  .nav-icon { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+  .sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); }
+
+  /* Main */
+  .main { flex: 1; overflow-y: auto; padding: 32px 40px; }
+  .main::-webkit-scrollbar { width: 6px; }
+  .main::-webkit-scrollbar-track { background: transparent; }
+  .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px; margin-bottom: 20px; }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .card-title { font-size: 15px; font-weight: 700; }
+  .card-badge { font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 600; }
+
+  /* Grid */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* Stats */
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: center; }
+  .stat-value { font-size: 28px; font-weight: 800; color: var(--teal); }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 10px 12px; background: rgba(67,192,190,0.06); color: var(--teal); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--text-muted); vertical-align: top; }
+  tr:hover td { background: var(--surface-hover); }
+
+  /* Badges */
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+  .badge-teal { background: rgba(67,192,190,0.15); color: var(--teal); }
+  .badge-blue { background: rgba(44,76,121,0.3); color: #7dade6; }
+  .badge-orange { background: rgba(245,158,11,0.15); color: var(--orange); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-purple { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .badge-pink { background: rgba(244,114,182,0.15); color: var(--pink); }
+
+  /* Section headings */
+  .section-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .section-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+
+  /* Principle cards */
+  .principle { padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; border-left: 3px solid var(--teal); }
+  .principle-north { border-left-color: var(--orange); }
+  .principle-num { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
+  .principle-name { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .principle-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Competitor cards */
+  .competitor { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: border-color 0.2s; cursor: pointer; }
+  .competitor:hover { border-color: var(--teal); }
+  .competitor.expanded .competitor-detail { display: block; }
+  .competitor-header { padding: 20px; display: flex; align-items: center; gap: 14px; }
+  .competitor-logo { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; flex-shrink: 0; }
+  .competitor-info h3 { font-size: 14px; font-weight: 700; }
+  .competitor-info p { font-size: 12px; color: var(--text-muted); }
+  .competitor-detail { display: none; padding: 0 20px 20px; }
+  .competitor-section { margin-bottom: 14px; }
+  .competitor-section h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--teal); margin-bottom: 6px; font-weight: 700; }
+  .competitor-section li { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; padding-left: 12px; position: relative; line-height: 1.5; }
+  .competitor-section li::before { content: ''; position: absolute; left: 0; top: 7px; width: 4px; height: 4px; border-radius: 50%; background: var(--teal); }
+  .competitor-section ul { list-style: none; }
+
+  /* Screen map */
+  .screen-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+  .screen-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .screen-card .screen-num { position: absolute; top: 12px; right: 12px; font-size: 28px; font-weight: 900; color: rgba(67,192,190,0.1); }
+  .screen-card .screen-type { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; font-weight: 600; }
+  .screen-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .screen-card .screen-route { font-size: 11px; color: var(--text-dim); font-family: 'SF Mono', Menlo, monospace; margin-bottom: 8px; }
+  .screen-card .screen-components { display: flex; flex-wrap: wrap; gap: 4px; }
+  .screen-card .screen-components span { font-size: 10px; padding: 1px 6px; background: rgba(67,192,190,0.08); border-radius: 3px; color: var(--text-dim); }
+
+  /* Edge case cards */
+  .edge-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .edge-priority { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .edge-card h3 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .edge-card p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Risk matrix */
+  .risk-row { display: grid; grid-template-columns: 1fr 100px 100px 1.5fr; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); align-items: center; }
+  .risk-row:last-child { border-bottom: none; }
+  .risk-label { font-size: 13px; font-weight: 600; }
+  .risk-meter { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+  .risk-meter-fill { height: 100%; border-radius: 3px; }
+
+  /* Component list */
+  .comp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .comp-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .comp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .comp-existing .comp-dot { background: var(--green); }
+  .comp-new .comp-dot { background: var(--orange); }
+
+  /* Emotion bar */
+  .emotion-bar { background: linear-gradient(135deg, rgba(67,192,190,0.15), rgba(44,76,121,0.15)); border: 1px solid var(--border); border-radius: 10px; padding: 24px; text-align: center; margin-bottom: 20px; }
+  .emotion-bar .emotion-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 6px; font-weight: 700; }
+  .emotion-bar .emotion-quote { font-size: 18px; font-weight: 700; color: var(--teal); font-style: italic; }
+
+  /* Decision row */
+  .decision-row { display: flex; align-items: flex-start; gap: 16px; padding: 16px; border-bottom: 1px solid var(--border); }
+  .decision-row:last-child { border-bottom: none; }
+  .decision-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(67,192,190,0.1); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .decision-content h3 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .decision-content .decision-choice { font-size: 13px; color: var(--teal); font-weight: 600; margin-bottom: 4px; }
+  .decision-content .decision-rationale { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Metrics */
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .metric-id { font-size: 10px; font-weight: 700; color: var(--teal); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .metric-target { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .metric-desc { font-size: 12px; color: var(--text-muted); }
+
+  /* Dependency graph */
+  .dep-flow { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .dep-node { padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: var(--surface); }
+  .dep-node.current { background: rgba(67,192,190,0.15); border-color: var(--teal); color: var(--teal); }
+  .dep-arrow { color: var(--text-dim); font-size: 16px; }
+
+  /* Filter bar */
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filter-btn { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-muted); transition: all 0.15s; }
+  .filter-btn:hover { border-color: var(--teal); color: var(--text); }
+  .filter-btn.active { background: rgba(67,192,190,0.12); border-color: var(--teal); color: var(--teal); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .timeline-item { position: relative; margin-bottom: 20px; }
+  .timeline-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--teal); background: var(--bg); }
+  .timeline-item .tl-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+  .timeline-item .tl-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Frustration list */
+  .frustration { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-radius: 8px; background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.15); margin-bottom: 8px; }
+  .frustration-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .frustration p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  /* User persona cards */
+  .persona { display: flex; gap: 16px; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; }
+  .persona-avatar { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .persona-info h3 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .persona-info .persona-role { font-size: 12px; color: var(--teal); font-weight: 600; margin-bottom: 6px; }
+  .persona-info p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* Search */
+  .search-box { width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 13px; outline: none; margin-bottom: 16px; }
+  .search-box:focus { border-color: var(--teal); }
+  .search-box::placeholder { color: var(--text-dim); }
+
+  /* Scrollbar for sidebar */
+  .sidebar-nav::-webkit-scrollbar { width: 4px; }
+  .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* Gate status */
+  .gate-bar { display: flex; gap: 4px; margin-bottom: 20px; }
+  .gate-step { flex: 1; padding: 10px 12px; border-radius: 8px; text-align: center; font-size: 11px; font-weight: 600; border: 1px solid var(--border); background: var(--surface); color: var(--text-dim); position: relative; }
+  .gate-step.passed { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); color: var(--green); }
+  .gate-step.current { background: rgba(67,192,190,0.1); border-color: var(--teal); color: var(--teal); }
+  .gate-step .gate-num { font-size: 16px; font-weight: 800; display: block; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h1>LES Design Playground</h1>
+    <div class="subtitle">Lead Essential &middot; TP-2315</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-title">Overview</div>
+      <div class="nav-item active" data-panel="overview"><span class="nav-icon">&#9673;</span> Dashboard</div>
+      <div class="nav-item" data-panel="principles"><span class="nav-icon">&#9733;</span> Design Principles</div>
+      <div class="nav-item" data-panel="users"><span class="nav-icon">&#9786;</span> User Research</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Research</div>
+      <div class="nav-item" data-panel="competitors"><span class="nav-icon">&#9878;</span> Competitive Analysis</div>
+      <div class="nav-item" data-panel="decisions"><span class="nav-icon">&#9745;</span> Pattern Decisions</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Architecture</div>
+      <div class="nav-item" data-panel="screens"><span class="nav-icon">&#9638;</span> Screen Inventory</div>
+      <div class="nav-item" data-panel="components"><span class="nav-icon">&#9881;</span> Component Map</div>
+      <div class="nav-item" data-panel="dependencies"><span class="nav-icon">&#8644;</span> Dependencies</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Quality</div>
+      <div class="nav-item" data-panel="edges"><span class="nav-icon">&#9888;</span> Edge Cases</div>
+      <div class="nav-item" data-panel="risks"><span class="nav-icon">&#9760;</span> Risk Matrix</div>
+      <div class="nav-item" data-panel="metrics"><span class="nav-icon">&#9662;</span> Success Metrics</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Delivery</div>
+      <div class="nav-item" data-panel="gates"><span class="nav-icon">&#10003;</span> Gate Status</div>
+      <div class="nav-item" data-panel="events"><span class="nav-icon">&#9881;</span> Analytics Events</div>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    Design Kickoff &middot; Gate 2 Passed &middot; 2026-02-22
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- OVERVIEW -->
+  <div class="panel active" id="overview">
+    <div class="section-title">Design Dashboard</div>
+    <div class="section-subtitle">Lead Essential (LES) &mdash; Design kickoff summary at a glance</div>
+
+    <div class="gate-bar">
+      <div class="gate-step passed"><span class="gate-num">G0</span>Idea</div>
+      <div class="gate-step passed"><span class="gate-num">G1</span>Spec</div>
+      <div class="gate-step passed"><span class="gate-num">G2</span>Design</div>
+      <div class="gate-step current"><span class="gate-num">G3</span>Plan</div>
+      <div class="gate-step"><span class="gate-num">G4</span>Code</div>
+      <div class="gate-step"><span class="gate-num">G5</span>QA</div>
+      <div class="gate-step"><span class="gate-num">G6</span>Release</div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom: 20px;">
+      <div class="stat-card"><div class="stat-value">9</div><div class="stat-label">Screens</div></div>
+      <div class="stat-card"><div class="stat-value">8</div><div class="stat-label">Reused Components</div></div>
+      <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">New Components</div></div>
+      <div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Competitors Studied</div></div>
+    </div>
+    <div class="grid-4" style="margin-bottom: 24px;">
+      <div class="stat-card"><div class="stat-value">9</div><div class="stat-label">Edge Cases</div></div>
+      <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Risks Identified</div></div>
+      <div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Open Questions</div></div>
+      <div class="stat-card"><div class="stat-value" style="font-size: 22px;">M</div><div class="stat-label">Build Size (BMW 3)</div></div>
+    </div>
+
+    <div class="emotion-bar">
+      <div class="emotion-label">Target Emotion</div>
+      <div class="emotion-quote">"I can see my whole pipeline and know exactly what to do next"</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header"><div class="card-title">North Star</div></div>
+        <p style="font-size: 15px; color: var(--orange); font-weight: 700; margin-bottom: 8px;">Speed over polish</p>
+        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">Optimise for agent efficiency. Fastest possible path to update a lead.</p>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Layout Decision</div></div>
+        <p style="font-size: 15px; color: var(--teal); font-weight: 700; margin-bottom: 8px;">2-panel (sidebar + tabbed main)</p>
+        <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5;">Matches Portal's existing patterns (Suppliers, CareCoordinators). 3-column is overkill for our data volume.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINCIPLES -->
+  <div class="panel" id="principles">
+    <div class="section-title">Design Principles</div>
+    <div class="section-subtitle">The strategic guidelines driving every design decision</div>
+
+    <div class="principle principle-north" style="margin-bottom: 20px;">
+      <div class="principle-num">North Star</div>
+      <div class="principle-name" style="color: var(--orange);">Speed over polish</div>
+      <div class="principle-desc">Optimise for agent efficiency. Fastest possible path to update a lead.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="principle">
+        <div class="principle-num">Principle 1</div>
+        <div class="principle-name">Context without navigation</div>
+        <div class="principle-desc">Key lead info (stage, status, assignment, last contact) visible from any tab without clicking back.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 2</div>
+        <div class="principle-name">Edit where you read</div>
+        <div class="principle-desc">Section cards toggle between read and edit mode in-place. No modals, no page navigation.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 3</div>
+        <div class="principle-name">Pipeline first</div>
+        <div class="principle-desc">Journey Stage and Lead Status are the most prominent elements on every screen. They're what the business measures.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-num">Principle 4</div>
+        <div class="principle-name">Familiar > clever</div>
+        <div class="principle-desc">Use patterns sales staff already know from Zoho/CRMs. Don't innovate on interaction patterns, innovate on speed.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="card">
+        <div class="card-header"><div class="card-title">Frustration Risks</div></div>
+        <div class="frustration"><span class="frustration-icon">&#9888;</span><p>Too many clicks to update a single field (Zoho complaint)</p></div>
+        <div class="frustration"><span class="frustration-icon">&#9888;</span><p>Losing context when switching between leads (need fast back-to-list)</p></div>
+        <div class="frustration"><span class="frustration-icon">&#9888;</span><p>Not knowing what's required before a stage transition (wizard should preview requirements)</p></div>
+        <div class="frustration"><span class="frustration-icon">&#9888;</span><p>Timeline buried under too much scrolling (paginate, filter)</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USERS -->
+  <div class="panel" id="users">
+    <div class="section-title">User Research</div>
+    <div class="section-subtitle">Who we're designing for and how they work</div>
+
+    <div class="persona" style="border-left: 3px solid var(--teal);">
+      <div class="persona-avatar" style="background: rgba(67,192,190,0.15);">&#128100;</div>
+      <div class="persona-info">
+        <h3>Sales Staff</h3>
+        <div class="persona-role">Primary User</div>
+        <p><strong>Device:</strong> Desktop-first (on desktop all day)<br><strong>Frequency:</strong> Daily power-user<br><strong>Context:</strong> Multitasking &mdash; phone calls, switching between leads<br><strong>Needs:</strong> Efficiency, quick actions, keyboard nav, persistent sidebar context, fast transitions</p>
+      </div>
+    </div>
+    <div class="persona" style="border-left: 3px solid var(--blue-light);">
+      <div class="persona-avatar" style="background: rgba(44,76,121,0.2);">&#128101;</div>
+      <div class="persona-info">
+        <h3>Sales Team Leader / Head of Sales</h3>
+        <div class="persona-role">Secondary User (Staff)</div>
+        <p><strong>Frequency:</strong> Daily<br><strong>Needs:</strong> Bulk operations, reassignment, pipeline visibility, team performance overview</p>
+      </div>
+    </div>
+    <div class="persona" style="border-left: 3px solid var(--purple);">
+      <div class="persona-avatar" style="background: rgba(167,139,250,0.15);">&#128100;</div>
+      <div class="persona-info">
+        <h3>Lead Owner (Consumer/Representative)</h3>
+        <div class="persona-role">Secondary User (External)</div>
+        <p><strong>Frequency:</strong> Occasional<br><strong>Needs:</strong> Simplicity, section-based editing &mdash; view and update specific profile sections without navigating unrelated ones</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header"><div class="card-title">Key Research Findings</div></div>
+      <table>
+        <thead><tr><th>Aspect</th><th>Finding</th><th>Design Impact</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight: 600;">Device Priority</td><td>Desktop-first</td><td>Can use complex layouts, sidebars, multi-column</td></tr>
+          <tr><td style="font-weight: 600;">Usage Frequency</td><td>Daily power-user (staff), occasional (consumers)</td><td>Worth investing in list view performance, quick create</td></tr>
+          <tr><td style="font-weight: 600;">Work Context</td><td>Multitasking &mdash; phone calls, switching leads</td><td>Persistent sidebar context, fast transitions</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- COMPETITORS -->
+  <div class="panel" id="competitors">
+    <div class="section-title">Competitive Analysis</div>
+    <div class="section-subtitle">Learnings from 5 CRM platforms &mdash; click to expand details</div>
+
+    <div class="grid-2">
+      <div class="competitor" onclick="this.classList.toggle('expanded')">
+        <div class="competitor-header">
+          <div class="competitor-logo" style="background: rgba(245,158,11,0.15); color: var(--orange);">H</div>
+          <div class="competitor-info"><h3>HubSpot CRM</h3><p>3-column contact record</p></div>
+        </div>
+        <div class="competitor-detail">
+          <div class="competitor-section"><h4>What they do well</h4><ul>
+            <li>Customisable overview tab with drag-and-drop cards</li>
+            <li>Activity timeline filterable by type (calls, emails, notes, tasks)</li>
+            <li>Sidebar properties grouped into collapsible cards</li>
+          </ul></div>
+          <div class="competitor-section"><h4>What we learned</h4><ul>
+            <li>Overview tab as default landing &mdash; quick summary before diving in</li>
+            <li>Sidebar should show identity + status at a glance without scrolling</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="competitor" onclick="this.classList.toggle('expanded')">
+        <div class="competitor-header">
+          <div class="competitor-logo" style="background: rgba(59,107,170,0.15); color: var(--blue-light);">S</div>
+          <div class="competitor-info"><h3>Salesforce</h3><p>3-column with 4-zone sidebar</p></div>
+        </div>
+        <div class="competitor-detail">
+          <div class="competitor-section"><h4>What they do well</h4><ul>
+            <li>Path component &mdash; horizontal stage bar with click-to-advance + guidance</li>
+            <li>Collapsible sections with remembered preferences</li>
+            <li>Activity timeline with expand/collapse all</li>
+          </ul></div>
+          <div class="competitor-section"><h4>What we learned</h4><ul>
+            <li>Stage guidance text per step (tell agent what's needed)</li>
+            <li>Zone-based field prioritisation</li>
+            <li>3-column overkill for our use case</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="competitor" onclick="this.classList.toggle('expanded')">
+        <div class="competitor-header">
+          <div class="competitor-logo" style="background: rgba(34,197,94,0.15); color: var(--green);">P</div>
+          <div class="competitor-info"><h3>Pipedrive</h3><p>2-panel with independent scroll</p></div>
+        </div>
+        <div class="competitor-detail">
+          <div class="competitor-section"><h4>What they do well</h4><ul>
+            <li>Summary panel at top &mdash; critical info always visible</li>
+            <li>Independent scrollbars for sidebar and main content</li>
+            <li>Focus section highlights upcoming activities, pinned notes</li>
+          </ul></div>
+          <div class="competitor-section"><h4>What we learned</h4><ul>
+            <li>Independent scrolling is essential</li>
+            <li>Summary panel pattern for persistent sidebar</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="competitor" onclick="this.classList.toggle('expanded')">
+        <div class="competitor-header">
+          <div class="competitor-logo" style="background: rgba(167,139,250,0.15); color: var(--purple);">C</div>
+          <div class="competitor-info"><h3>Close CRM</h3><p>2-panel with pinned activities</p></div>
+        </div>
+        <div class="competitor-detail">
+          <div class="competitor-section"><h4>What they do well</h4><ul>
+            <li>Pinned activities (up to 5) float to top of timeline</li>
+            <li>Unified activity stream &mdash; all comm types in one feed</li>
+            <li>Auto-logging eliminates manual data entry</li>
+            <li>Inline editing with ESC to cancel</li>
+          </ul></div>
+          <div class="competitor-section"><h4>What we learned</h4><ul>
+            <li>Pinned notes pattern for timeline</li>
+            <li>Activity filtering by type without leaving page</li>
+            <li>Speed-first philosophy matches our principle</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="competitor" onclick="this.classList.toggle('expanded')" style="grid-column: span 2;">
+        <div class="competitor-header">
+          <div class="competitor-logo" style="background: rgba(239,68,68,0.15); color: var(--red);">Z</div>
+          <div class="competitor-info"><h3>Zoho CRM</h3><p>The system we're replacing &mdash; tabs + related lists</p></div>
+        </div>
+        <div class="competitor-detail">
+          <div class="grid-2">
+            <div class="competitor-section"><h4>What they do well</h4><ul>
+              <li>Blueprint workflow &mdash; visual stage progression</li>
+              <li>Canvas view for custom visual layouts</li>
+              <li>Related lists with expand/collapse</li>
+            </ul></div>
+            <div class="competitor-section"><h4 style="color: var(--red);">Why users want to leave</h4><ul>
+              <li>Timeline defaults to oldest-first, no persistent preference</li>
+              <li>Interface complexity &mdash; steep learning curve</li>
+              <li>Missing context on updates</li>
+              <li>Performance degrades with many related lists</li>
+            </ul></div>
+          </div>
+          <div class="competitor-section" style="margin-top: 8px;"><h4 style="color: var(--green);">What we must improve</h4><ul>
+            <li>Timeline newest-first by default</li>
+            <li>Simpler, consistent interface</li>
+            <li>Clear audit trail showing who/when/why on every change</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DECISIONS -->
+  <div class="panel" id="decisions">
+    <div class="section-title">Pattern Decisions</div>
+    <div class="section-subtitle">Key UX decisions synthesised from competitive research</div>
+
+    <div class="card">
+      <div class="decision-row">
+        <div class="decision-icon">&#9638;</div>
+        <div class="decision-content">
+          <h3>Layout</h3>
+          <div class="decision-choice">2-panel (sidebar + main with tabs)</div>
+          <div class="decision-rationale">Matches Portal's existing patterns (Suppliers, CareCoordinators). 3-column is overkill.</div>
+        </div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-icon">&#8594;</div>
+        <div class="decision-content">
+          <h3>Stage Visualisation</h3>
+          <div class="decision-choice">Horizontal progress bar at page top</div>
+          <div class="decision-rationale">Universal CRM pattern. Click-to-advance opens wizard.</div>
+        </div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-icon">&#9776;</div>
+        <div class="decision-content">
+          <h3>Timeline Position</h3>
+          <div class="decision-choice">Dedicated tab (not always-visible panel)</div>
+          <div class="decision-rationale">Keeps Overview tab clean. Staff go to Timeline when they need history.</div>
+        </div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-icon">&#9998;</div>
+        <div class="decision-content">
+          <h3>Section Editing</h3>
+          <div class="decision-choice">Inline card expansion (ACRM pattern)</div>
+          <div class="decision-rationale">Spec decision. Collapsible cards with edit toggle &mdash; read mode by default.</div>
+        </div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-icon">&#9776;</div>
+        <div class="decision-content">
+          <h3>Sidebar Content</h3>
+          <div class="decision-choice">Identity + status + assignment (persistent)</div>
+          <div class="decision-rationale">Pipedrive/Close pattern &mdash; key context always visible regardless of tab.</div>
+        </div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-icon">&#128204;</div>
+        <div class="decision-content">
+          <h3>Notes</h3>
+          <div class="decision-choice">Pinned notes support (Close pattern)</div>
+          <div class="decision-rationale">High-value for lead handoffs between agents.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREENS -->
+  <div class="panel" id="screens">
+    <div class="section-title">Screen Inventory</div>
+    <div class="section-subtitle">9 screens across 4 types &mdash; filter by screen type</div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All (9)</button>
+      <button class="filter-btn" data-filter="new">New (6)</button>
+      <button class="filter-btn" data-filter="enhance">Enhanced (1)</button>
+      <button class="filter-btn" data-filter="replace">Replace (1)</button>
+      <button class="filter-btn" data-filter="modal">Modal (1+4)</button>
+    </div>
+
+    <div class="grid-3" id="screen-grid">
+      <div class="screen-card" data-type="new">
+        <div class="screen-num">01</div>
+        <div class="screen-type badge-teal badge">New</div>
+        <h3>Lead Profile &mdash; Overview</h3>
+        <div class="screen-route">/staff/leads/{lead}</div>
+        <div class="screen-components">
+          <span>Sidebar</span><span>Tabs</span><span>SectionCards</span><span>JourneyBar</span>
+        </div>
+      </div>
+      <div class="screen-card" data-type="new">
+        <div class="screen-num">02</div>
+        <div class="screen-type badge-teal badge">New</div>
+        <h3>Lead Profile &mdash; Timeline</h3>
+        <div class="screen-route">/staff/leads/{lead}/timeline</div>
+        <div class="screen-components">
+          <span>Timeline</span><span>AddNote</span><span>Pagination</span>
+        </div>
+      </div>
+      <div class="screen-card" data-type="new">
+        <div class="screen-num">03</div>
+        <div class="screen-type badge-teal badge">New</div>
+        <h3>Lead Profile &mdash; Other</h3>
+        <div class="screen-route">/staff/leads/{lead}/other</div>
+        <div class="screen-components">
+          <span>Attribution</span><span>TraitsEditor</span>
+        </div>
+      </div>
+      <div class="screen-card" data-type="modal">
+        <div class="screen-num">04</div>
+        <div class="screen-type badge-purple badge">Modal</div>
+        <h3>Quick Create Modal</h3>
+        <div class="screen-route">Modal on /staff/leads</div>
+        <div class="screen-components">
+          <span>CommonModal</span><span>CommonForm</span>
+        </div>
+      </div>
+      <div class="screen-card" data-type="new">
+        <div class="screen-num">05</div>
+        <div class="screen-type badge-teal badge">New</div>
+        <h3>Guided Create Stepper</h3>
+        <div class="screen-route">/staff/leads/create</div>
+        <div class="screen-components">
+          <span>StepNavigation</span><span>3 Steps</span><span>CommonForm</span>
+        </div>
+      </div>
+      <div class="screen-card" data-type="modal">
+        <div class="screen-num">06</div>
+        <div class="screen-type badge-purple badge">Modal</div>
+        <h3>Journey Stage Wizard</h3>
+        <div class="screen-route">Modal overlay</div>
+        <div class="screen-components">
+          <span>StageSelector</span><span>MandatoryFields</span>
+        </div>
+      </div>
+      <div class="screen-card" data-type="modal">
+        <div class="screen-num">07</div>
+        <div class="screen-type badge-purple badge">Modal</div>
+        <h3>Lead Status Wizards (&times;4)</h3>
+        <div class="screen-route">Modal overlays</div>
+        <div class="screen-components">
+          <span>StatusForms</span><span>CommonModal</span>
+        </div>
+      </div>
+      <div class="screen-card" data-type="replace">
+        <div class="screen-num">08</div>
+        <div class="screen-type badge-orange badge">Replace</div>
+        <h3>Consumer Profile</h3>
+        <div class="screen-route">/lead/edit</div>
+        <div class="screen-components">
+          <span>SectionCards</span><span>5 Sections</span><span>EditToggle</span>
+        </div>
+      </div>
+      <div class="screen-card" data-type="enhance">
+        <div class="screen-num">09</div>
+        <div class="screen-type badge-blue badge">Enhanced</div>
+        <h3>Staff Leads List</h3>
+        <div class="screen-route">/staff/leads</div>
+        <div class="screen-components">
+          <span>CommonTable</span><span>Filters</span><span>KPICards</span><span>BulkActions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPONENTS -->
+  <div class="panel" id="components">
+    <div class="section-title">Component Map</div>
+    <div class="section-subtitle">Reused existing components and new components to build</div>
+
+    <div class="card" style="margin-bottom: 20px;">
+      <div class="card-header"><div class="card-title">Reusing Existing <span class="badge badge-green" style="margin-left: 8px;">8 components</span></div></div>
+      <div class="comp-grid">
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonCard</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonForm</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonFormField</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonStepNavigation</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonSelectMenu</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonButton</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonBadge</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonAlert</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonDefinitionItem</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonModal</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonSplitPanel</div>
+        <div class="comp-item comp-existing"><div class="comp-dot"></div>CommonTable</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">New Components Needed <span class="badge badge-orange" style="margin-left: 8px;">4 components</span></div></div>
+      <div class="comp-grid">
+        <div class="comp-item comp-new"><div class="comp-dot"></div>Journey Stage Bar</div>
+        <div class="comp-item comp-new"><div class="comp-dot"></div>Section Edit Card</div>
+        <div class="comp-item comp-new"><div class="comp-dot"></div>Timeline Entry</div>
+        <div class="comp-item comp-new"><div class="comp-dot"></div>Traits Editor</div>
+      </div>
+      <div style="margin-top: 16px;">
+        <table>
+          <thead><tr><th>Component</th><th>Description</th><th>Pattern Source</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight: 600; color: var(--text);">Journey Stage Bar</td><td>Horizontal progress bar, click-to-advance opens wizard</td><td>Salesforce Path</td></tr>
+            <tr><td style="font-weight: 600; color: var(--text);">Section Edit Card</td><td>Read/edit toggle, ACRM pattern, collapsible</td><td>Pipedrive / ACRM</td></tr>
+            <tr><td style="font-weight: 600; color: var(--text);">Timeline Entry</td><td>Activity types, pinned notes, chronological</td><td>Close CRM</td></tr>
+            <tr><td style="font-weight: 600; color: var(--text);">Traits Editor</td><td>JSON field editor for lead traits</td><td>Custom</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEPENDENCIES -->
+  <div class="panel" id="dependencies">
+    <div class="section-title">Dependencies</div>
+    <div class="section-subtitle">What LES depends on and what it blocks</div>
+
+    <div class="card" style="margin-bottom: 20px;">
+      <div class="card-header"><div class="card-title">Depends On <span class="badge badge-blue">Already Built</span></div></div>
+      <div class="dep-flow">
+        <div class="dep-node">Lead Data Model</div>
+        <span class="dep-arrow">&rarr;</span>
+        <div class="dep-node">LTH Conversion Wizard</div>
+        <span class="dep-arrow">&rarr;</span>
+        <div class="dep-node">Zoho Sync</div>
+        <span class="dep-arrow">&rarr;</span>
+        <div class="dep-node">Common Components</div>
+        <span class="dep-arrow">&rarr;</span>
+        <div class="dep-node current">LES</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Blocks</div></div>
+      <div class="dep-flow">
+        <div class="dep-node current">LES</div>
+        <span class="dep-arrow">&rarr;</span>
+        <div class="dep-node" style="border-color: var(--orange); color: var(--orange);">LTH Quality</div>
+      </div>
+      <div class="dep-flow">
+        <div class="dep-node current">LES</div>
+        <span class="dep-arrow">&rarr;</span>
+        <div class="dep-node" style="border-color: var(--purple); color: var(--purple);">LGI Lead Capture</div>
+      </div>
+      <div class="dep-flow">
+        <div class="dep-node current">LES</div>
+        <span class="dep-arrow">&rarr;</span>
+        <div class="dep-node" style="border-color: var(--pink); color: var(--pink);">LDS Extended CRM</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header"><div class="card-title">Open Questions for Dev</div></div>
+      <table>
+        <thead><tr><th>#</th><th>Question</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Which feature flag &mdash; new <code style="color:var(--teal);">lead-essential</code> or extend existing <code style="color:var(--teal);">lead-to-hca-conversion</code>?</td></tr>
+          <tr><td>2</td><td>Journey Stage wizard: store required fields per stage in config or hardcode in aggregate?</td></tr>
+          <tr><td>3</td><td>Pinned notes: new event type or flag on existing note events?</td></tr>
+          <tr><td>4</td><td>Consumer profile sections: same aggregate as staff-side, or separate read/write boundaries?</td></tr>
+          <tr><td>5</td><td>Bulk assignment: queue job or synchronous for small batches (&lt;10)?</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EDGE CASES -->
+  <div class="panel" id="edges">
+    <div class="section-title">Edge Cases</div>
+    <div class="section-subtitle">9 edge cases identified &mdash; filter by priority</div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all" data-target="edge-grid">All (9)</button>
+      <button class="filter-btn" data-filter="p1" data-target="edge-grid">P1 Critical (3)</button>
+      <button class="filter-btn" data-filter="p2" data-target="edge-grid">P2 Important (4)</button>
+      <button class="filter-btn" data-filter="p3" data-target="edge-grid">P3 Nice-to-have (2)</button>
+    </div>
+
+    <div class="grid-2" id="edge-grid">
+      <div class="edge-card" data-priority="p1" style="border-left: 3px solid var(--red);">
+        <div class="edge-priority" style="color: var(--red);">P1 Critical</div>
+        <h3>Duplicate email on create</h3>
+        <p>Warning banner with link to existing lead. Allow proceed.</p>
+      </div>
+      <div class="edge-card" data-priority="p1" style="border-left: 3px solid var(--red);">
+        <div class="edge-priority" style="color: var(--red);">P1 Critical</div>
+        <h3>Lead with no Journey Stage data</h3>
+        <p>Default to Pre-Care on creation. Show "Unknown" badge for legacy leads.</p>
+      </div>
+      <div class="edge-card" data-priority="p1" style="border-left: 3px solid var(--red);">
+        <div class="edge-priority" style="color: var(--red);">P1 Critical</div>
+        <h3>Lost lead re-engagement</h3>
+        <p>Allow status change back from Lost. Require re-engagement note. Stage unfreezes.</p>
+      </div>
+      <div class="edge-card" data-priority="p2" style="border-left: 3px solid var(--orange);">
+        <div class="edge-priority" style="color: var(--orange);">P2 Important</div>
+        <h3>Empty timeline</h3>
+        <p>Show empty state with "No activity yet" message.</p>
+      </div>
+      <div class="edge-card" data-priority="p2" style="border-left: 3px solid var(--orange);">
+        <div class="edge-priority" style="color: var(--orange);">P2 Important</div>
+        <h3>Missing attribution data</h3>
+        <p>Show "No attribution data" empty state on Other tab.</p>
+      </div>
+      <div class="edge-card" data-priority="p2" style="border-left: 3px solid var(--orange);">
+        <div class="edge-priority" style="color: var(--orange);">P2 Important</div>
+        <h3>Bulk assign 100+ leads</h3>
+        <p>Paginated selection. Background job for bulk assignment. Success toast.</p>
+      </div>
+      <div class="edge-card" data-priority="p2" style="border-left: 3px solid var(--orange);">
+        <div class="edge-priority" style="color: var(--orange);">P2 Important</div>
+        <h3>Zoho sync conflict</h3>
+        <p>Portal wins for fields edited in Portal. Show "Last synced" timestamp.</p>
+      </div>
+      <div class="edge-card" data-priority="p3" style="border-left: 3px solid var(--text-dim);">
+        <div class="edge-priority" style="color: var(--text-dim);">P3 Nice-to-have</div>
+        <h3>Long lead name (overflow)</h3>
+        <p>Truncate with ellipsis in list view. Full name in profile sidebar.</p>
+      </div>
+      <div class="edge-card" data-priority="p3" style="border-left: 3px solid var(--text-dim);">
+        <div class="edge-priority" style="color: var(--text-dim);">P3 Nice-to-have</div>
+        <h3>Consumer with no account (guest)</h3>
+        <p>Section cards still display. "Create account to save" prompt for guests.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISKS -->
+  <div class="panel" id="risks">
+    <div class="section-title">Risk Matrix</div>
+    <div class="section-subtitle">4 design risks with likelihood, impact, and mitigation</div>
+
+    <div class="card">
+      <table>
+        <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr>
+            <td style="font-weight: 600; color: var(--text);">Staff miss Zoho's tab-heavy layout</td>
+            <td><span class="badge badge-orange">Medium</span></td>
+            <td><span class="badge badge-green">Low</span></td>
+            <td>Section cards are familiar from ACRM. Training session at launch.</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600; color: var(--text);">Timeline tab gets ignored</td>
+            <td><span class="badge badge-green">Low</span></td>
+            <td><span class="badge badge-orange">Medium</span></td>
+            <td>Add "last activity" summary to sidebar. Key events visible without visiting tab.</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600; color: var(--text);">Journey Stage wizard feels heavy</td>
+            <td><span class="badge badge-orange">Medium</span></td>
+            <td><span class="badge badge-orange">Medium</span></td>
+            <td>Show required fields upfront. Pre-fill what we can. Allow save without all optional fields.</td>
+          </tr>
+          <tr>
+            <td style="font-weight: 600; color: var(--text);">Quick Create used for everything (data quality drops)</td>
+            <td><span class="badge badge-orange">Medium</span></td>
+            <td><span class="badge badge-red">High</span></td>
+            <td>Profile completion indicator nudges staff. Team leader dashboard shows completion rates.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header"><div class="card-title">Assumptions</div></div>
+      <table>
+        <thead><tr><th>#</th><th>Assumption</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Sales staff will adapt to inline section editing (not modal-based like Zoho)</td></tr>
+          <tr><td>2</td><td>Timeline tab is sufficient &mdash; staff don't need always-visible activity feed</td></tr>
+          <tr><td>3</td><td>6 primary Journey Stages are enough &mdash; substages provide granularity without overwhelming the progress bar</td></tr>
+          <tr><td>4</td><td>Consumer section-based forms will increase completion vs the current 6-step wizard</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="panel" id="metrics">
+    <div class="section-title">Success Metrics</div>
+    <div class="section-subtitle">Measurable targets from the spec</div>
+
+    <div class="grid-3" style="margin-bottom: 24px;">
+      <div class="metric-card">
+        <div class="metric-id">SC-001</div>
+        <div class="metric-target" style="color: var(--teal);">&lt; 30s</div>
+        <div class="metric-desc">Create lead time</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-id">SC-002</div>
+        <div class="metric-target" style="color: var(--green);">100%</div>
+        <div class="metric-desc">Leads with valid Journey Stage + Lead Status</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-id">SC-003</div>
+        <div class="metric-target" style="color: var(--teal);">&lt; 60s</div>
+        <div class="metric-desc">Update any section time</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-id">SC-007</div>
+        <div class="metric-target" style="color: var(--teal);">&lt; 2s</div>
+        <div class="metric-desc">List view load (10k leads)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-id">SC-008</div>
+        <div class="metric-target" style="color: var(--green);">+15%</div>
+        <div class="metric-desc">Profile completion in first month</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Performance Considerations</div></div>
+      <table>
+        <thead><tr><th>Area</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight: 600; color: var(--text);">Lead list</td><td>500&ndash;10,000 leads. Server-side pagination + filtering (already exists).</td></tr>
+          <tr><td style="font-weight: 600; color: var(--text);">Timeline</td><td>Paginated. Load 20 entries, "Load more" button.</td></tr>
+          <tr><td style="font-weight: 600; color: var(--text);">Profile sections</td><td>All data loaded on initial page load (single lead, not large).</td></tr>
+          <tr><td style="font-weight: 600; color: var(--text);">Sidebar</td><td>Static once loaded &mdash; no real-time updates needed.</td></tr>
+          <tr><td style="font-weight: 600; color: var(--text);">Real-time</td><td>Not required for MVP. Zoho sync is async/queued.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- GATES -->
+  <div class="panel" id="gates">
+    <div class="section-title">Gate Status</div>
+    <div class="section-subtitle">Design delivery progress through the TC WoW gates</div>
+
+    <div class="gate-bar" style="margin-bottom: 24px;">
+      <div class="gate-step passed"><span class="gate-num">G0</span>Idea</div>
+      <div class="gate-step passed"><span class="gate-num">G1</span>Spec</div>
+      <div class="gate-step passed"><span class="gate-num">G2</span>Design</div>
+      <div class="gate-step current"><span class="gate-num">G3</span>Plan</div>
+      <div class="gate-step"><span class="gate-num">G4</span>Code</div>
+      <div class="gate-step"><span class="gate-num">G5</span>QA</div>
+      <div class="gate-step"><span class="gate-num">G6</span>Release</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title">Gate 2: Design Handover</div><div class="card-badge badge-green">PASS</div></div>
+      <table>
+        <thead><tr><th>Check</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>User research complete</td><td style="color: var(--green);">&#10003; Primary, device, usage context defined</td></tr>
+          <tr><td>Design principles defined</td><td style="color: var(--green);">&#10003; North Star + 4 supporting</td></tr>
+          <tr><td>Edge cases identified</td><td style="color: var(--green);">&#10003; 9 cases with handling + priority</td></tr>
+          <tr><td>Constraints documented</td><td style="color: var(--green);">&#10003; Accessibility, security, Zoho sync</td></tr>
+          <tr><td>Build size assessed</td><td style="color: var(--green);">&#10003; M (BMW 3 Series)</td></tr>
+          <tr><td>All stories have design coverage</td><td style="color: var(--green);">&#10003; 9 screen types covering 11 stories</td></tr>
+          <tr><td>Success metrics defined</td><td style="color: var(--green);">&#10003; SC-001 through SC-008</td></tr>
+          <tr><td>Mockup coverage</td><td style="color: var(--green);">&#10003; 9 HTML screens + challenge mode</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header"><div class="card-title">Out of Scope (Deferred to LDS)</div></div>
+      <ul style="list-style: none; padding: 0;">
+        <li style="padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 13px;">&#8226; Timeline enrichment (call recordings, email body, SMS content)</li>
+        <li style="padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 13px;">&#8226; Attribution analytics dashboard</li>
+        <li style="padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 13px;">&#8226; Options &amp; Traits extended editor</li>
+        <li style="padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 13px;">&#8226; Custom field descriptions on hover</li>
+        <li style="padding: 8px 0; color: var(--text-muted); font-size: 13px;">&#8226; Real-time sync status indicator</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- EVENTS -->
+  <div class="panel" id="events">
+    <div class="section-title">Analytics Events</div>
+    <div class="section-subtitle">Events to instrument for tracking success metrics</div>
+
+    <div class="card">
+      <table>
+        <thead><tr><th>Event</th><th>Properties</th><th>Tracks</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight: 600; color: var(--teal); font-family: monospace;">lead.created</td><td><code style="color: var(--text-muted);">path: quick_create | guided_create</code></td><td>SC-001</td></tr>
+          <tr><td style="font-weight: 600; color: var(--teal); font-family: monospace;">lead.section_edited</td><td><code style="color: var(--text-muted);">section: personal_details | living_situation | ...</code></td><td>SC-003, SC-008</td></tr>
+          <tr><td style="font-weight: 600; color: var(--teal); font-family: monospace;">lead.stage_changed</td><td><code style="color: var(--text-muted);">from, to</code></td><td>SC-002</td></tr>
+          <tr><td style="font-weight: 600; color: var(--teal); font-family: monospace;">lead.status_changed</td><td><code style="color: var(--text-muted);">from, to, status_type</code></td><td>SC-002</td></tr>
+          <tr><td style="font-weight: 600; color: var(--teal); font-family: monospace;">lead.assigned</td><td><code style="color: var(--text-muted);">from, to, bulk: true/false</code></td><td>&mdash;</td></tr>
+          <tr><td style="font-weight: 600; color: var(--teal); font-family: monospace;">lead.note_added</td><td><code style="color: var(--text-muted);">&mdash;</code></td><td>&mdash;</td></tr>
+          <tr><td style="font-weight: 600; color: var(--teal); font-family: monospace;">lead.exported</td><td><code style="color: var(--text-muted);">count, format</code></td><td>&mdash;</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header"><div class="card-title">Rollout Strategy</div></div>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+        <strong style="color: var(--text);">Single release</strong> &mdash; all 11 stories behind feature flag. No phased rollout per business-spec.<br>
+        <strong style="color: var(--text);">Feature Flag:</strong> <code style="color: var(--teal);">lead-essential</code> (new flag, or extend existing <code style="color: var(--teal);">lead-to-hca-conversion</code>)
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Navigation
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      item.classList.add('active');
+      const panel = document.getElementById(item.dataset.panel);
+      if (panel) panel.classList.add('active');
+    });
+  });
+
+  // Screen filters
+  document.querySelectorAll('#screens .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#screens .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('#screen-grid .screen-card').forEach(card => {
+        if (filter === 'all') { card.style.display = ''; return; }
+        card.style.display = card.dataset.type === filter ? '' : 'none';
+      });
+    });
+  });
+
+  // Edge case filters
+  document.querySelectorAll('#edges .filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#edges .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('#edge-grid .edge-card').forEach(card => {
+        if (filter === 'all') { card.style.display = ''; return; }
+        card.style.display = card.dataset.priority === filter ? '' : 'none';
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

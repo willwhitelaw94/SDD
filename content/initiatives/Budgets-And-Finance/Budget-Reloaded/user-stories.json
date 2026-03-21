@@ -1,0 +1,704 @@
+{
+  "epic": "TP-2501",
+  "epic_name": "Budget Reloaded (BUR)",
+  "initiative": "TP-1869",
+  "initiative_name": "Budgets and Services",
+  "source": "TC-Budgets V2 Meeting Actions AND Data (4 Nov 2025)",
+  "created": "2025-11-07",
+  "total_stories": 25,
+  "stories": [
+    {
+      "id": "US-001",
+      "title": "Support item-based rate cards (quantity/price model)",
+      "description": "As a care coordinator, I need to add budget items like falls alarms, nutritional powder, and equipment using quantity + price model (not hours + rate), so that I can allocate non-hourly services correctly.",
+      "solution_area": "Supplier & Rate Card Integration",
+      "impact": "🔴 I can't do my job without this",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P0",
+      "acceptance_criteria": [
+        "Budget item creation supports 'Item' service type with quantity/price fields",
+        "Rate card section exists for item-based services separate from hourly services",
+        "Can specify unit price and quantity",
+        "Calculations correctly multiply quantity × unit price",
+        "UI clearly distinguishes item-based vs hourly service planning"
+      ],
+      "feedback_source": "Budget items like falls alarm, nutritional powder, items etc. needs its own rate card section where its quantity and price rather than only hours and rate.",
+      "estimated_effort": "5 sprints",
+      "owner": "Khoa (Backend Lead)"
+    },
+    {
+      "id": "US-002",
+      "title": "Expand frequency options for maintenance services",
+      "description": "As a care coordinator, I need frequency options beyond weekly/fortnightly/monthly (specifically: 3-weekly, 6-weekly, 8-weekly, 13-weekly, biannual, annual), so that I can accurately plan maintenance services that don't fit standard patterns.",
+      "solution_area": "Supplier & Rate Card Integration",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Frequency dropdown includes: weekly, fortnightly, 3-weekly, 4-weekly (monthly), 6-weekly, 8-weekly, 13-weekly, biannual, annual",
+        "Frequency options available for all applicable service types",
+        "Form validates correctly with all frequency options",
+        "Calculations (4-weekly totals) work correctly with all frequencies"
+      ],
+      "feedback_source": "Frequency on services like home maintenance need more frequencies than weekly, f/n, mth, as required. (it needs 3, 6, 8, 13 weekly, biannual, and annual)",
+      "estimated_effort": "3 sprints",
+      "owner": "Beth (UX/Designer), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-003",
+      "title": "Add 'requires falls alarm' option to needs section",
+      "description": "As a care coordinator, I need a 'requires falls alarm' option in the needs dropdown (not just available when already accessing it), so that I can record fall intervention needs upfront.",
+      "solution_area": "Supplier & Rate Card Integration",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "'Requires falls alarm' appears as a selectable option in the needs dropdown",
+        "Works independently (not dependent on existing falls alarm access)",
+        "Can be toggled on/off during budget creation",
+        "Syncs to care plan correctly"
+      ],
+      "feedback_source": "No option for requires falls alarm, only if they are already accessing it (drop down menu needs section)",
+      "estimated_effort": "2 sprints",
+      "owner": "Beth (UX/Designer)"
+    },
+    {
+      "id": "US-004",
+      "title": "Funding stream allocation priority logic",
+      "description": "As a care coordinator, I need budgets to allocate to quarterly funding first, then unspent funds (when both are selected), so that funding allocation follows the correct priority and doesn't create glitches requiring re-selection.",
+      "solution_area": "Exception-Based Funding Defaults",
+      "impact": "🔴 I can't do my job without this",
+      "sub_epic": "TP-2502",
+      "sub_epic_name": "Discovery",
+      "priority": "P0",
+      "acceptance_criteria": [
+        "When both quarterly and unspent funds are selected, quarterly funds allocated first",
+        "Unspent funds only allocated after quarterly budget exhausted",
+        "No need to unselect/reselect unspent to fix allocation order",
+        "Allocation order visible and confirmed before submit",
+        "Tested with hybrid funding scenarios"
+      ],
+      "feedback_source": "Budgets using unspent funds instead of using up quarterly budget first when both funding streams selected, is this a glitch? If I unselect unspent, save, reselect unspent it fixes it",
+      "estimated_effort": "4 sprints",
+      "owner": "Khoa (Backend Lead), Fran (Finance Consultant)"
+    },
+    {
+      "id": "US-005",
+      "title": "Quarterly vs total planned view toggle",
+      "description": "As a care coordinator, I need to toggle between 'total planned' and 'planned this quarter' for unspent funds display, so that I can focus on quarterly budget planning without seeing multi-quarter totals.",
+      "solution_area": "Exception-Based Funding Defaults",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2502",
+      "sub_epic_name": "Discovery",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Toggle switch visible on budget page",
+        "'Total planned' shows cumulative across all quarters",
+        "'Planned this quarter' shows only current quarter allocation",
+        "Toggle state persists for user session",
+        "Correctly updates when changing date range"
+      ],
+      "feedback_source": "Has there been any update on Unspent Funds only showing from the quarter we are planning in? Would it at least be possible to add a toggle to switch from 'total planned' to 'planned this quarter'?",
+      "estimated_effort": "2 sprints",
+      "owner": "Beth (UX/Designer), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-006",
+      "title": "Add 'Every 3 weeks' frequency option",
+      "description": "As a care coordinator, I need a 'every 3 weeks' frequency option, so that I can accommodate coordinator requests for non-standard frequencies.",
+      "solution_area": "Exception-Based Funding Defaults",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "'Every 3 weeks' appears in frequency dropdown",
+        "4-weekly total calculated correctly",
+        "Saves and persists correctly"
+      ],
+      "feedback_source": "Can we add every three week in the options, as i have had a few client ask for this option.",
+      "estimated_effort": "1 sprint",
+      "owner": "Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-007",
+      "title": "Display total coordination fee for period",
+      "description": "As a care coordinator, I need a field showing total coordination fee for the period, so that I can see at a glance how much coordination cost is budgeted.",
+      "solution_area": "Prominent Coordination Display",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "New field 'Total Coordination Fee' displays on budget page",
+        "Automatically calculates sum of all coordination fees for the period",
+        "Updates when coordination services are added/removed",
+        "Formatted as currency"
+      ],
+      "feedback_source": "Can you add a field in the Portal which shows the 'Total Coordination fee' for the period.",
+      "estimated_effort": "2 sprints",
+      "owner": "Tim (Frontend Lead), Khoa (Backend Lead)"
+    },
+    {
+      "id": "US-008",
+      "title": "Suppress supplementary budget fields by default",
+      "description": "As a care coordinator, I need supplementary/extra budget fields to appear on care plan by default (not require clicking dropdown), so that I can see all planned services without extra navigation.",
+      "solution_area": "Prominent Coordination Display",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Supplements section visible on initial load (not collapsed)",
+        "Can still collapse if desired",
+        "Shows summary of supplements in collapsed state",
+        "Clearly labeled as 'Supplements' or 'Additional Services'"
+      ],
+      "feedback_source": "Supplements don't show on service plan page",
+      "estimated_effort": "2 sprints",
+      "owner": "Beth (UX/Designer)"
+    },
+    {
+      "id": "US-009",
+      "title": "Clarify funding stream eligibility per service",
+      "description": "As a care coordinator, I need UI clarity about which funding streams each service CAN and CANNOT be assigned to, so that I understand eligibility rules upfront.",
+      "solution_area": "Human-Readable Funding Context",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Service type shows allowed funding stream(s) or funding stream restrictions",
+        "Tooltips or help text explain why certain streams aren't available",
+        "Error message if trying to assign to ineligible stream is explanatory",
+        "Tested with all service types"
+      ],
+      "feedback_source": "UI could be more explanatory about which funding stream different services CAN and CANNOT be assigned to",
+      "estimated_effort": "2 sprints",
+      "owner": "Beth (UX/Designer), Fran (Finance Consultant)"
+    },
+    {
+      "id": "US-010",
+      "title": "Fix supplement visibility on service plan",
+      "description": "As a care coordinator, I need supplements to show on the service plan page, so that I can verify all allocated services before submission.",
+      "solution_area": "Human-Readable Funding Context",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Supplements section appears on service plan page",
+        "All selected supplements listed with quantities/details",
+        "Clearly distinguished from primary services",
+        "Visible in both draft and submitted states"
+      ],
+      "feedback_source": "Supplements don't show on service plan page - Could you please advise where I can check if the client has a supplement included under the new budget?",
+      "estimated_effort": "2 sprints",
+      "owner": "Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-011",
+      "title": "Batch save budget amendments",
+      "description": "As a care coordinator, I need to save all budget amendments in one action (not individual saves), so that I can edit multiple services efficiently without waiting for each to load.",
+      "solution_area": "Unified UI & Workflow Patterns",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Single 'Save All' button at top-right or bottom of form (like 'Submit')",
+        "All pending changes saved in one request",
+        "Loading occurs once after all changes submitted",
+        "Success confirmation shows all changes saved",
+        "Validation occurs for all fields before save"
+      ],
+      "feedback_source": "Having to save each budget amendments individually and having to wait for them to load one after another can be a bit counterproductive... Can we have one save button... would save a lot more time.",
+      "estimated_effort": "3 sprints",
+      "owner": "Tim (Frontend Lead), Khoa (Backend Lead)"
+    },
+    {
+      "id": "US-012",
+      "title": "Rename duplicate action to 'Edit'",
+      "description": "As a care coordinator, I need the action to edit a submitted plan called 'Edit' (not 'Duplicate'), so that the UI is intuitive for making changes.",
+      "solution_area": "Unified UI & Workflow Patterns",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Button/menu item labeled 'Edit' instead of 'Duplicate'",
+        "Maintains same functionality (creates new version for editing)",
+        "Help text clarifies that editing submitted plans creates a new revision"
+      ],
+      "feedback_source": "UI is not intuitive to knowing that you need to duplicate a plan to make any edits to a submitted plan. Edit is the expected terminology",
+      "estimated_effort": "1 sprint",
+      "owner": "Beth (UX/Designer)"
+    },
+    {
+      "id": "US-013",
+      "title": "Minimalist SAH budget screen design",
+      "description": "As a care coordinator, I need the SAH budget screen to load faster with a minimalist design, so that switching between old and new budget screens isn't slow.",
+      "solution_area": "Unified UI & Workflow Patterns",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Page load time < 2 seconds for typical budget (benchmark: measure baseline first)",
+        "Minimized visual clutter (remove non-essential elements initially visible)",
+        "Summary view on hover; details expand on click (not all visible by default)",
+        "Performance tested on standard laptop hardware"
+      ],
+      "feedback_source": "Is there a way that we can make the new SAH budget screen more 'minimalist'; I would think this could make the transitions/loading up of the new budget quicker",
+      "estimated_effort": "3 sprints",
+      "owner": "Beth (UX/Designer), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-014",
+      "title": "Summary view similar to old budget interface",
+      "description": "As a care coordinator, I need a summary view (like the old budget) shown on hover, with detailed breakdown only on dropdown click, so that I can quickly scan budgets without opening full details.",
+      "solution_area": "Unified UI & Workflow Patterns",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Hovering over budget line shows summary (Frequency, Units, Rates, 4-weekly Total)",
+        "Click dropdown to expand full details (planned/projected spend)",
+        "Faster rendering with lazy-loaded detail sections",
+        "Works on both desktop and laptop"
+      ],
+      "feedback_source": "Maybe switching it up and present the summary of the budget (when we hover over the budget line) and only show the entire budget details inc. planned/projected to spend when we click the drop down bar.",
+      "estimated_effort": "3 sprints",
+      "owner": "Beth (UX/Designer), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-015",
+      "title": "Budget change visibility/comparison",
+      "description": "As a care coordinator receiving a budget change, I need to see what changed (not just the new version), so that I can approve or reject changes confidently.",
+      "solution_area": "Unified UI & Workflow Patterns",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "When CO submits budget change, 'View Changes' or 'Compare' option available",
+        "Shows side-by-side diff of old vs new (or highlights changed fields)",
+        "Clearly indicates which line items changed",
+        "Approve/Reject buttons appear after reviewing changes"
+      ],
+      "feedback_source": "When CO sent a budget change, I don't see what has been changed and not sure what to approve... as before, I could easily see the change request and reject or approve straight away",
+      "estimated_effort": "4 sprints",
+      "owner": "Tim (Frontend Lead), Khoa (Backend Lead)"
+    },
+    {
+      "id": "US-016",
+      "title": "Fix form validation inconsistency (required field marking)",
+      "description": "As a care coordinator, I need form validation to be consistent (fields with * required, without * optional), so that I don't save incomplete forms and get errors.",
+      "solution_area": "Unified UI & Workflow Patterns",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "All required fields marked with *",
+        "All optional fields NOT marked with *",
+        "Server-side validation rejects saves with missing required fields",
+        "Error message specifies which required fields are missing",
+        "Tested across all budget forms"
+      ],
+      "feedback_source": "Fields with * are able to be saved without being filled, then details with no * on the text box is required to be filled (description in needs)",
+      "estimated_effort": "2 sprints",
+      "owner": "Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-017",
+      "title": "Auto-expand needs field by default",
+      "description": "As a care coordinator, I need the needs field to appear by default with a checkbox to uncheck if not needed (not hidden by default), so that I don't miss recording important care needs.",
+      "solution_area": "Unified UI & Workflow Patterns",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Needs section visible on initial page load",
+        "Checkbox 'Include in care plan' checked by default",
+        "Can uncheck to exclude from care plan",
+        "Helps prevent missed data entry"
+      ],
+      "feedback_source": "It would be good if it automatically had the needs entry show up on care plan and have a tick box if you don't want it, rather than vice versa.",
+      "estimated_effort": "1 sprint",
+      "owner": "Beth (UX/Designer)"
+    },
+    {
+      "id": "US-018",
+      "title": "Display screen unblurred on laptop",
+      "description": "As a care coordinator, I need the budget screen to render clearly on laptop without blur, so that I can read and edit budgets properly.",
+      "solution_area": "Unified UI & Workflow Patterns",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "No blur/rendering issues on standard laptop resolutions (1920x1080, 1366x768)",
+        "Text clarity verified at 100% and 125% zoom",
+        "Tested on Chrome, Firefox, Safari, Edge",
+        "Performance acceptable on older laptops"
+      ],
+      "feedback_source": "Coordinators raising that screen is blurred on laptop",
+      "estimated_effort": "2 sprints",
+      "owner": "Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-019",
+      "title": "Outlook email tagging add-in",
+      "description": "As a care team member, I need an Outlook add-in that intercepts send and prompts me to tag emails before sending, so that all budget-related emails are categorized correctly.",
+      "solution_area": "Enhanced Notifications & Export",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2506",
+      "sub_epic_name": "Release",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Event-based Outlook add-in listens for Send button",
+        "Custom popup appears with tag dropdown",
+        "Cannot send email until tag selected",
+        "Tags stored in email metadata",
+        "Works with Outlook desktop and web versions"
+      ],
+      "technical_approach": "1. Intercept Send event via Office.js; 2. Open custom task pane popup; 3. Display dropdown with available tagging options; 4. Block send until selection made; 5. Store tag in email custom properties",
+      "feedback_source": "Create an event-based add in for Outlook: 1. Run a code when the user clicks send 2. open a custom pop-up for tagging 3. Block the send until the tagging is complete",
+      "estimated_effort": "4 sprints",
+      "owner": "[TBD - External Integration]"
+    },
+    {
+      "id": "US-020",
+      "title": "Service plan sent email template",
+      "description": "As a care coordinator, I need configurable email templates for service plan notifications, so that clients receive consistent, branded communication about their budgets.",
+      "solution_area": "Enhanced Notifications & Export",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Template variables: [ClientName], [ServicePlanDate], [CoordinatorName], [ContactInfo]",
+        "Admin can customize template text and formatting",
+        "Draft and live versions available",
+        "Tested with bulk send tool"
+      ],
+      "feedback_source": "Provide service plan sent email template to Tim (Action: Romy to create post-Nov 1 template)",
+      "estimated_effort": "2 sprints",
+      "owner": "Romy (Product Owner)"
+    },
+    {
+      "id": "US-021",
+      "title": "Include care coordinator name in 'Service Plans' inbox",
+      "description": "As a clinical team member, I need to see the care coordinator name in the Service Plans inbox, so that I know who to contact about budget changes.",
+      "solution_area": "Clinical/Care Plan Integration",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "Future Epic",
+      "sub_epic_name": "Beyond TP-2501 Scope",
+      "priority": "P3",
+      "acceptance_criteria": [
+        "Care coordinator name visible in inbox list",
+        "Name appears in budget detail view",
+        "Clickable to open coordinator contact info"
+      ],
+      "feedback_source": "Can we include the CR name in the 'Service Plans' Inbox?",
+      "estimated_effort": "1 sprint",
+      "owner": "[Future Assignment]"
+    },
+    {
+      "id": "US-022",
+      "title": "Change service plan PDF language to 'planned with you'",
+      "description": "As a client receiving a service plan PDF, I need the language to reflect collaborative planning ('planned with you') instead of paternalistic ('planned for you'), so that I feel heard in the planning process.",
+      "solution_area": "Clinical/Care Plan Integration",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "PDF template updated: 'A list of services planned for you' → 'A list of services planned with you'",
+        "Language updated consistently across all service plan sections",
+        "Tested in generated PDF output"
+      ],
+      "feedback_source": "Can we change this to 'planned with you' to reflect the collaborative process and requirements",
+      "estimated_effort": "1 sprint",
+      "owner": "Romy (Product Owner)"
+    },
+    {
+      "id": "US-023",
+      "title": "Mandatory action plan for all risks",
+      "description": "As a clinical coordinator, I need all risks to have mandatory action plan sections (not just yes/no), so that I can document how we're addressing identified risks.",
+      "solution_area": "Clinical/Care Plan Integration",
+      "impact": "🔴 I can't do my job without this",
+      "sub_epic": "Future Epic",
+      "sub_epic_name": "Clinical Care Plan Redesign",
+      "priority": "P3",
+      "acceptance_criteria": [
+        "All risk types have mandatory action plan field",
+        "Cannot save risk without populated action plan",
+        "Field supports multi-line text entry",
+        "Visible in care plan view and print"
+      ],
+      "feedback_source": "Not all risks have a action plan section that is mandatory, when it should be... We always used to have details and action plans in place. Now we don't.",
+      "estimated_effort": "3 sprints",
+      "owner": "[Future Assignment]"
+    },
+    {
+      "id": "US-024",
+      "title": "Add EPOA and AHD recording fields",
+      "description": "As a clinical coordinator, I need clear fields for recording EPOA and AHD documents, so that I can track legal authority without searching through supplemental data.",
+      "solution_area": "Clinical/Care Plan Integration",
+      "impact": "🔴 I can't do my job without this",
+      "sub_epic": "Future Epic",
+      "sub_epic_name": "Clinical Care Plan Redesign",
+      "priority": "P3",
+      "acceptance_criteria": [
+        "Dedicated EPOA field in care plan",
+        "Dedicated AHD field in care plan",
+        "Can upload or reference documents",
+        "Visible in quick reference on overview page"
+      ],
+      "feedback_source": "EPOA and AHD does not have a clear spot to be recorded. This is sometimes placed under the overview in the portal care plan and is exclusively recorded using the current onboarding questionnaire",
+      "estimated_effort": "2 sprints",
+      "owner": "[Future Assignment]"
+    },
+    {
+      "id": "US-025",
+      "title": "Add Country of Birth field",
+      "description": "As an operations team member managing government reporting, I need a 'Country of Birth' field separate from 'Nationality', so that we can satisfy end-of-life questionnaire requirements.",
+      "solution_area": "Clinical/Care Plan Integration",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "Future Epic",
+      "sub_epic_name": "Client Data Model Enhancement",
+      "priority": "P3",
+      "acceptance_criteria": [
+        "Country of Birth field appears in client demographics",
+        "Separate from Nationality field",
+        "Searchable dropdown of countries",
+        "Required for government reporting workflows"
+      ],
+      "feedback_source": "We also need to record Country of Birth for clients in addition to Nationality. This was something that we could not find during a EOL questionnaire from the government.",
+      "estimated_effort": "1 sprint",
+      "owner": "[Future Assignment]"
+    },
+    {
+      "id": "US-026",
+      "title": "Add pie charts to collapsed funding panel",
+      "description": "As a care coordinator, I need to see pie chart visualizations in the collapsed funding panel state, so that I can quickly see funding stream distribution at a glance without expanding the full panel.",
+      "solution_area": "Funding Stream Visibility",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Collapsed funding panel displays mini pie charts for each active funding stream",
+        "Pie charts visually represent plan/spent/projected proportions",
+        "Clicking on a pie or the panel expands to full funding detail view",
+        "Pie charts update in real-time as services are added/modified",
+        "Works for 2-5 concurrent funding streams without visual clutter"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Decision to add pies to collapsed state for quick visual funding stream reference",
+      "estimated_effort": "2 sprints",
+      "owner": "Beth (UX/Designer), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-027",
+      "title": "Display remaining balance for each funding stream in left sidebar",
+      "description": "As a care coordinator, I need to see the remaining cash balance for each funding stream in the left sidebar (visible across all package pages), so that I always know what funds are available without navigating to the budget page.",
+      "solution_area": "Funding Stream Visibility",
+      "impact": "🔴 I can't do my job without this",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P0",
+      "acceptance_criteria": [
+        "Left sidebar displays remaining balance for each active funding stream",
+        "Shows cash-based remaining (not projected) - calculated as: Total Funding - Approved Invoice Spend",
+        "Visible on all package context pages (Claims, Budget, Documents, etc.)",
+        "Updates when invoices are approved",
+        "Color-coded per funding stream (e.g., ON = blue, HC = green)",
+        "Time-window aware - shows funding streams only when active (e.g., restorative care for 6 weeks, ATHM for 12 months)",
+        "Clickable to navigate to budget/funding detail page",
+        "Displays as small, minimalist UI cards/badges to handle 2-5 funding streams without clutter"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Decision to show very small representation of remaining amount for all funding streams in left-bar, cash first",
+      "estimated_effort": "3 sprints",
+      "owner": "Beth (UX/Designer), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-028",
+      "title": "Add funding stream tooltip with supplement details",
+      "description": "As a care coordinator, I need to see supplement dollar amounts in tooltips when hovering over funding stream indicators, so that I can understand what's contributing to the total funding amount.",
+      "solution_area": "Funding Stream Visibility",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Hovering over funding stream pie/card shows tooltip with breakdown",
+        "Tooltip displays: Oxygen supplement ($X), Enteral feeding supplement ($X), Dementia supplement ($X), etc.",
+        "Shows date ranges for each supplement",
+        "Shows MSO percentage and dollar value",
+        "Tooltip appears on both collapsed and expanded funding views",
+        "Clear, readable formatting for 3-5 supplements"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Decision to add $amount of each supplement inside the tooltip",
+      "estimated_effort": "2 sprints",
+      "owner": "Beth (UX/Designer), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-029",
+      "title": "Display funding stream expiry date and time-to-expiry warning",
+      "description": "As a care coordinator, I need to see when each funding stream will expire (based on planned spend), so that I can proactively plan for package level reviews or contribution changes.",
+      "solution_area": "Funding Stream Visibility",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2504",
+      "sub_epic_name": "Development",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Funding stream detail shows calculated expiry date based on current plan",
+        "Warning icon appears when funding will run out before end of current planning period",
+        "Example message: 'In 45 days you will be out of funds' or 'Expected to expire: March 15, 2026'",
+        "Warning appears for both spend-based expiry (ON, HC) and time-based expiry (ATHM 12 months)",
+        "Does not plan services beyond the expiry date for that funding stream",
+        "Warning visible on funding panel and/or as icon next to funding stream name",
+        "ATHM expiry prominently displayed (12-month limit from activation)",
+        "Time-window funding streams (restorative care, ATHM) clearly communicate their limited availability"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Decision to show date that funding expires and warning 'in 45 days you will be out of funds'",
+      "estimated_effort": "3 sprints",
+      "owner": "Khoa (Backend Lead), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-030",
+      "title": "Remove overall funding rollup from right panel",
+      "description": "As a care coordinator, I need to see individual funding stream balances (not a combined total), so that I don't misunderstand what funds are available when they have different time constraints.",
+      "solution_area": "Funding Stream Visibility",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Remove gray 'Total Available' rollup box from funding panel",
+        "Display only individual funding streams (ON, HC, AT-HM, RC, VC, etc.)",
+        "Each funding stream shows its own plan/spent/projected/remaining",
+        "No aggregated total that could mislead users about constrained funds (e.g., mixing quarterly ON with 6-week restorative care)"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Decision: no rollup, show individual funding streams only",
+      "estimated_effort": "1 sprint",
+      "owner": "Beth (UX/Designer)"
+    },
+    {
+      "id": "US-031",
+      "title": "Display participant contributions based on fortnightly cap",
+      "description": "As a care coordinator working with grandfathered clients, I need contributions to be calculated using the fortnightly cap (not monthly percentage), so that clients see accurate expected contributions and don't feel worse off.",
+      "solution_area": "Contributions & Funding Logic",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2502",
+      "sub_epic_name": "Discovery",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Contribution calculations use fortnightly cap for grandfathered clients",
+        "Hybrid and new clients continue using monthly percentage method",
+        "Contribution display shows accurate expected amounts based on service plan",
+        "Calculation logic documented in ticket for cap implementation",
+        "Tested with grandfathered client scenarios to ensure accuracy"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Decision to show contributions based on fortnightly cap, create ticket for cap logic",
+      "estimated_effort": "3 sprints",
+      "owner": "Khoa (Backend Lead), Fran (Finance Consultant)"
+    },
+    {
+      "id": "US-032",
+      "title": "Rename 'Coord Loading' to 'Coord Overheads'",
+      "description": "As a care coordinator, I need the coordination cost label to say 'Coord Overheads' (not 'Coord Loading'), so that the terminology is clearer and more accurate.",
+      "solution_area": "Terminology & Labels",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "All instances of 'Coord Loading' changed to 'Coord Overheads'",
+        "Updated in budget UI, service plan, funding breakdown, and any tooltips",
+        "Tested across all budget and funding views"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Decision to change Coord Loading to Coord Overheads",
+      "estimated_effort": "1 sprint",
+      "owner": "Beth (UX/Designer), Tim (Frontend Lead)"
+    },
+    {
+      "id": "US-033",
+      "title": "Maintain 'Care to Activate' utilization modal",
+      "description": "As a care coordinator, I need access to the 'Care to Activate' utilization modal, so that I can see detailed utilization metrics when needed.",
+      "solution_area": "Utilization Metrics",
+      "impact": "🟢 Nice to have/fix",
+      "sub_epic": "TP-2503",
+      "sub_epic_name": "Design",
+      "priority": "P2",
+      "acceptance_criteria": [
+        "Utilization link appears under funding stream section (e.g., under 'Home Support Ongoing')",
+        "Clicking link opens utilization modal",
+        "Modal displays 'Care to Activate' and other utilization metrics",
+        "Modal content updated to match new funding stream UI patterns",
+        "Does not replace inline funding stream displays"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Confirmed utilization modal exists, needs content rework in future",
+      "estimated_effort": "2 sprints",
+      "owner": "Beth (UX/Designer)"
+    },
+    {
+      "id": "US-034",
+      "title": "Investigate OT prescription service funding stream assignment",
+      "description": "As a technical lead, I need to investigate how OT prescription services can be reliably identified and charged to the ATHM funding stream (as opposed to OT services charged to ongoing funding), so that invoices are correctly allocated.",
+      "solution_area": "Invoice Matching & Funding Logic",
+      "impact": "🟠 I can find a workaround",
+      "sub_epic": "TP-2502",
+      "sub_epic_name": "Discovery",
+      "priority": "P1",
+      "acceptance_criteria": [
+        "Research completed on distinguishing 'Clinical Prescription' (ATHM-eligible) from 'Occupational Therapy' (ON-eligible)",
+        "Document current invoice matching logic and gaps",
+        "Propose solution for reliable funding stream assignment (e.g., service ID, prescription module flag, invoice notes matching)",
+        "Consider edge cases: invoices submitted through prescriptions module, generic 'OT' invoices",
+        "Findings documented in discovery ticket",
+        "Recommendation provided for budget UI (e.g., separate 'Clinical Prescription' service type vs OT)"
+      ],
+      "feedback_source": "BUR Meeting Transcript 9/12/25 - Discussion about ensuring OT prescription services can be reliably ID'd and charged to ATHM funding stream vs ON",
+      "estimated_effort": "2 sprints",
+      "owner": "Khoa (Backend Lead), Romy (Product Owner)"
+    }
+  ],
+  "summary": {
+    "total_stories": 34,
+    "impact_breakdown": {
+      "red_blockers": 4,
+      "orange_workaround": 13,
+      "green_polish": 17
+    },
+    "solution_areas": {
+      "Supplier & Rate Card Integration": 3,
+      "Exception-Based Funding Defaults": 3,
+      "Prominent Coordination Display": 2,
+      "Human-Readable Funding Context": 2,
+      "Unified UI & Workflow Patterns": 8,
+      "Enhanced Notifications & Export": 2,
+      "Clinical/Care Plan Integration": 4,
+      "Funding Stream Visibility": 5,
+      "Contributions & Funding Logic": 1,
+      "Terminology & Labels": 1,
+      "Utilization Metrics": 1,
+      "Invoice Matching & Funding Logic": 1
+    },
+    "sub_epic_distribution": {
+      "TP-2502 (Discovery)": 4,
+      "TP-2503 (Design)": 15,
+      "TP-2504 (Development)": 11,
+      "TP-2505 (QA)": "All stories",
+      "TP-2506 (Release)": 1,
+      "Future Epics": 4
+    }
+  }
+}

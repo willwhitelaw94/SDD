@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Records — Notes on Card</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          },
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 min-h-screen flex">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="w-60 bg-white border-r border-gray-200 min-h-screen flex-shrink-0 p-4 space-y-3">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-8 h-8 rounded-lg bg-tc-teal-700 flex items-center justify-center text-white text-xs font-bold">TC</div>
+      <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+    <div class="space-y-1">
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-md flex items-center px-3">
+        <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+      </div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 min-h-screen overflow-y-auto">
+    <!-- Record Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <span class="text-lg font-semibold font-mono text-gray-900">REF-00142</span>
+          <span class="inline-flex items-center gap-1 text-xs font-medium text-tc-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">Complaint</span>
+          <span class="inline-flex items-center gap-1 text-xs font-medium text-red-700 bg-red-50 px-2 py-0.5 rounded-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Urgent
+          </span>
+          <span class="text-xs text-gray-400 bg-violet-50 text-violet-700 px-2 py-0.5 rounded-full font-medium">Investigation</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">Edit</button>
+          <button class="inline-flex items-center gap-1.5 bg-tc-teal-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-tc-teal-700/90 transition">
+            Move to Resolution
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </button>
+        </div>
+      </div>
+      <p class="text-sm text-gray-700 mt-1 ml-11">Pressure injury developed — care plan not followed by agency staff</p>
+    </header>
+
+    <!-- Content Area -->
+    <div class="max-w-4xl mx-auto px-6 py-6">
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Notes Column (2/3 width) -->
+        <div class="col-span-2 space-y-4">
+          <h2 class="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+            Notes &amp; Comments
+            <span class="text-xs text-gray-400 font-normal">(5)</span>
+          </h2>
+
+          <!-- Note 1 -->
+          <div class="bg-white rounded-lg border border-gray-200 p-4">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-xs font-bold flex-shrink-0">AT</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-sm font-medium text-gray-900">Alice Turner</span>
+                  <span class="text-xs text-gray-400">8 Mar 2026, 2:10 PM</span>
+                  <span class="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">Coordinator</span>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">Spoke with agency manager regarding the handover gap. They've confirmed that the care worker assigned to Margaret's shifts did not receive a formal written handover — only a verbal briefing. They're arranging a joint review meeting for next Tuesday to discuss procedural changes.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Note 2 -->
+          <div class="bg-white rounded-lg border border-gray-200 p-4">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold flex-shrink-0">SL</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-sm font-medium text-gray-900">Sarah Lee</span>
+                  <span class="text-xs text-gray-400">5 Mar 2026, 10:30 AM</span>
+                  <span class="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">Care Partner</span>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">Wound care nurse has completed assessment. Confirmed Grade 2 pressure injury on sacrum. Treatment plan initiated — daily dressing changes, pressure-relieving mattress ordered. See attached wound assessment form.</p>
+                <!-- Attachment -->
+                <div class="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-100 w-fit">
+                  <div class="w-8 h-8 rounded bg-red-100 flex items-center justify-center">
+                    <svg class="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg>
+                  </div>
+                  <div>
+                    <p class="text-xs font-medium text-gray-700">Wound_Assessment_MT_050326.pdf</p>
+                    <p class="text-[10px] text-gray-400">245 KB</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Note 3 -->
+          <div class="bg-white rounded-lg border border-gray-200 p-4">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-xs font-bold flex-shrink-0">AT</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-sm font-medium text-gray-900">Alice Turner</span>
+                  <span class="text-xs text-gray-400">28 Feb 2026, 4:45 PM</span>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">Called Jennifer (daughter) to acknowledge receipt of complaint and explain our investigation process. She appreciated the call and will provide a written statement by end of week. She mentioned this is the second time agency staff have not followed care plans.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Note 4 — with photo attachment -->
+          <div class="bg-white rounded-lg border border-gray-200 p-4">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold flex-shrink-0">SL</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-sm font-medium text-gray-900">Sarah Lee</span>
+                  <span class="text-xs text-gray-400">20 Feb 2026, 9:15 AM</span>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">Initial assessment during home visit. Noticed redness and early-stage tissue damage. Documented with photos and notified GP immediately. Margaret was in good spirits otherwise.</p>
+                <div class="flex gap-2">
+                  <div class="w-16 h-16 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  </div>
+                  <div class="w-16 h-16 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Note 5 — system note -->
+          <div class="bg-white rounded-lg border border-gray-200 p-4">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold flex-shrink-0">JT</div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-sm font-medium text-gray-900">Jennifer Thompson</span>
+                  <span class="text-xs text-gray-400">15 Feb 2026, 11:00 AM</span>
+                  <span class="text-[10px] text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded">Complainant</span>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">Initial complaint lodged via phone. Mum has a pressure injury that she didn't have before. We believe the fill-in carer didn't turn her as per the care plan. We want a full investigation and assurance it won't happen again.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Write a comment -->
+          <div class="bg-white rounded-lg border border-gray-200 p-4">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 rounded-full bg-tc-teal-700 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">YU</div>
+              <div class="flex-1">
+                <textarea rows="2" placeholder="Write a comment..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 focus:border-tc-teal-500 resize-none mb-2"></textarea>
+                <div class="flex items-center justify-between">
+                  <button class="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                    Attach file
+                  </button>
+                  <button class="bg-tc-teal-700 text-white px-4 py-1.5 rounded-lg text-xs font-medium hover:bg-tc-teal-700/90 transition">
+                    Add Comment
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity Feed (1/3 width) -->
+        <div class="space-y-3">
+          <h2 class="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Activity
+          </h2>
+          <div class="space-y-0">
+            <!-- Activity items -->
+            <div class="flex gap-3 py-2.5 border-l-2 border-gray-200 pl-4 ml-1 relative">
+              <div class="absolute -left-[5px] top-3 w-2 h-2 rounded-full bg-violet-400"></div>
+              <div>
+                <p class="text-xs text-gray-700"><span class="font-medium">Alice Turner</span> moved to <span class="font-medium text-violet-700">Investigation</span></p>
+                <p class="text-[10px] text-gray-400 mt-0.5">5 Mar, 10:45 AM</p>
+              </div>
+            </div>
+            <div class="flex gap-3 py-2.5 border-l-2 border-gray-200 pl-4 ml-1 relative">
+              <div class="absolute -left-[5px] top-3 w-2 h-2 rounded-full bg-orange-400"></div>
+              <div>
+                <p class="text-xs text-gray-700"><span class="font-medium">Alice Turner</span> moved to <span class="font-medium text-orange-700">Owner Accepted</span></p>
+                <p class="text-[10px] text-gray-400 mt-0.5">1 Mar, 2:30 PM</p>
+              </div>
+            </div>
+            <div class="flex gap-3 py-2.5 border-l-2 border-gray-200 pl-4 ml-1 relative">
+              <div class="absolute -left-[5px] top-3 w-2 h-2 rounded-full bg-pink-400"></div>
+              <div>
+                <p class="text-xs text-gray-700"><span class="font-medium">Alice Turner</span> assigned as coordinator</p>
+                <p class="text-[10px] text-gray-400 mt-0.5">28 Feb, 9:00 AM</p>
+              </div>
+            </div>
+            <div class="flex gap-3 py-2.5 border-l-2 border-gray-200 pl-4 ml-1 relative">
+              <div class="absolute -left-[5px] top-3 w-2 h-2 rounded-full bg-red-400"></div>
+              <div>
+                <p class="text-xs text-gray-700">Triage set to <span class="font-medium text-red-700">Urgent</span></p>
+                <p class="text-[10px] text-gray-400 mt-0.5">22 Feb, 11:30 AM</p>
+              </div>
+            </div>
+            <div class="flex gap-3 py-2.5 border-l-2 border-gray-200 pl-4 ml-1 relative">
+              <div class="absolute -left-[5px] top-3 w-2 h-2 rounded-full bg-yellow-400"></div>
+              <div>
+                <p class="text-xs text-gray-700"><span class="font-medium">System</span> moved to <span class="font-medium text-yellow-700">Triage</span></p>
+                <p class="text-[10px] text-gray-400 mt-0.5">22 Feb, 11:00 AM</p>
+              </div>
+            </div>
+            <div class="flex gap-3 py-2.5 border-l-2 border-gray-200 pl-4 ml-1 relative">
+              <div class="absolute -left-[5px] top-3 w-2 h-2 rounded-full bg-indigo-400"></div>
+              <div>
+                <p class="text-xs text-gray-700"><span class="font-medium">System</span> moved to <span class="font-medium text-indigo-700">Received</span></p>
+                <p class="text-[10px] text-gray-400 mt-0.5">15 Feb, 11:05 AM</p>
+              </div>
+            </div>
+            <div class="flex gap-3 py-2.5 border-l-2 border-transparent pl-4 ml-1 relative">
+              <div class="absolute -left-[5px] top-3 w-2 h-2 rounded-full bg-blue-400"></div>
+              <div>
+                <p class="text-xs text-gray-700">Record <span class="font-medium">created</span></p>
+                <p class="text-[10px] text-gray-400 mt-0.5">15 Feb, 11:00 AM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

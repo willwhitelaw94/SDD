@@ -1,0 +1,295 @@
+## Needs List View — Package Needs Tab (v2)
+
+== DEFAULT VIEW (Active needs, pyramid hidden) ========================
+
+┌──────────────────────────────────────────────────────────────────┐
+│  Needs                                                           │
+│                                                                  │
+│  [Active ▾]  [Draft]  [Archived]    [△ Maslow]    [+ Add Need]  │
+│                                                                  │
+│  ─── PHYSIOLOGICAL ──────────────────────────────────────────── │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  🍽 Nutrition & Hydration                              │   │
+│  │     Requires assistance with meal preparation due to     │   │
+│  │     limited mobility and arthritis in both hands.        │   │
+│  │                                                          │   │
+│  │     HCP  │  🔗 2 risks  │  💰 2 budget items  │  📋     │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  💊 Medication & Health Management                     │   │
+│  │     Daily medication management for 8+ prescribed        │   │
+│  │     medications including blood thinners.                │   │
+│  │                                                          │   │
+│  │     HCP  │  🔗 1 risk   │  💰 1 budget item   │  📋     │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  ─── SAFETY & SECURITY ─────────────────────────────────────── │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  🏠 Home Safety & Environment                         │   │
+│  │     Home requires modifications for wheelchair access    │   │
+│  │     including ramp installation and bathroom rails.      │   │
+│  │                                                          │   │
+│  │     PHN  │  🔗 1 risk   │  💰 1 budget item   │  📋     │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  ─── BELONGING ──────────────────────────────────────────────── │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  👥 Social Connection & Community                      │   │
+│  │     Isolated since partner passed — needs regular social │   │
+│  │     outings and community group participation.           │   │
+│  │                                                          │   │
+│  │     Informal  │  🔗 0 risks  │  💰 0 budget items       │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  Showing 4 active needs                                          │
+└──────────────────────────────────────────────────────────────────┘
+
+Legend:
+  ⠿  = Drag handle (reorder within list)
+  📋  = "Add to Care Plan" indicator (shown when enabled)
+  🔗  = Linked risks count
+  💰  = Linked budget items count
+  △  = Toggle Maslow pyramid filter
+
+
+== MASLOW PYRAMID FILTER (revealed — click [△ Maslow]) ===============
+
+┌──────────────────────────────────────────────────────────────────┐
+│  Needs                                                           │
+│                                                                  │
+│  [Active ▾]  [Draft]  [Archived]    [▲ Maslow ✕]  [+ Add Need]  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │                                                          │   │
+│  │                  ┌──────────────┐                        │   │
+│  │                  │ Self-Act. (1)│                        │   │
+│  │               ┌──┴──────────────┴──┐                    │   │
+│  │               │    Esteem      (2) │                    │   │
+│  │            ┌──┴────────────────────┴──┐                 │   │
+│  │            │     Belonging        (1) │                 │   │
+│  │         ┌──┴──────────────────────────┴──┐              │   │
+│  │         │   Safety & Security        (1) │              │   │
+│  │      ┌──┴────────────────────────────────┴──┐           │   │
+│  │      │ ● Physiological                   (4) │  ← active│   │
+│  │      └───────────────────────────────────────┘          │   │
+│  │                                                          │   │
+│  │      9 needs total                       [Clear filter] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  ─── PHYSIOLOGICAL (filtered) ──────────────────────────────── │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  🍽 Nutrition & Hydration                              │   │
+│  │     Requires assistance with meal preparation due to     │   │
+│  │     limited mobility and arthritis in both hands.        │   │
+│  │                                                          │   │
+│  │     HCP  │  🔗 2 risks  │  💰 2 budget items  │  📋     │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  💊 Medication & Health Management                     │   │
+│  │     Daily medication management for 8+ prescribed        │   │
+│  │     medications including blood thinners.                │   │
+│  │                                                          │   │
+│  │     HCP  │  🔗 1 risk   │  💰 1 budget item   │  📋     │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  🚿 Personal Hygiene & Care                           │   │
+│  │     Showering assistance 3x/week with dignity-focused    │   │
+│  │     approach.                                            │   │
+│  │                                                          │   │
+│  │     HCP  │  🔗 1 risk   │  💰 1 budget item   │  📋     │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  🚶 Mobility & Physical Function                      │   │
+│  │     Wheelchair access and transfer assistance required   │   │
+│  │     for all daily activities.                            │   │
+│  │                                                          │   │
+│  │     PHN  │  🔗 2 risks  │  💰 1 budget item   │  📋     │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  Showing 4 of 9 needs (Physiological)                            │
+└──────────────────────────────────────────────────────────────────┘
+
+Pyramid behaviour:
+  - Each tier is clickable — filters the list to that Maslow level
+  - Count badge on each tier shows how many needs at that level
+  - Active/selected tier is highlighted (● marker + teal accent)
+  - "Clear filter" resets to show all needs (grouped by level)
+  - Tiers with 0 needs are dimmed but still clickable
+  - Pyramid respects the active status tab (counts reflect Active/Draft/Archived)
+  - Smooth slide-down animation when revealed, slide-up when hidden
+
+
+== PYRAMID — No filter active (overview mode) ========================
+
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│                  ┌──────────────┐                            │
+│                  │ Self-Act. (1)│                            │
+│               ┌──┴──────────────┴──┐                        │
+│               │    Esteem      (2) │                        │
+│            ┌──┴────────────────────┴──┐                     │
+│            │     Belonging        (1) │                     │
+│         ┌──┴──────────────────────────┴──┐                  │
+│         │   Safety & Security        (1) │                  │
+│      ┌──┴────────────────────────────────┴──┐               │
+│      │   Physiological                   (4) │               │
+│      └───────────────────────────────────────┘               │
+│                                                              │
+│      9 needs total                          [Clear filter]  │
+└──────────────────────────────────────────────────────────────┘
+
+Notes:
+  - When no tier is selected, pyramid is in "overview mode" — just shows counts
+  - Hovering a tier highlights it and shows a tooltip: "Physiological — 4 needs"
+  - The pyramid is an at-a-glance summary of the recipient's care need profile
+  - Audit value: "You can see this recipient's needs are concentrated in
+    Physiological — they need foundational support"
+
+
+== PYRAMID — Tier with 0 needs (dimmed) =============================
+
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│                  ┌──────────────┐                            │
+│                  │ Self-Act. (0)│  ← dimmed, still clickable │
+│               ┌──┴──────────────┴──┐                        │
+│               │    Esteem      (0) │  ← dimmed              │
+│            ┌──┴────────────────────┴──┐                     │
+│            │     Belonging        (0) │  ← dimmed           │
+│         ┌──┴──────────────────────────┴──┐                  │
+│         │   Safety & Security        (1) │                  │
+│      ┌──┴────────────────────────────────┴──┐               │
+│      │ ● Physiological                   (2) │  ← active   │
+│      └───────────────────────────────────────┘               │
+│                                                              │
+│      3 needs total                          [Clear filter]  │
+└──────────────────────────────────────────────────────────────┘
+
+Notes:
+  - Dimmed tiers use lighter text + muted background
+  - Still clickable (shows empty state for that level)
+  - Helps Coordinators identify gaps: "No needs above Safety — is this complete?"
+
+
+== DRAFT TAB VIEW ==================================================
+
+┌──────────────────────────────────────────────────────────────────┐
+│  Needs                                                           │
+│                                                                  │
+│  [Active]  [Draft ▾]  [Archived]    [△ Maslow]    [+ Add Need]  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │ ⠿  🚶 Mobility & Physical Function          DRAFT       │   │
+│  │     Physiotherapy assessment needed — details pending     │   │
+│  │     from OT review.                                      │   │
+│  │                                                          │   │
+│  │     HCP  │  🔗 0 risks  │  💰 0 budget items            │   │
+│  │                                          [Edit] [Delete] │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  Showing 1 draft need                                            │
+└──────────────────────────────────────────────────────────────────┘
+
+
+== ARCHIVED TAB VIEW ================================================
+
+┌──────────────────────────────────────────────────────────────────┐
+│  Needs                                                           │
+│                                                                  │
+│  [Active]  [Draft]  [Archived ▾]    [△ Maslow]    [+ Add Need]  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐   │
+│  │    ⚠ Emergency & Risk Management              ARCHIVED   │   │
+│  │     Previous falls risk management plan — superseded by  │   │
+│  │     updated assessment Dec 2025.                         │   │
+│  │                                                          │   │
+│  │     HCP  │  🔗 1 risk   │  💰 1 budget item             │   │
+│  │                                                  [View]  │   │
+│  └──────────────────────────────────────────────────────────┘   │
+│                                                                  │
+│  Showing 1 archived need                                         │
+│  Archived needs are read-only.                                   │
+└──────────────────────────────────────────────────────────────────┘
+
+Notes:
+  - Archived needs have no drag handle (not reorderable)
+  - Archived needs show [View] only (no Edit/Delete)
+  - No "Add to Care Plan" indicator (archived excluded from care plan)
+  - Pyramid filter available on all tabs — counts update per tab
+
+
+== EMPTY STATE (No needs created yet) ==============================
+
+┌──────────────────────────────────────────────────────────────────┐
+│  Needs                                                           │
+│                                                                  │
+│  [Active ▾]  [Draft]  [Archived]    [△ Maslow]    [+ Add Need]  │
+│                                                                  │
+│                                                                  │
+│              ┌─────────────────────────┐                         │
+│              │                         │                         │
+│              │     📋                  │                         │
+│              │                         │                         │
+│              │  No needs recorded yet  │                         │
+│              │                         │                         │
+│              │  Add a need to start    │                         │
+│              │  building this          │                         │
+│              │  recipient's care plan. │                         │
+│              │                         │                         │
+│              │     [+ Add Need]        │                         │
+│              │                         │                         │
+│              └─────────────────────────┘                         │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+Notes:
+  - Pyramid button is hidden when there are 0 needs (nothing to filter)
+  - Empty state shows on first visit before any needs are created
+
+
+== CARD DETAIL — Expanded (hover/focus state) =======================
+
+┌──────────────────────────────────────────────────────────────────┐
+│ ⠿  🍽 Nutrition & Hydration                           Active    │
+│                                                                  │
+│     Requires assistance with meal preparation due to             │
+│     limited mobility and arthritis in both hands.                │
+│                                                                  │
+│     How it will be met:                                          │
+│     Weekly meal prep service (3x/week) with occupational         │
+│     therapy review quarterly.                                    │
+│                                                                  │
+│     ┌────────────┐  ┌──────────────┐  ┌─────────────────┐      │
+│     │ 💰 HCP     │  │ 🔗 2 risks   │  │ 💰 2 budget     │      │
+│     │            │  │              │  │    items        │      │
+│     │            │  │ Falls Risk   │  │ Personal Care   │      │
+│     │            │  │ Med Risk     │  │ Meal Prep       │      │
+│     └────────────┘  └──────────────┘  └─────────────────┘      │
+│                                                                  │
+│     📋 Included in Care Plan                                     │
+│     Last updated: 12 Feb 2026 by Jane Smith                      │
+│                                                                  │
+│                                          [Edit] [Archive] [Delete]│
+└──────────────────────────────────────────────────────────────────┘
+
+Notes:
+  - Expanded card shows "How it will be met" text
+  - Shows individual linked risks and budget items (not just counts)
+  - Shows last updated timestamp and user
+  - [Archive] action moves need to Archived status

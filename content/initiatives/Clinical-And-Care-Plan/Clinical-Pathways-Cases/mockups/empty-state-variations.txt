@@ -1,0 +1,144 @@
+## Empty State — 5 Variations
+
+Context: Shown when a recipient's package has no clinical cases.
+Uses CommonEmptyPlaceholder component.
+Should encourage case creation without being pushy.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION A: Simple Text + Button (Standard Pattern)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                                                                             │
+│                                                                             │
+│                         📋                                                  │
+│                                                                             │
+│              No clinical cases recorded                                     │
+│              for this recipient.                                            │
+│                                                                             │
+│              [+ Create Case]                                                │
+│                                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Pros: Matches existing CommonEmptyPlaceholder pattern exactly (e.g., Incidents tab).
+      Simple, familiar, no explanation needed.
+Cons: Doesn't explain what cases are or when to create one. New users
+      may not understand the feature.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION B: Explanatory Text + Button
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                                                                             │
+│                         📋                                                  │
+│                                                                             │
+│              No clinical cases yet                                          │
+│                                                                             │
+│              Clinical cases track ongoing concerns                          │
+│              with scheduled reviews and audit trails.                       │
+│              Create a case for incidents, assessments,                      │
+│              or clinical judgement.                                          │
+│                                                                             │
+│              [+ Create Case]                                                │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Pros: Educates new users about what cases are. Mentions the three trigger
+      types. Friendly and informative.
+Cons: Slightly verbose. Experienced users will see this explanation
+      every time a recipient has no cases (before they create one).
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION C: Contextual Suggestion
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                                                                             │
+│                         📋                                                  │
+│                                                                             │
+│              No clinical cases recorded                                     │
+│                                                                             │
+│              This recipient has 3 active risks and                          │
+│              2 recent incidents. Consider creating a                        │
+│              case if ongoing clinical monitoring is                         │
+│              needed.                                                        │
+│                                                                             │
+│              [+ Create Case]                                                │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Pros: Uses actual package data to prompt action. Clinically relevant —
+      suggests creating a case based on existing risks/incidents. Smart.
+Cons: Requires fetching risk/incident counts for the empty state. May
+      feel presumptuous ("you should create a case"). More complex to
+      implement. What if they have 0 risks and 0 incidents?
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION D: Case Type Quick-Start Cards
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│              No clinical cases recorded                                     │
+│                                                                             │
+│  ┌──────────────────┐ ┌──────────────────┐ ┌──────────────────┐           │
+│  │ ●Mandatory        │ │ ●Recommended     │ │ ●Self-Service    │           │
+│  │                   │ │                   │ │                   │           │
+│  │ Duty of care —    │ │ Standard clinical │ │ Low risk,         │           │
+│  │ ongoing clinical  │ │ follow-up with    │ │ informational —   │           │
+│  │ obligation        │ │ review schedule   │ │ no review needed  │           │
+│  │                   │ │                   │ │                   │           │
+│  │ [Create →]        │ │ [Create →]        │ │ [Create →]        │           │
+│  └──────────────────┘ └──────────────────┘ └──────────────────┘           │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Pros: Teaches the three case types immediately. One-click to create with
+      type pre-selected. Reduces form friction. Educational.
+Cons: Over-engineered for an empty state. The create modal already explains
+      types. Takes significant vertical space. Non-standard pattern —
+      empty states in TC Portal don't do this.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION E: Minimal — Just the Icon + Short Text
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                                                                             │
+│                                                                             │
+│                                                                             │
+│                         📋                                                  │
+│              No cases                                                       │
+│                                                                             │
+│                                                                             │
+│                                                                             │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Pros: Ultra-minimal. No redundant CTA (button already in header). Clean.
+Cons: Too sparse. No guidance. Doesn't meet "Transparency" principle —
+      users don't know what to do. Missing the CTA in the empty area.

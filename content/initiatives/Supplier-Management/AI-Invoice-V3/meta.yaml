@@ -1,0 +1,13 @@
+jira_key: TP-2323
+title: 'AI Invoice V3'
+status: In Progress
+prefix: AIV3
+summary: "AI-powered invoice processing and matching"
+linear_project_id: 909746af-4a7b-4804-b4f8-7b04731f539b
+linear_url: https://linear.app/trilogycare/project/aiv3-ai-invoice-v3-tp-2323-f14d8ff703ae
+brp_priority: P1
+description: AI-assisted invoice line item classification system with breadcrumb hierarchy, confidence scoring, scoped service selection, and multi-service detection
+due_date: null
+last_synced: '2026-02-03T00:00:00.000Z'
+supersedes:
+  - TP-3301-AIC

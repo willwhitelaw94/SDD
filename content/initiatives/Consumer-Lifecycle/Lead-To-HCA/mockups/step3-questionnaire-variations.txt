@@ -1,0 +1,375 @@
+================================================================================
+       STEP 3: QUESTIONNAIRE — LAYOUT VARIATIONS (6 OPTIONS)
+================================================================================
+
+Step 3 captures client details, funding/financial info, and meeting booking.
+Three sub-sections:
+  - Client Details (Gender, DOB, Email, Phone, Country, Nationality, Language,
+    Interpreter Required)
+  - Funding & Financial (Funding Status, Pensioner Status, Contribution Rates,
+    Default to max, Payment Method)
+  - Scheduling (Calendly booking, Meeting Date/Time)
+
+Note: Commencement/Cessation/Closing dates were captured in Step 1 but
+Commencement defaults to Meeting Date when booked via Calendly.
+
+================================================================================
+OPTION A: Three Grouped Sections (Horizontal Dividers)
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 3: QUESTIONNAIRE                                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  CLIENT DETAILS                                                             │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  Gender *                  Date of Birth *            Phone *               │
+│  [Female ▼]                [01/03/1945          📅]   [0412 345 678_____]  │
+│                                                                             │
+│  Email *                                              Country               │
+│  [joan.smith@email.com______________________]         [Australia ▼]        │
+│                                                                             │
+│  Nationality                          Preferred Language *                  │
+│  [Australian ▼]                       [English ▼]                           │
+│                                                                             │
+│  ☐ Interpreter Required                                                     │
+│                                                                             │
+│  FUNDING & FINANCIAL                                                        │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  Funding Status *                     Pensioner Status *                    │
+│  [FSO (Full) ▼]                       [Full pensioner ▼]                   │
+│                                                                             │
+│  Contribution Rates                                                         │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  Everyday        Clinical         Independence                       │   │
+│  │  [____]%         [____]%          [____]%                            │   │
+│  │                                                                      │   │
+│  │  ☑ Default to maximum contribution rates                             │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Payment Method *                                                           │
+│  [Direct debit ▼]                                                           │
+│                                                                             │
+│  SCHEDULING                                                                 │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  📅 Book Assessment Meeting                                          │   │
+│  │                                                                      │   │
+│  │  [Book Meeting via Calendly →]                                       │   │
+│  │                                                                      │   │
+│  │  Meeting:  Not yet booked                                            │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Commencement Date                                                          │
+│  [02/02/2026 📅]  ℹ Will update to meeting date when booked                │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                              [Save Draft]      [Continue →]      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Straightforward, all visible, clear section grouping
+**Cons:** Long scroll, contribution rates section can feel complex
+
+================================================================================
+OPTION B: Card-Based Sub-Sections
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 3: QUESTIONNAIRE                                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  👤 CLIENT DETAILS                                                   │   │
+│  │                                                                      │   │
+│  │  Gender *           DOB *                Phone *                      │   │
+│  │  [Female ▼]         [01/03/1945 📅]      [0412 345 678_______]      │   │
+│  │                                                                      │   │
+│  │  Email *                                                             │   │
+│  │  [joan.smith@email.com_________________________________]            │   │
+│  │                                                                      │   │
+│  │  Country             Nationality          Language *                  │   │
+│  │  [Australia ▼]       [Australian ▼]       [English ▼]                │   │
+│  │                                                                      │   │
+│  │  ☐ Interpreter Required                                              │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  💰 FUNDING & FINANCIAL                                               │   │
+│  │                                                                      │   │
+│  │  Funding Status *            Pensioner Status *                       │   │
+│  │  [FSO (Full) ▼]              [Full pensioner ▼]                      │   │
+│  │                                                                      │   │
+│  │  ┌─ Contribution Rates ──────────────────────────────────────────┐   │   │
+│  │  │  Everyday [___]%    Clinical [___]%    Independence [___]%    │   │   │
+│  │  │  ☑ Default to maximum                                        │   │   │
+│  │  └──────────────────────────────────────────────────────────────┘   │   │
+│  │                                                                      │   │
+│  │  Payment Method *                                                    │   │
+│  │  [Direct debit ▼]                                                    │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  📅 SCHEDULING                                                        │   │
+│  │                                                                      │   │
+│  │  [Book Meeting via Calendly →]          Meeting: Not yet booked      │   │
+│  │                                                                      │   │
+│  │  Commencement Date                                                   │   │
+│  │  [02/02/2026 📅]   ℹ Updates to meeting date when booked            │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                              [Save Draft]      [Continue →]      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Clear visual grouping, consistent with Card-Based accordion (Option G overall),
+each section feels contained
+**Cons:** Cards within cards if nested inside accordion, lots of borders
+
+================================================================================
+OPTION C: Two-Column Layout
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 3: QUESTIONNAIRE                                                      │
+├─────────────────────────────────┬───────────────────────────────────────────┤
+│                                 │                                           │
+│  CLIENT DETAILS                 │  FUNDING & FINANCIAL                      │
+│  ─────────────────────────     │  ─────────────────────────────────────── │
+│                                 │                                           │
+│  Gender *                       │  Funding Status *                         │
+│  [Female ▼]                     │  [FSO (Full) ▼]                           │
+│                                 │                                           │
+│  Date of Birth *                │  Pensioner Status *                       │
+│  [01/03/1945          📅]       │  [Full pensioner ▼]                       │
+│                                 │                                           │
+│  Email *                        │  Contribution Rates                       │
+│  [joan.smith@email.com___]      │  Everyday [___]%                          │
+│                                 │  Clinical [___]%                          │
+│  Phone *                        │  Independence [___]%                      │
+│  [0412 345 678__________]       │  ☑ Default to maximum                     │
+│                                 │                                           │
+│  Country                        │  Payment Method *                         │
+│  [Australia ▼]                  │  [Direct debit ▼]                         │
+│                                 │                                           │
+│  Nationality                    │                                           │
+│  [Australian ▼]                 │                                           │
+│                                 │                                           │
+│  Preferred Language *           │                                           │
+│  [English ▼]                    │                                           │
+│                                 │                                           │
+│  ☐ Interpreter Required         │                                           │
+│                                 │                                           │
+├─────────────────────────────────┴───────────────────────────────────────────┤
+│                                                                             │
+│  SCHEDULING                                                                 │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  ┌──────────────────────────────────┐   Commencement Date                   │
+│  │  [Book Meeting via Calendly →]   │   [02/02/2026 📅]                     │
+│  │                                  │   ℹ Updates to meeting date           │
+│  │  Meeting: Not yet booked         │                                       │
+│  └──────────────────────────────────┘                                       │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                              [Save Draft]      [Continue →]      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Compact, everything above the fold on desktop, clear separation
+**Cons:** Columns can feel disconnected, harder to scan top-to-bottom
+
+================================================================================
+OPTION D: Progressive — Funding Conditional on Status
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 3: QUESTIONNAIRE                                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  CLIENT DETAILS                                                             │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  Gender *           DOB *                  Phone *                           │
+│  [Female ▼]         [01/03/1945 📅]        [0412 345 678_______]           │
+│                                                                             │
+│  Email *                                   Country                          │
+│  [joan.smith@email.com________________]    [Australia ▼]                   │
+│                                                                             │
+│  Nationality        Language *              ☐ Interpreter Required           │
+│  [Australian ▼]     [English ▼]                                             │
+│                                                                             │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  FUNDING                                                                    │
+│                                                                             │
+│  Funding Status *                                                           │
+│  ● FSO (Full)        ○ MSO (60%)                                            │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ℹ FSO (Full Subsidy Only): Client receives full government          │   │
+│  │    subsidy. No additional top-up fees.                                │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Pensioner Status *                                                         │
+│  [Full pensioner ▼]                                                         │
+│                                                                             │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  CONTRIBUTION RATES                                                         │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ☑ Default to maximum contribution rates                             │   │
+│  │    ℹ Check this if the client doesn't know their rates yet. Maximum  │   │
+│  │      government rates will be applied and can be adjusted later.     │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Everyday                Clinical                Independence               │
+│  ┌──────────┐            ┌──────────┐            ┌──────────┐              │
+│  │  MAX   %  │ (disabled) │  MAX   %  │ (disabled) │  MAX   %  │ (disabled) │
+│  └──────────┘            └──────────┘            └──────────┘              │
+│                                                                             │
+│  Payment Method *                                                           │
+│  ○ Direct debit     ○ Invoice     ○ Refuse to specify     ○ Wants info     │
+│                                                                             │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  SCHEDULING                                                                 │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  📅 Assessment Meeting                                               │   │
+│  │                                                                      │   │
+│  │  [Book Meeting via Calendly →]                                       │   │
+│  │                                                                      │   │
+│  │  Status: Not yet booked                                              │   │
+│  │  ℹ Booking a meeting will update the Commencement Date               │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                              [Save Draft]      [Continue →]      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Radio buttons for FSO/MSO with inline explanation, "Default to max" disables
+rate fields (less confusion), payment method as radio makes choices visible
+**Cons:** Longer form, more info text may feel over-explained
+
+================================================================================
+OPTION E: Calendly Integration — Booked State
+================================================================================
+
+Shows what happens AFTER a meeting is booked via Calendly.
+
+--- MEETING BOOKED ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 3: QUESTIONNAIRE                                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [Client Details section — same as other options]                           │
+│  [Funding section — same as other options]                                  │
+│                                                                             │
+│  SCHEDULING                                                                 │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ✓ Meeting Booked                                                    │   │
+│  │                                                                      │   │
+│  │  ┌──────────────────────────────────────────────────────────────┐    │   │
+│  │  │  📅 Tuesday, 15 February 2026                                │    │   │
+│  │  │  🕐 10:00 AM — 11:00 AM (AEST)                               │    │   │
+│  │  │  📍 Zoom (link will be sent to client)                       │    │   │
+│  │  │                                                              │    │   │
+│  │  │  Booked with: Sarah Chen (Care Partner)                      │    │   │
+│  │  └──────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                      │   │
+│  │  [Reschedule]    [Cancel Booking]                                    │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ℹ Commencement Date updated to 15/02/2026 (meeting date)            │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Commencement Date                Cessation Date         Closing Date       │
+│  [15/02/2026 📅] (auto-set)      [dd/mm/yyyy 📅]        [dd/mm/yyyy 📅]   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                              [Save Draft]      [Continue →]      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- CALENDLY UNAVAILABLE FALLBACK ---
+
+│  SCHEDULING                                                                 │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ⚠ Calendly is unavailable                                          │   │
+│  │  You can enter the meeting details manually.             [Retry]     │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Meeting Date *                        Meeting Time *                       │
+│  [dd/mm/yyyy                    📅]    [hh:mm AM/PM ▼]                     │
+│                                                                             │
+│  Commencement Date                                                          │
+│  [dd/mm/yyyy 📅]    ℹ Set to meeting date                                  │
+
+**Pros:** Shows the full Calendly integration lifecycle (unbooked → booked → fallback),
+clear date auto-update, reschedule/cancel options
+**Cons:** Calendly details may vary based on their embed API
+
+================================================================================
+OPTION F: Compact Single-Column with Inline Help
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 3: QUESTIONNAIRE                                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Gender *              DOB *                    Phone *                      │
+│  [Female ▼]            [01/03/1945 📅]          [0412 345 678______]       │
+│                                                                             │
+│  Email *                                        Country                     │
+│  [joan.smith@email.com____________________]     [Australia ▼]              │
+│                                                                             │
+│  Nationality           Language *                                           │
+│  [Australian ▼]        [English ▼]              ☐ Interpreter Required      │
+│                                                                             │
+│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  │
+│                                                                             │
+│  Funding [FSO (Full) ▼]     Pensioner [Full pensioner ▼]                   │
+│                                                                             │
+│  ☑ Default to max rates     Payment [Direct debit ▼]                       │
+│                                                                             │
+│  Rates: Everyday [MAX]%  Clinical [MAX]%  Independence [MAX]%  (disabled)  │
+│                                                                             │
+│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─  │
+│                                                                             │
+│  [📅 Book Meeting via Calendly]          Meeting: Not yet booked            │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                              [Save Draft]      [Continue →]      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Everything above the fold, minimal vertical space, fast to scan
+**Cons:** Dense, no section headers may confuse new users, no room for help text
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+**Option D (Progressive with Conditional Funding)** recommended because:
+- FSO/MSO as radio buttons makes the binary choice obvious
+- Inline explanation of funding status reduces errors
+- "Default to max" checkbox disabling rate fields prevents confusion
+- Payment method as radio shows all 4 options at once
+- Clear Calendly section with helpful messaging
+
+**Option B (Card-Based)** is best if using Card-Based accordion (Option G overall)
+for visual consistency — cards within cards.
+
+**Option E (Calendly States)** is essential as a supplement — use its booked state
+and fallback patterns regardless of which main layout is chosen.
+
+**Option C (Two-Column)** is best for power users who want minimal scrolling.

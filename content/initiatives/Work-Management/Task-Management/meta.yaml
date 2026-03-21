@@ -1,0 +1,17 @@
+jira_key: TP-2143
+title: 'Task Management'
+status: qa
+prefix: TMN
+summary: "Task creation, assignment, and tracking"
+linear_project_id: 85fb283b-6a8a-4a52-972f-49946d8ff770
+linear_url: https://linear.app/trilogycare/project/tmn-task-management-tp-2143-769c2110e93c
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+gates:
+  dev:
+    passed: true
+    date: 2026-03-05
+    pr: "https://github.com/Trilogy-Care/tc-portal/pull/4455"
+    notes: "68 tests passing, 161 assertions, Pint clean, all AC verified"
+bounty_value: 15000

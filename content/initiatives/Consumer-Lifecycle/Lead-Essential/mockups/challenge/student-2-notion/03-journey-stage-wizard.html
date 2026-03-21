@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LES Challenge — Notion Nick — Journey Stage Wizard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',300:'#94DBDA',400:'#66CCCA',500:'#43C0BE',600:'#2F9E9C',700:'#007F7E',800:'#005656',900:'#003D3D' },
+            'primary-blue': { 50:'#F0F4FA',100:'#D6E1F0',200:'#BCCEE7',300:'#96B2D9',400:'#7197CC',500:'#4B7BBE',600:'#39639D',700:'#2C4C79',800:'#1E3452',900:'#101C2D' },
+            info: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',500:'#43C0BE',700:'#007F7E',900:'#003D3D' },
+            success: { 50:'#F6FBFE',100:'#DBEFFA',200:'#BCE2F6',500:'#35A8E4',700:'#156F9D' },
+            warning: { 50:'#FFF9F5',100:'#FFDAC6',200:'#FFC19F',500:'#E0763C',700:'#9C481A' },
+            danger: { 50:'#FFF5F5',100:'#FFCCCE',200:'#FFA8AC',500:'#E04B51',700:'#9C262A' },
+          },
+          fontFamily: { sans: ['"Roboto Flex"', 'system-ui', 'sans-serif'] },
+          borderRadius: { 'input': '8px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    .text-primary { color: #13171D; }
+    .text-secondary { color: #666666; }
+    .text-tertiary { color: #808080; }
+    body { background: #ffffff; }
+
+    /* Board column */
+    .board-column {
+      min-width: 180px;
+      flex: 1;
+      background: rgba(55, 53, 47, 0.024);
+      border-radius: 6px;
+      padding: 8px;
+      transition: background 0.2s;
+    }
+    .board-column.drop-target {
+      background: rgba(0, 127, 126, 0.08);
+      outline: 2px dashed #007F7E;
+      outline-offset: -2px;
+    }
+    .board-column-header {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(55, 53, 47, 0.5);
+      padding: 4px 6px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .column-count {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(55, 53, 47, 0.35);
+    }
+
+    /* Board card */
+    .board-card {
+      background: white;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 6px;
+      box-shadow: 0 0 0 1px rgba(55, 53, 47, 0.06), 0 1px 3px rgba(55, 53, 47, 0.08);
+      cursor: grab;
+      transition: box-shadow 0.15s, transform 0.15s;
+      font-size: 13px;
+    }
+    .board-card:hover {
+      box-shadow: 0 0 0 1px rgba(55, 53, 47, 0.1), 0 2px 8px rgba(55, 53, 47, 0.12);
+    }
+    .board-card.active-card {
+      box-shadow: 0 0 0 2px #007F7E, 0 4px 12px rgba(0, 127, 126, 0.2);
+      transform: scale(1.02);
+    }
+    .board-card.dragging {
+      opacity: 0.5;
+      transform: rotate(2deg) scale(0.98);
+    }
+    .board-card .card-title {
+      font-weight: 500;
+      color: #37352f;
+      margin-bottom: 4px;
+    }
+    .board-card .card-meta {
+      font-size: 11px;
+      color: rgba(55, 53, 47, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Notion pill */
+    .notion-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    /* Avatar */
+    .avatar {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 600;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    /* Drop zone indicator */
+    .drop-zone {
+      border: 2px dashed rgba(0, 127, 126, 0.4);
+      border-radius: 4px;
+      padding: 16px;
+      text-align: center;
+      color: rgba(0, 127, 126, 0.6);
+      font-size: 12px;
+      margin-bottom: 6px;
+      background: rgba(0, 127, 126, 0.03);
+      display: none;
+    }
+    .drop-zone.visible {
+      display: block;
+    }
+
+    /* Drag arrow indicator */
+    .drag-arrow {
+      display: none;
+      position: absolute;
+      z-index: 10;
+    }
+    .drag-arrow.visible {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.visible {
+      display: flex;
+    }
+
+    /* Modal */
+    .modal {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 0 1px rgba(55, 53, 47, 0.09), 0 8px 32px rgba(55, 53, 47, 0.24);
+      width: 560px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      padding: 20px 24px 12px;
+      border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+    }
+    .modal-body {
+      padding: 16px 24px;
+    }
+    .modal-footer {
+      padding: 12px 24px 16px;
+      border-top: 1px solid rgba(55, 53, 47, 0.09);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    /* Form field */
+    .form-field {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(55, 53, 47, 0.65);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .form-label .required {
+      color: #E04B51;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .form-label .template-badge {
+      font-size: 10px;
+      background: rgba(0, 127, 126, 0.1);
+      color: #007F7E;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 400;
+    }
+
+    /* Notion-style input */
+    .notion-input {
+      width: 100%;
+      padding: 6px 10px;
+      font-size: 14px;
+      color: #37352f;
+      border: 1px solid rgba(55, 53, 47, 0.16);
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      background: white;
+    }
+    .notion-input:focus {
+      border-color: #007F7E;
+      box-shadow: 0 0 0 2px rgba(0, 127, 126, 0.15);
+    }
+    .notion-input::placeholder {
+      color: rgba(55, 53, 47, 0.3);
+    }
+
+    /* Notion-style select */
+    .notion-select {
+      width: 100%;
+      padding: 6px 10px;
+      font-size: 14px;
+      color: #37352f;
+      border: 1px solid rgba(55, 53, 47, 0.16);
+      border-radius: 4px;
+      outline: none;
+      background: white;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .notion-select:focus {
+      border-color: #007F7E;
+      box-shadow: 0 0 0 2px rgba(0, 127, 126, 0.15);
+    }
+
+    /* Notion-style person picker */
+    .person-picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1px solid rgba(55, 53, 47, 0.16);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .person-picker:hover {
+      border-color: rgba(55, 53, 47, 0.3);
+    }
+
+    /* Section separator in modal */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(55, 53, 47, 0.4);
+      margin-top: 8px;
+      margin-bottom: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(55, 53, 47, 0.06);
+    }
+
+    /* Transition arrow badge */
+    .transition-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(55, 53, 47, 0.04);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #37352f;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 100;
+      transition: transform 0.3s ease;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast.visible { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #007F7E; }
+
+    /* Breadcrumb */
+    .breadcrumb a {
+      color: rgba(55, 53, 47, 0.5);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .breadcrumb a:hover { color: #37352f; }
+    .breadcrumb span { color: #37352f; font-weight: 500; font-size: 13px; }
+
+    /* Add new button in column */
+    .column-add {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px;
+      font-size: 12px;
+      color: rgba(55, 53, 47, 0.35);
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.1s;
+    }
+    .column-add:hover {
+      background: rgba(55, 53, 47, 0.06);
+      color: rgba(55, 53, 47, 0.65);
+    }
+  </style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body class="min-h-screen bg-white">
+
+  <!-- Top navigation bar -->
+  <div class="h-11 border-b border-gray-200 flex items-center px-4 justify-between bg-white sticky top-0 z-40">
+    <div class="flex items-center gap-2">
+      <button class="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="rgba(55,53,47,0.45)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="breadcrumb flex items-center gap-1.5">
+        <a href="#">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display:inline; vertical-align: -2px; margin-right: 2px;"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M4 5h6M4 7h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          Leads Database
+        </a>
+        <span style="color: rgba(55,53,47,0.3);">/</span>
+        <a href="#">Margaret Wilson</a>
+        <span style="color: rgba(55,53,47,0.3);">/</span>
+        <span>Journey Stage</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-1">
+      <button class="text-xs px-2.5 py-1 rounded hover:bg-gray-100 text-gray-500">Share</button>
+    </div>
+  </div>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-60 border-r border-gray-200 min-h-screen bg-gray-50/50 flex-shrink-0">
+      <div class="p-3">
+        <div class="flex items-center gap-2 px-2 py-1.5 mb-4">
+          <div class="w-5 h-5 rounded bg-teal-700 flex items-center justify-center text-white text-[10px] font-bold">TC</div>
+          <span class="text-sm font-medium text-gray-800">Trilogy Care Portal</span>
+        </div>
+        <button class="w-full flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-500 mb-3">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M9.5 9.5l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Search
+        </button>
+        <div class="space-y-0.5">
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l5-5 5 5M3.5 5.5V12h3V9h1v3h3V5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Dashboard
+          </a>
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.2"/></svg>
+            Consumers
+          </a>
+          <div>
+            <a href="#" class="flex items-center gap-2 px-2 py-1 rounded bg-gray-200/80 text-sm font-medium text-gray-900">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M4 5h6M4 7h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+              Leads Database
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 min-w-0 px-8 pt-6 pb-12">
+
+      <!-- Page heading -->
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-1">
+          <span class="text-2xl">&#128100;</span>
+          <h1 class="text-2xl font-bold" style="color: #37352f;">Margaret Wilson</h1>
+          <span class="notion-pill bg-blue-100 text-blue-700 text-sm">Approved</span>
+        </div>
+        <p class="text-sm ml-10" style="color: rgba(55,53,47,0.5);">Drag the highlighted card to a new column to transition the journey stage</p>
+      </div>
+
+      <!-- Board view (mini kanban) -->
+      <div class="flex gap-3 overflow-x-auto pb-4 relative" id="board">
+
+        <!-- Pre-Care Column -->
+        <div class="board-column" data-stage="Pre-Care" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Pre-Care')" ondragleave="handleDragLeave(event)">
+          <div class="board-column-header">
+            <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+            Pre-Care
+            <span class="column-count">3</span>
+          </div>
+          <div class="drop-zone" id="drop-Pre-Care">Drop here</div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Dorothy Thompson</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-gray-100 text-gray-600" style="font-size:10px; padding: 1px 5px;">Not Contacted</span>
+              <div class="avatar bg-teal-600" style="width:16px;height:16px;font-size:8px;">SC</div>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Frank O'Brien</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-yellow-100 text-yellow-700" style="font-size:10px; padding: 1px 5px;">Attempted</span>
+              <div class="avatar bg-primary-blue-600" style="width:16px;height:16px;font-size:8px;">DW</div>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Helen Nguyen</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-gray-100 text-gray-600" style="font-size:10px; padding: 1px 5px;">Not Contacted</span>
+            </div>
+          </div>
+          <div class="column-add">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- ACAT Booked Column -->
+        <div class="board-column" data-stage="ACAT Booked" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'ACAT Booked')" ondragleave="handleDragLeave(event)">
+          <div class="board-column-header">
+            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+            ACAT Booked
+            <span class="column-count">2</span>
+          </div>
+          <div class="drop-zone" id="drop-ACAT Booked">Drop here</div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Robert Jenkins</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-pink-500" style="width:16px;height:16px;font-size:8px;">MS</div>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Shirley Patterson</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-teal-600" style="width:16px;height:16px;font-size:8px;">SC</div>
+            </div>
+          </div>
+          <div class="column-add">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Approved Column (current) -->
+        <div class="board-column" data-stage="Approved" style="background: rgba(0, 127, 126, 0.04); outline: 1px solid rgba(0, 127, 126, 0.15); outline-offset: -1px;" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Approved')" ondragleave="handleDragLeave(event)">
+          <div class="board-column-header" style="color: #007F7E;">
+            <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+            Approved
+            <span class="column-count" style="color: #007F7E;">3</span>
+            <span class="text-[10px] font-normal px-1.5 py-0.5 rounded bg-teal-100 text-teal-700 ml-auto">Current</span>
+          </div>
+          <div class="drop-zone" id="drop-Approved">Drop here</div>
+          <!-- Highlighted card: Margaret Wilson -->
+          <div class="board-card active-card" id="margaret-card" draggable="true" ondragstart="handleDragStart(event)" data-lead="Margaret Wilson">
+            <div class="card-title">Margaret Wilson</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-teal-600" style="width:16px;height:16px;font-size:8px;">SC</div>
+              <span style="font-size:10px; color: rgba(55,53,47,0.4);">TC-4821</span>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Arthur Dawson</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-primary-blue-600" style="width:16px;height:16px;font-size:8px;">DW</div>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Edna McAllister</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-yellow-100 text-yellow-700" style="font-size:10px; padding: 1px 5px;">Attempted</span>
+              <div class="avatar bg-purple-500" style="width:16px;height:16px;font-size:8px;">JP</div>
+            </div>
+          </div>
+          <div class="column-add">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Visual arrow indicator between Approved and Allocated -->
+        <div class="flex items-center self-center -mx-1.5 relative" id="drag-hint">
+          <div class="flex flex-col items-center gap-1">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M6 16h20M20 10l6 6-6 6" stroke="#007F7E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="text-[10px] text-teal-700 font-medium whitespace-nowrap">Drag card</span>
+          </div>
+        </div>
+
+        <!-- Allocated Column (target) -->
+        <div class="board-column" data-stage="Allocated" id="allocated-column" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Allocated')" ondragleave="handleDragLeave(event)">
+          <div class="board-column-header">
+            <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+            Allocated
+            <span class="column-count">2</span>
+          </div>
+          <div class="drop-zone visible" id="drop-Allocated" style="display:block;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:inline; vertical-align: -3px; margin-right: 4px;"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Drop Margaret here
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Patricia Kowalski</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-amber-500" style="width:16px;height:16px;font-size:8px;">LT</div>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">George Fitzgerald</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-pink-500" style="width:16px;height:16px;font-size:8px;">MS</div>
+            </div>
+          </div>
+          <div class="column-add">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Active Column -->
+        <div class="board-column" data-stage="Active" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Active')" ondragleave="handleDragLeave(event)">
+          <div class="board-column-header">
+            <span class="w-2 h-2 rounded-full bg-green-400"></span>
+            Active
+            <span class="column-count">3</span>
+          </div>
+          <div class="drop-zone" id="drop-Active">Drop here</div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Beryl Sanderson</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-amber-500" style="width:16px;height:16px;font-size:8px;">LT</div>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Kenneth Murray</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-purple-500" style="width:16px;height:16px;font-size:8px;">JP</div>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Valerie Chang</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-teal-600" style="width:16px;height:16px;font-size:8px;">SC</div>
+            </div>
+          </div>
+          <div class="column-add">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Converted Column -->
+        <div class="board-column" data-stage="Converted" ondragover="handleDragOver(event)" ondrop="handleDrop(event, 'Converted')" ondragleave="handleDragLeave(event)">
+          <div class="board-column-header">
+            <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+            Converted
+            <span class="column-count">2</span>
+          </div>
+          <div class="drop-zone" id="drop-Converted">Drop here</div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Joan Whitfield</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-primary-blue-600" style="width:16px;height:16px;font-size:8px;">DW</div>
+            </div>
+          </div>
+          <div class="board-card" draggable="true" ondragstart="handleDragStart(event)">
+            <div class="card-title">Raymond Hartley</div>
+            <div class="card-meta">
+              <span class="notion-pill bg-green-100 text-green-700" style="font-size:10px; padding: 1px 5px;">Made Contact</span>
+              <div class="avatar bg-pink-500" style="width:16px;height:16px;font-size:8px;">MS</div>
+            </div>
+          </div>
+          <div class="column-add">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick-trigger button for demo -->
+      <div class="mt-4 flex items-center gap-3">
+        <button onclick="showTransitionModal('Approved', 'Allocated')" class="px-4 py-2 rounded-md text-sm font-medium text-white bg-teal-700 hover:bg-teal-800 transition shadow-sm">
+          Simulate: Move Margaret to Allocated
+        </button>
+        <span class="text-xs text-gray-400">or drag Margaret's card to any column</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transition Modal -->
+  <div class="modal-overlay" id="transition-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-semibold" style="color: #37352f;">Update Journey Stage</h2>
+          <button onclick="closeModal()" class="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100 text-gray-400">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12M4 4l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <!-- Transition badge -->
+        <div class="transition-badge" id="transition-badge">
+          <span class="notion-pill bg-blue-100 text-blue-700" id="from-stage">Approved</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 8h8M9 5l3 3-3 3" stroke="rgba(55,53,47,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="notion-pill bg-indigo-100 text-indigo-700" id="to-stage">Allocated</span>
+        </div>
+        <div class="mt-2 text-xs" style="color: rgba(55,53,47,0.45);">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="display:inline; vertical-align:-2px; margin-right:3px;"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1"/><path d="M6 3v3l2 1" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/></svg>
+          Margaret Wilson &bull; TC-4821
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Required fields -->
+        <div class="section-label" style="border-top: none; margin-top: 0; padding-top: 0;">Required Properties</div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Package Level <span class="required">*</span>
+          </div>
+          <select class="notion-select" id="field-package-level">
+            <option value="">Select package level...</option>
+            <option value="1">Level 1 - Basic Care</option>
+            <option value="2">Level 2 - Low Care</option>
+            <option value="3" selected>Level 3 - Intermediate Care</option>
+            <option value="4">Level 4 - High Care</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Allocation Date <span class="required">*</span>
+          </div>
+          <input type="date" class="notion-input" id="field-allocation-date" value="2026-02-21">
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Assigned Care Coordinator <span class="required">*</span>
+          </div>
+          <div class="person-picker" onclick="togglePersonPicker()">
+            <div class="avatar bg-teal-600" style="width:22px;height:22px;font-size:10px;">SC</div>
+            <span class="text-sm" style="color: #37352f;" id="selected-person">Sarah Chen</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="ml-auto"><path d="M3 4.5l3 3 3-3" stroke="rgba(55,53,47,0.35)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Referral Code <span class="required">*</span>
+          </div>
+          <input type="text" class="notion-input" placeholder="Enter MAC referral code..." id="field-referral-code" value="MAC-2026-00847">
+        </div>
+
+        <!-- Suggested fields (template auto-filled) -->
+        <div class="section-label">Suggested Properties</div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Service Start Date
+            <span class="template-badge">Auto-filled</span>
+          </div>
+          <input type="date" class="notion-input" value="2026-03-01" id="field-service-start">
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Budget (Annual)
+            <span class="template-badge">Auto-filled</span>
+          </div>
+          <input type="text" class="notion-input" value="$55,591.40" id="field-budget">
+          <div class="text-[11px] mt-1" style="color: rgba(55,53,47,0.4);">Level 3 standard annual amount (2025-26)</div>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Primary Contact
+            <span class="template-badge">Auto-filled</span>
+          </div>
+          <input type="text" class="notion-input" value="Karen Wilson (Daughter)" id="field-primary-contact">
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Initial Services
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="notion-pill bg-gray-100 text-gray-700 cursor-pointer hover:bg-gray-200">Personal Care</span>
+            <span class="notion-pill bg-gray-100 text-gray-700 cursor-pointer hover:bg-gray-200">Domestic Assistance</span>
+            <span class="notion-pill bg-gray-100 text-gray-700 cursor-pointer hover:bg-gray-200">Nursing</span>
+            <span class="notion-pill bg-gray-50 text-gray-400 cursor-pointer hover:bg-gray-100 border border-dashed border-gray-300">+ Add service</span>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label">
+            Transition Notes
+          </div>
+          <textarea class="notion-input" rows="3" placeholder="Add notes about this stage transition..." style="resize: vertical;">ACAT approval confirmed Level 3 HCP. MAC referral code received. Package to commence 1 March 2026. Karen Wilson (daughter) is primary contact for onboarding.</textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button onclick="closeModal()" class="px-4 py-1.5 text-sm rounded hover:bg-gray-100" style="color: rgba(55,53,47,0.65);">Cancel</button>
+        <button onclick="saveTransition()" class="px-4 py-1.5 text-sm rounded bg-teal-700 text-white hover:bg-teal-800 font-medium transition">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let draggedCard = null;
+
+    // Drag and drop handlers
+    function handleDragStart(event) {
+      draggedCard = event.target;
+      event.target.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+
+      // Show all drop zones
+      document.querySelectorAll('.drop-zone').forEach(z => {
+        if (!z.closest('.board-column').querySelector('.active-card') || z.id !== 'drop-Approved') {
+          z.classList.add('visible');
+          z.style.display = 'block';
+        }
+      });
+
+      // Hide the hint arrow while dragging
+      document.getElementById('drag-hint').style.opacity = '0.3';
+    }
+
+    function handleDragOver(event) {
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+      const column = event.currentTarget;
+      column.classList.add('drop-target');
+    }
+
+    function handleDragLeave(event) {
+      event.currentTarget.classList.remove('drop-target');
+    }
+
+    function handleDrop(event, targetStage) {
+      event.preventDefault();
+      const column = event.currentTarget;
+      column.classList.remove('drop-target');
+
+      // Hide all drop zones
+      document.querySelectorAll('.drop-zone').forEach(z => {
+        z.classList.remove('visible');
+        if (z.id !== 'drop-Allocated') {
+          z.style.display = 'none';
+        }
+      });
+
+      // Restore hint arrow
+      document.getElementById('drag-hint').style.opacity = '1';
+
+      if (draggedCard) {
+        draggedCard.classList.remove('dragging');
+
+        // If it's the Margaret card, show the transition modal
+        if (draggedCard.dataset && draggedCard.dataset.lead === 'Margaret Wilson') {
+          showTransitionModal('Approved', targetStage);
+        } else {
+          // For other cards, just move them
+          const addBtn = column.querySelector('.column-add');
+          column.insertBefore(draggedCard, addBtn);
+          showToast('Card moved to ' + targetStage);
+        }
+
+        draggedCard = null;
+      }
+    }
+
+    // Reset drag state if drag ends without drop
+    document.addEventListener('dragend', () => {
+      document.querySelectorAll('.board-card.dragging').forEach(c => c.classList.remove('dragging'));
+      document.querySelectorAll('.board-column.drop-target').forEach(c => c.classList.remove('drop-target'));
+      document.querySelectorAll('.drop-zone').forEach(z => {
+        z.classList.remove('visible');
+        if (z.id !== 'drop-Allocated') {
+          z.style.display = 'none';
+        }
+      });
+      document.getElementById('drag-hint').style.opacity = '1';
+    });
+
+    // Stage pill styles map
+    const stagePills = {
+      'Pre-Care': { bg: 'bg-gray-100', text: 'text-gray-600' },
+      'ACAT Booked': { bg: 'bg-yellow-100', text: 'text-yellow-700' },
+      'Approved': { bg: 'bg-blue-100', text: 'text-blue-700' },
+      'Allocated': { bg: 'bg-indigo-100', text: 'text-indigo-700' },
+      'Active': { bg: 'bg-green-100', text: 'text-green-700' },
+      'Converted': { bg: 'bg-teal-100', text: 'text-teal-700' },
+    };
+
+    // Show transition modal
+    function showTransitionModal(fromStage, toStage) {
+      const modal = document.getElementById('transition-modal');
+      const fromPill = document.getElementById('from-stage');
+      const toPill = document.getElementById('to-stage');
+
+      const fromStyle = stagePills[fromStage] || stagePills['Approved'];
+      const toStyle = stagePills[toStage] || stagePills['Allocated'];
+
+      fromPill.className = 'notion-pill ' + fromStyle.bg + ' ' + fromStyle.text;
+      fromPill.textContent = fromStage;
+      toPill.className = 'notion-pill ' + toStyle.bg + ' ' + toStyle.text;
+      toPill.textContent = toStage;
+
+      modal.classList.add('visible');
+    }
+
+    function closeModal() {
+      document.getElementById('transition-modal').classList.remove('visible');
+    }
+
+    function saveTransition() {
+      // Validate required fields
+      const packageLevel = document.getElementById('field-package-level').value;
+      const allocationDate = document.getElementById('field-allocation-date').value;
+      const referralCode = document.getElementById('field-referral-code').value;
+
+      if (!packageLevel || !allocationDate || !referralCode) {
+        showToast('Please fill in all required fields', false);
+        return;
+      }
+
+      closeModal();
+
+      // Move the card visually
+      const card = document.getElementById('margaret-card');
+      const allocatedColumn = document.getElementById('allocated-column');
+      const addBtn = allocatedColumn.querySelector('.column-add');
+
+      card.classList.remove('active-card');
+      allocatedColumn.insertBefore(card, addBtn);
+
+      // Update card styling for new column
+      setTimeout(() => {
+        card.classList.add('active-card');
+      }, 100);
+
+      // Hide the drop zone in Allocated
+      const dropZone = document.getElementById('drop-Allocated');
+      dropZone.style.display = 'none';
+
+      // Hide the drag hint
+      document.getElementById('drag-hint').style.display = 'none';
+
+      // Update column counts
+      const approvedHeader = document.querySelector('[data-stage="Approved"] .column-count');
+      const allocatedHeader = document.querySelector('[data-stage="Allocated"] .column-count');
+      approvedHeader.textContent = '2';
+      allocatedHeader.textContent = '3';
+
+      // Update the page heading pill
+      const headingPill = document.querySelector('h1').nextElementSibling;
+      if (headingPill) {
+        headingPill.className = 'notion-pill bg-indigo-100 text-indigo-700 text-sm';
+        headingPill.textContent = 'Allocated';
+      }
+
+      showToast('Stage updated to Allocated', true);
+    }
+
+    // Person picker toggle (simple demo)
+    function togglePersonPicker() {
+      // For demo: just cycle through agents
+      const agents = [
+        { name: 'Sarah Chen', initials: 'SC', color: 'bg-teal-600' },
+        { name: 'David Williams', initials: 'DW', color: 'bg-primary-blue-600' },
+        { name: 'Maria Santos', initials: 'MS', color: 'bg-pink-500' },
+        { name: 'James Park', initials: 'JP', color: 'bg-purple-500' },
+        { name: 'Lisa Thompson', initials: 'LT', color: 'bg-amber-500' },
+      ];
+      const current = document.getElementById('selected-person').textContent;
+      const currentIdx = agents.findIndex(a => a.name === current);
+      const next = agents[(currentIdx + 1) % agents.length];
+
+      document.getElementById('selected-person').textContent = next.name;
+      const avatar = document.querySelector('.person-picker .avatar');
+      avatar.className = 'avatar ' + next.color;
+      avatar.style.width = '22px';
+      avatar.style.height = '22px';
+      avatar.style.fontSize = '10px';
+      avatar.textContent = next.initials;
+    }
+
+    // Toast
+    function showToast(message, success) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = 'toast visible' + (success ? ' success' : '');
+      if (success) {
+        toast.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' + message;
+      }
+      setTimeout(() => {
+        toast.classList.remove('visible');
+      }, 2500);
+    }
+
+    // Close modal on overlay click
+    document.getElementById('transition-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('transition-modal')) {
+        closeModal();
+      }
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+
+</body>
+</html>

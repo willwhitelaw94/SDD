@@ -1,0 +1,212 @@
+{
+  "body": [
+  {
+    "title": "As a Team Leader, I can view all my team members in one place",
+    "description": "Team leaders need to quickly see who is on their team, including their roles, status, and when they joined. Currently, this requires manual tracking in spreadsheets or asking IT/admin for the current roster. This wastes 2-4 days per request and leads to stale data. By providing a centralized team view, leaders can verify membership instantly and make informed decisions about workload distribution and team composition.",
+    "acceptanceCriteria": [
+      "Team leader can navigate to 'My Teams' from main navigation",
+      "Team list shows all team members with name, email, role(s), status, and join date",
+      "Team members are sorted by join date (most recent first) by default",
+      "Status indicators clearly show active, inactive, or pending members",
+      "Page loads in <800ms for teams up to 100 members",
+      "Team leader can search/filter team members by name or role",
+      "Empty state message shown if team has no members yet"
+    ],
+    "persona": "Team Leader",
+    "priority": "P1"
+  },
+  {
+    "title": "As a Team Leader, I can add existing users to my team",
+    "description": "When a new employee joins the department or when workload needs redistribution, team leaders currently must submit IT tickets and wait 2-4 days for team membership changes. This delays onboarding and frustrates both leaders and new team members. By enabling self-service team management, leaders can add members in under 5 minutes, accelerating onboarding and improving team agility.",
+    "acceptanceCriteria": [
+      "Team leader can click 'Add Member' button on team detail page",
+      "Search autocomplete finds users by name or email as they type",
+      "Search returns results in <200ms",
+      "Team leader can select a user from search results",
+      "Team leader must assign a role from available options (dropdown)",
+      "System prevents adding a user who is already a team member",
+      "Confirmation message shows after successful addition",
+      "New member receives notification email about being added to team",
+      "Operation completes in <500ms"
+    ],
+    "persona": "Team Leader",
+    "priority": "P1"
+  },
+  {
+    "title": "As a Team Leader, I can remove team members when they change roles or leave",
+    "description": "When employees move to different departments, change roles, or leave the organization, their team memberships must be updated immediately to prevent unauthorized access and maintain accurate team rosters. Currently, this requires IT tickets and manual coordination, risking security gaps during the 2-4 day delay. Self-service removal ensures team data stays current and reduces security risks.",
+    "acceptanceCriteria": [
+      "Team leader can click 'Remove' button next to team member name",
+      "System shows confirmation dialog with member name and current role(s)",
+      "Confirmation dialog warns about permission revocation",
+      "Team leader must confirm action before removal proceeds",
+      "System removes member and revokes team-specific permissions immediately",
+      "Removed member receives notification email",
+      "Audit log records removal with timestamp, actor, and team",
+      "Operation completes in <500ms",
+      "Removed member no longer appears in team list"
+    ],
+    "persona": "Team Leader",
+    "priority": "P1"
+  },
+  {
+    "title": "As a Team Leader, I can assign or change roles for my team members",
+    "description": "Team members' responsibilities evolve over time—junior staff become seniors, specialists take on management duties, or temporary coverage requires role adjustments. Currently, role changes require IT intervention and config file updates, causing delays and limiting team flexibility. By allowing team leaders to manage role assignments, teams can adapt quickly to changing business needs without engineering bottlenecks.",
+    "acceptanceCriteria": [
+      "Team leader can click 'Change Role' button next to team member",
+      "Role selector dropdown shows only roles the team leader can assign",
+      "System prevents privilege escalation (cannot assign roles higher than leader's own)",
+      "Role change takes effect immediately upon confirmation",
+      "Team member receives notification about role change",
+      "System updates member's permissions based on new role",
+      "Audit log records role change with before/after state",
+      "Operation completes in <500ms",
+      "Updated role displays in team member list immediately"
+    ],
+    "persona": "Team Leader",
+    "priority": "P1"
+  },
+  {
+    "title": "As a Team Member, I can view which teams I belong to and my role in each",
+    "description": "Team members are often confused about their team memberships, roles, and what permissions they have. This leads to support tickets ('Why can't I access this feature?') and inefficiency ('Who should I ask about this?'). By providing clear visibility into team memberships and permissions, employees can understand their access levels, know who their team leaders are, and work more confidently.",
+    "acceptanceCriteria": [
+      "Team member can navigate to 'My Teams' from profile menu",
+      "Page lists all teams the user belongs to",
+      "Each team shows: team name, team leader name, user's role, and permissions summary",
+      "Team member can click team name to see full team roster (if team is public)",
+      "Team member can click role to expand detailed permission list",
+      "Page clearly indicates if user has no team memberships yet",
+      "Page loads in <800ms"
+    ],
+    "persona": "Team Member",
+    "priority": "P1"
+  },
+  {
+    "title": "As an HR Officer, I can quickly offboard terminated employees from all teams",
+    "description": "During employee offboarding, HR must ensure terminated staff are removed from all teams and access is revoked immediately for security and compliance reasons. Currently, this requires coordinating with multiple team leaders, creating risk that access lingers for days or is forgotten entirely. A bulk removal feature allows HR to offboard employees in one action with full audit trail, reducing security risks and ensuring compliance.",
+    "acceptanceCriteria": [
+      "HR officer can navigate to 'User Management' (admin access required)",
+      "HR officer can search for any user by name or email",
+      "User profile displays all current team memberships in one view",
+      "HR officer can click 'Remove from All Teams' button",
+      "Confirmation dialog lists all teams user will be removed from",
+      "System shows progress indicator during bulk removal",
+      "Success message confirms all teams removed from",
+      "User receives notification about offboarding",
+      "Audit log records all removals individually",
+      "All team-specific permissions revoked immediately",
+      "Bulk operation completes in <5 seconds for up to 10 teams"
+    ],
+    "persona": "HR Officer",
+    "priority": "P1"
+  },
+  {
+    "title": "As an Administrator, I can create custom roles for new job functions",
+    "description": "As the business evolves, new roles emerge (e.g., 'Invoice Specialist', 'Data Quality Analyst') that don't fit existing role definitions. Currently, creating roles requires engineering to edit config files and deploy code changes, causing weeks of delay. By providing a UI for role creation, administrators can respond to business needs immediately, assigning precise permissions without engineering bottlenecks.",
+    "acceptanceCriteria": [
+      "Administrator can navigate to 'Settings' → 'Roles & Permissions'",
+      "Administrator can click 'Create New Role' button",
+      "Form requires role name, description, and optional parent role",
+      "Administrator can select permissions from categorized checklist",
+      "Permission categories match existing domains (bills, packages, tasks, etc.)",
+      "System validates role name is unique",
+      "Administrator can set role visibility (global or team-specific)",
+      "Success message confirms role creation",
+      "New role immediately available for assignment by team leaders",
+      "Audit log records role creation with all permissions assigned"
+    ],
+    "persona": "Administrator",
+    "priority": "P2"
+  },
+  {
+    "title": "As an Administrator, I can assign permission bundles to roles",
+    "description": "Managing individual permissions (170+ total) for each role is tedious and error-prone. Permission bundles group related permissions (e.g., 'Bill Processing Bundle' includes create_bill, edit_bill, approve_bill, delete_bill) making role configuration faster and more consistent. This reduces the risk of missed permissions and makes the system easier for non-technical administrators to manage.",
+    "acceptanceCriteria": [
+      "Administrator can view existing roles in 'Roles & Permissions' section",
+      "Administrator can click 'Edit Permissions' on any role",
+      "Permission management UI shows both individual permissions and pre-defined bundles",
+      "Bundles are organized by functional area (bills, packages, tasks, etc.)",
+      "Expanding a bundle shows all included permissions",
+      "Administrator can assign/remove entire bundles with one click",
+      "System shows tooltip explaining what each bundle enables",
+      "Changes take effect immediately for all users with that role",
+      "Audit log records all permission changes",
+      "Operation completes in <1 second"
+    ],
+    "persona": "Administrator",
+    "priority": "P2"
+  },
+  {
+    "title": "As a Care Coordinator, I can see accurate team assignments on packages",
+    "description": "Care coordinators need to know which team is responsible for each package to route questions, assign tasks, and coordinate care. Currently, team assignments exist but team membership data is often stale (manually updated weeks ago), leading to coordinators contacting the wrong people or not knowing who to ask. By ensuring team management updates flow through to package views, coordinators can reliably identify the right team members.",
+    "acceptanceCriteria": [
+      "Package detail page shows assigned team name",
+      "Clicking team name displays current team members (not stale data)",
+      "Team member list shows names, roles, and status (active/inactive)",
+      "Inactive team members are visually differentiated or hidden by default",
+      "Care coordinator can filter packages by assigned team",
+      "Team data refreshes when members are added/removed (no cache staleness)",
+      "Package list view shows team assignment in table column",
+      "Page loads in <800ms with team data included"
+    ],
+    "persona": "Care Coordinator",
+    "priority": "P1"
+  },
+  {
+    "title": "As a Team Member, I receive clear notifications when my team membership changes",
+    "description": "Team members need to know when they've been added to new teams, removed from teams, or when their role changes so they can understand what work they're now responsible for (or no longer responsible for). Without notifications, members discover changes accidentally, leading to confusion ('Why can't I access this anymore?') and missed work ('I didn't know I was supposed to handle that'). Clear notifications ensure smooth transitions.",
+    "acceptanceCriteria": [
+      "User receives email notification when added to a team",
+      "Email includes team name, role assigned, team leader name, and link to team page",
+      "User receives email notification when removed from a team",
+      "Removal email includes team name, reason (if provided), and effective date",
+      "User receives email notification when role changes",
+      "Role change email shows old role, new role, and updated permissions summary",
+      "Emails use clear, non-technical language",
+      "Emails are sent within 1 minute of the change",
+      "Users can opt out of email notifications but still see in-app notifications"
+    ],
+    "persona": "Team Member",
+    "priority": "P2"
+  },
+  {
+    "title": "As an HR Officer, I can bulk add a new employee to multiple teams during onboarding",
+    "description": "New employees often need to join multiple teams immediately (e.g., primary functional team, company-wide communications team, training team). Adding them one team at a time is tedious and slows onboarding. Bulk team assignment allows HR to configure all memberships at once, reducing onboarding time from hours to minutes and ensuring new hires have access to everything they need on day one.",
+    "acceptanceCriteria": [
+      "HR officer can navigate to new employee's profile",
+      "HR officer can click 'Add to Teams' button",
+      "Modal displays searchable list of all available teams",
+      "HR officer can select multiple teams via checkboxes",
+      "For each selected team, HR officer must assign a role",
+      "System validates the user isn't already a member of selected teams",
+      "HR officer can review selections before confirming",
+      "System processes all additions in one operation",
+      "Progress indicator shows teams being added",
+      "Success message lists all teams added",
+      "User receives single welcome email listing all new teams",
+      "Audit log records each team addition individually",
+      "Bulk operation completes in <3 seconds for up to 10 teams"
+    ],
+    "persona": "HR Officer",
+    "priority": "P2"
+  },
+  {
+    "title": "As an Administrator, I can view audit logs of all team and permission changes",
+    "description": "For security, compliance, and troubleshooting, administrators need a complete audit trail of who changed what, when, and why. This is critical for incident response ('Who gave this user admin access?'), compliance audits (required 7-year retention), and debugging permission issues ('Why did this user lose access to bills?'). A searchable audit log provides transparency and accountability.",
+    "acceptanceCriteria": [
+      "Administrator can navigate to 'Audit Logs' from admin menu",
+      "Log displays all team membership changes (additions, removals, role changes)",
+      "Log displays all permission changes (role creation, permission assignments)",
+      "Each entry shows: timestamp, actor (who made the change), action, target (user/team/role), before/after state",
+      "Administrator can filter logs by date range, actor, action type, or target",
+      "Administrator can search logs by user name, team name, or role name",
+      "Administrator can export logs to CSV for compliance reporting",
+      "Logs are retained for 7 years (compliance requirement)",
+      "Log entries cannot be edited or deleted (immutable audit trail)",
+      "Page loads first 100 entries in <1 second with pagination for older entries"
+    ],
+    "persona": "Administrator",
+    "priority": "P2"
+  }
+]
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit an Invoice — Trilogy Care</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: { 50: '#F0FAFA', 100: '#D5F1F0', 200: '#BAE8E7', 300: '#94DBDA', 400: '#66CCCA', 500: '#43C0BE', 600: '#2F9E9C', 700: '#007F7E', 800: '#005656', 900: '#003D3D' },
+                        'primary-blue': { 50: '#F0F4FA', 100: '#D6E1F0', 200: '#BCCEE7', 300: '#96B2D9', 400: '#7197CC', 500: '#4B7BBE', 600: '#39639D', 700: '#2C4C79', 800: '#1E3452', 900: '#101C2D' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap');
+        * { font-family: 'Roboto Flex', sans-serif; }
+    </style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- NO SIDEBAR — Public unauthenticated page -->
+
+    <!-- Minimal Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="h-8 w-8 bg-teal-700 rounded-lg flex items-center justify-center">
+                    <span class="text-white text-sm font-bold">TC</span>
+                </div>
+                <span class="text-sm font-semibold text-gray-900">Trilogy Care</span>
+            </div>
+            <span class="text-xs text-gray-400">Public Invoice Submission</span>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-6 py-10">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-semibold text-gray-900 mb-2">Submit an Invoice</h1>
+            <p class="text-sm text-gray-500">Submit your invoice directly. No account needed.</p>
+        </div>
+
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
+            <div class="p-8 space-y-6">
+                <!-- ABN -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ABN <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        <input type="text" value="51 824 753 556" placeholder="Enter your ABN" class="w-full px-4 py-3.5 text-base border border-gray-200 rounded-xl text-gray-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none font-mono tracking-wider" />
+                        <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                            <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <span class="text-xs text-green-600 font-medium">Valid</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-green-600 mt-1.5 flex items-center gap-1">
+                        <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                        Sunshine Coast Allied Health Services Pty Ltd
+                    </p>
+                </div>
+
+                <!-- Supplier Name (auto-filled from ABN) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Supplier Name</label>
+                    <input type="text" value="Sunshine Coast Allied Health Services Pty Ltd" class="w-full px-4 py-3.5 text-base border border-gray-200 rounded-xl text-gray-700 bg-gray-50 outline-none" readonly />
+                    <p class="text-xs text-gray-400 mt-1">Auto-filled from ABN lookup</p>
+                </div>
+
+                <!-- Client Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Client Name <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        <input type="text" value="Arthur" placeholder="Start typing the client's name..." class="w-full px-4 py-3.5 text-base border border-gray-200 rounded-xl text-gray-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none" />
+                    </div>
+                    <!-- Autocomplete dropdown -->
+                    <div class="mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
+                        <div class="px-4 py-3 hover:bg-teal-50 cursor-pointer flex items-center justify-between">
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">Arthur Reid</div>
+                                <div class="text-xs text-gray-400">Home Care Package</div>
+                            </div>
+                            <svg class="h-4 w-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                        <div class="px-4 py-3 hover:bg-teal-50 cursor-pointer flex items-center justify-between border-t border-gray-100">
+                            <div>
+                                <div class="text-sm font-medium text-gray-900">Arthur Simmons</div>
+                                <div class="text-xs text-gray-400">NDIS</div>
+                            </div>
+                            <svg class="h-4 w-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Type -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Service Type <span class="text-red-400">*</span></label>
+                    <select class="w-full px-4 py-3.5 text-base border border-gray-200 rounded-xl text-gray-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none bg-white appearance-none" style="background-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 fill=%22none%22 viewBox=%220 0 24 24%22 stroke=%22%236B7280%22 stroke-width=%222%22><path stroke-linecap=%22round%22 stroke-linejoin=%22round%22 d=%22M19 9l-7 7-7-7%22/></svg>'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.25rem;">
+                        <option value="">Select a service type...</option>
+                        <option value="nursing">Nursing</option>
+                        <option value="physio">Physiotherapy</option>
+                        <option value="ot">Occupational Therapy</option>
+                        <option value="speech">Speech Pathology</option>
+                        <option value="podiatry">Podiatry</option>
+                        <option value="gardening">Gardening & Maintenance</option>
+                        <option value="cleaning">Domestic Assistance</option>
+                        <option value="transport">Transport</option>
+                        <option value="meals">Meal Preparation</option>
+                        <option value="social">Social Support</option>
+                    </select>
+                </div>
+
+                <!-- Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Invoice PDF <span class="text-red-400">*</span></label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-teal-400 transition-colors cursor-pointer">
+                        <svg class="h-10 w-10 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                        <p class="text-sm text-gray-600 font-medium">Drop your invoice here or click to browse</p>
+                        <p class="text-xs text-gray-400 mt-1">PDF only, max 10 MB</p>
+                    </div>
+                </div>
+
+                <!-- Amount -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Invoice Amount <span class="text-red-400">*</span></label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-base text-gray-400">$</span>
+                        <input type="text" placeholder="0.00" class="w-full pl-8 pr-4 py-3.5 text-base border border-gray-200 rounded-xl text-gray-900 font-mono focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 outline-none" />
+                    </div>
+                </div>
+
+                <!-- reCAPTCHA placeholder -->
+                <div class="flex items-center gap-3 bg-gray-50 rounded-xl p-4 border border-gray-200">
+                    <div class="h-8 w-8 border-2 border-gray-300 rounded flex items-center justify-center shrink-0">
+                        <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-sm text-gray-700">I'm not a robot</span>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] text-gray-400">reCAPTCHA</div>
+                        <div class="text-[9px] text-gray-300">Privacy - Terms</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="border-t border-gray-200 px-8 py-5 bg-gray-50 rounded-b-xl">
+                <button class="w-full bg-teal-700 hover:bg-teal-600 text-white py-3.5 rounded-xl text-base font-semibold transition-colors">
+                    Submit Invoice
+                </button>
+                <p class="text-xs text-gray-400 text-center mt-3">You'll receive a reference number immediately after submission</p>
+            </div>
+        </div>
+
+        <!-- Success state (shown after submission) -->
+        <div class="mt-8 bg-white border border-green-200 rounded-xl shadow-sm overflow-hidden">
+            <div class="bg-green-50 px-8 py-6 text-center">
+                <div class="h-14 w-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="h-7 w-7 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                </div>
+                <h2 class="text-xl font-semibold text-green-800 mb-1">Invoice Submitted</h2>
+                <p class="text-sm text-green-600">Your invoice has been received and is being processed.</p>
+            </div>
+            <div class="px-8 py-6 text-center">
+                <div class="text-xs text-gray-400 uppercase tracking-wider mb-2">Your Reference Number</div>
+                <div class="text-3xl font-bold font-mono text-gray-900 mb-4">#TC-4829</div>
+                <div class="flex items-center justify-center gap-3">
+                    <button class="flex items-center gap-1.5 text-sm text-teal-700 hover:text-teal-600 font-medium">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        Copy Reference
+                    </button>
+                    <span class="text-gray-300">|</span>
+                    <button class="text-sm text-gray-500 hover:text-gray-700 font-medium">Submit Another</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-xs text-gray-400 pb-8">
+            <p>Need help? Contact <a href="mailto:support@trilogycare.com.au" class="text-teal-700 hover:underline">support@trilogycare.com.au</a></p>
+            <p class="mt-1">Trilogy Care &middot; ABN 79 619 624 750</p>
+        </footer>
+    </main>
+<script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

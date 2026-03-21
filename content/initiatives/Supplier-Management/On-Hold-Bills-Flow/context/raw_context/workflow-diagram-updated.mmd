@@ -1,0 +1,94 @@
+flowchart TD
+    Start[Bill Submission Received] --> AutoReject{Auto-Reject Check<br/>AI 99% accuracy}
+
+    AutoReject -->|YES| RejectedFinal1[REJECTED FINAL]
+    AutoReject -->|NO| Diagnosis[Multi-Issue Diagnosis<br/>Bill Processor + AI<br/><br/>For each reason:<br/>• Touches Invoice? Y/N<br/>• Requires Dept Action? Y/N]
+
+    Diagnosis --> Split{Split Reasons}
+    Split -->|External| ExternalReasons[External Reasons<br/>No dept work<br/>Status: Unresolved]
+    Split -->|Internal| InternalReasons[Internal Reasons<br/>Require dept work]
+
+    InternalReasons --> DeptRouting[Route to Departments<br/>Care / Compliance / Accounts<br/><br/>Department performs:<br/>• Reviews<br/>• Contacts parties<br/>• Makes decisions<br/><br/>NO hard timeouts]
+
+    DeptRouting --> ReasonStatus[Reason Status After Work:<br/>• Resolved<br/>• Unresolved<br/>• Awaiting]
+
+    ExternalReasons --> Temporal
+    ReasonStatus --> Temporal[Temporal Re-validation<br/><br/>Re-check:<br/>• Funding balance<br/>• Funding period dates<br/>• Authorization status<br/>• Supplier status<br/><br/>May ADD new reasons]
+
+    Temporal --> NewReasons{New Reasons<br/>Added?}
+
+    NewReasons -->|YES| Diagnosis
+    NewReasons -->|NO| AnyUnresolved{Any Reason<br/>Still Unresolved?}
+
+    AnyUnresolved -->|NO| AllResolved[All Resolved]
+    AllResolved --> Payment[PAID]
+
+    AnyUnresolved -->|YES| CoexistFilter[Can Coexist Filter<br/><br/>Determine which reasons<br/>to include in comms<br/><br/>Apply dominance rules<br/>e.g. Supplier terminated<br/>hides other reasons]
+
+    CoexistFilter --> LimitedTimeWarning[Limited Time Soft Warning<br/>Identification<br/><br/>Check for time-sensitive qualifiers:<br/>• Funding close to depletion<br/>• Authorization nearing expiry<br/>• Service period ending soon]
+
+    LimitedTimeWarning --> Disqualifies{Any Reason<br/>Disqualifies<br/>Future Attempts?}
+
+    Disqualifies -->|NO| TouchesInvoice{Any Reason<br/>Touches Invoice?}
+
+    TouchesInvoice -->|NO| AwaitingExternal{Any Reason<br/>Status = Awaiting<br/>External Action?}
+
+    %% THREE COMMS TYPE NODES
+    Disqualifies -->|YES| RejectPeriodType[COMMS TYPE:<br/>REJECT PERIOD]
+    TouchesInvoice -->|YES| RejectResubmitType[COMMS TYPE:<br/>REJECT-RESUBMIT]
+    AwaitingExternal -->|YES| OnHoldType[COMMS TYPE:<br/>ON HOLD]
+    AwaitingExternal -->|NO| RejectPeriodType
+
+    %% REJECT PERIOD PATH - LEFT SIDE
+    RejectPeriodType --> CommsPeriod[Draft & Send<br/>REJECT PERIOD Comms<br/><br/>Payload includes:<br/>• Primary blocker reason<br/>• ALL other issues for<br/>  future reference<br/>• NO resubmit link<br/><br/>Split by recipient:<br/>• Supplier / Client / Coordinator]
+
+    CommsPeriod --> RejectedFinal2[REJECTED FINAL<br/><br/>Permanent rejection<br/>Do not resubmit]
+
+    %% REJECT-RESUBMIT PATH - MIDDLE
+    RejectResubmitType --> LimitedTimeSoftWarning1[Limited Time - Soft Warning<br/>if applicable<br/><br/>Add urgency notice if:<br/>Time-sensitive qualifiers detected]
+
+    LimitedTimeSoftWarning1 --> CommsReject[Draft & Send<br/>REJECT-RESUBMIT Comms<br/><br/>Payload includes:<br/>• ALL external-facing issues<br/>• Resubmit link<br/>• Soft warning if applicable<br/><br/>Split by recipient:<br/>• Supplier / Client / Coordinator]
+
+    CommsReject --> RejectedResubmit[REJECTED RESUBMIT<br/><br/>This submission is rejected<br/>Supplier may resubmit<br/>as new linked submission]
+
+    RejectedResubmit -.->|Supplier resubmits<br/>New linked submission| Start
+
+    %% ON HOLD PATH - RIGHT SIDE
+    OnHoldType --> LimitedTimeSoftWarning2[Limited Time - Soft Warning<br/>if applicable<br/><br/>Add urgency notice if:<br/>Time-sensitive qualifiers detected]
+
+    LimitedTimeSoftWarning2 --> CommsOnHold[Draft & Send<br/>ON HOLD Comms<br/><br/>Payload includes:<br/>• Awaiting reasons<br/>• No resubmit needed<br/>• Status updates<br/>• Soft warning if applicable<br/><br/>Split by recipient:<br/>• Supplier / Client / Coordinator]
+
+    CommsOnHold --> TriggerCadence[Trigger Cadence<br/><br/>Day 0: Comms sent<br/>Day 3: Reminder<br/>Day 7: Final warning<br/>Day 10: Timeout]
+
+    TriggerCadence --> CadenceOutcome{Outcome?}
+
+    CadenceOutcome -->|External Party<br/>Acts/Resolves| TemporalRecheckOnHold[Temporal Recheck<br/><br/>Re-validate all qualifiers<br/>before proceeding to payment]
+
+    TemporalRecheckOnHold --> RecheckPassOnHold{Passed<br/>Re-validation?}
+    RecheckPassOnHold -->|YES| Payment
+    RecheckPassOnHold -->|NO - New issues| Diagnosis
+
+    CadenceOutcome -->|Timeout<br/>Day 10| TemporalRecheckTimeout[Temporal Recheck<br/><br/>Re-validate before<br/>timeout rejection]
+
+    TemporalRecheckTimeout --> LimitedTimeSoftWarning1
+
+    style RejectedFinal1 fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px
+    style RejectedFinal2 fill:#ff6b6b,stroke:#c92a2a,stroke-width:3px
+    style AllResolved fill:#51cf66,stroke:#2f9e44,stroke-width:2px
+    style Payment fill:#51cf66,stroke:#2f9e44,stroke-width:3px
+    style RejectedResubmit fill:#ffd43b,stroke:#fab005,stroke-width:3px
+    style CommsReject fill:#ffd43b,stroke:#fab005,stroke-width:2px
+    style CommsPeriod fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px
+    style CommsOnHold fill:#ffa94d,stroke:#d9480f,stroke-width:2px
+    style OnHoldType fill:#ffa94d,stroke:#d9480f,stroke-width:2px
+    style RejectPeriodType fill:#ff6b6b,stroke:#c92a2a,stroke-width:2px
+    style RejectResubmitType fill:#ffd43b,stroke:#fab005,stroke-width:2px
+    style DeptRouting fill:#74c0fc,stroke:#1864ab,stroke-width:2px
+    style Temporal fill:#ff8787,stroke:#e03131,stroke-width:2px
+    style TemporalRecheckOnHold fill:#ff8787,stroke:#e03131,stroke-width:2px
+    style TemporalRecheckTimeout fill:#ff8787,stroke:#e03131,stroke-width:2px
+    style CoexistFilter fill:#a78bfa,stroke:#6741d9,stroke-width:2px
+    style TriggerCadence fill:#ffa94d,stroke:#d9480f,stroke-width:2px
+    style LimitedTimeWarning fill:#f59e0b,stroke:#d97706,stroke-width:2px
+    style LimitedTimeSoftWarning1 fill:#f59e0b,stroke:#d97706,stroke-width:2px
+    style LimitedTimeSoftWarning2 fill:#f59e0b,stroke:#d97706,stroke-width:2px

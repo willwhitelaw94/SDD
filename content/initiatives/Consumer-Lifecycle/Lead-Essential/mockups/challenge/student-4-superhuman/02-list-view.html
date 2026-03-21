@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LES Challenge — Superhuman Sam — List View</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',300:'#94DBDA',400:'#66CCCA',500:'#43C0BE',600:'#2F9E9C',700:'#007F7E',800:'#005656',900:'#003D3D' },
+            'primary-blue': { 50:'#F0F4FA',100:'#D6E1F0',200:'#BCCEE7',300:'#96B2D9',400:'#7197CC',500:'#4B7BBE',600:'#39639D',700:'#2C4C79',800:'#1E3452',900:'#101C2D' },
+            info: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',500:'#43C0BE',700:'#007F7E',900:'#003D3D' },
+            success: { 50:'#F6FBFE',100:'#DBEFFA',200:'#BCE2F6',500:'#35A8E4',700:'#156F9D' },
+            warning: { 50:'#FFF9F5',100:'#FFDAC6',200:'#FFC19F',500:'#E0763C',700:'#9C481A' },
+            danger: { 50:'#FFF5F5',100:'#FFCCCE',200:'#FFA8AC',500:'#E04B51',700:'#9C262A' },
+          },
+          fontFamily: { sans: ['"Roboto Flex"', 'system-ui', 'sans-serif'] },
+          borderRadius: { 'input': '8px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    .text-primary { color: #13171D; }
+    .text-secondary { color: #666666; }
+    .text-tertiary { color: #808080; }
+
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; background: #0f1117; color: #e4e4e7; }
+
+    /* Split tabs */
+    .split-tabs { display: flex; gap: 0; border-bottom: 1px solid #27272a; background: #18181b; }
+    .split-tab { padding: 12px 20px; font-size: 13px; font-weight: 500; color: #71717a; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.1s; display: flex; align-items: center; gap: 6px; }
+    .split-tab:hover { color: #a1a1aa; }
+    .split-tab.active { color: #e4e4e7; border-bottom-color: #007F7E; }
+    .split-tab .count { font-size: 11px; background: #27272a; color: #71717a; padding: 1px 6px; border-radius: 10px; font-weight: 600; }
+    .split-tab.active .count { background: rgba(0, 127, 126, 0.2); color: #43C0BE; }
+
+    /* Lead rows */
+    .lead-row { display: flex; align-items: center; padding: 12px 24px; border-bottom: 1px solid #1f1f23; cursor: pointer; transition: background 0.05s; }
+    .lead-row:hover { background: #1a1a1f; }
+    .lead-row.highlighted { background: #1a2332; }
+    .lead-row.unread .lead-name { font-weight: 600; color: #ffffff; }
+
+    /* Stage dots */
+    .stage-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .stage-pre-care { background: #808080; }
+    .stage-acat-booked { background: #E0763C; }
+    .stage-approved { background: #43C0BE; }
+    .stage-allocated { background: #4B7BBE; }
+    .stage-active { background: #35A8E4; }
+    .stage-converted { background: #007F7E; }
+
+    /* Agent avatars */
+    .agent-avatar { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: white; flex-shrink: 0; }
+
+    /* Priority indicator */
+    .priority-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Hints bar */
+    .hints-bar { background: #18181b; border-top: 1px solid #27272a; padding: 8px 24px; font-size: 12px; color: #52525b; display: flex; gap: 16px; align-items: center; position: fixed; bottom: 0; left: 0; right: 0; z-index: 10; }
+    .hints-bar kbd { background: #27272a; padding: 2px 6px; border-radius: 3px; font-size: 11px; color: #71717a; font-family: 'Roboto Flex', monospace; }
+
+    /* Undo toast */
+    .undo-toast { position: fixed; bottom: 48px; left: 50%; transform: translateX(-50%); background: #27272a; color: #e4e4e7; padding: 10px 20px; border-radius: 8px; font-size: 13px; display: none; align-items: center; gap: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); z-index: 50; }
+    .undo-toast.show { display: flex; animation: slideUp 0.2s cubic-bezier(0.25, 0.1, 0.25, 1.0); }
+    .undo-toast kbd { background: #3f3f46; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-family: 'Roboto Flex', monospace; }
+
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+
+    @keyframes slideRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(80px); opacity: 0; }
+    }
+
+    .lead-row.archiving {
+      animation: slideRight 0.15s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+    /* Command palette */
+    .cmd-palette-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: none; align-items: flex-start; justify-content: center; padding-top: 120px; }
+    .cmd-palette-overlay.show { display: flex; }
+    .cmd-palette { background: #18181b; border: 1px solid #27272a; border-radius: 12px; width: 480px; box-shadow: 0 8px 48px rgba(0,0,0,0.6); overflow: hidden; }
+    .cmd-palette input { width: 100%; background: transparent; border: none; padding: 16px 20px; color: #e4e4e7; font-size: 15px; outline: none; }
+    .cmd-palette input::placeholder { color: #52525b; }
+    .cmd-result { padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.05s; }
+    .cmd-result:hover, .cmd-result.active { background: #27272a; }
+    .cmd-result-key { font-size: 11px; color: #52525b; background: #1f1f23; padding: 2px 6px; border-radius: 3px; font-family: 'Roboto Flex', monospace; }
+  </style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <div style="display: flex; flex-direction: column; height: 100vh;">
+
+    <!-- Header bar -->
+    <div style="padding: 16px 24px; border-bottom: 1px solid #27272a; background: #18181b; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <h1 style="font-size: 16px; font-weight: 600; color: #e4e4e7;">Leads</h1>
+        <span style="font-size: 13px; color: #52525b;">43 total</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #27272a; border-radius: 6px; cursor: pointer; font-size: 12px; color: #a1a1aa;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <span>Search</span>
+          <kbd style="background: #3f3f46; padding: 1px 5px; border-radius: 3px; font-size: 10px; margin-left: 4px; font-family: 'Roboto Flex', monospace;">/</kbd>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: #27272a; border-radius: 6px; cursor: pointer; font-size: 12px; color: #a1a1aa;" onclick="openCmdPalette()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path></svg>
+          <span>Command</span>
+          <kbd style="background: #3f3f46; padding: 1px 5px; border-radius: 3px; font-size: 10px; margin-left: 4px; font-family: 'Roboto Flex', monospace;">&#8984;K</kbd>
+        </div>
+      </div>
+    </div>
+
+    <!-- Split Inbox Tabs -->
+    <div class="split-tabs" id="splitTabs">
+      <div class="split-tab active" data-split="new" onclick="switchSplit('new')">
+        New <span class="count">12</span>
+      </div>
+      <div class="split-tab" data-split="follow-up" onclick="switchSplit('follow-up')">
+        Follow-up <span class="count">8</span>
+      </div>
+      <div class="split-tab" data-split="callback" onclick="switchSplit('callback')">
+        Callback Today <span class="count">3</span>
+      </div>
+      <div class="split-tab" data-split="hot" onclick="switchSplit('hot')">
+        Hot <span class="count">5</span>
+      </div>
+      <div class="split-tab" data-split="stale" onclick="switchSplit('stale')">
+        Stale <span class="count">15</span>
+      </div>
+    </div>
+
+    <!-- Column Headers -->
+    <div style="display: flex; align-items: center; padding: 8px 24px; border-bottom: 1px solid #27272a; background: #141418; font-size: 11px; font-weight: 600; color: #3f3f46; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;">
+      <div style="width: 32px;"></div>
+      <div style="flex: 1;">Lead</div>
+      <div style="width: 140px;">Stage</div>
+      <div style="width: 100px; text-align: right;">Time</div>
+      <div style="width: 40px; text-align: center;">Agent</div>
+    </div>
+
+    <!-- Lead List -->
+    <div id="leadList" style="flex: 1; overflow-y: auto; padding-bottom: 44px;">
+    </div>
+
+    <!-- Bottom Hints Bar -->
+    <div class="hints-bar">
+      <span><kbd>E</kbd> Done</span>
+      <span><kbd>H</kbd> Snooze</span>
+      <span><kbd>G</kbd> Stage</span>
+      <span><kbd>N</kbd> Note</span>
+      <span><kbd>J</kbd><kbd>K</kbd> Navigate</span>
+      <span><kbd>/</kbd> Search</span>
+      <span><kbd>&#8984;K</kbd> Command</span>
+      <span><kbd>?</kbd> Shortcuts</span>
+    </div>
+  </div>
+
+  <!-- Undo Toast -->
+  <div class="undo-toast" id="undoToast">
+    <span id="undoToastMessage"></span>
+    <span>Press <kbd>Z</kbd> to undo</span>
+    <span id="undoCountdown" style="color: #52525b;">(5s)</span>
+  </div>
+
+  <!-- Command Palette -->
+  <div class="cmd-palette-overlay" id="cmdPalette">
+    <div class="cmd-palette">
+      <div style="border-bottom: 1px solid #27272a;">
+        <input type="text" id="cmdInput" placeholder="Type a command..." />
+      </div>
+      <div id="cmdResults" style="max-height: 320px; overflow-y: auto;">
+        <div class="cmd-result active" data-action="stage">
+          <span style="font-size: 13px; color: #e4e4e7;">Change Journey Stage</span>
+          <span class="cmd-result-key">G</span>
+        </div>
+        <div class="cmd-result" data-action="note">
+          <span style="font-size: 13px; color: #e4e4e7;">Add Note</span>
+          <span class="cmd-result-key">N</span>
+        </div>
+        <div class="cmd-result" data-action="done">
+          <span style="font-size: 13px; color: #e4e4e7;">Mark as Done</span>
+          <span class="cmd-result-key">E</span>
+        </div>
+        <div class="cmd-result" data-action="snooze">
+          <span style="font-size: 13px; color: #e4e4e7;">Snooze Lead</span>
+          <span class="cmd-result-key">H</span>
+        </div>
+        <div class="cmd-result" data-action="assign">
+          <span style="font-size: 13px; color: #e4e4e7;">Reassign Lead</span>
+          <span class="cmd-result-key">A</span>
+        </div>
+        <div class="cmd-result" data-action="status">
+          <span style="font-size: 13px; color: #e4e4e7;">Change Lead Status</span>
+          <span class="cmd-result-key">S</span>
+        </div>
+        <div class="cmd-result" data-action="filter">
+          <span style="font-size: 13px; color: #e4e4e7;">Filter Leads</span>
+          <span class="cmd-result-key">F</span>
+        </div>
+        <div class="cmd-result" data-action="search">
+          <span style="font-size: 13px; color: #e4e4e7;">Search Leads</span>
+          <span class="cmd-result-key">/</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data
+    const splits = {
+      'new': [
+        { name: 'Betty Nakamura', tc: 'TC-6733', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: 'Just now', agent: 'SC', agentColor: '#2C4C79', unread: true },
+        { name: 'James Wu', tc: 'TC-7891', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '14m ago', agent: 'DW', agentColor: '#9C481A', unread: true },
+        { name: 'Patricia Hughes', tc: 'TC-3215', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '28m ago', agent: 'MS', agentColor: '#007F7E', unread: true },
+        { name: 'George Kowalski', tc: 'TC-8842', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '1h ago', agent: 'JP', agentColor: '#4B7BBE', unread: true },
+        { name: 'Eileen McAllister', tc: 'TC-5567', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '1h ago', agent: 'LT', agentColor: '#9C262A', unread: false },
+        { name: 'Vincent Tran', tc: 'TC-2290', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '2h ago', agent: 'SC', agentColor: '#2C4C79', unread: false },
+        { name: 'Shirley Davidson', tc: 'TC-4478', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '3h ago', agent: 'DW', agentColor: '#9C481A', unread: false },
+        { name: 'Arthur Nguyen', tc: 'TC-9134', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '4h ago', agent: 'MS', agentColor: '#007F7E', unread: false },
+        { name: 'Frances Kelly', tc: 'TC-1078', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '5h ago', agent: 'JP', agentColor: '#4B7BBE', unread: false },
+        { name: 'Thomas Andersson', tc: 'TC-6621', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '6h ago', agent: 'LT', agentColor: '#9C262A', unread: false },
+        { name: 'Gloria Simmons', tc: 'TC-3389', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: 'Yesterday', agent: 'SC', agentColor: '#2C4C79', unread: false },
+        { name: 'Norman Blake', tc: 'TC-7754', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: 'Yesterday', agent: 'DW', agentColor: '#9C481A', unread: false },
+      ],
+      'follow-up': [
+        { name: 'Margaret Chen', tc: 'TC-2198', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '2h ago', agent: 'SC', agentColor: '#2C4C79', unread: true },
+        { name: 'Dorothy Wilson', tc: 'TC-5021', stage: 'Approved', stageClass: 'stage-approved', stageShort: 'Appr', time: 'Yesterday', agent: 'DW', agentColor: '#9C481A', unread: false },
+        { name: 'Harold Patterson', tc: 'TC-3847', stage: 'Allocated', stageClass: 'stage-allocated', stageShort: 'Alloc', time: '45m ago', agent: 'SC', agentColor: '#2C4C79', unread: true },
+        { name: 'Barbara Thompson', tc: 'TC-4456', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '3h ago', agent: 'MS', agentColor: '#007F7E', unread: false },
+        { name: 'Kenneth Marsh', tc: 'TC-8821', stage: 'Approved', stageClass: 'stage-approved', stageShort: 'Appr', time: 'Yesterday', agent: 'JP', agentColor: '#4B7BBE', unread: false },
+        { name: 'Ruth Agarwal', tc: 'TC-1543', stage: 'Allocated', stageClass: 'stage-allocated', stageShort: 'Alloc', time: '2d ago', agent: 'LT', agentColor: '#9C262A', unread: false },
+        { name: 'Walter Kim', tc: 'TC-9207', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '2d ago', agent: 'SC', agentColor: '#2C4C79', unread: false },
+        { name: 'Helen Cruz', tc: 'TC-6178', stage: 'Approved', stageClass: 'stage-approved', stageShort: 'Appr', time: '3d ago', agent: 'DW', agentColor: '#9C481A', unread: false },
+      ],
+      'callback': [
+        { name: 'Evelyn O\'Brien', tc: 'TC-4102', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '10:30am', agent: 'SC', agentColor: '#2C4C79', unread: true, priority: '#E04B51' },
+        { name: 'Charles Petrov', tc: 'TC-5590', stage: 'Approved', stageClass: 'stage-approved', stageShort: 'Appr', time: '2:00pm', agent: 'MS', agentColor: '#007F7E', unread: true, priority: '#E0763C' },
+        { name: 'Doris Yamamoto', tc: 'TC-3312', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '4:30pm', agent: 'JP', agentColor: '#4B7BBE', unread: false, priority: '#E0763C' },
+      ],
+      'hot': [
+        { name: 'Robert Fitzgerald', tc: 'TC-1456', stage: 'Active', stageClass: 'stage-active', stageShort: 'Act', time: '3d ago', agent: 'LT', agentColor: '#9C262A', unread: false, priority: '#E04B51' },
+        { name: 'Alice Brennan', tc: 'TC-7723', stage: 'Approved', stageClass: 'stage-approved', stageShort: 'Appr', time: '1d ago', agent: 'SC', agentColor: '#2C4C79', unread: true, priority: '#E04B51' },
+        { name: 'Frank Morales', tc: 'TC-2847', stage: 'Allocated', stageClass: 'stage-allocated', stageShort: 'Alloc', time: '5h ago', agent: 'DW', agentColor: '#9C481A', unread: true, priority: '#E04B51' },
+        { name: 'Mabel Singh', tc: 'TC-9954', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '2d ago', agent: 'MS', agentColor: '#007F7E', unread: false, priority: '#E04B51' },
+        { name: 'Edward Li', tc: 'TC-6231', stage: 'Approved', stageClass: 'stage-approved', stageShort: 'Appr', time: '4d ago', agent: 'JP', agentColor: '#4B7BBE', unread: false, priority: '#E0763C' },
+      ],
+      'stale': [
+        { name: 'Jean Campbell', tc: 'TC-1123', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '8d', agent: 'DW', agentColor: '#9C481A', unread: false },
+        { name: 'Albert Russo', tc: 'TC-4491', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '10d', agent: 'SC', agentColor: '#2C4C79', unread: false },
+        { name: 'Mildred Park', tc: 'TC-8876', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '12d', agent: 'MS', agentColor: '#007F7E', unread: false },
+        { name: 'Raymond Cooper', tc: 'TC-2567', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '14d', agent: 'LT', agentColor: '#9C262A', unread: false },
+        { name: 'Edna Johansson', tc: 'TC-5934', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '15d', agent: 'JP', agentColor: '#4B7BBE', unread: false },
+        { name: 'Clifford Pham', tc: 'TC-7200', stage: 'Approved', stageClass: 'stage-approved', stageShort: 'Appr', time: '16d', agent: 'SC', agentColor: '#2C4C79', unread: false },
+        { name: 'Lois Fernandez', tc: 'TC-3645', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '18d', agent: 'DW', agentColor: '#9C481A', unread: false },
+        { name: 'Ernest Whitfield', tc: 'TC-9078', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '20d', agent: 'MS', agentColor: '#007F7E', unread: false },
+        { name: 'Irene Taylor', tc: 'TC-1289', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '21d', agent: 'LT', agentColor: '#9C262A', unread: false },
+        { name: 'Stanley Okonkwo', tc: 'TC-4756', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '23d', agent: 'JP', agentColor: '#4B7BBE', unread: false },
+        { name: 'Gladys Murray', tc: 'TC-8312', stage: 'Approved', stageClass: 'stage-approved', stageShort: 'Appr', time: '24d', agent: 'SC', agentColor: '#2C4C79', unread: false },
+        { name: 'Leonard Becker', tc: 'TC-6543', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '26d', agent: 'DW', agentColor: '#9C481A', unread: false },
+        { name: 'Hazel Dubois', tc: 'TC-2901', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '28d', agent: 'MS', agentColor: '#007F7E', unread: false },
+        { name: 'Cecil Santana', tc: 'TC-5177', stage: 'ACAT Booked', stageClass: 'stage-acat-booked', stageShort: 'ACAT', time: '30d', agent: 'LT', agentColor: '#9C262A', unread: false },
+        { name: 'Bernice Leung', tc: 'TC-7689', stage: 'Pre-Care', stageClass: 'stage-pre-care', stageShort: 'Pre', time: '32d', agent: 'JP', agentColor: '#4B7BBE', unread: false },
+      ],
+    };
+
+    // State
+    let currentSplit = 'new';
+    let highlightedIndex = 0;
+    let cmdOpen = false;
+    let undoTimer = null;
+
+    function renderList() {
+      const list = document.getElementById('leadList');
+      const data = splits[currentSplit];
+      list.innerHTML = '';
+
+      data.forEach((lead, i) => {
+        const row = document.createElement('div');
+        row.className = `lead-row${i === highlightedIndex ? ' highlighted' : ''}${lead.unread ? ' unread' : ''}`;
+        row.dataset.index = i;
+        row.onclick = () => { highlightedIndex = i; renderList(); };
+
+        row.innerHTML = `
+          <div style="width: 32px; display: flex; align-items: center; justify-content: center;">
+            ${lead.priority ? `<div class="priority-dot" style="background: ${lead.priority};"></div>` : ''}
+          </div>
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="lead-name" style="font-size: 14px; color: #e4e4e7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${lead.name}</span>
+              <span style="font-size: 12px; color: #3f3f46; flex-shrink: 0;">${lead.tc}</span>
+            </div>
+          </div>
+          <div style="width: 140px; display: flex; align-items: center; gap: 6px;">
+            <span class="stage-dot ${lead.stageClass}"></span>
+            <span style="font-size: 12px; color: #71717a;">${lead.stageShort}</span>
+          </div>
+          <div style="width: 100px; text-align: right; font-size: 12px; color: #52525b;">${lead.time}</div>
+          <div style="width: 40px; display: flex; justify-content: center;">
+            <div class="agent-avatar" style="background: ${lead.agentColor};">${lead.agent}</div>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function switchSplit(split) {
+      currentSplit = split;
+      highlightedIndex = 0;
+
+      document.querySelectorAll('.split-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.split === split);
+      });
+
+      renderList();
+    }
+
+    function handleAction(action) {
+      const data = splits[currentSplit];
+      if (!data.length) return;
+      const lead = data[highlightedIndex];
+
+      switch(action) {
+        case 'done': {
+          const row = document.querySelector(`.lead-row[data-index="${highlightedIndex}"]`);
+          if (row) {
+            row.classList.add('archiving');
+            setTimeout(() => {
+              data.splice(highlightedIndex, 1);
+              updateSplitCount(currentSplit, data.length);
+              if (highlightedIndex >= data.length) highlightedIndex = Math.max(0, data.length - 1);
+              renderList();
+            }, 150);
+          }
+          showUndo(`Marked "${lead.name}" as Done.`);
+          break;
+        }
+        case 'snooze': {
+          const row = document.querySelector(`.lead-row[data-index="${highlightedIndex}"]`);
+          if (row) {
+            row.classList.add('archiving');
+            setTimeout(() => {
+              data.splice(highlightedIndex, 1);
+              updateSplitCount(currentSplit, data.length);
+              if (highlightedIndex >= data.length) highlightedIndex = Math.max(0, data.length - 1);
+              renderList();
+            }, 150);
+          }
+          showUndo(`Snoozed "${lead.name}" until tomorrow morning.`);
+          break;
+        }
+        case 'note':
+          showUndo(`Note input opened for "${lead.name}".`);
+          break;
+        case 'stage':
+          showUndo(`Stage selector opened for "${lead.name}".`);
+          break;
+      }
+    }
+
+    function updateSplitCount(split, count) {
+      const tab = document.querySelector(`.split-tab[data-split="${split}"] .count`);
+      if (tab) tab.textContent = count;
+    }
+
+    function showUndo(message) {
+      const toast = document.getElementById('undoToast');
+      const msgEl = document.getElementById('undoToastMessage');
+      const countdown = document.getElementById('undoCountdown');
+
+      msgEl.textContent = message;
+      toast.classList.add('show');
+
+      let seconds = 5;
+      countdown.textContent = `(${seconds}s)`;
+
+      if (undoTimer) clearInterval(undoTimer);
+      undoTimer = setInterval(() => {
+        seconds--;
+        countdown.textContent = `(${seconds}s)`;
+        if (seconds <= 0) {
+          clearInterval(undoTimer);
+          toast.classList.remove('show');
+        }
+      }, 1000);
+    }
+
+    function openCmdPalette() {
+      cmdOpen = true;
+      document.getElementById('cmdPalette').classList.add('show');
+      const input = document.getElementById('cmdInput');
+      input.value = '';
+      input.focus();
+      filterCmdResults('');
+    }
+
+    function closeCmdPalette() {
+      cmdOpen = false;
+      document.getElementById('cmdPalette').classList.remove('show');
+    }
+
+    function filterCmdResults(query) {
+      const results = document.querySelectorAll('.cmd-result');
+      let firstVisible = null;
+      results.forEach(r => {
+        const text = r.querySelector('span').textContent.toLowerCase();
+        const match = !query || text.includes(query.toLowerCase());
+        r.style.display = match ? 'flex' : 'none';
+        if (match && !firstVisible) firstVisible = r;
+      });
+      results.forEach(r => r.classList.remove('active'));
+      if (firstVisible) firstVisible.classList.add('active');
+    }
+
+    // Keyboard handlers
+    document.addEventListener('keydown', function(e) {
+      // Command palette
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (cmdOpen) closeCmdPalette();
+        else openCmdPalette();
+        return;
+      }
+
+      if (cmdOpen) {
+        if (e.key === 'Escape') { closeCmdPalette(); return; }
+        if (e.key === 'Enter') {
+          const activeResult = document.querySelector('.cmd-result.active');
+          if (activeResult) {
+            closeCmdPalette();
+            handleAction(activeResult.dataset.action);
+          }
+          return;
+        }
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const results = [...document.querySelectorAll('.cmd-result')].filter(r => r.style.display !== 'none');
+          const activeIdx = results.findIndex(r => r.classList.contains('active'));
+          results.forEach(r => r.classList.remove('active'));
+          let newIdx = e.key === 'ArrowDown' ? activeIdx + 1 : activeIdx - 1;
+          if (newIdx >= results.length) newIdx = 0;
+          if (newIdx < 0) newIdx = results.length - 1;
+          results[newIdx].classList.add('active');
+          return;
+        }
+        return;
+      }
+
+      const data = splits[currentSplit];
+
+      switch(e.key.toLowerCase()) {
+        case 'j':
+          e.preventDefault();
+          if (highlightedIndex < data.length - 1) {
+            highlightedIndex++;
+            renderList();
+            // Scroll into view
+            const row = document.querySelector(`.lead-row[data-index="${highlightedIndex}"]`);
+            if (row) row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+          break;
+        case 'k':
+          e.preventDefault();
+          if (highlightedIndex > 0) {
+            highlightedIndex--;
+            renderList();
+            const row = document.querySelector(`.lead-row[data-index="${highlightedIndex}"]`);
+            if (row) row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+          break;
+        case 'e':
+          e.preventDefault();
+          handleAction('done');
+          break;
+        case 'h':
+          e.preventDefault();
+          handleAction('snooze');
+          break;
+        case 'n':
+          e.preventDefault();
+          handleAction('note');
+          break;
+        case 'g':
+          e.preventDefault();
+          handleAction('stage');
+          break;
+        case 'z':
+          e.preventDefault();
+          document.getElementById('undoToast').classList.remove('show');
+          if (undoTimer) clearInterval(undoTimer);
+          showUndo('Action undone.');
+          break;
+        case '1':
+          switchSplit('new');
+          break;
+        case '2':
+          switchSplit('follow-up');
+          break;
+        case '3':
+          switchSplit('callback');
+          break;
+        case '4':
+          switchSplit('hot');
+          break;
+        case '5':
+          switchSplit('stale');
+          break;
+      }
+    });
+
+    // Command palette input filtering
+    document.getElementById('cmdInput').addEventListener('input', function(e) {
+      filterCmdResults(e.target.value);
+    });
+
+    // Click outside command palette to close
+    document.getElementById('cmdPalette').addEventListener('click', function(e) {
+      if (e.target === this) closeCmdPalette();
+    });
+
+    // Initial render
+    renderList();
+  </script>
+</body>
+</html>

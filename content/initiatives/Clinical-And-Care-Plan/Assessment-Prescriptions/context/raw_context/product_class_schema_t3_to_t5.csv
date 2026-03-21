@@ -1,0 +1,428 @@
+﻿Prescription requirement ,tier_3,t3_code,tier_4,t4_code,Tier 5 (Item),t5_code
+Low risk,Communication and Information Management Products,SERV-0065,Orientation,22 45,Tactile orientation materials,22 45 12
+Low risk,Communication and Information Management Products,SERV-0065,Orientation,22 45,Visual orientation materials,22 45 15
+Low risk,Communication and Information Management Products,SERV-0065,Orientation,22 45,Other,22 45 OTH
+Low risk,Communication and Information Management Products,SERV-0065,Play,30 03,Games,30 03 09
+Low risk,Communication and Information Management Products,SERV-0065,Play,30 03,Other,30 03 OTH
+Prescribed,Communication and Information Management Products,SERV-0065,Hearing,22 06,Sound transmission systems for hearing aids,22 06 25
+Prescribed,Communication and Information Management Products,SERV-0065,Hearing,22 06,Accessories for assistive products for hearing,22 06 27
+Prescribed,Communication and Information Management Products,SERV-0065,Hearing,22 06,Other,22 06 OTH
+Prescribed,Communication and Information Management Products,SERV-0065,Voice and speech functions,22 09,Voice amplifiers for personal use,22 09 06
+Prescribed,Communication and Information Management Products,SERV-0065,Voice and speech functions,22 09,Other,22 09 OTH
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,Page turners,22 13 03
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,"Writing boards, reading stands and book support cushions",22 13 06
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,"Signature guides, stamps and writing frames",22 13 09
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,Reading masks and typoscopes,22 13 12
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,Text-to-speech devices and software,22 13 15
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,OCR equipment and OCR software,22 13 18
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,DAISY players and e-book readers,22 13 21
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,Manual devices for drawing and handwriting,22 13 24
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,Manual Braille writing equipment,22 13 27
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,Portable note-taking devices for Braille,22 13 36
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,Assistive products for Braille training,22 13 51
+Under advice,Communication and Information Management Products,SERV-0065,"Reading, writing and drawing",22 13,Other,22 13 OTH
+Prescribed,Communication and Information Management Products,SERV-0065,Face-to-face communications,22 21,Letter and symbol sets and boards,22 21 03
+Prescribed,Communication and Information Management Products,SERV-0065,Face-to-face communications,22 21,Dialogue units,22 21 09
+Prescribed,Communication and Information Management Products,SERV-0065,Face-to-face communications,22 21,Face-to-face communication software,22 21 12
+Prescribed,Communication and Information Management Products,SERV-0065,Face-to-face communications,22 21,Other,22 21 OTH
+Prescribed,Communication and Information Management Products,SERV-0065,Distant communications,22 24,Multifunctional communication systems,22 24 04
+Prescribed,Communication and Information Management Products,SERV-0065,Distant communications,22 24,Accessories for assistive products for distant communication,22 24 21
+Prescribed,Communication and Information Management Products,SERV-0065,Distant communications,22 24,Software for distant communication,22 24 24
+Prescribed,Communication and Information Management Products,SERV-0065,Distant communications,22 24,Other,22 24 OTH
+Prescribed,Communication and Information Management Products,SERV-0065,"Signalling, alarming and localisation",22 29,Signalling devices,22 29 03
+Prescribed,Communication and Information Management Products,SERV-0065,"Signalling, alarming and localisation",22 29,Personal emergency alarm systems,22 29 06
+Prescribed,Communication and Information Management Products,SERV-0065,"Signalling, alarming and localisation",22 29,Environmental emergency alarm systems,22 29 09
+Prescribed,Communication and Information Management Products,SERV-0065,"Signalling, alarming and localisation",22 29,Localising and tracking systems,22 29 12
+Prescribed,Communication and Information Management Products,SERV-0065,"Signalling, alarming and localisation",22 29,Marking materials and marking tools,22 29 15
+Prescribed,Communication and Information Management Products,SERV-0065,"Signalling, alarming and localisation",22 29,Other,22 29 OTH
+Prescribed,Communication and Information Management Products,SERV-0065,Computer and terminals,22 33,Portable computers and personal digital assistants (PDA),22 33 06
+Prescribed,Communication and Information Management Products,SERV-0065,Computer and terminals,22 33,Other,22 33 OTH
+Under advice,Communication and Information Management Products,SERV-0065,Output devices,22 39,Visual displays,22 39 04
+Under advice,Communication and Information Management Products,SERV-0065,Output devices,22 39,Tactile displays,22 39 05
+Under advice,Communication and Information Management Products,SERV-0065,Output devices,22 39,Other,22 39 OTH
+Prescribed,Communication and Information Management Products,SERV-0065,Electronic assistive products for operation and controlling devices,24 13,Switches for electrical devices,24 13 09
+Prescribed,Communication and Information Management Products,SERV-0065,Electronic assistive products for operation and controlling devices,24 13,Keyboards,24 13 18
+Prescribed,Communication and Information Management Products,SERV-0065,Electronic assistive products for operation and controlling devices,24 13,Computer pointing devices,24 13 21
+Prescribed,Communication and Information Management Products,SERV-0065,Electronic assistive products for operation and controlling devices,24 13,Other,24 13 OTH
+Low risk,Domestic Life Products,SERV-0064,Preparing food and drink,15 03,Assistive products for weighing and measuring to prepare food and drink,15 03 03
+Low risk,Domestic Life Products,SERV-0064,Preparing food and drink,15 03,"Assistive products for cutting, chopping and dividing to prepare food and drink",15 03 06
+Low risk,Domestic Life Products,SERV-0064,Preparing food and drink,15 03,Assistive products for cleaning and peeling,15 03 09
+Low risk,Domestic Life Products,SERV-0064,Preparing food and drink,15 03,Assistive products for baking,15 03 12
+Low risk,Domestic Life Products,SERV-0064,Preparing food and drink,15 03,Machines for food preparation,15 03 15
+Low risk,Domestic Life Products,SERV-0064,Preparing food and drink,15 03,Other,15 03 OTH
+Low risk,Domestic Life Products,SERV-0064,Dishwashing,15 06,Dishwashing brushes and flask brushes,15 06 06
+Low risk,Domestic Life Products,SERV-0064,Dishwashing,15 06,Dish drying racks,15 06 09
+Low risk,Domestic Life Products,SERV-0064,Dishwashing,15 06,Dishcloth wringers,15 06 15
+Low risk,Domestic Life Products,SERV-0064,Dishwashing,15 06,Other,15 06 OTH
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,Assistive products for service and storing food and drink,15 09 03
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,Food dispensers,15 09 06
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,"Cutlery, chopsticks and straws",15 09 13
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,"Mugs, glasses, cups and saucers",15 09 16
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,Plates and bowls,15 09 18
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,Food guards,15 09 21
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,Egg cups,15 09 24
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,Feeding apparatus,15 09 27
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,Other,15 09 OTH
+Low risk,Domestic Life Products,SERV-0064,Housecleaning,15 12,"Dustpans, dust brushes and dust brooms",15 12 03
+Low risk,Domestic Life Products,SERV-0064,Housecleaning,15 12,"Brushes, sponges, chamois leathers, dusters and floorcloths",15 12 06
+Low risk,Domestic Life Products,SERV-0064,Housecleaning,15 12,Vacuum cleaners,15 12 09
+Low risk,Domestic Life Products,SERV-0064,Housecleaning,15 12,Carpet sweepers for dry use,15 12 12
+Low risk,Domestic Life Products,SERV-0064,Housecleaning,15 12,Floor mopping equipment,15 12 22
+Low risk,Domestic Life Products,SERV-0064,Housecleaning,15 12,Other,15 12 OTH
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Scissors,15 15 21
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Ironing machines and irons,15 15 24
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Ironing boards and ironing tables,15 15 27
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Laundry baskets on castors,15 15 30
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Washing machines,15 15 33
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Wringers for laundry,15 15 36
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Clothespins,15 15 39
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Assistive products for drying clothes,15 15 43
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Shoe cleaning devices,15 15 48
+Low risk,Domestic Life Products,SERV-0064,Making and maintaining textiles for domestic use,15 15,Other,15 15 OTH
+Low risk,Domestic Life Products,SERV-0064,Gardening and lawn care for domestic use,15 18,Tools for outdoor gardening,15 18 03
+Low risk,Domestic Life Products,SERV-0064,Gardening and lawn care for domestic use,15 18,Assistive products for protecting the body while gardening,15 18 09
+Low risk,Domestic Life Products,SERV-0064,Gardening and lawn care for domestic use,15 18,Tools for indoor gardening and flower arranging,15 18 12
+Low risk,Domestic Life Products,SERV-0064,Gardening and lawn care for domestic use,15 18,Other,15 18 OTH
+Low risk,Domestic Life Products,SERV-0064,Eating and drinking,15 09,Stoppers and funnels,19 09 09
+Low risk,Domestic Life Products,SERV-0064,Manipulate containers,24 06,Container openers,24 06 03
+Low risk,Domestic Life Products,SERV-0064,Manipulate containers,24 06,Tube-squeezing devices,24 06 06
+Low risk,Domestic Life Products,SERV-0064,Manipulate containers,24 06,Other,24 06 OTH
+Low risk,Domestic Life Products,SERV-0064,Fixation,24 27,Suction cups,24 27 03
+Low risk,Domestic Life Products,SERV-0064,Fixation,24 27,Non-slip pads,24 27 06
+Low risk,Domestic Life Products,SERV-0064,Fixation,24 27,Clips and spring-clips,24 27 12
+Low risk,Domestic Life Products,SERV-0064,Fixation,24 27,"Magnets, magnetic strips and clamps",24 27 18
+Low risk,Domestic Life Products,SERV-0064,Fixation,24 27,Other,24 27 OTH
+Low risk,Domestic Life Products,SERV-0064,Carrying and transporting,24 36,Assistive products for carrying,24 36 03
+Low risk,Domestic Life Products,SERV-0064,Carrying and transporting,24 36,Baggage and shopping trolleys,24 36 09
+Low risk,Domestic Life Products,SERV-0064,Carrying and transporting,24 36,Trolleys,24 36 12
+Low risk,Domestic Life Products,SERV-0064,Carrying and transporting,24 36,Other,24 36 OTH
+Prescribed,Domestic Life Products,SERV-0064,Tables,18 03,"Reading desks, writing desks and standing desks",18 03 06
+Prescribed,Domestic Life Products,SERV-0064,Tables,18 03,Dining tables,18 03 12
+Prescribed,Domestic Life Products,SERV-0064,Tables,18 03,Bed tables,18 03 15
+Prescribed,Domestic Life Products,SERV-0064,Tables,18 03,Other,18 03 OTH
+Prescribed,Domestic Life Products,SERV-0064,Light fixtures,18 06,General lights,18 06 03
+Prescribed,Domestic Life Products,SERV-0064,Light fixtures,18 06,Reading lights and working lights,18 06 06
+Prescribed,Domestic Life Products,SERV-0064,Light fixtures,18 06,Other,18 06 OTH
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Chairs,18 09 03
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Stools,18 09 04
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Standing chairs,18 09 07
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Coxit chairs,18 09 09
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Lounge chairs and easy chairs,18 09 15
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Special sitting furniture,18 09 21
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Chair lifts and chair transporters,18 09 24
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Modular seating systems,18 09 39
+Under advice,Domestic Life Products,SERV-0064,Sitting furniture,18 09,Other,18 09 OTH
+Under advice,Domestic Life Products,SERV-0064,Accessories for sitting furniture,18 10,Back cushions,18 10 03
+Under advice,Domestic Life Products,SERV-0064,Accessories for sitting furniture,18 10,Neck and head support for sitting furniture,18 10 13
+Under advice,Domestic Life Products,SERV-0064,Accessories for sitting furniture,18 10,Leg rests and footrests,18 10 15
+Under advice,Domestic Life Products,SERV-0064,Accessories for sitting furniture,18 10,Cushions or systems added to seats to assist a person to stand or sit,18 10 21
+Under advice,Domestic Life Products,SERV-0064,Accessories for sitting furniture,18 10,Other,18 10 OTH
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,"Beds and detachable bed boards/mattress support platforms, non-adjustable",18 12 04
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Beds and detachable bed boards/mattress support platforms with manual adjustment,18 12 07
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Beds and detachable bed boards/mattress support platforms with powered adjustment,18 12 10
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Bed lifts,18 12 12
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Bedding,18 12 15
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Mattress and mattress coverings,18 12 18
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Blanket supports,18 12 21
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Separate adjustable back supports and leg supports for beds,18 12 24
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Side rails to be fixed to beds,18 12 26
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Rails for self-lifting to be fixed to beds,18 12 28
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Assistive products for bed-shortening,18 12 30
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Assistive products for bed-lengthening,18 12 33
+Prescribed,Domestic Life Products,SERV-0064,Beds and bed equipment,18 12,Other,18 12 OTH
+Prescribed,Domestic Life Products,SERV-0064,Height adjustment of furniture,18 15,Leg extenders,18 15 03
+Prescribed,Domestic Life Products,SERV-0064,Height adjustment of furniture,18 15,Height-adjustable plinths and brackets,18 15 06
+Prescribed,Domestic Life Products,SERV-0064,Height adjustment of furniture,18 15,Pedestals and fixed height plinths and brackets,18 15 09
+Prescribed,Domestic Life Products,SERV-0064,Height adjustment of furniture,18 15,Other,18 15 OTH
+Prescribed,Domestic Life Products,SERV-0064,Vertical accessibility,18 30,Portable ramps,18 30 15
+Prescribed,Domestic Life Products,SERV-0064,Vertical accessibility,18 30,Other,18 30 OTH
+Under advice,Domestic Life Products,SERV-0064,Extended reach,24 21,Manual gripping tongs,24 21 03
+Under advice,Domestic Life Products,SERV-0064,Extended reach,24 21,Electric gripping tongs,24 21 06
+Under advice,Domestic Life Products,SERV-0064,Extended reach,24 21,Extenders without gripping function,24 21 09
+Under advice,Domestic Life Products,SERV-0064,Extended reach,24 21,Other,24 21 OTH
+Under advice,Domestic Life Products,SERV-0064,Positioning,24 24,Fixed-position systems,24 24 03
+Under advice,Domestic Life Products,SERV-0064,Positioning,24 24,Other,24 24 OTH
+Prescribed,Domestic Life Products,SERV-0064,Environmental impact,27 03,Assistve products for controlling indoor air temperature and humidity,27 03 03
+Prescribed,Domestic Life Products,SERV-0064,Environmental impact,27 03,Assistive products for improving indoor air quality,27 03 06
+Prescribed,Domestic Life Products,SERV-0064,Environmental impact,27 03,Assistive products for reducing noise,27 03 09
+Prescribed,Domestic Life Products,SERV-0064,Environmental impact,27 03,Assistive products for controlling illumination,27 03 15
+Prescribed,Domestic Life Products,SERV-0064,Environmental impact,27 03,Other,2703 OTH
+Under advice,Domestic Life Products,SERV-0064,Hunting and fishing,30 24,Assistive products for hunting,30 24 03
+Under advice,Domestic Life Products,SERV-0064,Hunting and fishing,30 24,Assistive products for fishing,30 24 06
+Under advice,Domestic Life Products,SERV-0064,Hunting and fishing,30 24,Other,30 24 OTH
+Under advice,Domestic Life Products,SERV-0064,Camping and caravanning,30 27,Other,30 27 OTH
+Under advice,Domestic Life Products,SERV-0064,Seeing,22 03,Light filters (absorption filters),22 03 03
+Under advice,Domestic Life Products,SERV-0064,Seeing,22 03,"Magnifier glasss, lenses and lens systems for magnification",22 03 09
+Under advice,Domestic Life Products,SERV-0064,Seeing,22 03,Assistive products for extending and adjusting the range and angle of the field of vision,22 03 15
+Under advice,Domestic Life Products,SERV-0064,Seeing,22 03,Image-enlarging systems,22 03 18
+Under advice,Domestic Life Products,SERV-0064,Seeing,22 03,Screen magnification software,22 03 21
+Under advice,Domestic Life Products,SERV-0064,Seeing,22 03,Other,22 03 OTH
+Prescribed,Home Modification Products,SERV-0067,Minor Home Modification/s,HM 01,Minor bathroom/toilet modification/s,HM 01 01
+Prescribed,Home Modification Products,SERV-0067,Minor Home Modification/s,HM 01,Minor kitchen modification/s,HM 01 02
+Prescribed,Home Modification Products,SERV-0067,Minor Home Modification/s,HM 01,Minor access modification/s,HM 01 03
+Prescribed,Home Modification Products,SERV-0067,Minor Home Modification/s,HM 01,Minor rails for functional support,HM 01 04
+Prescribed,Home Modification Products,SERV-0067,Minor Home Modification/s,HM 01,Other minor modification/s – including bulk modifications,HM 01 OTH
+Prescribed,Home Modification Products,SERV-0067,Complex Home Modification/s,HM 02,Complex bathroom/toilet modification/s,HM 02 01
+Prescribed,Home Modification Products,SERV-0067,Complex Home Modification/s,HM 02,Complex kitchen modification/s,HM 02 02
+Prescribed,Home Modification Products,SERV-0067,Complex Home Modification/s,HM 02,Complex access modification/s,HM 02 03
+Prescribed,Home Modification Products,SERV-0067,Complex Home Modification/s,HM 02,Complex rails for functional support,HM 02 04
+Prescribed,Home Modification Products,SERV-0067,Complex Home Modification/s,HM 02,Other complex modifications/s - including progress payments,HM 02 OTH
+Prescribed,Home Modifications Prescription and Clinical Support,SERV-0068,N/A,N/A,Prescriptions,ATITM 001
+Prescribed,Home Modifications Prescription and Clinical Support,SERV-0068,N/A,N/A,Prescriptions,HMITM 001
+Low risk,Managing Body Functions,SERV-0061,Supporting and stimulating blood circulation,04 06,Anti-oedema stockings for arms and legs and other parts of the body,04 06 06
+Low risk,Managing Body Functions,SERV-0061,Supporting and stimulating blood circulation,04 06,Other,04 06 OTH
+Low risk,Managing Body Functions,SERV-0061,Administering medicines,04 19,Assistive products for administering non-liquid medicines,04 19 04
+Low risk,Managing Body Functions,SERV-0061,Administering medicines,04 19,Other,04 19 OTH
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for memory training,04 26 03
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for training in sequencing,04 26 06
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for training in attention,04 26 09
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for training in concept development,04 26 12
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for training in classification,04 26 15
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for training in problem solving,04 26 18
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for training inductive/deductive reasoning,04 26 21
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for developing and enhancing understanding of cause and effect,04 26 24
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for social training,04 26 27
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Assistive products for training in understanding of time,04 26 30
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Other products to enhance cognitive function,04 26 88
+Prescribed,Managing Body Functions,SERV-0061,Enhance cognitive function,04 26,Other,04 26 OTH
+Prescribed,Managing Body Functions,SERV-0061,Manage tissue integrity,04 33,Seat cushions and underlays for tissue integrity,04 33 03
+Prescribed,Managing Body Functions,SERV-0061,Manage tissue integrity,04 33,Back cushions and back pads for tissue integrity,04 33 04
+Prescribed,Managing Body Functions,SERV-0061,Manage tissue integrity,04 33,Assistive products for tissue integrity when lying down,04 33 06
+Prescribed,Managing Body Functions,SERV-0061,Manage tissue integrity,04 33,Special equipment for tissue integrity,04 33 09
+Prescribed,Managing Body Functions,SERV-0061,Manage tissue integrity,04 33,Other,04 33 0TH
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Finger orthoses,06 06 03
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Hand orthoses,06 06 06
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Hand-finger orthoses,06 06 07
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Wrist-hand orthoses,06 06 12
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Wrist-hand-finger orthoses,06 06 13
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Shoulder-elbow-wrist-hand orthoses,06 06 30
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Hand and finger joints,06 06 32
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Wrist joints,06 06 33
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Elbow joints,06 06 36
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Shoulder joints,06 06 39
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Interface components for upper limb orthoses,06 06 42
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Structural components for upper limb orthoses,06 06 45
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Finishing (cosmetic) components for upper limb orthoses,06 06 48
+Prescribed,Managing Body Functions,SERV-0061,Upper limb orthoses,06 06,Other,06 06 OTH
+Prescribed,Managing Body Functions,SERV-0061,Lower limb orthoses,06 12,Foot orthoses,06 12 03
+Prescribed,Managing Body Functions,SERV-0061,Lower limb orthoses,06 12,Other,06 12 OTH
+Prescribed,Managing Body Functions,SERV-0061,Supporting handrails and grab bars,18 18,Removable grab rails and hand grips,18 18 10
+Prescribed,Managing Body Functions,SERV-0061,"Managing time, memory and planning",22 28,Clocks and timepieces,22 28 03
+Prescribed,Managing Body Functions,SERV-0061,"Managing time, memory and planning",22 28,Calendars and timetables,22 28 06
+Prescribed,Managing Body Functions,SERV-0061,"Managing time, memory and planning",22 28,"Assistive products for structuring periods of time, activities and personal goals",22 28 09
+Prescribed,Managing Body Functions,SERV-0061,"Managing time, memory and planning",22 28,Memory support products,22 28 12
+Prescribed,Managing Body Functions,SERV-0061,"Managing time, memory and planning",22 28,Other,22 28 OTH
+Prescribed,Managing Body Functions,SERV-0061,"Assist or replace arm function, hand function, finger function or a combination of these functions",24 18,Devices for grasping,24 18 03
+Prescribed,Managing Body Functions,SERV-0061,"Assist or replace arm function, hand function, finger function or a combination of these functions",24 18,Grip adapters and attachments,24 18 06
+Prescribed,Managing Body Functions,SERV-0061,"Assist or replace arm function, hand function, finger function or a combination of these functions",24 18,Body-worn holders,24 18 09
+Prescribed,Managing Body Functions,SERV-0061,"Assist or replace arm function, hand function, finger function or a combination of these functions",24 18,Stands,24 18 12
+Prescribed,Managing Body Functions,SERV-0061,"Assist or replace arm function, hand function, finger function or a combination of these functions",24 18,Operating sticks,24 18 15
+Prescribed,Managing Body Functions,SERV-0061,"Assist or replace arm function, hand function, finger function or a combination of these functions",24 18,Arm supports to permit manual activities,24 18 27
+Prescribed,Managing Body Functions,SERV-0061,"Assist or replace arm function, hand function, finger function or a combination of these functions",24 18,Robotic manipulators,24 18 30
+Prescribed,Managing Body Functions,SERV-0061,"Assist or replace arm function, hand function, finger function or a combination of these functions",24 18,Other,24 18 OTH
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Walking sticks,12 03 03
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Elbow crutches,12 03 06
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Forearm crutches,12 03 09
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Axillary crutches,12 03 12
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Multi-tip walking sticks,12 03 16
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Walking sticks with seat,12 03 18
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Lateral support frames,12 03 21
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Walking sticks with wheels,12 03 24
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by one arm",12 03,Other,12 03 OTH
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by both arms",12 06,Walking frames,12 06 03
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by both arms",12 06,Rollators,12 06 06
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by both arms",12 06,Walking trolleys,12 06 07
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by both arms",12 06,Walking chairs,12 06 09
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by both arms",12 06,Walking tables,12 06 12
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by both arms",12 06,Powered rollators,12 06 15
+Prescribed,Mobility Products,SERV-0063,"Walking, manipulated by both arms",12 06,Other,12 06 OTH
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Tips for assistive products for walking,12 07 05
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Products to properly grip assistive products for walking,12 07 12
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Accessories for assistive products for walking to provide support for specific body parts,12 07 15
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Accessories for assistive products for walking to protect from injury,12 07 18
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Seats for assistive products for walking,12 07 21
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Accessories attached to assistive products for walking to hold or carry objects,12 07 24
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Products to hold assistive products for walking in place when not in use,12 07 27
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Accessories to enable a person to manoeuvre assistive products for walking,12 07 30
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Accessories to adjust height of rollators and walking frames,12 07 33
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Lights and safety signalling devices for assistive products for walking,12 07 36
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Tyres and wheels for assistive products for walking,12 07 39
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Power assist units for assistive products for walking,12 07 42
+Prescribed,Mobility Products,SERV-0063,Accessories for assistive products for walking,12 07,Other,12 07 OTH
+Under advice,Mobility Products,SERV-0063,Guide canes and symbol canes for orientation,12 08,Guide canes,12 08 03
+Under advice,Mobility Products,SERV-0063,Guide canes and symbol canes for orientation,12 08,Symbol canes,12 08 06
+Under advice,Mobility Products,SERV-0063,Guide canes and symbol canes for orientation,12 08,Accessories for guide canes and symbol canes,12 08 09
+Under advice,Mobility Products,SERV-0063,Guide canes and symbol canes for orientation,12 08,Other,12 08 OTH
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Vehicle accessories and vehicle adaptations to control speed,12 12 05
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Vehicle accessories and vehicle adaptations to operate steering system,12 12 07
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Accessories and adaptations to complementary functions necessary to operate vehicles,12 12 08
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Vehicle occupant restraining systems,12 12 09
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Seats and cushions for motor vehicles and accessories and adaptations relating to seating in vehicles,12 12 12
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Hoists to transfer person into or out of vehicles without wheelchair,12 12 15
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Assistive products for transferring a person seated in a wheelchair into or out of vehicles,12 12 18
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Assistive products for loading unoccupied wheelchairs onto or into vehicles,12 12 21
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Assistive products for fastening wheelchairs in vehicles,12 12 24
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Vehicle chassis and body adaptations,12 12 27
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Products and equipment to carry unoccupied wheelchairs on or attached to vehicles,12 12 30
+Prescribed,Mobility Products,SERV-0063,Vehicle accessories and vehicle adaptations,12 12,Other,12 12 OTH
+Prescribed,Mobility Products,SERV-0063,Diverse motorised vehicles,12 17,Diverse four-wheeled motorised vehicles,12 17 09
+Prescribed,Mobility Products,SERV-0063,Diverse motorised vehicles,12 17,Other,12 17 OTH
+Prescribed,Mobility Products,SERV-0063,Manual wheelchairs,12 22,Bimanual hand rim-drive wheelchairs,12 22 03
+Prescribed,Mobility Products,SERV-0063,Manual wheelchairs,12 22,Bimanual lever-drive wheelchairs,12 22 06
+Prescribed,Mobility Products,SERV-0063,Manual wheelchairs,12 22,Single-side manual drive wheelchairs,12 22 09
+Prescribed,Mobility Products,SERV-0063,Manual wheelchairs,12 22,Hand rim-activated power-assisted wheelchairs,12 22 12
+Prescribed,Mobility Products,SERV-0063,Manual wheelchairs,12 22,Foot-propelled wheelchairs,12 22 15
+Prescribed,Mobility Products,SERV-0063,Manual wheelchairs,12 22,Push wheelchairs,12 22 18
+Prescribed,Mobility Products,SERV-0063,Manual wheelchairs,12 22,Power-assisted push wheelchairs,12 22 21
+Prescribed,Mobility Products,SERV-0063,Manual wheelchairs,12 22,Other,12 22 OTH
+Prescribed,Mobility Products,SERV-0063,Powered wheelchairs,12 23,Electrically powered wheelchairs with manual direct steering,12 23 03
+Prescribed,Mobility Products,SERV-0063,Powered wheelchairs,12 23,Electrically powered wheelchairs with electronic steering,12 23 06
+Prescribed,Mobility Products,SERV-0063,Powered wheelchairs,12 23,Assistant-controlled electrically powered wheelchairs,12 23 12
+Prescribed,Mobility Products,SERV-0063,Powered wheelchairs,12 23,Stair-climbing powered wheelchairs,12 23 15
+Prescribed,Mobility Products,SERV-0063,Powered wheelchairs,12 23,Self-balancing wheelchairs,12 23 18
+Prescribed,Mobility Products,SERV-0063,Powered wheelchairs,12 23,Other,12 23 OTH
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Steering and control systems for wheelchairs,12 24 03
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Propulsion units for manual wheelchairs,12 24 09
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Half-hand bikes,12 24 11
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Lights and safety signalling devices for wheelchairs,12 24 12
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Running or parking brakes for wheelchairs,12 24 18
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,"Tyres, wheels and castors for wheelchairs",12 24 21
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Batteries and battery chargers for wheelchairs,12 24 24
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Devices for cleaning wheelchairs or any part of wheelchairs,12 24 28
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Devices to protect wheelchairs and their occupants from sunlight or precipitation,12 24 34
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Devices to connect a wheelchair to a bicycle,12 24 36
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Devices to which a wheelchair is attached that facilitate movement up and down stairs,12 24 39
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Devices attached to wheelchairs to hold or carry objects,12 24 42
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Devices to check surroundings of wheelchairs,12 24 45
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Pivot drive wheels units,12 24 48
+Prescribed,Mobility Products,SERV-0063,Wheelchair accessories,12 24,Other,12 24 OTH
+Prescribed,Mobility Products,SERV-0063,Accessories for wheelchair seating,12 25,Back supports for wheelchairs,12 25 03
+Prescribed,Mobility Products,SERV-0063,Accessories for wheelchair seating,12 25,Seat cushions and underlays,12 25 06
+Prescribed,Mobility Products,SERV-0063,Accessories for wheelchair seating,12 25,Arm supports for wheelchairs,12 25 09
+Prescribed,Mobility Products,SERV-0063,Accessories for wheelchair seating,12 25,Head supports and neck supports for wheelchairs,12 25 12
+Prescribed,Mobility Products,SERV-0063,Accessories for wheelchair seating,12 25,Leg supports and foot supports for wheelchairs,12 25 15
+Prescribed,Mobility Products,SERV-0063,Accessories for wheelchair seating,12 25,Trunk supports and pelvic supports for wheelchairs,12 25 18
+Prescribed,Mobility Products,SERV-0063,Accessories for wheelchair seating,12 25,Lap trays for wheelchairs,12 25 24
+Prescribed,Mobility Products,SERV-0063,Accessories for wheelchair seating,12 25,Other,12 25 OTH
+Prescribed,Mobility Products,SERV-0063,Diverse human powered vehicles,12 27,Crawlers and mobility boards,12 27 15
+Prescribed,Mobility Products,SERV-0063,Diverse human powered vehicles,12 27,Manually powered stand-on mobility devices,12 27 24
+Prescribed,Mobility Products,SERV-0063,Diverse human powered vehicles,12 27,Other,12 27 OTH
+Prescribed,Mobility Products,SERV-0063,Changing body position,12 31,Assistive products for sliding and turning,12 31 03
+Prescribed,Mobility Products,SERV-0063,Changing body position,12 31,Turntables,12 31 06
+Prescribed,Mobility Products,SERV-0063,Changing body position,12 31,Not mounted rails for self-lifting,12 31 09
+Prescribed,Mobility Products,SERV-0063,Changing body position,12 31,Grip ladders,12 31 12
+Prescribed,Mobility Products,SERV-0063,Changing body position,12 31,Lifting belts and harnesses,12 31 15
+Prescribed,Mobility Products,SERV-0063,Changing body position,12 31,Transfer platforms,12 31 21
+Prescribed,Mobility Products,SERV-0063,Changing body position,12 31,Lifting seats and mattresses,12 31 24
+Prescribed,Mobility Products,SERV-0063,Changing body position,12 31,Other,12 31 OTH
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,Mobile hoists for transferring a person in sitting position with sling seats,12 36 03
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,Mobile hoists for transferring person in standing position,12 36 04
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,Mobile hoists for transferring a person in sitting position with solid seats,12 36 06
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,Mobile hoists for transferring person in lying position,12 36 09
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,"Stationary hoists fixed to walls, floor or ceiling",12 36 12
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,"Stationary hoists fixed to, or mounted in or on, another product",12 36 15
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,Stationary free-standing hoists,12 36 18
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,Body support units for hoists,12 36 21
+Prescribed,Mobility Products,SERV-0063,Lifting persons,12 36,Other,12 36 OTH
+Prescribed,Mobility Products,SERV-0063,Assistance dog maintenance,AD-01,Essential assistance dog maintenance,AD01-01
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Outerwear,09 03 05
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Gloves and mittens,09 03 12
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Blouses and shirts,09 03 15
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Jackets and trousers,09 03 18
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Skirts and dresses,09 03 21
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Underwear,09 03 24
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Stockings and socks,09 03 27
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Nightwear,09 03 30
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Bathing wear,09 03 33
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Bibs and aprons,09 03 39
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Shoes and boots,09 03 42
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Anti-slip assistive products for shoes and boots,09 03 45
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Buttoning devices and fasteners,09 03 48
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Neckties and bowties,09 03 51
+Low risk,Self-care Products,SERV-0062,Clothes and shoes,09 03,Other,09 03 OTH
+Low risk,Self-care Products,SERV-0062,Dressing and undressing,09 09,Assistive products for putting on or removing clothing,09 09 03
+Low risk,Self-care Products,SERV-0062,Dressing and undressing,09 09,Shoehorns and bootjacks,09 09 06
+Low risk,Self-care Products,SERV-0062,Dressing and undressing,09 09,Clothes holders,09 09 09
+Low risk,Self-care Products,SERV-0062,Dressing and undressing,09 09,Dressing and undressing hooks or sticks,09 09 12
+Low risk,Self-care Products,SERV-0062,Dressing and undressing,09 09,Zipper pullers,09 09 15
+Low risk,Self-care Products,SERV-0062,Dressing and undressing,09 09,Button hooks,09 09 18
+Low risk,Self-care Products,SERV-0062,Dressing and undressing,09 09,Other,09 09 OTH
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Toilet seats,09 12 09
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Toilet splash guards,09 12 10
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Toilet seats with built-in raising mechanism to assist standing up and sitting down,09 12 21
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Toilet arm supports and toilet back supports mounted on toilet,09 12 24
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,"Toilet arm supports and toilet back supports, free-standing",09 12 25
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Toilet paper tongs,09 12 27
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Toilet roll holders,09 12 30
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Bedpans,09 12 33
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Padding for toilet seats,09 12 45
+Low risk,Self-care Products,SERV-0062,Toileting,09 12,Other,09 12 OTH
+Low risk,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,"	Non-slip bathmats, non-slip shower mats and non-slip tapes",09 33 06
+Low risk,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,Back supports for bath or shower,09 33 08
+Low risk,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,"Washcloths, sponges and brushes with holder, handle or grip",09 33 30
+Low risk,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,Assistive products for drying oneself,09 33 36
+Low risk,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,Other,09 33 OTH
+Low risk,Self-care Products,SERV-0062,Nail care,09 36,Nail brushes,09 36 03
+Low risk,Self-care Products,SERV-0062,Nail care,09 36,Nail files and emery boards,09 36 06
+Low risk,Self-care Products,SERV-0062,Nail care,09 36,Nail scissors and clippers,09 36 09
+Low risk,Self-care Products,SERV-0062,Nail care,09 36,Other,09 36 OTH
+Low risk,Self-care Products,SERV-0062,Hair care,09 39,Assistive products for shampooing,09 39 03
+Low risk,Self-care Products,SERV-0062,Hair care,09 39,Combs and hairbrushes,09 39 06
+Low risk,Self-care Products,SERV-0062,Hair care,09 39,Hair dryers,09 39 09
+Low risk,Self-care Products,SERV-0062,Hair care,09 39,Other,09 39 OTH
+Low risk,Self-care Products,SERV-0062,Dental care,09 42,Unpowered toothbrushes,09 42 03
+Low risk,Self-care Products,SERV-0062,Dental care,09 42,Powered toothbrushes,09 42 06
+Low risk,Self-care Products,SERV-0062,Dental care,09 42,Other,09 42 OTH
+Low risk,Self-care Products,SERV-0062,Facial care,09 45,"Shaving products, razors and (electric) shavers",09 45 03
+Low risk,Self-care Products,SERV-0062,Facial care,09 45,Assistive products for application of facial products,09 45 06
+Low risk,Self-care Products,SERV-0062,Facial care,09 45,Mirrors for facial care,09 45 09
+Low risk,Self-care Products,SERV-0062,Facial care,09 45,Other,0945 OTH
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Assistive products for head protection,09 06 03
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Assistve products for eye protection or face protection,09 06 06
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Assistive products for ear protection or hearing protection,09 06 09
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Asisstive products for elbow protection or arm protection,09 06 12
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Assstive products for hand protection,09 06 15
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Assistive products for knee protection or leg protection,09 06 18
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,"Assistive products for heel protection, toe protection or foot protection",09 06 21
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Assistive products for trunk protection or whole-body protection,09 06 24
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Assistive products for airway protection,09 06 27
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Protective sheaths for bathing,09 06 30
+Under advice,Self-care Products,SERV-0062,Body-worn assistive products for body protection,09 06,Other,09 06 OTH
+Under advice,Self-care Products,SERV-0062,Body stabilisation,09 07,"Seat belts, belts and harnesses for body stabilisation",09 07 03
+Under advice,Self-care Products,SERV-0062,Body stabilisation,09 07,"Positioning pillows, positioning cushions and positioning systems",09 07 06
+Under Advice,Self-care Products,SERV-0062,Toileting,09 12,Commode chairs - without castors,n/a
+Prescribed,Self-care Products,SERV-0062,Toileting,09 12,Commode chairs - with castors,09 12 03
+Prescribed,Self-care Products,SERV-0062,Toileting,09 12,"Raised toilet seats, free-standing",09 12 12
+Prescribed,Self-care Products,SERV-0062,Toileting,09 12,"Raised toilet seats, detachable",09 12 15
+Prescribed,Self-care Products,SERV-0062,Toileting,09 12,Raised toilet seats fixed to toilet,09 12 18
+Under advice,Self-care Products,SERV-0062,Collecting urine and faeces,09 27,Non-body-worn urinals and urine bottles,09 27 09
+Prescribed,Self-care Products,SERV-0062,Collecting urine and faeces,09 27,Suspenders and fastning devices for urine collectors,09 27 13
+Under advice,Self-care Products,SERV-0062,Collecting urine and faeces,09 27,Other,09 27 OTH
+Prescribed,Self-care Products,SERV-0062,Absorbing products to contain urine and faeces,09 30,"Absorbent products, washable",09 30 36
+Prescribed,Self-care Products,SERV-0062,Absorbing products to contain urine and faeces,09 30,"Underpads for non-body-worn use to protect chair or bedding, washable",09 30 45
+Prescribed,Self-care Products,SERV-0062,Absorbing products to contain urine and faeces,09 30,Other,09 30 OTH
+Prescribed,Self-care Products,SERV-0062,Prevent involuntary urine or faeces leakage,09 31,Incontinence alarms,09 31 09
+Prescribed,Self-care Products,SERV-0062,Prevent involuntary urine or faeces leakage,09 31,Other,09 31 OTH
+Prescribed,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,Bath boards,09 33 04
+Prescribed,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,Bath seats,09 33 05
+Prescribed,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,Shower chairs with and without wheels,09 33 07
+Prescribed,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,"Bathing stretchers, shower tables and adult changing tables",09 33 12
+Prescribed,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,Bathtub shelves,09 33 24
+Prescribed,Self-care Products,SERV-0062,"Washing, bathing and showering",09 33,Assistive products for reducing length or depth of a bathtub,09 33 27
+Prescribed,Self-care Products,SERV-0062,Sexual activity,09 54,Assistive products for sexual habitation and rehabilitation,09 54 12
+Prescribed,Self-care Products,SERV-0062,Sexual activity,09 54,Other,09 54 OTH
+Under advice,Self-care Products,SERV-0062,Body stabilisation,09 07,Other,0907 OTH
+N/A,#N/A,#N/A,#N/A,,Other,SERV-0006-OTH
+N/A,#N/A,#N/A,#N/A,,Telephone bill,HSITM-001
+N/A,#N/A,#N/A,#N/A,,Internet Bill,HSITM-002
+N/A,#N/A,#N/A,#N/A,,Other,SERV-0015-OTH
+N/A,#N/A,#N/A,#N/A,,Taxi service,HSITM-011
+N/A,#N/A,#N/A,#N/A,,Rideshare,HSITM-012
+N/A,#N/A,#N/A,#N/A,,Other,SERV-0017-OTH
+N/A,#N/A,#N/A,#N/A,,Continence aids,HSITM-004
+N/A,#N/A,#N/A,#N/A,,Prescribed skin emollients,HSITM-005
+N/A,#N/A,#N/A,#N/A,,Oxygen consumables,HSITM-006
+N/A,#N/A,#N/A,#N/A,,Other,SERV-0026-OTH
+N/A,#N/A,#N/A,#N/A,,Prescribed supplementary dietary products,HSITM-008
+N/A,#N/A,#N/A,#N/A,,Prescribed dietary aids,HSITM-009
+N/A,#N/A,#N/A,#N/A,,Other,SERV-0047-OTH

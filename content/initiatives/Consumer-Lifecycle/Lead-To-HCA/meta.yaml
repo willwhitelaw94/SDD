@@ -1,0 +1,12 @@
+jira_key: TP-2012
+title: 'Lead to HCA'
+status: In Progress
+prefix: LTH
+summary: "Convert leads through to signed agreements"
+linear_project_id: d29e3108-555c-4dc9-8ca7-ced7f75424e0
+linear_url: https://linear.app/trilogycare/project/lth-lead-to-hca-tp-2012-921375156e41
+brp_priority: P2
+description: Conversion wizard transforming qualified leads into active Home Care Packages. Includes Multi-Package Support (MPS).
+due_date: null
+last_synced: '2026-02-02T00:00:00.000Z'
+bounty_value: 5000

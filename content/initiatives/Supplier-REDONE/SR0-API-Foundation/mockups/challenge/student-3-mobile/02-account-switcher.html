@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Switcher — Mobile Mo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: { 50: '#F0F4FA', 700: '#2C4C79', 800: '#1E3452', 900: '#101C2D' },
+            tc: { teal: '#007F7E', 'teal-light': '#43C0BE', green: '#4DC375', orange: '#FF8F51', red: '#E04B51' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    .tap-target { -webkit-tap-highlight-color: transparent; }
+    .tap-target:active { transform: scale(0.98); }
+    /* Bottom sheet animation */
+    .bottom-sheet { transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1); }
+    .bottom-sheet.hidden { transform: translateY(100%); }
+    .sheet-overlay { transition: opacity 0.3s ease; }
+    .sheet-overlay.hidden { opacity: 0; pointer-events: none; }
+    /* Drag handle */
+    .drag-handle { width: 36px; height: 4px; border-radius: 2px; background: #d1d5db; margin: 0 auto; }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+
+  <!-- Mobile Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+    <div class="px-4">
+      <div class="flex items-center justify-between h-14">
+        <!-- Hamburger -->
+        <button class="tap-target w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100 -ml-1">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-navy-700 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-xs">TC</span>
+          </div>
+        </div>
+
+        <!-- Account trigger (avatar) -->
+        <button
+          onclick="toggleSheet()"
+          class="tap-target flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-gray-100 -mr-1"
+        >
+          <div class="w-8 h-8 bg-navy-700 rounded-full flex items-center justify-center text-white text-xs font-bold">JD</div>
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Bottom Sheet Overlay -->
+  <div id="sheet-overlay" class="sheet-overlay fixed inset-0 z-40 bg-black/50" onclick="toggleSheet()"></div>
+
+  <!-- Bottom Sheet -->
+  <div id="bottom-sheet" class="bottom-sheet fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl shadow-2xl max-h-[80vh] overflow-hidden">
+    <!-- Drag handle -->
+    <div class="pt-3 pb-2">
+      <div class="drag-handle"></div>
+    </div>
+
+    <!-- Sheet Header -->
+    <div class="px-5 pb-4 border-b border-gray-100">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-bold text-gray-900">Switch Account</h2>
+          <p class="text-xs text-gray-400 mt-0.5">Acme Healthcare Group · ABN 12 345 678 901</p>
+        </div>
+        <button onclick="toggleSheet()" class="tap-target w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Supplier List -->
+    <div class="overflow-y-auto">
+      <!-- Active Supplier -->
+      <button class="tap-target w-full px-5 py-4 flex items-center gap-4 bg-tc-teal/5 border-l-4 border-tc-teal">
+        <div class="w-12 h-12 bg-navy-50 rounded-2xl flex items-center justify-center shrink-0">
+          <span class="text-navy-700 font-bold text-sm">AC</span>
+        </div>
+        <div class="flex-1 text-left">
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-gray-900">Acme Care Pty Ltd</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-tc-green"></span>
+          </div>
+          <p class="text-sm text-gray-500 mt-0.5">Verified · Supplier Admin</p>
+        </div>
+        <div class="w-10 h-10 bg-tc-teal/10 rounded-xl flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-tc-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        </div>
+      </button>
+
+      <!-- Other Supplier -->
+      <button class="tap-target w-full px-5 py-4 flex items-center gap-4 hover:bg-gray-50 active:bg-gray-100 transition border-l-4 border-transparent">
+        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center shrink-0">
+          <span class="text-blue-600 font-bold text-sm">BH</span>
+        </div>
+        <div class="flex-1 text-left">
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-gray-900">Beta Health Services</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-tc-green"></span>
+          </div>
+          <p class="text-sm text-gray-500 mt-0.5">Verified · Supplier Admin</p>
+        </div>
+        <svg class="w-5 h-5 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+
+      <!-- Pending Supplier -->
+      <button class="tap-target w-full px-5 py-4 flex items-center gap-4 hover:bg-gray-50 active:bg-gray-100 transition border-l-4 border-transparent">
+        <div class="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center shrink-0">
+          <span class="text-tc-orange font-bold text-sm">GW</span>
+        </div>
+        <div class="flex-1 text-left">
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-gray-900">Gamma Wellness Co</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-tc-orange"></span>
+          </div>
+          <p class="text-sm text-gray-500 mt-0.5">Pending verification · Supplier</p>
+        </div>
+        <svg class="w-5 h-5 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- Legend + safe area -->
+    <div class="px-5 py-4 border-t border-gray-100 bg-gray-50">
+      <div class="flex items-center gap-3 text-xs text-gray-400">
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-tc-green"></span> Verified</span>
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-tc-orange"></span> Pending</span>
+      </div>
+    </div>
+    <!-- Bottom safe area -->
+    <div class="h-8 bg-gray-50"></div>
+  </div>
+
+  <!-- Page Content (Behind the sheet) -->
+  <main class="px-4 py-6">
+    <div class="mb-5">
+      <h1 class="text-xl font-bold text-gray-900">Dashboard</h1>
+      <p class="text-sm text-gray-500 mt-0.5">Acme Care Pty Ltd</p>
+    </div>
+
+    <!-- Mobile stat cards (stacked) -->
+    <div class="space-y-3 mb-6">
+      <div class="bg-white rounded-2xl border border-gray-200 p-5 flex items-center justify-between">
+        <div>
+          <div class="text-sm text-gray-500">Open Bills</div>
+          <div class="text-2xl font-bold text-gray-900 mt-1">12</div>
+        </div>
+        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-200 p-5 flex items-center justify-between">
+        <div>
+          <div class="text-sm text-gray-500">Active Workers</div>
+          <div class="text-2xl font-bold text-gray-900 mt-1">34</div>
+        </div>
+        <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-tc-green" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-200 p-5 flex items-center justify-between">
+        <div>
+          <div class="text-sm text-gray-500">Compliance</div>
+          <div class="text-2xl font-bold text-tc-teal mt-1">92%</div>
+        </div>
+        <div class="w-12 h-12 bg-tc-teal/10 rounded-2xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-tc-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function toggleSheet() {
+      const sheet = document.getElementById('bottom-sheet');
+      const overlay = document.getElementById('sheet-overlay');
+      sheet.classList.toggle('hidden');
+      overlay.classList.toggle('hidden');
+    }
+  </script>
+  <script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

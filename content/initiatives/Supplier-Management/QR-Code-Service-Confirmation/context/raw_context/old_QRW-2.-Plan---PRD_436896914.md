@@ -1,0 +1,143 @@
+<div id="page">
+
+<div id="main" class="aui-page-panel">
+
+<div id="main-header">
+
+<div id="breadcrumb-section">
+
+1.  [Trilogy Care Portal](index.html)
+
+</div>
+
+# <span id="title-text"> Trilogy Care Portal : QRW 2. Plan - PRD </span>
+
+</div>
+
+<div id="content" class="view">
+
+<div class="page-metadata">
+
+Created by <span class="author"> Mike Wise</span>, last modified by <span class="editor"> Steven Boge</span> on Oct 30, 2025
+
+</div>
+
+<div id="main-content" class="wiki-content group">
+
+## Executive Summary
+
+The project aims to develop a lightweight, QR-based Visit Confirmation module. This module will allow field workers to confirm their visits by scanning a unique QR code assigned to each recipient. The system will validate the recipient-booking linkage and store an auditable record, enhancing operational certainty and reducing disputes.
+
+<a href="https://www.health.gov.au/sites/default/files/2025-09/support-at-home-program-manual-a-guide-for-registered-providers.pdf" class="external-link" rel="nofollow">https://www.health.gov.au/sites/default/files/2025-09/support-at-home-program-manual-a-guide-for-registered-providers.pdf</a>
+
+## <span class="inline-comment-marker" ref="8c2a8a6b-5ede-4cdf-b7f3-bc2c6917e18f">Problem Statement</span>
+
+<span class="inline-comment-marker" ref="8c2a8a6b-5ede-4cdf-b7f3-bc2c6917e18f">The business lacks a reliable, auditable way to confirm field visits, leading to operational uncertainty, compliance risks (Support at Home Manual v4.0 - 10.5 Confirmation of Service delivery), increased admin workload, and potential disputes over timesheets. Without a streamlined confirmation process tied to actual bookings, the organisation faces inefficiencies, higher costs, and risks to service integrity.</span>
+
+There is the additional challenge of what we ideally want as an MVP on day 1 for compliance and what is required in the ideal future state.
+
+## Goals & Success Metrics
+
+- **Operational Certainty**: Achieve verifiable "I was there" signals tied to actual bookings.
+
+- **Dispute Reduction**: Lower timesheet/admin disputes and potential over-claiming.
+
+- **Efficiency**: Reduce check-in time to 10-20 seconds per visit.
+
+## Assumptions
+
+- Workers have smartphones with cameras and intermittent data coverage.
+
+- The booking system exposes recipient-scoped bookings and stable booking IDs/UIDs.
+
+## Background / Context
+
+The module is designed to provide operational certainty and reduce administrative overhead by ensuring that visit confirmations are tied to actual bookings.
+
+## Scope Requirements
+
+- **Mobile Web Page**: PWA-capable with fields for Worker Name, Booking selector/ID, and a confirmation checkbox.
+
+- **Backend Endpoints**: Validations and audit store.
+
+- **QR Slug Generator**: QR asset pack for care plan and magnet PDF.
+
+- **Admin Views**: Visit log, exceptions, export.
+
+### Out-of-Scope
+
+- Full integration with existing CRM systems.
+
+- Advanced analytics and reporting features.
+
+## Stakeholders
+
+- **Field Workers**: Submit confirmations.
+
+- **Recipients / Families**: Consent to QR display.
+
+- **Scheduling / Care Coordination**: Manage bookings, monitor exceptions.
+
+- **Finance / Payroll**: Rely on confirmations for approvals and audits.
+
+## Risks & Mitigations
+
+- **Spoofing**: Use recipient scoping, time-window validation, and optional client PIN.
+
+- **Privacy Concerns**: No PII in QR; explicit GPS consent.
+
+## Estimated Effort, Cost, Time
+
+- **Engineering Effort**: ~2.5–4.0 person-weeks total.
+
+- **Cost**: \$15k–\$30k for MVP.
+
+- **Timeline**: MVP in 2–3 weeks, pilot 1 week, then staged rollout.
+
+## Benefits
+
+- **Fewer Disputes**: Save coordinator/payroll time weekly.
+
+- **Leakage Reduction**: Monthly savings of \$2.4k–\$4.8k.
+
+------------------------------------------------------------------------
+
+This PRD provides a structured approach to developing the QR-based Visit Confirmation module, ensuring alignment with the project's goals and stakeholder needs\[1\].
+
+Sources:
+
+1.  <a href="QRW-1.-Idea-Brief_436896930.html" data-linked-resource-id="436896930" data-linked-resource-version="13" data-linked-resource-type="page">https://trilogycare-sandbox.atlassian.net/wiki/spaces/TCD/pages/39026695/QRW+1.+Idea+-+Brief</a>
+
++++++
+
+**Included in supplier newsletter, Oct 2025**
+
+Trilogy Care is currently developing a QR code solution for this requirement that will allow for start and finish shift times to be documented and timestamped, as well as collect shift notes and other relevant information to support you in meeting your evidentiary requirements. You will hear more about this from us in the coming months.
+
+\+ Report any risks, incidents, or changes in client condition to Trilogy Care promptly.
+
+We’re finalising a new Supplier Training Course in Home Care Academy
+
+</div>
+
+</div>
+
+</div>
+
+<div id="footer" role="contentinfo">
+
+<div class="section footer-body">
+
+Document generated by Confluence on Nov 07, 2025 09:52
+
+<div id="footer-logo">
+
+[Atlassian](http://www.atlassian.com/)
+
+</div>
+
+</div>
+
+</div>
+
+</div>

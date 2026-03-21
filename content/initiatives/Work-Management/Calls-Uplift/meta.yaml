@@ -1,0 +1,17 @@
+jira_key: TP-2332
+title: 'Calls Uplift'
+status: qa
+prefix: CUL
+summary: "Enhanced call logging and tracking"
+linear_project_id: d360e949-1680-4aa0-81f3-0cbb0cc84f6f
+linear_url: https://linear.app/trilogycare/project/cul-calls-uplift-tp-2332-745d2b501fa8
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+gates:
+  dev:
+    passed: true
+    date: 2026-03-05
+    pr: "https://github.com/Trilogy-Care/tc-portal/pull/4455"
+    notes: "15 tests passing, 25 assertions, all AC verified, 6/6 Vue TS audit pass"
+bounty_value: 5000

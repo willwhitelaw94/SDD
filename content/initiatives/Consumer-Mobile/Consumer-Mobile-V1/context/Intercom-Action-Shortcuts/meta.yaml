@@ -1,0 +1,6 @@
+title: 'Intercom Action Shortcuts'
+status: 'Backlog'
+prefix: IAS
+description: 'Enable authenticated Intercom shortcuts for consumer actions - pre-filled tickets with user context'
+due_date: null
+parent_epic: MOB1

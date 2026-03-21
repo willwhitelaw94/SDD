@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec Explorer — Incident Management</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--border:#334155;
+  --teal:#007F7E;--teal-light:#43C0BE;--blue:#2C4C79;
+  --p1:#ef4444;--p2:#fbbf24;--p3:#64748b;--p4:#475569;
+  --given:#43C0BE;--when:#fbbf24;--then:#a78bfa;
+  --text:#e2e8f0;--text-dim:#94a3b8;--text-bright:#f8fafc;
+  --cat-intake:#f59e0b;--cat-viewer:#3b82f6;--cat-form:#22c55e;
+  --cat-harm:#ef4444;--cat-lifecycle:#a855f7;--cat-list:#ec4899;
+  --cat-sirs:#06b6d4;--cat-migration:#14b8a6;--cat-flag:#fb923c;
+  --cat-public:#6366f1;--cat-audit:#8b5cf6;--cat-permissions:#64748b;
+  --cat-automation:#475569;--cat-analytics:#334155;--cat-notifications:#f97316;
+}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}
+
+/* Layout */
+.app{display:flex;height:100vh;width:100vw}
+.sidebar{width:340px;min-width:340px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:10}
+.canvas-container{flex:1;position:relative;overflow:hidden}
+.detail-panel{width:440px;min-width:440px;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto;display:none;z-index:10}
+.detail-panel.open{display:flex;flex-direction:column}
+.prompt-bar{position:fixed;bottom:0;left:340px;right:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 16px;z-index:20;display:none}
+.prompt-bar.open{display:flex;gap:12px;align-items:flex-start}
+.prompt-bar.with-detail{right:440px}
+
+/* Sidebar */
+.sidebar-header{padding:16px;border-bottom:1px solid var(--border)}
+.sidebar-header h1{font-size:14px;font-weight:700;color:var(--teal-light);margin-bottom:2px}
+.sidebar-header .epic-name{font-size:18px;font-weight:800;color:var(--text-bright)}
+.sidebar-header .counts{font-size:12px;color:var(--text-dim);margin-top:8px;display:flex;gap:12px;flex-wrap:wrap}
+.sidebar-header .counts span{background:var(--bg);padding:2px 8px;border-radius:4px}
+
+.search-box{padding:8px 16px}
+.search-box input{width:100%;padding:8px 12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;outline:none}
+.search-box input:focus{border-color:var(--teal)}
+.search-box input::placeholder{color:var(--text-dim)}
+
+.sidebar-tabs{display:flex;border-bottom:1px solid var(--border)}
+.sidebar-tabs button{flex:1;padding:10px 8px;background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid transparent;transition:all 0.2s}
+.sidebar-tabs button.active{color:var(--teal-light);border-bottom-color:var(--teal)}
+.sidebar-tabs button:hover{color:var(--text)}
+
+.sidebar-content{flex:1;overflow-y:auto;padding:8px}
+
+.stats-bar{display:flex;gap:6px;padding:8px 16px;border-bottom:1px solid var(--border)}
+.stats-bar .stat{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600}
+.stats-bar .stat .dot{width:8px;height:8px;border-radius:50%}
+
+/* Sidebar Story Cards */
+.sidebar-card{padding:10px 12px;margin:4px 0;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all 0.15s}
+.sidebar-card:hover{background:rgba(67,192,190,0.08);border-color:var(--border)}
+.sidebar-card.selected{background:rgba(67,192,190,0.12);border-color:var(--teal)}
+.sidebar-card .card-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.sidebar-card .story-num{font-size:11px;font-weight:700;color:var(--text-dim)}
+.sidebar-card .story-title{font-size:13px;font-weight:600;color:var(--text-bright);flex:1}
+.sidebar-card .priority-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;color:#000}
+.sidebar-card .card-meta{display:flex;gap:10px;font-size:11px;color:var(--text-dim)}
+
+/* FR Cards in sidebar */
+.fr-group{margin:8px 0}
+.fr-group-header{padding:6px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;border-radius:4px;margin-bottom:4px}
+.fr-card{padding:8px 12px;margin:2px 0;border-radius:4px;cursor:pointer;font-size:12px;color:var(--text);border:1px solid transparent;transition:all 0.15s}
+.fr-card:hover{background:rgba(67,192,190,0.08);border-color:var(--border)}
+.fr-card .fr-id{font-weight:700;color:var(--teal-light);margin-right:6px}
+
+/* Scenario cards in sidebar */
+.scenario-card{padding:8px 12px;margin:2px 0;border-radius:4px;cursor:pointer;font-size:12px;border:1px solid transparent;transition:all 0.15s}
+.scenario-card:hover{background:rgba(67,192,190,0.08);border-color:var(--border)}
+.scenario-card .scenario-parent{font-size:10px;font-weight:600;color:var(--text-dim);margin-bottom:2px}
+
+/* Canvas */
+.canvas{width:100%;height:100%;cursor:grab}
+.canvas:active{cursor:grabbing}
+.canvas-controls{position:absolute;top:12px;right:12px;display:flex;gap:6px;z-index:5}
+.canvas-controls button{padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);cursor:pointer;font-size:12px;font-weight:600;transition:all 0.15s}
+.canvas-controls button:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
+.phase-legend{position:absolute;top:12px;left:12px;display:flex;gap:8px;z-index:5}
+.phase-legend .legend-item{display:flex;align-items:center;gap:4px;padding:4px 10px;background:var(--surface);border:1px solid var(--border);border-radius:4px;font-size:11px;font-weight:600}
+.phase-legend .legend-dot{width:10px;height:10px;border-radius:50%}
+
+/* Story card on canvas */
+.story-node{position:absolute;width:220px;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer;user-select:none;transition:box-shadow 0.15s,border-color 0.15s}
+.story-node:hover{border-color:var(--teal);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.story-node.selected{border-color:var(--teal-light);box-shadow:0 0 0 2px rgba(67,192,190,0.3)}
+.story-node.dragging{z-index:100;opacity:0.9}
+.story-node .priority-stripe{height:4px;border-radius:8px 8px 0 0}
+.story-node .node-body{padding:12px}
+.story-node .node-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.story-node .node-num{font-size:11px;font-weight:700;color:var(--text-dim)}
+.story-node .node-priority{font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;color:#000}
+.story-node .node-title{font-size:12px;font-weight:600;color:var(--text-bright);line-height:1.4;margin-bottom:8px}
+.story-node .node-actor{font-size:10px;color:var(--text-dim);margin-bottom:6px}
+.story-node .node-stats{display:flex;gap:8px;font-size:10px;color:var(--text-dim)}
+.story-node .node-stats span{display:flex;align-items:center;gap:3px}
+.story-node .phase-tag{position:absolute;top:8px;right:-6px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;color:var(--text-bright)}
+
+/* Swim lane labels */
+.swim-lane-label{position:absolute;left:0;width:100%;text-align:center;font-size:12px;font-weight:700;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;pointer-events:none;opacity:0.3}
+.swim-lane-separator{position:absolute;left:40px;right:40px;border-top:1px dashed var(--border);pointer-events:none;opacity:0.4}
+
+/* Detail panel */
+.detail-header{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.detail-header .close-btn{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:20px;padding:4px;line-height:1}
+.detail-header .close-btn:hover{color:var(--text)}
+.detail-body{padding:16px;flex:1;overflow-y:auto}
+.detail-body h2{font-size:16px;font-weight:700;color:var(--text-bright);margin-bottom:4px}
+.detail-body .detail-actor{font-size:13px;color:var(--text-dim);margin-bottom:12px}
+.detail-body .detail-section{margin-bottom:16px}
+.detail-body .detail-section h3{font-size:12px;font-weight:700;color:var(--teal-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.detail-body .rationale{font-size:13px;color:var(--text);line-height:1.5;padding:8px 12px;background:var(--bg);border-radius:6px;border-left:3px solid var(--teal)}
+.detail-body .dep-tags{display:flex;flex-wrap:wrap;gap:4px}
+.detail-body .dep-tag{font-size:11px;padding:3px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--teal-light);transition:all 0.15s}
+.detail-body .dep-tag:hover{border-color:var(--teal);background:rgba(67,192,190,0.1)}
+.detail-body .scenario-block{padding:10px 12px;background:var(--bg);border-radius:6px;margin-bottom:6px;font-size:12px;line-height:1.6}
+.detail-body .scenario-block .kw-given{color:var(--given);font-weight:700}
+.detail-body .scenario-block .kw-when{color:var(--when);font-weight:700}
+.detail-body .scenario-block .kw-then{color:var(--then);font-weight:700}
+.detail-body .fr-badge{display:inline-block;font-size:11px;padding:3px 8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;cursor:pointer;margin:2px;color:var(--teal-light);font-weight:600;transition:all 0.15s}
+.detail-body .fr-badge:hover{border-color:var(--teal);background:rgba(67,192,190,0.1)}
+.detail-body .edge-case{padding:8px 12px;background:var(--bg);border-radius:6px;margin-bottom:4px;font-size:12px;line-height:1.5}
+
+/* Prompt bar */
+.prompt-text{flex:1;font-size:12px;color:var(--text);line-height:1.5;max-height:80px;overflow-y:auto;padding:8px 12px;background:var(--bg);border-radius:6px;font-family:monospace;white-space:pre-wrap}
+.copy-btn{padding:8px 16px;background:var(--teal);border:none;border-radius:6px;color:#fff;cursor:pointer;font-weight:600;font-size:12px;white-space:nowrap;transition:all 0.15s}
+.copy-btn:hover{background:var(--teal-light)}
+.copy-btn.copied{background:#22c55e}
+
+/* Tooltip */
+.tooltip{position:fixed;padding:12px 16px;background:#0f172aee;border:1px solid var(--border);border-radius:8px;max-width:320px;z-index:1000;pointer-events:none;font-size:12px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+.tooltip .tt-title{font-weight:700;color:var(--text-bright);margin-bottom:4px}
+.tooltip .tt-actor{color:var(--text-dim);margin-bottom:4px}
+.tooltip .tt-rationale{color:var(--text);margin-bottom:6px;font-style:italic}
+.tooltip .tt-stats{display:flex;gap:10px;color:var(--text-dim);font-size:11px}
+
+/* SVG arrows */
+.arrows-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* Scrollbar styling */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-dim)}
+
+/* Empty / hidden helper */
+.hidden{display:none!important}
+.no-results{padding:20px;text-align:center;color:var(--text-dim);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h1>SPEC EXPLORER</h1>
+      <div class="epic-name">ICM — Incident Management</div>
+      <div class="counts">
+        <span>18 Stories</span>
+        <span>41 FRs</span>
+        <span>60 Scenarios</span>
+        <span>15 Success Criteria</span>
+        <span>9 Edge Cases</span>
+      </div>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search stories, FRs, scenarios...">
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><div class="dot" style="background:var(--p1)"></div>P1: 4</div>
+      <div class="stat"><div class="dot" style="background:var(--p2)"></div>P2: 8</div>
+      <div class="stat"><div class="dot" style="background:var(--p3)"></div>P3: 3</div>
+      <div class="stat"><div class="dot" style="background:var(--p4)"></div>P4: 3</div>
+      <div class="stat" style="margin-left:auto">FRs: 41</div>
+    </div>
+    <div class="sidebar-tabs">
+      <button class="active" data-tab="stories">Stories</button>
+      <button data-tab="requirements">Requirements</button>
+      <button data-tab="scenarios">Scenarios</button>
+    </div>
+    <div class="sidebar-content" id="sidebarContent"></div>
+  </div>
+
+  <!-- Canvas -->
+  <div class="canvas-container">
+    <div class="phase-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--p1)"></div>P1 — Must Have</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--p2)"></div>P2 — Should Have</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--p3)"></div>P3 — Phase 2</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--p4)"></div>P4 — Phase 2</div>
+    </div>
+    <div class="canvas-controls">
+      <button onclick="zoomIn()">+</button>
+      <button onclick="zoomOut()">−</button>
+      <button onclick="fitAll()">Fit All</button>
+      <button onclick="resetLayout()">Reset</button>
+    </div>
+    <svg class="arrows-svg" id="arrowsSvg"></svg>
+    <div class="canvas" id="canvas"></div>
+  </div>
+
+  <!-- Detail Panel -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-header">
+      <div></div>
+      <button class="close-btn" onclick="closeDetail()">&times;</button>
+    </div>
+    <div class="detail-body" id="detailBody"></div>
+  </div>
+</div>
+
+<!-- Prompt Bar -->
+<div class="prompt-bar" id="promptBar">
+  <div class="prompt-text" id="promptText"></div>
+  <button class="copy-btn" id="copyBtn" onclick="copyPrompt()">Copy</button>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip hidden" id="tooltip"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA — parsed from spec.md
+// ═══════════════════════════════════════════════════════════════
+
+const STORIES = [
+  {
+    id: 'US1', num: 1, title: 'Care Partner Raises an Incident from Portal',
+    actor: 'Care Partner', priority: 'P1', phase: 1,
+    rationale: 'Care partners currently cannot create incidents where they work. This is the single biggest friction — removing it unblocks everything else. ~930 incidents/month are created exclusively in CRM, forcing context-switching.',
+    scenarios: [
+      'Given a Care Partner is viewing a client\'s package, When they click "Report Incident", Then they see the V2 incident form pre-filled with the client\'s name, DOB, and Support at Home ID',
+      'Given a Care Partner is filling in the form, When they select a harm classification tier, Then the form displays the corresponding timeframes for action (e.g., "Severe Harm — act within 24 hours")',
+      'Given a Care Partner submits the form, When all required fields are complete, Then the incident is created against the package and appears in both the global and package incident lists',
+      'Given a Care Partner is filling in outcomes, When they tick multiple outcomes (e.g., "Hospital admission" and "Police involvement"), Then all selected outcomes are saved against the incident',
+      'Given a Care Partner fills in "Has this happened before?" as Yes, When they submit, Then the trend details are saved and visible on the incident record',
+      'Given a Care Partner leaves required fields blank and attempts to submit, When validation runs, Then the system highlights each missing field and prevents submission'
+    ],
+    frs: ['FR-001','FR-002','FR-003','FR-004','FR-005','FR-006','FR-007','FR-008','FR-009','FR-010','FR-011','FR-019','FR-020','FR-020a','FR-026','FR-027'],
+    deps: []
+  },
+  {
+    id: 'US2', num: 2, title: 'Care Partner Views Incident History During Client Calls',
+    actor: 'Care Partner', priority: 'P1', phase: 1,
+    rationale: 'Care partners currently can\'t see incidents when they\'re on the phone with clients — the information is trapped in CRM. This directly impacts care quality. Marianne\'s primary motivation: "care partners can see incident history during client calls."',
+    scenarios: [
+      'Given a package has 3 incidents, When a Care Partner opens the package\'s incidents tab, Then they see all 3 incidents sorted most-recent-first with: date, harm classification, description summary, and resolution status',
+      'Given a Care Partner clicks on an incident, When the detail view opens, Then they see the full incident record including outcomes, actions taken, escalation details, follow-up plan, and trend history',
+      'Given a package has no incidents, When a Care Partner opens the incidents tab, Then they see an empty state with a "Report Incident" action',
+      'Given an incident has a Severe or Moderate harm classification, When it appears in the list, Then it shows a visual urgency indicator (colour-coded per harm tier) so the Care Partner immediately sees priority'
+    ],
+    frs: ['FR-013','FR-014','FR-031'],
+    deps: ['US1']
+  },
+  {
+    id: 'US3', num: 3, title: 'Harm Classification at Intake',
+    actor: 'Reporter (Care Partner, family, support worker, clinician)', priority: 'P1', phase: 1,
+    rationale: 'The current form has no triage guidance for reporters. Harm classification drives response timeframes and is central to SIRS compliance.',
+    scenarios: [
+      'Given a reporter is classifying an incident, When they select "Severe Harm", Then the form displays "Call 000 & notify provider immediately; act within 24 hours" with visual emphasis (red indicator)',
+      'Given a reporter selects "Clinical Notification Only", When they proceed, Then no urgency indicator is shown and the timeframe reads "Notify within 5 business days; record in care plan"',
+      'Given a reporter submits without selecting a harm classification, When they attempt to submit, Then the form prevents submission and highlights the required field'
+    ],
+    frs: ['FR-004','FR-005','FR-026'],
+    deps: ['US1']
+  },
+  {
+    id: 'US4', num: 4, title: 'View and Edit Incidents in Portal',
+    actor: 'Care Partner', priority: 'P1', phase: 1,
+    rationale: 'The Edit page is the most documented gap in the current system — the route and action exist but the page is missing. Without edit capability, Portal remains read-only and care partners must still use CRM for any changes.',
+    scenarios: [
+      'Given a Care Partner clicks on an incident from the incidents list or package tab, When the detail page loads, Then they see all incident fields: dates, reporter, description, harm classification, outcomes, actions taken, escalation details, follow-up plan, client notification status, and resolution status',
+      'Given a Care Partner updates the incident\'s resolution and adds notes, When they save, Then the changes persist and an audit trail entry records the update with the acting user and timestamp',
+      'Given an incident was originally migrated from Zoho CRM, When the Care Partner views it, Then all migrated data is displayed and the incident is fully editable in Portal',
+      'Given a Care Partner progresses an incident through the lifecycle (Reported → Triaged → Escalated → Actioned → Disclosed → Resolved), When they advance to "Resolved", Then the resolution field becomes required before the save completes'
+    ],
+    frs: ['FR-012','FR-018','FR-027','FR-028','FR-029'],
+    deps: ['US1','US2']
+  },
+  {
+    id: 'US5', num: 5, title: 'Trend Tracking on Incidents',
+    actor: 'Care Partner', priority: 'P2', phase: 1,
+    rationale: 'The current form has no "Has this happened before?" field. Trend analysis is a key gap identified in Marianne\'s documentation review and is critical for falls prevention and the April Falls Month initiative.',
+    scenarios: [
+      'Given a reporter is filling in the form, When they answer "Has this happened before?" as Yes, Then a details field appears asking for dates and frequency',
+      'Given a reporter answers "Part of a trend?" as Yes, When they provide details, Then the trend information is saved and visible on the incident detail view',
+      'Given a clinical team member views an incident marked as a trend, When they review the record, Then they see the trend flag prominently displayed alongside the incident details'
+    ],
+    frs: ['FR-008'],
+    deps: ['US1']
+  },
+  {
+    id: 'US6', num: 6, title: 'Actions Taken and Escalation Trail',
+    actor: 'Reporter', priority: 'P2', phase: 1,
+    rationale: 'The current form has no structured actions checklist or escalation tracking. This is a regulatory gap — the Best Practice Guide requires documentation of all actions taken.',
+    scenarios: [
+      'Given a reporter is completing the form, When they select actions from the checklist (first aid, called 000, contacted registered supporter, removed hazard, etc.), Then all selected actions are saved against the incident',
+      'Given a reporter fills in escalation details (who contacted, date/time, outcome), When they submit, Then the escalation trail is visible on the incident record',
+      'Given a reporter fills in the follow-up plan (GP appointment, care plan update needed, monitoring requirements), When they submit, Then the follow-up plan is visible and any care plan update flag is recorded'
+    ],
+    frs: ['FR-007','FR-009','FR-010'],
+    deps: ['US1']
+  },
+  {
+    id: 'US7', num: 7, title: 'Open Disclosure and Client Notification',
+    actor: 'Care Partner', priority: 'P2', phase: 1,
+    rationale: 'Open disclosure is a guiding principle in the Best Practice Guide and a regulatory requirement. Currently not tracked systematically.',
+    scenarios: [
+      'Given a reporter completes the form, When they record "Client informed: Yes" with date, method, and feedback, Then the disclosure record is saved',
+      'Given a reporter records "Client informed: Not yet", When they submit, Then the incident is flagged as requiring follow-up disclosure',
+      'Given an incident has "Not yet" disclosure status, When a Care Partner views it later, Then they see a visual indicator that disclosure is outstanding'
+    ],
+    frs: ['FR-011','FR-031'],
+    deps: ['US1','US4']
+  },
+  {
+    id: 'US8', num: 8, title: 'Global Incidents List with Filtering',
+    actor: 'Clinical Team member', priority: 'P2', phase: 1,
+    rationale: 'The existing incidents list exists but is basic. Clinical governance roles need filtering by harm tier, resolution status, date range, and trend flags.',
+    scenarios: [
+      'Given a Clinical Team member opens the global incidents list, When they filter by "Severe Harm", Then only incidents classified as Severe Harm are shown',
+      'Given a Clinical Team member filters by "Unresolved" status, When results display, Then only open incidents appear, sorted by harm severity (most severe first)',
+      'Given a Clinical Team member filters by date range, When they select the last quarter, Then only incidents within that period display with a count summary'
+    ],
+    frs: ['FR-015'],
+    deps: ['US1','US2']
+  },
+  {
+    id: 'US9', num: 9, title: 'Basic SIRS Deadline Tracking',
+    actor: 'Clinical Team member', priority: 'P2', phase: 1,
+    rationale: 'SIRS compliance is currently manual and relies on human memory. Priority 1 incidents must be reported within 24 hours — missing this is a regulatory breach. Even basic deadline visibility is a significant compliance improvement.',
+    scenarios: [
+      'Given an incident is flagged as SIRS-reportable and assigned Priority 1, When the priority is saved, Then the system calculates a deadline of 24 hours from the reported date and displays it on the incident record',
+      'Given an incident is flagged as SIRS-reportable and assigned Priority 2, When the priority is saved, Then the system calculates a deadline of 30 days from the reported date and displays it on the incident record',
+      'Given a SIRS deadline is approaching (within 4 hours for P1, within 3 days for P2), When a Clinical Team member views the incidents list, Then the incident shows a visual warning indicator (amber for approaching, red for overdue)',
+      'Given a Clinical Team member wants to see all SIRS incidents, When they filter the global incidents list by "SIRS", Then they see all SIRS incidents sorted by deadline urgency with P1/P2 indicators and time remaining',
+      'Given a SIRS incident has been reported to the ACQSC, When the Clinical Team member marks it as "Reported" with a date, Then the deadline warning is removed and the report date is recorded'
+    ],
+    frs: ['FR-022','FR-023','FR-024','FR-025','FR-041'],
+    deps: ['US3','US8']
+  },
+  {
+    id: 'US10', num: 10, title: 'One-Time Data Migration from CRM',
+    actor: 'System Administrator', priority: 'P2', phase: 1,
+    rationale: 'Portal is replacing CRM for incidents entirely (clean cut, no dual-system period). All historical data must be present in Portal from day one so that Care Partners have complete incident history during calls. The existing Zoho sync job is decommissioned after migration.',
+    scenarios: [
+      'Given the migration job is run against the CRM incident dataset, When it completes, Then all existing incidents are created in Portal with correct field mappings: dates, reporter, description, origin, classification, outcomes, and resolution',
+      'Given an existing CRM incident has a CAT 1-5 triage value, When migrated, Then the triage value is auto-mapped to the 4-tier harm classification (CAT 1\u2192Severe, CAT 2\u2192Moderate, CAT 3\u2192Low, CAT 4-5\u2192Clinical Notification) and the original CAT value is preserved in a legacy field for audit',
+      'Given the migration completes successfully, When the Zoho incident sync job is decommissioned, Then no further CRM sync occurs and Portal is the sole system for incident management',
+      'Given a Care Partner views a migrated incident, When they open the detail view, Then the incident is fully editable and behaves identically to a Portal-originated incident'
+    ],
+    frs: ['FR-016','FR-017','FR-018'],
+    deps: ['US4']
+  },
+  {
+    id: 'US11', num: 11, title: 'Gradual Rollout via Feature Flag',
+    actor: 'Product Owner', priority: 'P2', phase: 1,
+    rationale: 'Even with a clean cut from CRM, a phased rollout allows co-design with early adopters as Marianne recommended. The flag controls visibility of the new V2 form, edit capability, and related features while the team validates with real users.',
+    scenarios: [
+      'Given the feature flag is enabled for Organisation A, When a Care Partner from Organisation A views incidents, Then they see the "Report Incident" button and can create and edit incidents using the V2 form',
+      'Given the feature flag is disabled for Organisation B, When a Care Partner from Organisation B views incidents, Then they see incident records (migrated from CRM) but without create/edit capability until rollout reaches them',
+      'Given the feature flag is enabled globally, When all organisations have access, Then the flag can be removed and the feature is permanently available'
+    ],
+    frs: ['FR-021'],
+    deps: ['US1','US4']
+  },
+  {
+    id: 'US12', num: 12, title: 'Public Incident Intake Form',
+    actor: 'Care recipient, family member, support worker, or representative', priority: 'P2', phase: 1,
+    rationale: 'Marianne\'s V2 form was designed for all reporter types including care recipients and family. Restricting intake to Portal-logged-in users excludes the very people closest to incidents. A public form enables anyone to report while maintaining quality control through review.',
+    scenarios: [
+      'Given a family member accesses the public incident form link, When they fill in the V2 form sections and submit, Then the incident is created in Portal with a "Pending Review" status and the reporter\'s name, contact details, and relationship are recorded',
+      'Given a public-submitted incident is pending review, When a Care Partner or Coordinator opens the review queue, Then they see the incident details and can accept (linking to the correct package), request more information, or reject with a reason',
+      'Given a Care Partner accepts a public-submitted incident, When they confirm the package association and harm classification, Then the incident enters the standard lifecycle (Reported \u2192 Triaged \u2192 ...) and appears in the package incidents tab',
+      'Given a public-submitted incident is rejected, When the reviewer provides a reason, Then the rejection is recorded in the audit trail'
+    ],
+    frs: ['FR-033'],
+    deps: ['US1','US3']
+  },
+  {
+    id: 'US13', num: 13, title: 'Auto-Escalation Based on Harm Classification',
+    actor: 'Clinical Team member', priority: 'P3', phase: 2,
+    rationale: 'Stakeholder vision from Sian Holman — "the system should know based on the triage category who needs to be notified and when." Phase 2 builds on the structured data captured in Phase 1 intake.',
+    scenarios: [
+      'Given a reporter submits a Severe Harm incident, When the incident is saved, Then the system automatically notifies the assigned clinical nurse and the POD leader within 1 hour',
+      'Given a reporter submits a Moderate Harm incident, When the incident is saved, Then the system notifies the clinical team within 1 business day',
+      'Given no acknowledgement is received within the escalation timeframe, When the deadline passes, Then the system escalates to the next level (e.g., Head of Clinical Governance)'
+    ],
+    frs: ['FR-034'],
+    deps: ['US3','US9']
+  },
+  {
+    id: 'US14', num: 14, title: 'Incident \u2192 Case Automation',
+    actor: 'Clinical Team member', priority: 'P3', phase: 2,
+    rationale: 'Currently, the link between incidents and management plans/cases is manual. Automating this closes a major gap in the care cycle. Depends on CLI (Clinical Portal Uplift) epic.',
+    scenarios: [
+      'Given a Clinical Team member resolves an incident and selects "Create clinical case", When the resolution is saved, Then a new case is created in the Clinical Pathways system pre-populated with incident details',
+      'Given a case was created from an incident, When the Clinical Team member views the incident, Then they see a link to the associated case',
+      'Given a case was created from an incident, When the Clinical Team member views the case, Then they see the originating incident linked'
+    ],
+    frs: ['FR-035'],
+    deps: ['US4']
+  },
+  {
+    id: 'US15', num: 15, title: 'Risk Profile Auto-Update',
+    actor: 'Clinical Team member', priority: 'P3', phase: 2,
+    rationale: 'SAH Manual s8.6.2 mandates care plan review when an incident occurs. Currently this is manual. Depends on RNC2 (Future State Care Planning) epic.',
+    scenarios: [
+      'Given an incident is recorded for a client with an existing risk profile, When the incident is saved, Then the risk profile is flagged as "Review required — incident recorded"',
+      'Given an incident is classified as Severe Harm, When the clinical team reviews it, Then the system suggests specific risk categories to update based on the incident type',
+      'Given a risk profile is updated following an incident, When the update is saved, Then the audit trail links the risk change to the originating incident'
+    ],
+    frs: ['FR-036'],
+    deps: ['US1']
+  },
+  {
+    id: 'US16', num: 16, title: 'SIRS Deadline Enforcement with Alerts',
+    actor: 'Clinical Governance lead', priority: 'P4', phase: 2,
+    rationale: 'Phase 1 provides visibility; Phase 2 adds enforcement. Automated alerts replace the manual memory-based system and provide an audit trail for Commission reviews.',
+    scenarios: [
+      'Given a SIRS P1 incident is approaching its 24-hour deadline, When 12 hours remain, Then the assigned clinical lead receives an alert',
+      'Given a SIRS P1 incident is approaching its deadline, When 4 hours remain, Then escalation alerts are sent to the Head of Clinical Governance',
+      'Given a SIRS incident passes its deadline without being marked as "Reported", When the deadline expires, Then the system generates an overdue alert and flags the incident in the governance dashboard'
+    ],
+    frs: ['FR-037'],
+    deps: ['US9']
+  },
+  {
+    id: 'US17', num: 17, title: 'Incident Analytics and Export',
+    actor: 'Clinical Governance lead', priority: 'P4', phase: 2,
+    rationale: 'With ~2,781 incidents per quarter and no analytics, pattern analysis is impossible. Commission audit readiness requires demonstrable quality improvement cycles.',
+    scenarios: [
+      'Given a Clinical Governance lead opens the incidents dashboard, When they select the last quarter, Then they see trend charts: incidents by harm tier, incidents by type, repeat incidents, resolution timelines',
+      'Given the dashboard shows a pattern (e.g., spike in falls at a specific location), When the lead drills into the data, Then they see individual incidents contributing to the pattern with links to the records',
+      'Given a Clinical Governance lead needs a Commission report, When they export, Then a formatted report is generated with: incident counts by SIRS category, P1/P2 reporting compliance, resolution rates, and trend analysis'
+    ],
+    frs: ['FR-039','FR-040'],
+    deps: ['US8']
+  },
+  {
+    id: 'US18', num: 18, title: 'Notifications and In-App Alerts',
+    actor: 'Care Partner or Clinical Team member', priority: 'P4', phase: 2,
+    rationale: 'No notifications currently exist. Auto-escalation and deadline tracking (Phase 2) require a notification system to be effective.',
+    scenarios: [
+      'Given a new incident is raised for a package, When the incident is saved, Then the assigned Care Partner for that package receives an in-app notification',
+      'Given an incident is escalated (Severe or Moderate harm), When the escalation is triggered, Then the clinical team receives a notification with incident summary and required action',
+      'Given a Care Partner is assigned a follow-up action on an incident, When the follow-up date approaches, Then they receive a reminder notification'
+    ],
+    frs: ['FR-038'],
+    deps: ['US13']
+  }
+];
+
+const FR_CATEGORIES = {
+  'Intake Form': { colour: '#f59e0b', frs: ['FR-001','FR-002','FR-003','FR-019','FR-020','FR-020a'] },
+  'Harm Classification': { colour: '#ef4444', frs: ['FR-004','FR-005'] },
+  'Form Sections': { colour: '#22c55e', frs: ['FR-006','FR-007','FR-008','FR-009','FR-010','FR-011'] },
+  'View & Edit': { colour: '#3b82f6', frs: ['FR-012','FR-013','FR-014'] },
+  'Global List': { colour: '#ec4899', frs: ['FR-015'] },
+  'Migration': { colour: '#14b8a6', frs: ['FR-016','FR-017','FR-018'] },
+  'Feature Flag': { colour: '#fb923c', frs: ['FR-021'] },
+  'SIRS': { colour: '#06b6d4', frs: ['FR-022','FR-023','FR-024','FR-025'] },
+  'Audit & Lifecycle': { colour: '#a855f7', frs: ['FR-026','FR-027','FR-028','FR-029','FR-030'] },
+  'Disclosure & Permissions': { colour: '#64748b', frs: ['FR-031','FR-032'] },
+  'Public Form': { colour: '#6366f1', frs: ['FR-033'] },
+  'Automation (Phase 2)': { colour: '#475569', frs: ['FR-034','FR-035','FR-036'] },
+  'Alerts & Analytics (Phase 2)': { colour: '#334155', frs: ['FR-037','FR-038','FR-039','FR-040','FR-041'] },
+};
+
+const FRS = {
+  'FR-001': 'System MUST allow Care Partners to raise new incidents directly from a package\'s record',
+  'FR-002': 'System MUST present the V2 incident form with all 10 sections (client identification, incident details, reporter details, description, harm classification, outcomes, actions taken, escalation details, follow-up plan, client notification)',
+  'FR-003': 'System MUST pre-fill client identification (name, DOB, Support at Home ID) when raising from a package context',
+  'FR-004': 'System MUST enforce selection of one harm classification tier (4-tier, replacing CAT 1\u20135) and one classification (Clinical / Non-clinical / SIRS) before submission',
+  'FR-005': 'System MUST display timeframes for action corresponding to the selected harm tier',
+  'FR-006': 'System MUST support selecting multiple outcomes from the outcomes checklist',
+  'FR-007': 'System MUST support selecting multiple actions from the actions-taken checklist',
+  'FR-008': 'System MUST capture trend information (has this happened before, part of a trend) with optional free text',
+  'FR-009': 'System MUST capture escalation details (who contacted, date/time, outcome)',
+  'FR-010': 'System MUST capture follow-up plan (GP appointment, care plan update required, monitoring requirements)',
+  'FR-011': 'System MUST capture client notification status (yes/no/not yet, date, method, feedback)',
+  'FR-012': 'System MUST provide an Edit/Detail page for viewing and editing all incident fields',
+  'FR-013': 'System MUST display incidents on the package incidents tab sorted most-recent-first with: date, harm classification, description summary, resolution status',
+  'FR-014': 'System MUST provide an empty state with a "Report Incident" action when a package has no incidents',
+  'FR-015': 'System MUST provide the global incidents list with filtering by harm tier, resolution status, date range, and trend flag',
+  'FR-016': 'System MUST support a one-time data migration of all existing CRM incidents into Portal, mapping CAT 1-5 triage to the 4-tier harm classification (CAT 1\u2192Severe, CAT 2\u2192Moderate, CAT 3\u2192Low, CAT 4-5\u2192Clinical Notification) and preserving original values in a legacy field',
+  'FR-017': 'System MUST decommission the Zoho incident sync job after migration \u2014 Portal becomes the sole system for incident management',
+  'FR-018': 'System MUST ensure migrated incidents are fully editable and behave identically to Portal-originated incidents',
+  'FR-019': 'System MUST record the reporter\'s relationship to the care recipient',
+  'FR-020': 'System MUST record the location of the incident',
+  'FR-020a': 'System MUST replace the existing Origin field (Incident/Accident/Change-Deterioration) with clinical incident type categories',
+  'FR-021': 'System MUST be controllable via a feature flag toggled per organisation \u2014 when disabled, the current read-only views remain; when enabled, create and edit capabilities appear',
+  'FR-022': 'System MUST allow Clinical Team members to assign SIRS priority (P1/P2) to reportable incidents',
+  'FR-023': 'System MUST auto-calculate SIRS reporting deadlines: 24 hours from reported date for Priority 1, 30 days from reported date for Priority 2',
+  'FR-024': 'System MUST display SIRS deadline urgency indicators: approaching (amber) and overdue (red)',
+  'FR-025': 'System MUST allow Clinical Team members to mark a SIRS incident as "Reported" and record the report date',
+  'FR-026': 'System MUST capture an immutable intake snapshot recording the original harm classification at time of creation (separate from current values if later changed)',
+  'FR-027': 'System MUST maintain a complete audit trail for every incident creation, update, and field change with acting user and timestamp',
+  'FR-028': 'System MUST implement the V2 incident lifecycle: Reported \u2192 Triaged \u2192 Escalated \u2192 Actioned \u2192 Disclosed \u2192 Resolved. Incidents MAY skip stages when not applicable. Each skip must record a justification. CRM-migrated incidents are mapped to the nearest V2 stage.',
+  'FR-029': 'System MUST require resolution when stage is changed to "Resolved"',
+  'FR-030': 'System MUST prevent deletion of SIRS-reportable incidents (soft-delete only for non-SIRS)',
+  'FR-031': 'System MUST show a visual indicator for incidents with outstanding disclosure (client not yet informed)',
+  'FR-032': 'System MUST allow any Care Partner or Coordinator with access to a package to create and edit incidents on that package. SIRS priority assignment and "Reported" marking require Clinical Team access.',
+  'FR-033': 'System MUST provide a public incident intake form (no login required) that care recipients, family members, support workers, and representatives can use to report incidents. Public-submitted incidents sit in a pre-lifecycle "Pending Review" queue until accepted by a Care Partner or Coordinator. The form MUST include rate limiting (max 5 submissions per IP per hour) and CAPTCHA to prevent abuse.',
+  'FR-034': 'System MUST auto-escalate incidents to clinical staff based on harm classification tier and configured routing rules',
+  'FR-035': 'System MUST create a clinical case when an incident is resolved with "Requires clinical case" (depends on CLI epic)',
+  'FR-036': 'System MUST flag the client\'s risk profile for review when an incident is recorded (depends on RNC2 epic)',
+  'FR-037': 'System MUST enforce SIRS reporting deadlines with automated alerts at configurable thresholds',
+  'FR-038': 'System MUST send in-app and/or email notifications for new incidents, escalations, and approaching deadlines',
+  'FR-039': 'System MUST provide an incidents dashboard with trend analysis, pattern detection, and configurable date ranges',
+  'FR-040': 'System MUST support export of incidents in a Commission-ready report format',
+  'FR-041': 'System MUST track SIRS reportable incident types (8 types per Aged Care Act 2024)',
+};
+
+const EDGE_CASES = [
+  { q: 'What happens when an incident is raised against a client with no active package?', a: 'The system should allow raising the incident but flag the missing package association for resolution.', keywords: ['package','client','raise','incident'] },
+  { q: 'What happens when a reporter raises an incident but doesn\'t know the client\'s Support at Home ID?', a: 'The form should accept name + DOB as minimum identification.', keywords: ['reporter','support at home','ID','form','identification'] },
+  { q: 'What happens when a Care Partner raises an incident for a self-managed client?', a: 'The form works identically \u2014 Trilogy remains legally responsible regardless of management model.', keywords: ['self-managed','care partner','incident'] },
+  { q: 'What happens when an incident is raised outside business hours?', a: 'Harm classification timeframes are in business days (except Severe Harm which is 24 hours absolute). The system should calculate deadlines accordingly.', keywords: ['business hours','harm','deadline','timeframe'] },
+  { q: 'What happens if the one-time CRM migration encounters an incident with missing or invalid data?', a: 'The migration job logs the error, skips the record, and produces a report of unmigrated incidents for manual review.', keywords: ['migration','CRM','data','invalid'] },
+  { q: 'What happens if a migrated incident has a CAT value that doesn\'t cleanly map (e.g., blank triage)?', a: 'The harm classification is set to "Clinical Notification Only" (safest default) and flagged for clinical review.', keywords: ['migration','CAT','triage','harm','classification'] },
+  { q: 'What happens when a Care Partner changes harm classification after initial intake?', a: 'Both the original intake classification and the current classification are recorded for audit trail purposes.', keywords: ['harm','classification','change','intake','audit'] },
+  { q: 'What happens when a SIRS deadline has already passed when the incident is first classified as SIRS?', a: 'The deadline shows as overdue immediately; the system does not prevent saving.', keywords: ['SIRS','deadline','overdue'] },
+  { q: 'What happens when an incident is soft-deleted?', a: 'It is removed from the default list but retained for audit; SIRS-reportable incidents cannot be deleted (only resolved).', keywords: ['delete','soft-delete','SIRS','audit'] },
+];
+
+const SUCCESS_CRITERIA = [
+  { id: 'SC-001', text: 'Care Partners can raise an incident from Portal in under 5 minutes (current CRM process takes 10-15 minutes with context-switching)', phase: 1 },
+  { id: 'SC-002', text: '100% of incidents raised from Portal include harm classification (currently 0% have structured triage at intake)', phase: 1 },
+  { id: 'SC-003', text: 'Care Partners can view a client\'s incident history within 2 clicks from the package view', phase: 1 },
+  { id: 'SC-004', text: 'Clinical Team can filter the global incidents list to find specific incidents within 10 seconds', phase: 1 },
+  { id: 'SC-005', text: 'Trend tracking is captured on at least 80% of incidents where recurrence is known', phase: 1 },
+  { id: 'SC-006', text: 'Open disclosure status is recorded on 100% of incidents', phase: 1 },
+  { id: 'SC-007', text: '100% of existing CRM incidents successfully migrated to Portal with correct field mapping', phase: 1 },
+  { id: 'SC-008', text: 'System supports the current volume of ~930 incidents per month without performance degradation', phase: 1 },
+  { id: 'SC-009', text: 'The Edit page is functional \u2014 100% of incidents viewable and editable in Portal (eliminating the documented "Edit.vue missing" gap)', phase: 1 },
+  { id: 'SC-010', text: '100% of SIRS-classified incidents have an auto-calculated reporting deadline visible on the record', phase: 1 },
+  { id: 'SC-011', text: 'Zoho incident sync job successfully decommissioned post-migration with zero data loss', phase: 1 },
+  { id: 'SC-012', text: 'Zero missed SIRS Priority 1 deadlines (24h) after automated enforcement is enabled', phase: 2 },
+  { id: 'SC-013', text: 'Average time from incident creation to clinical acknowledgement reduced by 50% through auto-escalation', phase: 2 },
+  { id: 'SC-014', text: '100% of SIRS-reportable incidents have a system-enforced deadline with alert trail', phase: 2 },
+  { id: 'SC-015', text: 'Governance lead can generate a Commission-ready quarterly report in under 5 minutes', phase: 2 },
+];
+
+const OUT_OF_SCOPE = [
+  'SIRS submission to My Aged Care Provider Portal \u2014 the system tracks deadlines and compliance but actual submission to ACQSC remains a manual process via My Aged Care',
+  'Ongoing CRM sync \u2014 after the one-time migration, no further sync between CRM and Portal occurs in either direction',
+  'Anonymous reporting \u2014 the Best Practice Guide mentions allowing anonymous reporting, but this requires separate policy decisions and is deferred',
+  'Police notification tracking \u2014 the documentation review identifies this as a gap, but tracking police involvement is captured in the outcomes checklist (Phase 1) and full police notification workflow is deferred',
+];
+
+// Build FR→Story reverse map
+const frToStories = {};
+Object.keys(FRS).forEach(frId => { frToStories[frId] = []; });
+STORIES.forEach(s => {
+  s.frs.forEach(frId => {
+    if (frToStories[frId]) frToStories[frId].push(s.id);
+  });
+});
+
+// Priority colour map
+const PRIORITY_COLOURS = { P1: 'var(--p1)', P2: 'var(--p2)', P3: 'var(--p3)', P4: 'var(--p4)' };
+const PRIORITY_BG = { P1: '#ef4444', P2: '#fbbf24', P3: '#64748b', P4: '#475569' };
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+
+let selectedStory = null;
+let currentTab = 'stories';
+let canvasOffset = { x: 0, y: 0 };
+let canvasScale = 1;
+let isDragging = false;
+let isPanning = false;
+let dragTarget = null;
+let dragStartPos = { x: 0, y: 0 };
+let panStartPos = { x: 0, y: 0 };
+let panStartOffset = { x: 0, y: 0 };
+let nodePositions = {};
+let tooltipTimeout = null;
+
+// ═══════════════════════════════════════════════════════════════
+// LAYOUT
+// ═══════════════════════════════════════════════════════════════
+
+function calculateLayout() {
+  const containerW = document.querySelector('.canvas-container').clientWidth;
+  const containerH = document.querySelector('.canvas-container').clientHeight;
+  const cardW = 220;
+  const cardH = 140;
+  const hGap = 40;
+  const vGap = 30;
+  const laneGap = 60;
+
+  // Group stories by priority
+  const lanes = { P1: [], P2: [], P3: [], P4: [] };
+  STORIES.forEach(s => lanes[s.priority].push(s));
+
+  let currentY = 80;
+  const laneYs = {};
+
+  ['P1','P2','P3','P4'].forEach(p => {
+    const stories = lanes[p];
+    if (stories.length === 0) return;
+    laneYs[p] = { start: currentY };
+    const cols = stories.length;
+    const totalW = cols * cardW + (cols - 1) * hGap;
+    const startX = Math.max(60, (containerW - totalW) / 2);
+
+    stories.forEach((s, i) => {
+      nodePositions[s.id] = {
+        x: startX + i * (cardW + hGap),
+        y: currentY + 30
+      };
+    });
+
+    currentY += cardH + vGap + 30;
+    laneYs[p] = { ...laneYs[p], end: currentY };
+    currentY += laneGap;
+  });
+
+  return laneYs;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CANVAS RENDERING
+// ═══════════════════════════════════════════════════════════════
+
+function renderCanvas() {
+  const canvas = document.getElementById('canvas');
+  canvas.innerHTML = '';
+
+  const laneYs = calculateLayout();
+
+  // Render swim lane labels + separators
+  ['P1','P2','P3','P4'].forEach(p => {
+    if (!laneYs[p]) return;
+    const label = document.createElement('div');
+    label.className = 'swim-lane-label';
+    label.style.top = (laneYs[p].start - 5) + 'px';
+    label.textContent = p === 'P1' ? 'Priority 1 — Must Have' : p === 'P2' ? 'Priority 2 — Should Have' : p === 'P3' ? 'Priority 3 — Phase 2' : 'Priority 4 — Phase 2';
+    canvas.appendChild(label);
+
+    if (p !== 'P1') {
+      const sep = document.createElement('div');
+      sep.className = 'swim-lane-separator';
+      sep.style.top = (laneYs[p].start - 30) + 'px';
+      canvas.appendChild(sep);
+    }
+  });
+
+  // Render story nodes
+  STORIES.forEach(s => {
+    const node = document.createElement('div');
+    node.className = 'story-node' + (selectedStory === s.id ? ' selected' : '');
+    node.dataset.id = s.id;
+    const pos = nodePositions[s.id];
+    node.style.left = pos.x + 'px';
+    node.style.top = pos.y + 'px';
+
+    node.innerHTML = `
+      <div class="priority-stripe" style="background:${PRIORITY_BG[s.priority]}"></div>
+      <div class="node-body">
+        <div class="node-header">
+          <span class="node-num">${s.id}</span>
+          <span class="node-priority" style="background:${PRIORITY_BG[s.priority]}">${s.priority}</span>
+        </div>
+        <div class="node-title">${s.title}</div>
+        <div class="node-actor">${s.actor}</div>
+        <div class="node-stats">
+          <span>\u{1F4CB} ${s.scenarios.length} scenarios</span>
+          <span>\u2699 ${s.frs.length} FRs</span>
+          <span>${s.deps.length > 0 ? '\u{1F517} ' + s.deps.length + ' deps' : ''}</span>
+        </div>
+      </div>
+      <div class="phase-tag" style="background:${s.phase === 1 ? 'var(--teal)' : 'var(--blue)'}">Phase ${s.phase}</div>
+    `;
+
+    // Events
+    node.addEventListener('mousedown', e => startDrag(e, s.id));
+    node.addEventListener('click', e => {
+      if (!isDragging) selectStory(s.id);
+    });
+    node.addEventListener('mouseenter', e => showTooltip(e, s));
+    node.addEventListener('mouseleave', hideTooltip);
+
+    canvas.appendChild(node);
+  });
+
+  drawArrows();
+  applyTransform();
+}
+
+function drawArrows() {
+  const svg = document.getElementById('arrowsSvg');
+  svg.innerHTML = '';
+
+  // Define arrowhead marker
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+  marker.setAttribute('id', 'arrowhead');
+  marker.setAttribute('markerWidth', '10');
+  marker.setAttribute('markerHeight', '7');
+  marker.setAttribute('refX', '10');
+  marker.setAttribute('refY', '3.5');
+  marker.setAttribute('orient', 'auto');
+  const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  polygon.setAttribute('points', '0 0, 10 3.5, 0 7');
+  polygon.setAttribute('fill', '#43C0BE55');
+  marker.appendChild(polygon);
+  defs.appendChild(marker);
+  svg.appendChild(defs);
+
+  const cardW = 220;
+  const cardH = 140;
+
+  STORIES.forEach(s => {
+    s.deps.forEach(depId => {
+      const fromPos = nodePositions[depId];
+      const toPos = nodePositions[s.id];
+      if (!fromPos || !toPos) return;
+
+      // Calculate connection points
+      const fromCx = fromPos.x + cardW / 2;
+      const fromCy = fromPos.y + cardH / 2;
+      const toCx = toPos.x + cardW / 2;
+      const toCy = toPos.y + cardH / 2;
+
+      // Determine best edge connection
+      let x1, y1, x2, y2;
+      const dx = toCx - fromCx;
+      const dy = toCy - fromCy;
+
+      if (Math.abs(dy) > Math.abs(dx)) {
+        // Vertical connection
+        if (dy > 0) {
+          x1 = fromCx; y1 = fromPos.y + cardH;
+          x2 = toCx; y2 = toPos.y;
+        } else {
+          x1 = fromCx; y1 = fromPos.y;
+          x2 = toCx; y2 = toPos.y + cardH;
+        }
+      } else {
+        // Horizontal connection
+        if (dx > 0) {
+          x1 = fromPos.x + cardW; y1 = fromCy;
+          x2 = toPos.x; y2 = toCy;
+        } else {
+          x1 = fromPos.x; y1 = fromCy;
+          x2 = toPos.x + cardW; y2 = toCy;
+        }
+      }
+
+      // Apply canvas transform
+      const tx1 = x1 * canvasScale + canvasOffset.x;
+      const ty1 = y1 * canvasScale + canvasOffset.y;
+      const tx2 = x2 * canvasScale + canvasOffset.x;
+      const ty2 = y2 * canvasScale + canvasOffset.y;
+
+      const midX = (tx1 + tx2) / 2;
+      const midY = (ty1 + ty2) / 2;
+      const cpx1 = tx1 + (midX - tx1) * 0.5;
+      const cpy1 = ty1;
+      const cpx2 = tx2 - (tx2 - midX) * 0.5;
+      const cpy2 = ty2;
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${tx1} ${ty1} C ${cpx1} ${cpy1}, ${cpx2} ${cpy2}, ${tx2} ${ty2}`);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', '#43C0BE33');
+      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('marker-end', 'url(#arrowhead)');
+
+      // Highlight arrows for selected story
+      if (selectedStory && (s.id === selectedStory || depId === selectedStory)) {
+        path.setAttribute('stroke', '#43C0BE88');
+        path.setAttribute('stroke-width', '2.5');
+      }
+
+      svg.appendChild(path);
+    });
+  });
+}
+
+function applyTransform() {
+  const canvas = document.getElementById('canvas');
+  canvas.style.transform = `translate(${canvasOffset.x}px, ${canvasOffset.y}px) scale(${canvasScale})`;
+  canvas.style.transformOrigin = '0 0';
+  drawArrows();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INTERACTION - Drag, Pan, Zoom
+// ═══════════════════════════════════════════════════════════════
+
+function startDrag(e, storyId) {
+  if (e.button !== 0) return;
+  dragTarget = storyId;
+  const pos = nodePositions[storyId];
+  dragStartPos = { x: e.clientX - pos.x * canvasScale, y: e.clientY - pos.y * canvasScale };
+  isDragging = false;
+
+  const onMove = (ev) => {
+    isDragging = true;
+    const node = document.querySelector(`[data-id="${storyId}"]`);
+    if (node) node.classList.add('dragging');
+    nodePositions[storyId] = {
+      x: (ev.clientX - dragStartPos.x) / canvasScale,
+      y: (ev.clientY - dragStartPos.y) / canvasScale
+    };
+    node.style.left = nodePositions[storyId].x + 'px';
+    node.style.top = nodePositions[storyId].y + 'px';
+    drawArrows();
+  };
+
+  const onUp = () => {
+    const node = document.querySelector(`[data-id="${storyId}"]`);
+    if (node) node.classList.remove('dragging');
+    dragTarget = null;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    setTimeout(() => { isDragging = false; }, 50);
+  };
+
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+  e.stopPropagation();
+}
+
+// Pan
+document.querySelector('.canvas-container').addEventListener('mousedown', e => {
+  if (e.target.closest('.story-node') || e.target.closest('.canvas-controls') || e.target.closest('.phase-legend')) return;
+  isPanning = true;
+  panStartPos = { x: e.clientX, y: e.clientY };
+  panStartOffset = { ...canvasOffset };
+});
+
+document.addEventListener('mousemove', e => {
+  if (isPanning) {
+    canvasOffset.x = panStartOffset.x + (e.clientX - panStartPos.x);
+    canvasOffset.y = panStartOffset.y + (e.clientY - panStartPos.y);
+    applyTransform();
+  }
+});
+
+document.addEventListener('mouseup', () => { isPanning = false; });
+
+// Zoom
+document.querySelector('.canvas-container').addEventListener('wheel', e => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  const newScale = Math.max(0.3, Math.min(2, canvasScale * delta));
+
+  // Zoom towards cursor
+  const rect = document.querySelector('.canvas-container').getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  canvasOffset.x = mx - (mx - canvasOffset.x) * (newScale / canvasScale);
+  canvasOffset.y = my - (my - canvasOffset.y) * (newScale / canvasScale);
+  canvasScale = newScale;
+
+  applyTransform();
+}, { passive: false });
+
+function zoomIn() { canvasScale = Math.min(2, canvasScale * 1.2); applyTransform(); }
+function zoomOut() { canvasScale = Math.max(0.3, canvasScale * 0.8); applyTransform(); }
+
+function fitAll() {
+  const container = document.querySelector('.canvas-container');
+  const cw = container.clientWidth;
+  const ch = container.clientHeight;
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  STORIES.forEach(s => {
+    const p = nodePositions[s.id];
+    if (p.x < minX) minX = p.x;
+    if (p.y < minY) minY = p.y;
+    if (p.x + 220 > maxX) maxX = p.x + 220;
+    if (p.y + 140 > maxY) maxY = p.y + 140;
+  });
+
+  const contentW = maxX - minX + 100;
+  const contentH = maxY - minY + 100;
+  canvasScale = Math.min(cw / contentW, ch / contentH, 1.2);
+  canvasOffset.x = (cw - contentW * canvasScale) / 2 - minX * canvasScale + 50 * canvasScale;
+  canvasOffset.y = (ch - contentH * canvasScale) / 2 - minY * canvasScale + 50 * canvasScale;
+  applyTransform();
+}
+
+function resetLayout() {
+  nodePositions = {};
+  canvasOffset = { x: 0, y: 0 };
+  canvasScale = 1;
+  renderCanvas();
+  setTimeout(fitAll, 50);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOOLTIP
+// ═══════════════════════════════════════════════════════════════
+
+function showTooltip(e, story) {
+  clearTimeout(tooltipTimeout);
+  tooltipTimeout = setTimeout(() => {
+    const tt = document.getElementById('tooltip');
+    tt.innerHTML = `
+      <div class="tt-title">${story.id}: ${story.title}</div>
+      <div class="tt-actor">${story.actor} &bull; ${story.priority} &bull; Phase ${story.phase}</div>
+      <div class="tt-rationale">${story.rationale}</div>
+      <div class="tt-stats">
+        <span>${story.scenarios.length} scenarios</span>
+        <span>${story.frs.length} FRs</span>
+        <span>${story.deps.length} dependencies</span>
+      </div>
+    `;
+    tt.classList.remove('hidden');
+
+    const rect = tt.getBoundingClientRect();
+    let left = e.clientX + 16;
+    let top = e.clientY + 16;
+    if (left + rect.width > window.innerWidth) left = e.clientX - rect.width - 16;
+    if (top + rect.height > window.innerHeight) top = e.clientY - rect.height - 16;
+    tt.style.left = left + 'px';
+    tt.style.top = top + 'px';
+  }, 400);
+}
+
+function hideTooltip() {
+  clearTimeout(tooltipTimeout);
+  document.getElementById('tooltip').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SELECTION & DETAIL PANEL
+// ═══════════════════════════════════════════════════════════════
+
+function selectStory(storyId) {
+  selectedStory = storyId;
+  const story = STORIES.find(s => s.id === storyId);
+
+  // Update canvas selection
+  document.querySelectorAll('.story-node').forEach(n => n.classList.remove('selected'));
+  const node = document.querySelector(`[data-id="${storyId}"]`);
+  if (node) node.classList.add('selected');
+
+  // Update sidebar selection
+  document.querySelectorAll('.sidebar-card').forEach(c => c.classList.remove('selected'));
+  const sc = document.querySelector(`.sidebar-card[data-id="${storyId}"]`);
+  if (sc) { sc.classList.add('selected'); sc.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+
+  // Render detail panel
+  renderDetailPanel(story);
+
+  // Render prompt bar
+  renderPromptBar(story);
+
+  // Redraw arrows
+  drawArrows();
+}
+
+function renderDetailPanel(story) {
+  const panel = document.getElementById('detailPanel');
+  const body = document.getElementById('detailBody');
+  panel.classList.add('open');
+
+  // Match edge cases by keyword
+  const relatedEdgeCases = EDGE_CASES.filter(ec => {
+    const titleWords = story.title.toLowerCase().split(/\s+/);
+    return ec.keywords.some(kw => titleWords.some(tw => tw.includes(kw.toLowerCase())) || story.title.toLowerCase().includes(kw.toLowerCase()));
+  });
+
+  body.innerHTML = `
+    <h2>${story.id}: ${story.title}</h2>
+    <div class="detail-actor">${story.actor} &bull; <span style="color:${PRIORITY_BG[story.priority]};font-weight:700">${story.priority}</span> &bull; Phase ${story.phase} &bull; ${story.scenarios.length} scenarios &bull; ${story.frs.length} FRs</div>
+
+    <div class="detail-section">
+      <h3>Why This Priority</h3>
+      <div class="rationale">${story.rationale}</div>
+    </div>
+
+    ${story.deps.length > 0 ? `
+    <div class="detail-section">
+      <h3>Dependencies</h3>
+      <div class="dep-tags">
+        ${story.deps.map(d => {
+          const dep = STORIES.find(s => s.id === d);
+          return `<span class="dep-tag" onclick="selectStory('${d}')">${d}: ${dep ? dep.title : d}</span>`;
+        }).join('')}
+      </div>
+    </div>
+    ` : ''}
+
+    <div class="detail-section">
+      <h3>Acceptance Scenarios (${story.scenarios.length})</h3>
+      ${story.scenarios.map((sc, i) => `
+        <div class="scenario-block">
+          <strong style="color:var(--text-dim);font-size:11px">Scenario ${i + 1}</strong><br>
+          ${highlightGWT(sc)}
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="detail-section">
+      <h3>Functional Requirements (${story.frs.length})</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${story.frs.map(fr => `<span class="fr-badge" title="${escHtml(FRS[fr] || '')}">${fr}</span>`).join('')}
+      </div>
+      <div style="margin-top:8px">
+        ${story.frs.map(fr => `
+          <div style="font-size:11px;margin:4px 0;padding:6px 8px;background:var(--bg);border-radius:4px">
+            <strong style="color:var(--teal-light)">${fr}</strong>: ${FRS[fr] || ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    ${relatedEdgeCases.length > 0 ? `
+    <div class="detail-section">
+      <h3>Related Edge Cases (${relatedEdgeCases.length})</h3>
+      ${relatedEdgeCases.map(ec => `
+        <div class="edge-case">
+          <strong style="color:var(--when)">Q:</strong> ${ec.q}<br>
+          <strong style="color:var(--given)">A:</strong> ${ec.a}
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+  `;
+
+  // Update prompt bar positioning
+  const promptBar = document.getElementById('promptBar');
+  promptBar.classList.add('with-detail');
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.getElementById('promptBar').classList.remove('with-detail');
+  document.getElementById('promptBar').classList.remove('open');
+  selectedStory = null;
+  document.querySelectorAll('.story-node').forEach(n => n.classList.remove('selected'));
+  document.querySelectorAll('.sidebar-card').forEach(c => c.classList.remove('selected'));
+  drawArrows();
+}
+
+function highlightGWT(text) {
+  return text
+    .replace(/\bGiven\b/g, '<span class="kw-given">Given</span>')
+    .replace(/\bWhen\b/g, '<span class="kw-when">When</span>')
+    .replace(/\bThen\b/g, '<span class="kw-then">Then</span>');
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PROMPT BAR
+// ═══════════════════════════════════════════════════════════════
+
+function renderPromptBar(story) {
+  const bar = document.getElementById('promptBar');
+  const text = document.getElementById('promptText');
+  bar.classList.add('open');
+
+  const depsText = story.deps.length > 0
+    ? `\nDependencies: ${story.deps.map(d => { const dep = STORIES.find(s => s.id === d); return d + (dep ? ' (' + dep.title + ')' : ''); }).join(', ')}`
+    : '';
+
+  const prompt = `Implement ${story.id}: ${story.title}
+
+Actor: ${story.actor}
+Priority: ${story.priority} (Phase ${story.phase})
+Purpose: ${story.rationale}${depsText}
+
+Acceptance Criteria:
+${story.scenarios.map((sc, i) => `${i + 1}. ${sc}`).join('\n')}
+
+Functional Requirements:
+${story.frs.map(fr => `- ${fr}: ${FRS[fr] || ''}`).join('\n')}
+
+This is part of the ICM (Incident Management) epic in TC Portal. Uses Inertia v2 + Vue 3 + Tailwind v3. Incident domain code is in domain/Incident/. Vue pages in resources/js/Pages/. Follow existing Common components from resources/js/Components/Common/.`;
+
+  text.textContent = prompt;
+}
+
+function copyPrompt() {
+  const text = document.getElementById('promptText').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SIDEBAR
+// ═══════════════════════════════════════════════════════════════
+
+function renderSidebar() {
+  const container = document.getElementById('sidebarContent');
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  if (currentTab === 'stories') {
+    renderStoriesTab(container, query);
+  } else if (currentTab === 'requirements') {
+    renderRequirementsTab(container, query);
+  } else if (currentTab === 'scenarios') {
+    renderScenariosTab(container, query);
+  }
+}
+
+function renderStoriesTab(container, query) {
+  const filtered = STORIES.filter(s => {
+    if (!query) return true;
+    return s.title.toLowerCase().includes(query) ||
+           s.actor.toLowerCase().includes(query) ||
+           s.id.toLowerCase().includes(query) ||
+           s.rationale.toLowerCase().includes(query);
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="no-results">No stories match your search</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(s => `
+    <div class="sidebar-card ${selectedStory === s.id ? 'selected' : ''}" data-id="${s.id}" onclick="selectStory('${s.id}');flyTo('${s.id}')">
+      <div class="card-header">
+        <span class="story-num">${s.id}</span>
+        <span class="story-title">${s.title}</span>
+        <span class="priority-badge" style="background:${PRIORITY_BG[s.priority]}">${s.priority}</span>
+      </div>
+      <div class="card-meta">
+        <span>${s.actor}</span>
+        <span>${s.scenarios.length} scenarios</span>
+        <span>${s.frs.length} FRs</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRequirementsTab(container, query) {
+  let html = '';
+  Object.entries(FR_CATEGORIES).forEach(([cat, { colour, frs }]) => {
+    const filteredFrs = frs.filter(frId => {
+      if (!query) return true;
+      return frId.toLowerCase().includes(query) ||
+             (FRS[frId] || '').toLowerCase().includes(query) ||
+             cat.toLowerCase().includes(query);
+    });
+    if (filteredFrs.length === 0) return;
+
+    html += `<div class="fr-group">
+      <div class="fr-group-header" style="background:${colour}22;color:${colour}">${cat} (${filteredFrs.length})</div>
+      ${filteredFrs.map(frId => `
+        <div class="fr-card" onclick="showFrDetail('${frId}')">
+          <span class="fr-id">${frId}</span>${FRS[frId] || ''}
+          <div style="margin-top:4px;font-size:10px;color:var(--text-dim)">Stories: ${(frToStories[frId] || []).join(', ')}</div>
+        </div>
+      `).join('')}
+    </div>`;
+  });
+
+  container.innerHTML = html || '<div class="no-results">No requirements match your search</div>';
+}
+
+function renderScenariosTab(container, query) {
+  let html = '';
+  STORIES.forEach(s => {
+    s.scenarios.forEach((sc, i) => {
+      if (query && !sc.toLowerCase().includes(query) && !s.title.toLowerCase().includes(query)) return;
+      html += `
+        <div class="scenario-card" onclick="selectStory('${s.id}');flyTo('${s.id}')">
+          <div class="scenario-parent">${s.id}: ${s.title}</div>
+          ${highlightGWT(sc)}
+        </div>
+      `;
+    });
+  });
+
+  container.innerHTML = html || '<div class="no-results">No scenarios match your search</div>';
+}
+
+function showFrDetail(frId) {
+  // Find first story that uses this FR and select it
+  const stories = frToStories[frId] || [];
+  if (stories.length > 0) {
+    selectStory(stories[0]);
+    flyTo(stories[0]);
+  }
+}
+
+function flyTo(storyId) {
+  const pos = nodePositions[storyId];
+  if (!pos) return;
+
+  const container = document.querySelector('.canvas-container');
+  const cw = container.clientWidth;
+  const ch = container.clientHeight;
+  const detailOpen = document.getElementById('detailPanel').classList.contains('open');
+  const effectiveW = detailOpen ? cw - 440 : cw;
+
+  canvasScale = 1;
+  canvasOffset.x = effectiveW / 2 - pos.x * canvasScale - 110;
+  canvasOffset.y = ch / 2 - pos.y * canvasScale - 70;
+  applyTransform();
+}
+
+// Tab switching
+document.querySelectorAll('.sidebar-tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-tabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    renderSidebar();
+  });
+});
+
+// Search
+document.getElementById('searchInput').addEventListener('input', () => renderSidebar());
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+
+function init() {
+  renderCanvas();
+  renderSidebar();
+  setTimeout(fitAll, 100);
+}
+
+window.addEventListener('resize', () => {
+  drawArrows();
+});
+
+init();
+</script>
+</body>
+</html>

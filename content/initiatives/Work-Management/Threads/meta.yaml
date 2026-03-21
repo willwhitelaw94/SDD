@@ -1,0 +1,7 @@
+title: 'Threads'
+status: design
+prefix: THR
+summary: "Unified communication threads combining emails, calls, internal notes, and AI summaries into a single chronological timeline per conversation"
+description: null
+due_date: null
+bounty_value: 10000

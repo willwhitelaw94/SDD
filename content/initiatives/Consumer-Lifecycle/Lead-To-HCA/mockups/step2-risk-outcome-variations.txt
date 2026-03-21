@@ -1,0 +1,533 @@
+================================================================================
+         STEP 2: RISK ASSESSMENT OUTCOME — LAYOUT VARIATIONS (6 OPTIONS)
+================================================================================
+
+Step 2 receives the Risk Score Outcome from the Assessment Tool (external).
+This step has 4 states:
+  - Waiting (Assessment Tool not yet completed)
+  - Suitable for Everything (~98%)
+  - Needs Clinical Attention (~2%)
+  - Not Suited (rare — process stops)
+
+The salesperson cannot proceed past Step 2 until the outcome is received.
+
+================================================================================
+OPTION A: Centered Status Card (Full States)
+================================================================================
+
+--- STATE: WAITING ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                                                                             │
+│          ┌───────────────────────────────────────────────────────┐          │
+│          │                                                       │          │
+│          │                     ◌ ◌ ◌                             │          │
+│          │                                                       │          │
+│          │   Waiting for Assessment Tool                         │          │
+│          │                                                       │          │
+│          │   The risk assessment is being processed by the       │          │
+│          │   Assessment Tool. This typically takes 1-2 minutes.  │          │
+│          │                                                       │          │
+│          │   ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░     │          │
+│          │                                                       │          │
+│          │   Started: 2:34 PM                Elapsed: 45s        │          │
+│          │                                                       │          │
+│          │                    [Refresh Status]                    │          │
+│          │                                                       │          │
+│          └───────────────────────────────────────────────────────┘          │
+│                                                                             │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- STATE: SUITABLE FOR EVERYTHING ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                                                                             │
+│          ┌───────────────────────────────────────────────────────┐          │
+│          │                                                       │          │
+│          │   ✓  SUITABLE FOR EVERYTHING                          │          │
+│          │                                                       │          │
+│          │   Joan Smith has passed the risk assessment and is     │          │
+│          │   eligible for all management options.                 │          │
+│          │                                                       │          │
+│          │   ───────────────────────────────────────────────     │          │
+│          │                                                       │          │
+│          │   Management Option:  SM+ (Preferred)                 │          │
+│          │   Assessment Date:    02/02/2026 2:35 PM              │          │
+│          │                                                       │          │
+│          └───────────────────────────────────────────────────────┘          │
+│                                                                             │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- STATE: NEEDS CLINICAL ATTENTION ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                                                                             │
+│          ┌───────────────────────────────────────────────────────┐          │
+│          │                                                       │          │
+│          │   ⚠  NEEDS CLINICAL ATTENTION                         │          │
+│          │                                                       │          │
+│          │   Joan Smith requires clinical nurse review before     │          │
+│          │   an agreement can be signed. You may continue to     │          │
+│          │   Step 3, but Step 4 will show a sample agreement     │          │
+│          │   only (not signable).                                 │          │
+│          │                                                       │          │
+│          │   ───────────────────────────────────────────────     │          │
+│          │                                                       │          │
+│          │   Risk Flags:                                         │          │
+│          │   ┌──────────────────┐  ┌──────────────────┐          │          │
+│          │   │  Previously Off- │  │  High Care Need  │          │          │
+│          │   │  boarded         │  │                  │          │          │
+│          │   └──────────────────┘  └──────────────────┘          │          │
+│          │                                                       │          │
+│          │   Assessment Date:    02/02/2026 2:35 PM              │          │
+│          │                                                       │          │
+│          └───────────────────────────────────────────────────────┘          │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ℹ What happens next?                                                │   │
+│  │  • You can continue the questionnaire (Step 3)                       │   │
+│  │  • Step 4 will display a sample agreement (not signable)             │   │
+│  │  • Clinical nurse will review within 24 hours                        │   │
+│  │  • You'll be notified when the review is complete                    │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- STATE: NOT SUITED ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│                                                                             │
+│          ┌───────────────────────────────────────────────────────┐          │
+│          │                                                       │          │
+│          │   ✗  NOT SUITED                                       │          │
+│          │                                                       │          │
+│          │   Joan Smith does not meet eligibility criteria        │          │
+│          │   for Trilogy Care services at this time.              │          │
+│          │                                                       │          │
+│          │   ───────────────────────────────────────────────     │          │
+│          │                                                       │          │
+│          │   Risk Flags:                                         │          │
+│          │   ┌──────────────────┐  ┌──────────────────┐          │          │
+│          │   │    Critical      │  │  Safety Risk     │          │          │
+│          │   └──────────────────┘  └──────────────────┘          │          │
+│          │                                                       │          │
+│          │   Assessment Date:    02/02/2026 2:35 PM              │          │
+│          │                                                       │          │
+│          │   The conversion process cannot continue.             │          │
+│          │                                                       │          │
+│          └───────────────────────────────────────────────────────┘          │
+│                                                                             │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                     [Cancel Conversion]          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Clean, focused, status immediately obvious, room for risk flags
+**Cons:** Large empty space when waiting, simple layout may feel underwhelming
+
+================================================================================
+OPTION B: Compact Banner + Details Below
+================================================================================
+
+--- STATE: SUITABLE ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ✓  SUITABLE FOR EVERYTHING                       02/02/2026 2:35PM │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Joan Smith has passed the risk assessment. The preferred management        │
+│  option (SM+) will be used on the Home Care Agreement.                     │
+│                                                                             │
+│  ┌────────────────────┬────────────────────┬────────────────────────────┐   │
+│  │ Management Option  │ Risk Flags         │ Assessed By                │   │
+│  │ SM+ (Preferred)    │ None               │ Assessment Tool (auto)     │   │
+│  └────────────────────┴────────────────────┴────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- STATE: NEEDS CLINICAL ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ⚠  NEEDS CLINICAL ATTENTION                      02/02/2026 2:35PM │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Joan Smith requires clinical nurse review. You can continue the            │
+│  questionnaire, but Step 4 will show a sample agreement only.              │
+│                                                                             │
+│  ┌────────────────────┬────────────────────┬────────────────────────────┐   │
+│  │ Risk Flags         │ Clinical SLA       │ Your Action                │   │
+│  │ Previously Off-    │ Review within      │ Continue to Step 3         │   │
+│  │ boarded, High Care │ 24 hours           │ Send sample in Step 4      │   │
+│  └────────────────────┴────────────────────┴────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- STATE: WAITING ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ◌  AWAITING RESULT                               Started: 2:34 PM  │   │
+│  │     ████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░           │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  The Assessment Tool is processing the risk assessment.                     │
+│  This typically takes 1-2 minutes.                                         │
+│                                                                             │
+│                                              [Refresh]                      │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Compact, consistent height across states, data table for quick scanning
+**Cons:** Less visual impact, risk flags less prominent
+
+================================================================================
+OPTION C: Traffic Light Status with Expandable Detail
+================================================================================
+
+--- STATE: SUITABLE ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────┬───────────────────────────────────────────────────────────────┐   │
+│  │      │                                                               │   │
+│  │      │  Suitable for Everything                                      │   │
+│  │  🟢  │                                                               │   │
+│  │      │  Client is eligible for all management options.               │   │
+│  │      │  Preferred option (SM+) will be used on the agreement.        │   │
+│  │      │                                                               │   │
+│  └──────┴───────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ▶ View assessment details                                                  │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+--- STATE: NEEDS CLINICAL ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────┬───────────────────────────────────────────────────────────────┐   │
+│  │      │                                                               │   │
+│  │      │  Needs Clinical Attention                                     │   │
+│  │  🟡  │                                                               │   │
+│  │      │  Clinical nurse review required before agreement signing.     │   │
+│  │      │  You can continue — Step 4 will show a sample agreement.      │   │
+│  │      │                                                               │   │
+│  └──────┴───────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ▼ View assessment details                                                  │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  Risk Flags:  [Previously Offboarded]  [High Care Need]              │   │
+│  │  SLA:         Clinical review within 24 hours                        │   │
+│  │  Assessed:    02/02/2026 2:35 PM                                     │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+--- STATE: NOT SUITED ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────┬───────────────────────────────────────────────────────────────┐   │
+│  │      │                                                               │   │
+│  │      │  Not Suited                                                   │   │
+│  │  🔴  │                                                               │   │
+│  │      │  Client does not meet eligibility criteria.                   │   │
+│  │      │  Conversion cannot continue.                                  │   │
+│  │      │                                                               │   │
+│  └──────┴───────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ▼ View assessment details                                                  │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  Risk Flags:  [Critical]  [Safety Risk]                              │   │
+│  │  Assessed:    02/02/2026 2:35 PM                                     │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                     [Cancel Conversion]          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+--- STATE: WAITING ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────┬───────────────────────────────────────────────────────────────┐   │
+│  │      │                                                               │   │
+│  │      │  Awaiting Assessment Result                                   │   │
+│  │  ⚪  │                                                               │   │
+│  │      │  Processing...  ◌ ◌ ◌                    Elapsed: 45s         │   │
+│  │      │                                                               │   │
+│  └──────┴───────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Instantly recognizable traffic light metaphor, expandable keeps it clean
+**Cons:** Emoji circles may not render consistently, relies on color (accessibility)
+
+================================================================================
+OPTION D: Status + Next Actions Panel
+================================================================================
+
+--- STATE: SUITABLE ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────┬───────────────────────────────────────┤
+│                                     │                                       │
+│  OUTCOME                            │  WHAT THIS MEANS                      │
+│  ─────────────────────────────     │  ─────────────────────────────────── │
+│                                     │                                       │
+│  ✓ Suitable for Everything          │  • Client can sign immediately        │
+│                                     │  • Management Option = SM+ (Preferred)│
+│  Assessed: 02/02/2026               │  • Full agreement will be shown       │
+│  Risk Flags: None                   │  • Proceed to questionnaire           │
+│                                     │                                       │
+│                                     │  ─────────────────────────────────── │
+│                                     │  Next: Complete Step 3 (Questionnaire)│
+│                                     │  Then: Step 4 (Agreement + Signature) │
+│                                     │                                       │
+├─────────────────────────────────────┴───────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- STATE: NEEDS CLINICAL ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────┬───────────────────────────────────────┤
+│                                     │                                       │
+│  OUTCOME                            │  WHAT THIS MEANS                      │
+│  ─────────────────────────────     │  ─────────────────────────────────── │
+│                                     │                                       │
+│  ⚠ Needs Clinical Attention         │  • Clinical nurse will review         │
+│                                     │  • Review SLA: 24 hours               │
+│  Assessed: 02/02/2026               │  • Step 4 shows sample agreement only │
+│  Risk Flags:                        │  • You'll be notified when cleared    │
+│  [Previously Offboarded]            │                                       │
+│  [High Care Need]                   │  ─────────────────────────────────── │
+│                                     │  Next: Complete Step 3 (Questionnaire)│
+│                                     │  Then: Send sample in Step 4          │
+│                                     │  Later: Sign after clinical clearance │
+│                                     │                                       │
+├─────────────────────────────────────┴───────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Clear outcome + clear next actions, reduces confusion for "needs clinical" path
+**Cons:** Takes more horizontal space, may repeat info already shown in accordion summary
+
+================================================================================
+OPTION E: Minimal Inline Status (Embedded in Accordion)
+================================================================================
+
+This option treats Step 2 as a thin status display within the accordion rather
+than a full-page step, since there are no form fields to fill.
+
+--- WITHIN ACCORDION CONTEXT ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Convert: Joan Smith                                          [× Cancel]    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ ✓  STEP 1: ESSENTIALS                                         [▼]  │   │
+│  │    Support@Home • SM+ • Mary Smith (Daughter) • Ref: 2-12345...    │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ ✓  STEP 2: RISK ASSESSMENT          ✓ Suitable for Everything      │   │
+│  │    SM+ confirmed • No risk flags • Assessed 02/02/2026             │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌═════════════════════════════════════════════════════════════════════┐   │
+│  ║ ●  STEP 3: QUESTIONNAIRE                                          ║   │
+│  ║    [form fields...]                                                ║   │
+│  ╚═════════════════════════════════════════════════════════════════════╝   │
+│                                                                             │
+│  ...                                                                        │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+--- CLINICAL ATTENTION VARIANT ---
+
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ ⚠  STEP 2: RISK ASSESSMENT          ⚠ Needs Clinical Attention    │   │
+│  │    [Previously Offboarded] [High Care] • 24hr SLA • Click for info │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+
+--- WAITING VARIANT ---
+
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ ◌  STEP 2: RISK ASSESSMENT          ◌ Awaiting result...  45s     │   │
+│  │    ████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░                        │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+
+**Pros:** Treats Step 2 as a status display (not a form), minimal space, stays in flow
+**Cons:** Risk flags may be too compressed, less room for "what happens next" guidance
+
+================================================================================
+OPTION F: Full-Width Alert Variants (No Card)
+================================================================================
+
+--- SUITABLE ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ✓  Suitable for Everything                                          │   │
+│  │                                                                      │   │
+│  │  Joan Smith is eligible for all management options. The preferred     │   │
+│  │  option (SM+) will be used on the agreement.                         │   │
+│  │                                                                      │   │
+│  │  Assessed: 02/02/2026 2:35 PM                                        │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- NEEDS CLINICAL ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ⚠  Needs Clinical Attention                                        │   │
+│  │                                                                      │   │
+│  │  Risk Flags: [Previously Offboarded]  [High Care Need]               │   │
+│  │                                                                      │   │
+│  │  Clinical nurse review required before the agreement can be signed.  │   │
+│  │  Review SLA: 24 hours. You will be notified when complete.           │   │
+│  │                                                                      │   │
+│  │  You can continue to Step 3. Step 4 will display a sample            │   │
+│  │  agreement (not signable).                                           │   │
+│  │                                                                      │   │
+│  │  Assessed: 02/02/2026 2:35 PM                                        │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                              [Continue →]        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- NOT SUITED ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ✗  Not Suited                                                       │   │
+│  │                                                                      │   │
+│  │  Risk Flags: [Critical]  [Safety Risk]                               │   │
+│  │                                                                      │   │
+│  │  Joan Smith does not meet eligibility criteria for Trilogy Care       │   │
+│  │  services at this time. The conversion process cannot continue.      │   │
+│  │                                                                      │   │
+│  │  Assessed: 02/02/2026 2:35 PM                                        │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                     [Cancel Conversion]          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- WAITING ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 2: RISK ASSESSMENT OUTCOME                                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ◌  Awaiting Assessment Result                                       │   │
+│  │                                                                      │   │
+│  │  The Assessment Tool is processing the risk assessment.              │   │
+│  │  This typically takes 1-2 minutes.                                   │   │
+│  │                                                                      │   │
+│  │  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    │   │
+│  │                                                                      │   │
+│  │  Started: 2:34 PM                              [Refresh Status]      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Uses existing Alert component pattern, consistent with Portal UI, clean
+**Cons:** All states look similar (just color changes), less visual distinction
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+**Option A (Centered Status Card)** recommended for the full step view because:
+- Clear visual hierarchy with the outcome front and center
+- Room for risk flags and explanatory text
+- Waiting state with progress indicator feels intentional
+- "What happens next" info box for clinical path is very helpful
+
+**Option E (Minimal Inline)** is recommended if the team decides Step 2
+doesn't warrant a full page (it's a read-only display, not a form).
+
+**Option D (Status + Next Actions)** is best if stakeholders want to reduce
+confusion about what "Needs Clinical Attention" means for the salesperson.

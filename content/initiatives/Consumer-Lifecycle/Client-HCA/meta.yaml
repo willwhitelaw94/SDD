@@ -1,0 +1,11 @@
+jira_key: TP-1865
+title: 'Client HCA'
+status: In Progress
+prefix: HCA
+summary: "Home Care Agreement generation and management"
+linear_project_id: 783767c7-a62c-4800-8b2a-008b753e9443
+linear_url: https://linear.app/trilogycare/project/hca-client-hca-6b7972959c3e
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+bounty_value: 5000

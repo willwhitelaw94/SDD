@@ -1,0 +1,200 @@
+## Wizard Form — Create/Edit Need (CommonModal, right slide)
+
+┌──────────────────────────────────────────────────────┐
+│  Add Need                                        ✕   │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  ● Step 1          ○ Step 2          ○ Step 3        │
+│  Define Need       Link Risks        Budget Items    │
+│  ━━━━━━━━━━━━━━━━━─────────────────────────────────  │
+│                                                      │
+│  ┌─ Maslow Category ────────────────────────────┐    │
+│  │                                               │    │
+│  │  PHYSIOLOGICAL                                │    │
+│  │  ┌───────────────┐ ┌───────────────┐          │    │
+│  │  │ 🍽 Nutrition  │ │ 🚿 Personal  │          │    │
+│  │  │ & Hydration   │ │ Hygiene &    │          │    │
+│  │  │               │ │ Care         │          │    │
+│  │  └───────────────┘ └───────────────┘          │    │
+│  │  ┌───────────────┐ ┌───────────────┐          │    │
+│  │  │ 🚶 Mobility  │ │ 💊 Medication│          │    │
+│  │  │ & Physical   │ │ & Health     │          │    │
+│  │  │ Function     │ │ Management   │          │    │
+│  │  └───────────────┘ └───────────────┘          │    │
+│  │                                               │    │
+│  │  SAFETY & SECURITY                            │    │
+│  │  ┌───────────────┐ ┌───────────────┐          │    │
+│  │  │ 🏠 Home      │ │ ⚠ Emergency  │          │    │
+│  │  │ Safety &     │ │ & Risk       │          │    │
+│  │  │ Environment  │ │ Management   │          │    │
+│  │  └───────────────┘ └───────────────┘          │    │
+│  │  ┌───────────────┐                            │    │
+│  │  │ 🔒 Financial │                            │    │
+│  │  │ & Legal      │                            │    │
+│  │  │ Protection   │                            │    │
+│  │  └───────────────┘                            │    │
+│  │                                               │    │
+│  │  BELONGING            ▼ (collapsed)           │    │
+│  │  ESTEEM               ▼ (collapsed)           │    │
+│  │  SELF-ACTUALISATION   ▼ (collapsed)           │    │
+│  └───────────────────────────────────────────────┘    │
+│                                                      │
+│  Description *                                       │
+│  ┌──────────────────────────────────────────────┐    │
+│  │ Requires assistance with meal preparation    │    │
+│  │ due to limited mobility and arthritis in     │    │
+│  │ both hands.                                  │    │
+│  └──────────────────────────────────────────────┘    │
+│                                                      │
+│  How will this need be met?                          │
+│  ┌──────────────────────────────────────────────┐    │
+│  │ Weekly meal prep service (3x/week) with      │    │
+│  │ occupational therapy review quarterly.       │    │
+│  └──────────────────────────────────────────────┘    │
+│                                                      │
+│  Funding Source *                                     │
+│  [▼ HCP                                        ]    │
+│                                                      │
+│  ☑ Add to Care Plan                                  │
+│                                                      │
+│  Status                                              │
+│  ○ Draft    ● Active                                 │
+│                                                      │
+├──────────────────────────────────────────────────────┤
+│                        [Cancel]   [Next: Link Risks →]│
+└──────────────────────────────────────────────────────┘
+
+
+== STEP 2: Link Risks ==========================================
+
+┌──────────────────────────────────────────────────────┐
+│  Add Need                                        ✕   │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  ✓ Step 1          ● Step 2          ○ Step 3        │
+│  Define Need       Link Risks        Budget Items    │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────── │
+│                                                      │
+│  Link existing risks to this need                    │
+│  ┌──────────────────────────────────────────────┐    │
+│  │ 🔍 Search risks...                           │    │
+│  ├──────────────────────────────────────────────┤    │
+│  │  ☑  Falls Risk                               │    │
+│  │     Category: Mobility │ High                │    │
+│  │                                               │    │
+│  │  ☑  Medication Risk                          │    │
+│  │     Category: Clinical │ Medium              │    │
+│  │                                               │    │
+│  │  ☐  Cognitive Decline                        │    │
+│  │     Category: Cognitive │ Low                │    │
+│  │                                               │    │
+│  │  ☐  Social Isolation                         │    │
+│  │     Category: Social │ Medium                │    │
+│  └──────────────────────────────────────────────┘    │
+│                                                      │
+│  Selected: 2 risks                                   │
+│  ┌────────────────┐ ┌──────────────────┐             │
+│  │ ✕ Falls Risk   │ │ ✕ Medication Risk│             │
+│  └────────────────┘ └──────────────────┘             │
+│                                                      │
+│  💡 You can skip this step and link risks later      │
+│                                                      │
+├──────────────────────────────────────────────────────┤
+│  [← Back]               [Skip]   [Next: Budget Items →]│
+└──────────────────────────────────────────────────────┘
+
+
+== STEP 3: Associate Budget Items ==============================
+
+┌──────────────────────────────────────────────────────┐
+│  Add Need                                        ✕   │
+├──────────────────────────────────────────────────────┤
+│                                                      │
+│  ✓ Step 1          ✓ Step 2          ● Step 3        │
+│  Define Need       Link Risks        Budget Items    │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
+│                                                      │
+│  Associate budget items to this need                 │
+│  ┌──────────────────────────────────────────────┐    │
+│  │ 🔍 Search budget items...                    │    │
+│  ├──────────────────────────────────────────────┤    │
+│  │  ☑  Personal Care                            │    │
+│  │     $150.00/week │ CHSP                      │    │
+│  │                                               │    │
+│  │  ☑  Meal Preparation                         │    │
+│  │     $80.00/week │ HCP                        │    │
+│  │                                               │    │
+│  │  ☐  Transport                                │    │
+│  │     $45.00/week │ HCP                        │    │
+│  │                                               │    │
+│  │  ☐  Allied Health - OT                       │    │
+│  │     $120.00/session │ HCP                    │    │
+│  └──────────────────────────────────────────────┘    │
+│                                                      │
+│  Selected: 2 budget items                            │
+│  ┌────────────────┐ ┌──────────────────┐             │
+│  │ ✕ Personal Care│ │ ✕ Meal Prep      │             │
+│  └────────────────┘ └──────────────────┘             │
+│                                                      │
+│  💡 You can skip this step and link items later      │
+│                                                      │
+├──────────────────────────────────────────────────────┤
+│  [← Back]                [Skip]       [Save Need ✓] │
+└──────────────────────────────────────────────────────┘
+
+
+== EMPTY STATE (Step 2 — No risks on package) ==================
+
+┌──────────────────────────────────────────────────────┐
+│                                                      │
+│  ✓ Step 1          ● Step 2          ○ Step 3        │
+│  Define Need       Link Risks        Budget Items    │
+│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━─────────────── │
+│                                                      │
+│                                                      │
+│              ┌─────────────────────┐                 │
+│              │                     │                 │
+│              │    📋               │                 │
+│              │                     │                 │
+│              │  No risks recorded  │                 │
+│              │  for this package   │                 │
+│              │  yet.               │                 │
+│              │                     │                 │
+│              │  You can add risks  │                 │
+│              │  later and link     │                 │
+│              │  them to this need. │                 │
+│              │                     │                 │
+│              └─────────────────────┘                 │
+│                                                      │
+├──────────────────────────────────────────────────────┤
+│  [← Back]                          [Next: Budget →]  │
+└──────────────────────────────────────────────────────┘
+
+
+== VALIDATION ERROR STATE (Step 1) =============================
+
+┌──────────────────────────────────────────────────────┐
+│                                                      │
+│  ● Step 1          ○ Step 2          ○ Step 3        │
+│  Define Need       Link Risks        Budget Items    │
+│  ━━━━━━━━━━━━━━━━━─────────────────────────────────  │
+│                                                      │
+│  Maslow Category *                                   │
+│  ⚠ Please select a category                         │
+│  ┌───────────────────────────────────────────────┐   │
+│  │  (no selection — red border)                  │   │
+│  └───────────────────────────────────────────────┘   │
+│                                                      │
+│  Description *                                       │
+│  ⚠ Description is required                          │
+│  ┌──────────────────────────────────────────────┐    │
+│  │                                              │    │
+│  └──────────────────────────────────────────────┘    │
+│                (red border)                          │
+│                                                      │
+│  Funding Source *                                     │
+│  ⚠ Please select a funding source                   │
+│  [▼ Select funding source...                    ]    │
+│                (red border)                          │
+│                                                      │
+└──────────────────────────────────────────────────────┘

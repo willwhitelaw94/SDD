@@ -1,0 +1,10 @@
+jira_key: TP-XXXX
+title: 'Consumer Mobile V1'
+status: In Progress
+prefix: MOB1
+summary: "Core mobile app for consumers"
+linear_project_id: 310886a9-64b8-4592-b5ea-18c1f504d479
+linear_url: https://linear.app/trilogycare/project/mob1-consumer-mobile-v1-44f9a8992e55
+description: 'Phase 1 of Consumer Mobile App - See & Sign: View finances, manage care circle, sign agreements'
+due_date: null
+last_synced: '2025-01-15T00:00:00.000Z'

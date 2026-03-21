@@ -1,0 +1,243 @@
+## Case Detail View — 5 Variations
+
+Context: Right-slide Inertia modal showing full case info + review history.
+Opened by clicking a case in the list. Read-heavy view.
+Must show: case type, status, clinical concern, review history timeline,
+linked incidents, linked risks, assigned coordinator, audit info.
+Design principle: "Transparency" — dense data is a feature.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION A: Stacked Sections (Simple Top-Down)
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  ●Mandatory  ●Active                │
+                                    │  Post-fall monitoring               │
+                                    │                                      │
+                                    │  [Edit]  [Review →]  [⋮ More]      │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  Clinical Concern                    │
+                                    │  Recipient fell on 2026-02-10, GP   │
+                                    │  review completed. Monitoring for   │
+                                    │  recurrence and mobility decline.   │
+                                    │                                      │
+                                    │  ── Details ───────────────────      │
+                                    │  Type:       Mandatory               │
+                                    │  Status:     Active                  │
+                                    │  Interval:   Fortnightly (14 days)   │
+                                    │  Next Review: 15 Feb 2026            │
+                                    │  Assigned:   Ian S.                  │
+                                    │  Trigger:    Incident #1042          │
+                                    │  Created:    1 Feb 2026 by Sarah K.  │
+                                    │                                      │
+                                    │  ── Linked Risks ─────────────       │
+                                    │  • Falls Risk (High)                 │
+                                    │  • Mobility Decline (Medium)         │
+                                    │                                      │
+                                    │  ── Linked Incidents ─────────       │
+                                    │  • #1042 — Fall in bathroom (10 Feb) │
+                                    │                                      │
+                                    │  ── Review History ────────────      │
+                                    │                                      │
+                                    │  ● 8 Feb 2026 — Continue             │
+                                    │    Ian S.                            │
+                                    │    "Recipient stable. GP follow-up   │
+                                    │    confirmed. Continue monitoring."   │
+                                    │                                      │
+                                    │  ● 1 Feb 2026 — Case Created         │
+                                    │    Sarah K.                          │
+                                    │    "Initial case from fall incident" │
+                                    │                                      │
+                                    └──────────────────────────────────────┘
+
+Pros: Simple, scannable. All info in one scrollable view. Review history
+      is a clean timeline. Matches how clinical leads read case files.
+Cons: Long scroll for cases with many reviews. No visual separation between
+      "current state" and "history". All sections get equal weight.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION B: Header Card + Tabbed Sections
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ ●Mandatory  ●Active          │   │
+                                    │  │ Post-fall monitoring          │   │
+                                    │  │                               │   │
+                                    │  │ Next Review: 15 Feb 2026      │   │
+                                    │  │ Assigned: Ian S.              │   │
+                                    │  │                               │   │
+                                    │  │ [Edit] [Review →] [⋮ More]   │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  [Overview]  [Reviews (2)]  [Links] │
+                                    │  ──────────                          │
+                                    │                                      │
+                                    │  Clinical Concern                    │
+                                    │  Recipient fell on 2026-02-10...     │
+                                    │                                      │
+                                    │  Details                             │
+                                    │  Type:       Mandatory               │
+                                    │  Interval:   Fortnightly (14 days)   │
+                                    │  Trigger:    Incident #1042          │
+                                    │  Created:    1 Feb 2026 by Sarah K.  │
+                                    │                                      │
+                                    └──────────────────────────────────────┘
+
+Tabs:
+  [Overview] = Clinical concern + details (shown above)
+  [Reviews]  = Timeline of all reviews
+  [Links]    = Linked risks + incidents
+
+Pros: Header card pins key info (status, next review, assignee). Tabs
+      manage content density — review history separate from overview.
+      Review count badge on tab.
+Cons: Tabs inside a modal-inside-a-tab feels nested. Clinical leads may
+      want to see reviews alongside the concern (context switching).
+      Violates "Transparency" — hides info behind tabs.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION C: Two-Panel — Info Left, Timeline Right
+═══════════════════════════════════════════════════════════════════════════════
+
+                  ┌────────────────────────┬───────────────────────────────────┐
+                  │                        │                       ✕ Close    │
+                  │  ●Mandatory  ●Active   │  Review History                  │
+                  │  Post-fall monitoring   │  ─────────────────              │
+                  │                         │                                  │
+                  │  [Edit] [Review →]     │  ● 8 Feb 2026                    │
+                  │  ─────────────────     │    Continue — Ian S.             │
+                  │                         │    "Recipient stable. GP        │
+                  │  Clinical Concern       │    follow-up confirmed."        │
+                  │  Recipient fell on      │                                  │
+                  │  2026-02-10, GP review  │  ● 1 Feb 2026                    │
+                  │  completed. Monitoring  │    Created — Sarah K.           │
+                  │  for recurrence.        │    "Initial case from fall"     │
+                  │                         │                                  │
+                  │  ── Details ──────      │                                  │
+                  │  Interval:  14 days     │                                  │
+                  │  Next Review: 15 Feb    │                                  │
+                  │  Assigned: Ian S.       │                                  │
+                  │  Trigger: #1042         │                                  │
+                  │                         │                                  │
+                  │  ── Risks ──────        │                                  │
+                  │  • Falls Risk (High)    │                                  │
+                  │                         │                                  │
+                  │  ── Incidents ───       │                                  │
+                  │  • #1042 — Fall         │                                  │
+                  │                         │                                  │
+                  └────────────────────────┴───────────────────────────────────┘
+
+Pros: Current state and history visible simultaneously. No scrolling to
+      find review history. Clinical leads can read concern + reviews in
+      one view. Excellent for audit/governance.
+Cons: Requires wider modal (1000px+). More complex layout. May not fit
+      well on smaller screens. Custom layout — not standard CommonModal.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION D: Sticky Header + Scrollable Body (Cliniko-Inspired)
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │  ●Mandatory  ●Active     ✕ Close    │
+                                    │  Post-fall monitoring               │
+                                    │  Next Review: 15 Feb · Ian S.       │
+                                    │  [Edit]  [Review →]  [⋮]          │
+                                    ├──────────────────────────────────────┤ ← sticky
+                                    │                                      │
+                                    │  Clinical Concern                    │
+                                    │  Recipient fell on 2026-02-10, GP   │
+                                    │  review completed. Monitoring for   │
+                                    │  recurrence and mobility decline.   │
+                                    │                                      │
+                                    │  ── Details ───────────────────      │
+                                    │  Type: Mandatory · Interval: 14d    │
+                                    │  Trigger: Incident #1042            │
+                                    │  Created: 1 Feb 2026 by Sarah K.    │
+                                    │                                      │
+                                    │  ── Risks ─────────────────────      │
+                                    │  Falls Risk (High) · Mobility (Med) │
+                                    │                                      │
+                                    │  ── Incidents ─────────────────      │
+                                    │  #1042 — Fall in bathroom (10 Feb)   │
+                                    │                                      │
+                                    │  ── Reviews ───────────────────      │
+                                    │                                      │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ 8 Feb 2026 · Continue        │   │
+                                    │  │ Ian S.                       │   │
+                                    │  │ Recipient stable. GP follow- │   │
+                                    │  │ up confirmed. Continue.      │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ 1 Feb 2026 · Case Created    │   │
+                                    │  │ Sarah K.                     │   │
+                                    │  │ Initial case from fall       │   │
+                                    │  │ incident.                    │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    └──────────────────────────────────────┘
+
+Pros: Sticky header keeps case identity + actions visible while scrolling
+      review history. "Review →" always accessible. Compact detail section
+      uses inline layout (Type: Mandatory · Interval: 14d). Reviews as
+      cards are scannable and visually distinct.
+Cons: Sticky header in a modal may behave unexpectedly on some browsers.
+      Slightly more complex to implement than simple scroll.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION E: Assessment-First (APSO Pattern — Governance Optimised)
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  ●Mandatory  ●Active                │
+                                    │  Post-fall monitoring               │
+                                    │                                      │
+                                    │  ── Current State ─────────────      │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ Last Review: 8 Feb 2026      │   │
+                                    │  │ Outcome: Continue             │   │
+                                    │  │ "Recipient stable. GP        │   │
+                                    │  │  follow-up confirmed."       │   │
+                                    │  │                               │   │
+                                    │  │ Next Review: 15 Feb 2026      │   │
+                                    │  │ Assigned: Ian S.              │   │
+                                    │  │                               │   │
+                                    │  │ [Complete Review →]           │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  ── Clinical Concern ──────────     │
+                                    │  Recipient fell on 2026-02-10...     │
+                                    │                                      │
+                                    │  ── Case Details ──────────────     │
+                                    │  Type: Mandatory · Interval: 14d    │
+                                    │  Trigger: Incident #1042            │
+                                    │  Created: 1 Feb by Sarah K.         │
+                                    │                                      │
+                                    │  ── Risks & Incidents ─────────     │
+                                    │  Falls Risk (High)                   │
+                                    │  #1042 — Fall in bathroom (10 Feb)   │
+                                    │                                      │
+                                    │  ── Full Review History ───────     │
+                                    │  ● 8 Feb 2026 — Continue (Ian S.)   │
+                                    │  ● 1 Feb 2026 — Created (Sarah K.)  │
+                                    │                                      │
+                                    │  [Edit Case]                [⋮]    │
+                                    └──────────────────────────────────────┘
+
+Pros: Most recent assessment/review at top — clinical leads see "where are
+      we now?" immediately. Next action (review button) prominently placed.
+      Follows APSO pattern from healthcare UX research. History at bottom.
+Cons: Pushes original clinical concern below the fold if last review notes
+      are long. Different from other TC Portal detail modals (custom pattern).
+      May confuse coordinators expecting to see the concern first.

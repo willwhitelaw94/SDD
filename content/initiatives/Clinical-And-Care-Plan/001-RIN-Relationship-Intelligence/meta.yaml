@@ -1,0 +1,13 @@
+title: 'Relationship Intelligence'
+prefix: RIN
+status: in progress
+summary: "Capture personal context about clients and surface it alongside operational data to build rapport, reduce complaints, and meet regulatory care management touchpoint requirements."
+initiative: Clinical-And-Care-Plan
+linear_project_id: 4c98f93a-360d-4d5e-9f15-60f9503c0062
+linear_url: https://linear.app/trilogycare/project/rin-relationship-intelligence-7e83e45e74c9
+created: 2026-02-17
+gates:
+  design:
+    passed: true
+    date: 2026-03-12
+    notes: "Gate 2 PASS. Two-panel architecture (Intelligence + Conversation Guide), Personal Touch prompts, Support at Home-aligned touchpoints, interactive V3 prototype validated. 9 new components identified. Handover to Dev for technical planning."

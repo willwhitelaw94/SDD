@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Care Partner Check-Ins — Design Playground</title>
+<style>
+  :root {
+    --bg: #111;
+    --surface: #1a1a1a;
+    --surface2: #222;
+    --border: #333;
+    --text: #e5e5e5;
+    --text2: #999;
+    --teal: #007F7E;
+    --teal-light: #43C0BE;
+    --teal-bg: rgba(0,127,126,0.12);
+    --blue: #2C4C79;
+    --red: #dc2626;
+    --amber: #f59e0b;
+    --green: #16a34a;
+    --purple: #7c3aed;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── Layout ── */
+  .app {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+  }
+
+  .header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .header h1 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--teal-light);
+    letter-spacing: -0.3px;
+  }
+
+  .header .subtitle {
+    font-size: 11px;
+    color: var(--text2);
+    margin-left: 12px;
+  }
+
+  .presets {
+    display: flex;
+    gap: 6px;
+  }
+
+  .preset-btn {
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .preset-btn:hover { border-color: var(--teal); color: var(--text); }
+  .preset-btn.active { background: var(--teal); border-color: var(--teal); color: white; }
+
+  /* ── Controls Panel ── */
+  .controls {
+    grid-row: 2;
+    overflow-y: auto;
+    padding: 16px;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .control-group {
+    margin-bottom: 20px;
+  }
+
+  .control-group h3 {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--teal-light);
+    margin-bottom: 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .control {
+    margin-bottom: 12px;
+  }
+
+  .control label {
+    display: block;
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 4px;
+  }
+
+  .control select,
+  .control input[type="range"] {
+    width: 100%;
+  }
+
+  .control select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: inherit;
+  }
+
+  .control input[type="range"] {
+    -webkit-appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+  }
+
+  .control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--teal);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .range-value {
+    float: right;
+    font-size: 11px;
+    color: var(--teal-light);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+  }
+
+  .toggle-row label {
+    margin-bottom: 0;
+  }
+
+  .toggle {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    cursor: pointer;
+  }
+
+  .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle .slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+    border-radius: 10px;
+    transition: 0.2s;
+  }
+
+  .toggle .slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 2px;
+    top: 2px;
+    background: var(--text);
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+
+  .toggle input:checked + .slider { background: var(--teal); }
+  .toggle input:checked + .slider::before { transform: translateX(16px); }
+
+  .option-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .option-card {
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface2);
+    cursor: pointer;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text2);
+    transition: all 0.15s;
+  }
+
+  .option-card:hover { border-color: var(--teal); color: var(--text); }
+  .option-card.active { border-color: var(--teal); background: var(--teal-bg); color: var(--teal-light); }
+  .option-card .icon { font-size: 18px; margin-bottom: 2px; }
+
+  /* ── Preview ── */
+  .preview {
+    grid-row: 2;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .preview-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .preview-section .section-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text2);
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .preview-section .section-body {
+    padding: 20px;
+  }
+
+  /* ── Preview: Dashboard Cards ── */
+  .mock-page { background: #f8fafc; border-radius: 6px; padding: 16px; }
+
+  .card-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-group-label .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .card-group-label .count {
+    font-weight: 400;
+    color: #94a3b8;
+    font-size: 11px;
+  }
+
+  .checkin-card {
+    background: white;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  }
+
+  .checkin-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+  .card-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .card-body { flex: 1; min-width: 0; }
+
+  .card-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-meta {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-badges {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .badge-questions { background: #ede9fe; color: #7c3aed; }
+  .badge-attempts { background: #fef3c7; color: #d97706; }
+  .badge-overdue { background: #fee2e2; color: #dc2626; }
+  .badge-type { background: #f0fdf4; color: #16a34a; }
+
+  .card-arrow {
+    color: #cbd5e1;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── Preview: Completion Form ── */
+  .form-mock { background: #f8fafc; border-radius: 6px; }
+
+  .form-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    background: white;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .form-breadcrumb {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+  }
+
+  .form-breadcrumb span { margin: 0 4px; }
+  .form-breadcrumb .current { color: #1e293b; font-weight: 500; }
+
+  .form-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .form-client-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .form-client-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .form-client-info { flex: 1; }
+  .form-client-name { font-size: 14px; font-weight: 600; color: #1e293b; }
+  .form-client-detail { font-size: 12px; color: #94a3b8; }
+
+  .form-body { padding: 20px; }
+
+  .form-section {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .form-section-header {
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .form-section-body { padding: 16px; }
+
+  .form-field {
+    margin-bottom: 14px;
+  }
+
+  .form-field:last-child { margin-bottom: 0; }
+
+  .form-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #1e293b;
+    background: white;
+    font-family: inherit;
+  }
+
+  .form-textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #1e293b;
+    background: white;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 60px;
+  }
+
+  /* Wellbeing: Stars */
+  .stars {
+    display: flex;
+    gap: 4px;
+  }
+
+  .star {
+    font-size: 24px;
+    cursor: pointer;
+    color: #d1d5db;
+    transition: color 0.1s;
+  }
+
+  .star.filled { color: #f59e0b; }
+
+  /* Wellbeing: Numeric */
+  .numeric-scale {
+    display: flex;
+    gap: 6px;
+  }
+
+  .numeric-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid #d1d5db;
+    background: white;
+    font-size: 16px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .numeric-btn.selected { border-color: var(--teal); background: var(--teal-bg); color: var(--teal); }
+
+  .numeric-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 10px;
+    color: #94a3b8;
+  }
+
+  /* Wellbeing: Emoji */
+  .emoji-scale {
+    display: flex;
+    gap: 8px;
+  }
+
+  .emoji-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    background: white;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .emoji-btn.selected { border-color: var(--teal); background: var(--teal-bg); transform: scale(1.1); }
+
+  /* Wellbeing: Slider */
+  .wellbeing-slider-wrap {
+    position: relative;
+    padding-top: 8px;
+  }
+
+  .wellbeing-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  .wellbeing-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--teal);
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: #94a3b8;
+  }
+
+  /* Risk questions */
+  .risk-question {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background: #fafbfc;
+  }
+
+  .risk-question:last-child { margin-bottom: 0; }
+
+  .risk-tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: #fef3c7;
+    color: #92400e;
+    margin-bottom: 6px;
+  }
+
+  .risk-question p {
+    font-size: 13px;
+    color: #334155;
+    margin-bottom: 8px;
+  }
+
+  /* Previous summary */
+  .prev-summary {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    padding: 12px;
+  }
+
+  .prev-summary .prev-date {
+    font-size: 11px;
+    color: #16a34a;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .prev-summary .prev-text {
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.5;
+  }
+
+  /* Form footer */
+  .form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0 0 6px 6px;
+  }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .btn-primary { background: var(--teal); color: white; }
+  .btn-secondary { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+  .btn-danger { background: white; color: #dc2626; border: 1px solid #fecaca; }
+  .btn-ghost { background: transparent; color: #94a3b8; }
+
+  .form-footer-left { display: flex; gap: 8px; }
+  .form-footer-right { display: flex; gap: 8px; }
+
+  /* ── Prompt Output ── */
+  .prompt-bar {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    padding: 12px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .prompt-text {
+    flex: 1;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    max-height: 80px;
+    overflow-y: auto;
+  }
+
+  .copy-btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .copy-btn:hover { border-color: var(--teal); }
+  .copy-btn.copied { background: var(--teal); border-color: var(--teal); color: white; }
+
+  /* ── View Tabs ── */
+  .view-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 16px;
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 2px;
+  }
+
+  .view-tab {
+    flex: 1;
+    padding: 6px;
+    text-align: center;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text2);
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .view-tab.active { background: var(--teal); color: white; }
+  .view-tab:hover:not(.active) { color: var(--text); }
+
+  .hidden { display: none !important; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+  /* form layout: two-column */
+  .form-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .form-full { grid-column: 1 / -1; }
+
+  /* Step indicator */
+  .step-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 16px 20px;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .step-item.active { color: var(--teal); font-weight: 600; }
+  .step-item.done { color: #16a34a; }
+
+  .step-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .step-item.active .step-dot { border-color: var(--teal); background: var(--teal-bg); color: var(--teal); }
+  .step-item.done .step-dot { border-color: #16a34a; background: #f0fdf4; color: #16a34a; }
+
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: #e2e8f0;
+    margin: 0 8px;
+    min-width: 20px;
+  }
+
+  .step-line.done { background: #16a34a; }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <div style="display:flex;align-items:center;">
+      <h1>CHK Design Playground</h1>
+      <span class="subtitle">Care Partner Check-Ins</span>
+    </div>
+    <div class="presets">
+      <button class="preset-btn active" onclick="applyPreset('clean')">Clean</button>
+      <button class="preset-btn" onclick="applyPreset('dense')">Dense</button>
+      <button class="preset-btn" onclick="applyPreset('clinical')">Clinical</button>
+      <button class="preset-btn" onclick="applyPreset('warm')">Warm</button>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <!-- View Tabs -->
+    <div class="view-tabs">
+      <button class="view-tab active" onclick="switchView('dashboard')">Dashboard</button>
+      <button class="view-tab" onclick="switchView('form')">Form</button>
+    </div>
+
+    <!-- Dashboard Controls -->
+    <div id="dashboard-controls">
+      <div class="control-group">
+        <h3>Card Layout</h3>
+        <div class="control">
+          <label>Card style</label>
+          <div class="option-cards">
+            <div class="option-card active" data-val="border-left" onclick="setOption(this,'cardStyle')">
+              <div class="icon">▌</div>Left border
+            </div>
+            <div class="option-card" data-val="full-border" onclick="setOption(this,'cardStyle')">
+              <div class="icon">▢</div>Full border
+            </div>
+            <div class="option-card" data-val="shadow" onclick="setOption(this,'cardStyle')">
+              <div class="icon">◫</div>Shadow
+            </div>
+            <div class="option-card" data-val="flat" onclick="setOption(this,'cardStyle')">
+              <div class="icon">▬</div>Flat
+            </div>
+          </div>
+        </div>
+        <div class="control">
+          <label>Card padding <span class="range-value" id="cardPadding-val">12px</span></label>
+          <input type="range" min="8" max="20" value="12" oninput="setRange(this,'cardPadding')">
+        </div>
+        <div class="control">
+          <label>Corner radius <span class="range-value" id="cardRadius-val">8px</span></label>
+          <input type="range" min="0" max="16" value="8" oninput="setRange(this,'cardRadius')">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Information Density</h3>
+        <div class="control toggle-row">
+          <label>Show avatar</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showAvatar')"><span class="slider"></span></label>
+        </div>
+        <div class="control toggle-row">
+          <label>Show type badge</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showTypeBadge')"><span class="slider"></span></label>
+        </div>
+        <div class="control toggle-row">
+          <label>Show question count</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showQuestionBadge')"><span class="slider"></span></label>
+        </div>
+        <div class="control toggle-row">
+          <label>Show attempt badge</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showAttemptBadge')"><span class="slider"></span></label>
+        </div>
+        <div class="control toggle-row">
+          <label>Show due date</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showDueDate')"><span class="slider"></span></label>
+        </div>
+        <div class="control toggle-row">
+          <label>Show arrow</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showArrow')"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Grouping</h3>
+        <div class="control">
+          <label>Group display</label>
+          <select onchange="state.groupDisplay=this.value;updateAll()">
+            <option value="stacked">Stacked sections</option>
+            <option value="tabs">Tabs (Overdue / Today / Upcoming)</option>
+          </select>
+        </div>
+        <div class="control">
+          <label>Overdue emphasis</label>
+          <select onchange="state.overdueEmphasis=this.value;updateAll()">
+            <option value="red-border">Red left border</option>
+            <option value="red-bg">Red background tint</option>
+            <option value="badge-only">Badge only</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Controls -->
+    <div id="form-controls" class="hidden">
+      <div class="control-group">
+        <h3>Form Layout</h3>
+        <div class="control">
+          <label>Page structure</label>
+          <select onchange="state.formLayout=this.value;updateAll()">
+            <option value="single">Single page (scroll)</option>
+            <option value="steps">Step wizard</option>
+            <option value="split">Split panel (context | form)</option>
+          </select>
+        </div>
+        <div class="control toggle-row">
+          <label>Show previous summary</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showPrevSummary')"><span class="slider"></span></label>
+        </div>
+        <div class="control toggle-row">
+          <label>Show client banner</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showClientBanner')"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Wellbeing Rating</h3>
+        <div class="control">
+          <label>Rating style</label>
+          <div class="option-cards">
+            <div class="option-card active" data-val="numeric" onclick="setOption(this,'ratingStyle')">
+              <div class="icon">5</div>Numeric
+            </div>
+            <div class="option-card" data-val="stars" onclick="setOption(this,'ratingStyle')">
+              <div class="icon">&#9733;</div>Stars
+            </div>
+            <div class="option-card" data-val="emoji" onclick="setOption(this,'ratingStyle')">
+              <div class="icon">&#128522;</div>Emoji
+            </div>
+            <div class="option-card" data-val="slider" onclick="setOption(this,'ratingStyle')">
+              <div class="icon">&#8212;</div>Slider
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Risk Questions</h3>
+        <div class="control">
+          <label>Question display</label>
+          <select onchange="state.questionDisplay=this.value;updateAll()">
+            <option value="grouped">Grouped by risk</option>
+            <option value="flat">Flat list</option>
+            <option value="accordion">Accordion per risk</option>
+          </select>
+        </div>
+        <div class="control">
+          <label>Answer input type</label>
+          <select onchange="state.answerType=this.value;updateAll()">
+            <option value="textarea">Free text (textarea)</option>
+            <option value="input">Short text (input)</option>
+            <option value="mixed">Radio + text</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3>Actions</h3>
+        <div class="control toggle-row">
+          <label>Show cancel button</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showCancel')"><span class="slider"></span></label>
+        </div>
+        <div class="control toggle-row">
+          <label>Show save draft</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showDraft')"><span class="slider"></span></label>
+        </div>
+        <div class="control toggle-row">
+          <label>Show failed attempt button</label>
+          <label class="toggle"><input type="checkbox" checked onchange="setToggle(this,'showFailedAttempt')"><span class="slider"></span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div class="preview">
+    <!-- Dashboard Preview -->
+    <div id="dashboard-preview">
+      <div class="preview-section">
+        <div class="section-label">Dashboard — My Activities: Check-Ins</div>
+        <div class="section-body">
+          <div class="mock-page" id="dashboard-mock"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Preview -->
+    <div id="form-preview" class="hidden">
+      <div class="preview-section">
+        <div class="section-label">Check-In Completion Page</div>
+        <div class="section-body" style="padding:0;">
+          <div class="form-mock" id="form-mock"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prompt Bar -->
+  <div class="prompt-bar">
+    <div class="prompt-text" id="prompt-output">Adjust controls to generate a design prompt...</div>
+    <button class="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+  </div>
+</div>
+
+<script>
+const DEFAULTS = {
+  cardStyle: 'border-left',
+  cardPadding: 12,
+  cardRadius: 8,
+  showAvatar: true,
+  showTypeBadge: true,
+  showQuestionBadge: true,
+  showAttemptBadge: true,
+  showDueDate: true,
+  showArrow: true,
+  groupDisplay: 'stacked',
+  overdueEmphasis: 'red-border',
+  formLayout: 'single',
+  showPrevSummary: true,
+  showClientBanner: true,
+  ratingStyle: 'numeric',
+  questionDisplay: 'grouped',
+  answerType: 'textarea',
+  showCancel: true,
+  showDraft: true,
+  showFailedAttempt: true,
+  view: 'dashboard',
+  preset: 'clean'
+};
+
+const state = { ...DEFAULTS };
+
+const PRESETS = {
+  clean: { ...DEFAULTS },
+  dense: {
+    ...DEFAULTS, preset: 'dense',
+    cardStyle: 'flat', cardPadding: 8, cardRadius: 4,
+    showAvatar: false, showArrow: false, showTypeBadge: false,
+    formLayout: 'split', ratingStyle: 'numeric', questionDisplay: 'flat',
+    showDraft: false
+  },
+  clinical: {
+    ...DEFAULTS, preset: 'clinical',
+    cardStyle: 'full-border', cardPadding: 14, cardRadius: 6,
+    overdueEmphasis: 'red-bg', showAttemptBadge: true,
+    formLayout: 'steps', ratingStyle: 'slider', questionDisplay: 'accordion',
+    answerType: 'mixed'
+  },
+  warm: {
+    ...DEFAULTS, preset: 'warm',
+    cardStyle: 'shadow', cardPadding: 16, cardRadius: 12,
+    showAvatar: true, showArrow: false,
+    formLayout: 'single', ratingStyle: 'emoji', questionDisplay: 'grouped',
+    showFailedAttempt: false
+  }
+};
+
+function switchView(view) {
+  state.view = view;
+  document.querySelectorAll('.view-tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase() === view));
+  document.getElementById('dashboard-controls').classList.toggle('hidden', view !== 'dashboard');
+  document.getElementById('form-controls').classList.toggle('hidden', view !== 'form');
+  document.getElementById('dashboard-preview').classList.toggle('hidden', view !== 'dashboard');
+  document.getElementById('form-preview').classList.toggle('hidden', view !== 'form');
+  updateAll();
+}
+
+function setOption(el, key) {
+  el.parentElement.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  state[key] = el.dataset.val;
+  updateAll();
+}
+
+function setRange(el, key) {
+  state[key] = parseInt(el.value);
+  document.getElementById(key + '-val').textContent = el.value + 'px';
+  updateAll();
+}
+
+function setToggle(el, key) {
+  state[key] = el.checked;
+  updateAll();
+}
+
+function applyPreset(name) {
+  const preset = PRESETS[name];
+  Object.assign(state, preset);
+  state.preset = name;
+
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === name));
+
+  // Sync UI controls
+  syncControls();
+  updateAll();
+}
+
+function syncControls() {
+  // Card style
+  document.querySelectorAll('#dashboard-controls .option-card[data-val]').forEach(c => {
+    if (c.closest('.control').querySelector('label').textContent.includes('Card style')) {
+      c.classList.toggle('active', c.dataset.val === state.cardStyle);
+    }
+  });
+
+  // Rating style
+  document.querySelectorAll('#form-controls .option-card[data-val]').forEach(c => {
+    if (c.closest('.control').querySelector('label') && c.closest('.control').querySelector('label').textContent.includes('Rating style')) {
+      c.classList.toggle('active', c.dataset.val === state.ratingStyle);
+    }
+  });
+
+  // Ranges
+  document.querySelectorAll('input[type="range"]').forEach(r => {
+    const key = r.closest('.control').querySelector('label').textContent.includes('padding') ? 'cardPadding' : 'cardRadius';
+    r.value = state[key];
+    const valEl = document.getElementById(key + '-val');
+    if (valEl) valEl.textContent = state[key] + 'px';
+  });
+
+  // Toggles
+  const toggleMap = {
+    'Show avatar': 'showAvatar', 'Show type badge': 'showTypeBadge',
+    'Show question count': 'showQuestionBadge', 'Show attempt badge': 'showAttemptBadge',
+    'Show due date': 'showDueDate', 'Show arrow': 'showArrow',
+    'Show previous summary': 'showPrevSummary', 'Show client banner': 'showClientBanner',
+    'Show cancel button': 'showCancel', 'Show save draft': 'showDraft',
+    'Show failed attempt button': 'showFailedAttempt'
+  };
+
+  document.querySelectorAll('.toggle-row').forEach(row => {
+    const label = row.querySelector('label:first-child').textContent;
+    const key = toggleMap[label];
+    if (key) row.querySelector('input[type="checkbox"]').checked = state[key];
+  });
+
+  // Selects
+  document.querySelectorAll('select').forEach(sel => {
+    const label = sel.closest('.control').querySelector('label').textContent;
+    if (label.includes('Group')) sel.value = state.groupDisplay;
+    if (label.includes('Overdue')) sel.value = state.overdueEmphasis;
+    if (label.includes('Page')) sel.value = state.formLayout;
+    if (label.includes('Question display')) sel.value = state.questionDisplay;
+    if (label.includes('Answer')) sel.value = state.answerType;
+  });
+}
+
+// ── Dashboard Rendering ──
+
+const MOCK_CARDS = [
+  { name: 'Margaret Thompson', initials: 'MT', bg: '#7c3aed', due: '2 days overdue', group: 'overdue', type: 'Internal', questions: 2, attempts: 3 },
+  { name: 'Harold Wilson', initials: 'HW', bg: '#dc2626', due: '5 days overdue', group: 'overdue', type: 'Internal', questions: 1, attempts: 0 },
+  { name: 'Dorothy Chen', initials: 'DC', bg: '#2563eb', due: 'Today', group: 'today', type: 'External', questions: 0, attempts: 1 },
+  { name: 'Robert Garcia', initials: 'RG', bg: '#16a34a', due: 'In 5 days', group: 'upcoming', type: 'Internal', questions: 3, attempts: 0 },
+  { name: 'Susan Patel', initials: 'SP', bg: '#ea580c', due: 'In 12 days', group: 'upcoming', type: 'External', questions: 0, attempts: 0 },
+];
+
+function renderDashboard() {
+  const el = document.getElementById('dashboard-mock');
+  const groups = { overdue: [], today: [], upcoming: [] };
+  MOCK_CARDS.forEach(c => groups[c.group].push(c));
+
+  const groupMeta = {
+    overdue: { label: 'Overdue', color: '#dc2626', count: groups.overdue.length },
+    today: { label: 'Today', color: '#f59e0b', count: groups.today.length },
+    upcoming: { label: 'Upcoming', color: '#6366f1', count: groups.upcoming.length },
+  };
+
+  if (state.groupDisplay === 'tabs') {
+    el.innerHTML = `
+      <div style="display:flex;gap:2px;margin-bottom:12px;background:#f1f5f9;border-radius:6px;padding:2px;">
+        ${Object.entries(groupMeta).map(([k,v]) => `
+          <div style="flex:1;text-align:center;padding:6px;border-radius:4px;font-size:12px;font-weight:500;cursor:pointer;
+            ${k === 'overdue' ? 'background:white;color:#1e293b;box-shadow:0 1px 2px rgba(0,0,0,0.05);' : 'color:#94a3b8;'}">
+            ${v.label} <span style="font-size:11px;color:#94a3b8;">(${v.count})</span>
+          </div>
+        `).join('')}
+      </div>
+      ${renderCards(groups.overdue, 'overdue')}
+    `;
+  } else {
+    el.innerHTML = Object.entries(groups).map(([key, cards]) => {
+      const meta = groupMeta[key];
+      if (cards.length === 0) return '';
+      return `
+        <div style="margin-bottom:16px;">
+          <div class="card-group-label">
+            <span class="dot" style="background:${meta.color}"></span>
+            ${meta.label}
+            <span class="count">(${meta.count})</span>
+          </div>
+          ${renderCards(cards, key)}
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+function renderCards(cards, group) {
+  return cards.map(c => {
+    let borderStyle = '';
+    let bgStyle = '';
+    let boxShadow = `box-shadow: 0 1px 2px rgba(0,0,0,0.05);`;
+
+    const isOverdue = group === 'overdue';
+
+    if (state.cardStyle === 'border-left') {
+      const borderColor = isOverdue && state.overdueEmphasis === 'red-border' ? '#dc2626' : (isOverdue ? '#dc2626' : '#e2e8f0');
+      borderStyle = `border-left: 3px solid ${borderColor};`;
+    } else if (state.cardStyle === 'full-border') {
+      const borderColor = isOverdue && state.overdueEmphasis === 'red-border' ? '#fecaca' : '#e2e8f0';
+      borderStyle = `border: 1px solid ${borderColor};`;
+    } else if (state.cardStyle === 'shadow') {
+      boxShadow = 'box-shadow: 0 2px 8px rgba(0,0,0,0.06);';
+    } else {
+      boxShadow = 'box-shadow: none;';
+      borderStyle = 'border-bottom: 1px solid #f1f5f9;';
+    }
+
+    if (isOverdue && state.overdueEmphasis === 'red-bg') {
+      bgStyle = 'background: #fef2f2;';
+    }
+
+    return `
+      <div class="checkin-card" style="padding:${state.cardPadding}px ${state.cardPadding + 4}px;border-radius:${state.cardRadius}px;${borderStyle}${bgStyle}${boxShadow}">
+        ${state.showAvatar ? `<div class="card-avatar" style="background:${c.bg}">${c.initials}</div>` : ''}
+        <div class="card-body">
+          <div class="card-name">${c.name}</div>
+          <div class="card-meta">
+            ${state.showDueDate ? `<span>${c.due}</span>` : ''}
+          </div>
+        </div>
+        <div class="card-badges">
+          ${state.showTypeBadge ? `<span class="badge badge-type">${c.type}</span>` : ''}
+          ${state.showQuestionBadge && c.questions > 0 ? `<span class="badge badge-questions">${c.questions} Qs</span>` : ''}
+          ${state.showAttemptBadge && c.attempts > 0 ? `<span class="badge badge-attempts">${c.attempts} attempts</span>` : ''}
+          ${isOverdue && state.overdueEmphasis === 'badge-only' ? `<span class="badge badge-overdue">Overdue</span>` : ''}
+        </div>
+        ${state.showArrow ? '<div class="card-arrow">&#8250;</div>' : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// ── Form Rendering ──
+
+function renderForm() {
+  const el = document.getElementById('form-mock');
+
+  const header = `
+    <div class="form-header">
+      <div class="form-breadcrumb">Dashboard <span>/</span> Check-Ins <span>/</span> <span class="current">Margaret Thompson</span></div>
+      <div class="form-title">Complete Check-In</div>
+    </div>
+  `;
+
+  const clientBanner = state.showClientBanner ? `
+    <div class="form-client-banner">
+      <div class="form-client-avatar">MT</div>
+      <div class="form-client-info">
+        <div class="form-client-name">Margaret Thompson</div>
+        <div class="form-client-detail">HCP Level 4 &middot; Care Partner: You &middot; Due: 1 Mar 2026</div>
+      </div>
+      <span class="badge badge-overdue">2 days overdue</span>
+    </div>
+  ` : '';
+
+  const stepBar = state.formLayout === 'steps' ? `
+    <div class="step-bar">
+      <div class="step-item done">
+        <div class="step-dot">&#10003;</div>
+        <span>Context</span>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step-item active">
+        <div class="step-dot">2</div>
+        <span>Wellbeing</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-dot">3</div>
+        <span>Questions</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-dot">4</div>
+        <span>Summary</span>
+      </div>
+    </div>
+  ` : '';
+
+  const prevSummary = state.showPrevSummary ? `
+    <div class="form-section">
+      <div class="form-section-header">&#128221; Previous Check-In</div>
+      <div class="form-section-body">
+        <div class="prev-summary">
+          <div class="prev-date">Completed 2 Dec 2025 &middot; Rating: 4/5</div>
+          <div class="prev-text">Margaret was in good spirits. Discussed her physio progress and upcoming podiatry appointment. She mentioned some difficulty with meal prep — flagged with clinical team. No concerns about medication.</div>
+        </div>
+      </div>
+    </div>
+  ` : '';
+
+  const wellbeingRating = renderWellbeingRating();
+
+  const riskQuestions = renderRiskQuestions();
+
+  const summarySection = `
+    <div class="form-section">
+      <div class="form-section-header">&#9997;&#65039; Summary &amp; Actions</div>
+      <div class="form-section-body">
+        <div class="form-field">
+          <label class="form-label">Call Summary</label>
+          <textarea class="form-textarea" placeholder="How did the call go? Key topics discussed..." rows="3"></textarea>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Follow-up Actions</label>
+          <textarea class="form-textarea" placeholder="Any actions to take after this call..." rows="2"></textarea>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const footer = `
+    <div class="form-footer">
+      <div class="form-footer-left">
+        ${state.showCancel ? '<button class="btn btn-danger">Cancel Check-In</button>' : ''}
+        ${state.showFailedAttempt ? '<button class="btn btn-secondary">Log Failed Attempt</button>' : ''}
+      </div>
+      <div class="form-footer-right">
+        ${state.showDraft ? '<button class="btn btn-ghost">Save Draft</button>' : ''}
+        <button class="btn btn-primary">Complete Check-In &#8594;</button>
+      </div>
+    </div>
+  `;
+
+  if (state.formLayout === 'split') {
+    el.innerHTML = `
+      ${header}
+      ${stepBar}
+      <div style="display:grid;grid-template-columns:300px 1fr;min-height:400px;">
+        <div style="border-right:1px solid #e2e8f0;padding:16px;background:white;">
+          ${state.showClientBanner ? `
+            <div style="margin-bottom:16px;">
+              <div class="form-client-avatar" style="width:56px;height:56px;font-size:18px;margin-bottom:8px;">MT</div>
+              <div class="form-client-name" style="font-size:16px;">Margaret Thompson</div>
+              <div class="form-client-detail" style="margin-top:4px;">HCP Level 4</div>
+              <div style="margin-top:8px;"><span class="badge badge-overdue">2 days overdue</span></div>
+            </div>
+          ` : ''}
+          ${state.showPrevSummary ? `
+            <div style="margin-top:16px;">
+              <div style="font-size:11px;font-weight:600;color:#475569;margin-bottom:6px;">Previous Check-In</div>
+              <div class="prev-summary">
+                <div class="prev-date">2 Dec 2025 &middot; 4/5</div>
+                <div class="prev-text">Margaret was in good spirits. Discussed physio progress and podiatry appointment.</div>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+        <div class="form-body">
+          ${wellbeingRating}
+          ${riskQuestions}
+          ${summarySection}
+        </div>
+      </div>
+      ${footer}
+    `;
+  } else {
+    el.innerHTML = `
+      ${header}
+      ${clientBanner}
+      ${stepBar}
+      <div class="form-body">
+        ${prevSummary}
+        ${wellbeingRating}
+        ${riskQuestions}
+        ${summarySection}
+      </div>
+      ${footer}
+    `;
+  }
+}
+
+function renderWellbeingRating() {
+  let ratingHtml = '';
+
+  if (state.ratingStyle === 'stars') {
+    ratingHtml = `
+      <div class="stars">
+        <span class="star filled">&#9733;</span>
+        <span class="star filled">&#9733;</span>
+        <span class="star filled">&#9733;</span>
+        <span class="star filled">&#9733;</span>
+        <span class="star">&#9733;</span>
+      </div>
+      <div style="font-size:11px;color:#94a3b8;margin-top:4px;">4 of 5 — Good</div>
+    `;
+  } else if (state.ratingStyle === 'numeric') {
+    ratingHtml = `
+      <div class="numeric-scale">
+        ${[1,2,3,4,5].map(n => `<div class="numeric-btn ${n === 4 ? 'selected' : ''}">${n}</div>`).join('')}
+      </div>
+      <div class="numeric-labels"><span>1 — Poor</span><span>5 — Excellent</span></div>
+    `;
+  } else if (state.ratingStyle === 'emoji') {
+    const emojis = ['&#128543;', '&#128533;', '&#128528;', '&#128578;', '&#128513;'];
+    ratingHtml = `
+      <div class="emoji-scale">
+        ${emojis.map((e, i) => `<div class="emoji-btn ${i === 3 ? 'selected' : ''}">${e}</div>`).join('')}
+      </div>
+      <div class="numeric-labels"><span>Poor</span><span>Excellent</span></div>
+    `;
+  } else {
+    ratingHtml = `
+      <div class="wellbeing-slider-wrap">
+        <input type="range" class="wellbeing-slider" min="1" max="5" value="4" step="1"
+          style="background: linear-gradient(to right, #dc2626, #f59e0b, #16a34a);">
+        <div class="slider-labels">
+          <span>1 — Poor</span>
+          <span>2</span>
+          <span>3</span>
+          <span>4</span>
+          <span>5 — Excellent</span>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="form-section">
+      <div class="form-section-header">&#10084;&#65039; Client Wellbeing</div>
+      <div class="form-section-body">
+        <label class="form-label">How would you rate the client's overall wellbeing?</label>
+        ${ratingHtml}
+      </div>
+    </div>
+  `;
+}
+
+function renderRiskQuestions() {
+  const questions = [
+    { risk: 'Falls Risk', q: 'Has the client experienced any falls or near-falls since the last check-in?' },
+    { risk: 'Falls Risk', q: 'Is the client using their mobility aids as recommended?' },
+    { risk: 'Nutrition Risk', q: 'How would you describe the client\'s appetite and meal preparation this period?' },
+  ];
+
+  let content = '';
+
+  if (state.questionDisplay === 'grouped') {
+    const grouped = {};
+    questions.forEach(q => {
+      if (!grouped[q.risk]) grouped[q.risk] = [];
+      grouped[q.risk].push(q);
+    });
+
+    content = Object.entries(grouped).map(([risk, qs]) => `
+      <div style="margin-bottom:12px;">
+        <div class="risk-tag">${risk}</div>
+        ${qs.map(q => renderQuestionItem(q)).join('')}
+      </div>
+    `).join('');
+  } else if (state.questionDisplay === 'accordion') {
+    const grouped = {};
+    questions.forEach(q => {
+      if (!grouped[q.risk]) grouped[q.risk] = [];
+      grouped[q.risk].push(q);
+    });
+
+    content = Object.entries(grouped).map(([risk, qs], i) => `
+      <details ${i === 0 ? 'open' : ''} style="margin-bottom:8px;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;">
+        <summary style="padding:10px 12px;cursor:pointer;font-size:12px;font-weight:600;color:#475569;background:#f8fafc;display:flex;align-items:center;gap:6px;">
+          <span class="risk-tag" style="margin:0;">${risk}</span>
+          <span style="color:#94a3b8;font-weight:400;">${qs.length} question${qs.length > 1 ? 's' : ''}</span>
+        </summary>
+        <div style="padding:12px;">
+          ${qs.map(q => renderQuestionItem(q)).join('')}
+        </div>
+      </details>
+    `).join('');
+  } else {
+    content = questions.map(q => `
+      <div class="risk-question">
+        <span class="risk-tag">${q.risk}</span>
+        ${renderQuestionItem(q)}
+      </div>
+    `).join('');
+  }
+
+  return `
+    <div class="form-section">
+      <div class="form-section-header">&#128203; Clinical Questions <span style="font-weight:400;color:#94a3b8;">(${questions.length})</span></div>
+      <div class="form-section-body">${content}</div>
+    </div>
+  `;
+}
+
+function renderQuestionItem(q) {
+  let input = '';
+  if (state.answerType === 'textarea') {
+    input = `<textarea class="form-textarea" placeholder="Your response..." rows="2"></textarea>`;
+  } else if (state.answerType === 'input') {
+    input = `<input class="form-input" placeholder="Your response...">`;
+  } else {
+    input = `
+      <div style="display:flex;gap:12px;margin-bottom:6px;">
+        <label style="font-size:12px;color:#475569;display:flex;align-items:center;gap:4px;cursor:pointer;">
+          <input type="radio" name="${q.q.substring(0,10)}" style="accent-color:#007F7E;"> Yes
+        </label>
+        <label style="font-size:12px;color:#475569;display:flex;align-items:center;gap:4px;cursor:pointer;">
+          <input type="radio" name="${q.q.substring(0,10)}" style="accent-color:#007F7E;"> No
+        </label>
+        <label style="font-size:12px;color:#475569;display:flex;align-items:center;gap:4px;cursor:pointer;">
+          <input type="radio" name="${q.q.substring(0,10)}" style="accent-color:#007F7E;"> N/A
+        </label>
+      </div>
+      <input class="form-input" placeholder="Additional notes (optional)..." style="font-size:12px;">
+    `;
+  }
+
+  return `
+    <div style="margin-bottom:10px;">
+      <p style="font-size:13px;color:#334155;margin-bottom:6px;">${q.q}</p>
+      ${input}
+    </div>
+  `;
+}
+
+// ── Prompt Generation ──
+
+function updatePrompt() {
+  const parts = [];
+
+  if (state.view === 'dashboard') {
+    parts.push('**Dashboard check-in cards:**');
+
+    if (state.cardStyle !== DEFAULTS.cardStyle) {
+      const styleMap = { 'border-left': 'coloured left border', 'full-border': 'full card border', 'shadow': 'elevated shadow card', 'flat': 'flat minimal rows' };
+      parts.push(`Use ${styleMap[state.cardStyle]} style`);
+    }
+
+    if (state.cardRadius !== DEFAULTS.cardRadius) parts.push(`${state.cardRadius}px corner radius`);
+    if (state.cardPadding !== DEFAULTS.cardPadding) parts.push(`${state.cardPadding}px card padding`);
+
+    if (!state.showAvatar) parts.push('No avatars — text only');
+    if (!state.showTypeBadge) parts.push('Hide Internal/External type badge');
+    if (!state.showQuestionBadge) parts.push('Hide question count badge');
+    if (!state.showDueDate) parts.push('Hide due date text');
+    if (!state.showArrow) parts.push('No chevron arrow');
+
+    if (state.groupDisplay !== DEFAULTS.groupDisplay) {
+      parts.push(state.groupDisplay === 'tabs' ? 'Use tabs for Overdue/Today/Upcoming (not stacked sections)' : 'Stack Overdue/Today/Upcoming as sections');
+    }
+
+    if (state.overdueEmphasis !== DEFAULTS.overdueEmphasis) {
+      const emphMap = { 'red-border': 'red left border on overdue cards', 'red-bg': 'subtle red background tint on overdue cards', 'badge-only': 'overdue indicated by badge only (no colour on card)' };
+      parts.push(emphMap[state.overdueEmphasis]);
+    }
+  } else {
+    parts.push('**Check-in completion form:**');
+
+    if (state.formLayout !== DEFAULTS.formLayout) {
+      const layoutMap = { 'single': 'single scrolling page', 'steps': 'step wizard (Context > Wellbeing > Questions > Summary)', 'split': 'split panel — client context on left, form on right' };
+      parts.push(`Layout: ${layoutMap[state.formLayout]}`);
+    }
+
+    if (!state.showClientBanner) parts.push('No client banner at top');
+    if (!state.showPrevSummary) parts.push('Hide previous check-in summary');
+
+    if (state.ratingStyle !== DEFAULTS.ratingStyle) {
+      const rMap = { 'numeric': 'numeric 1-5 buttons', 'stars': '5-star rating', 'emoji': 'emoji faces (sad to happy)', 'slider': 'gradient slider (red to green)' };
+      parts.push(`Wellbeing rating: ${rMap[state.ratingStyle]}`);
+    }
+
+    if (state.questionDisplay !== DEFAULTS.questionDisplay) {
+      const qMap = { 'grouped': 'grouped by risk', 'flat': 'flat list', 'accordion': 'collapsible accordion per risk' };
+      parts.push(`Risk questions: ${qMap[state.questionDisplay]}`);
+    }
+
+    if (state.answerType !== DEFAULTS.answerType) {
+      const aMap = { 'textarea': 'free text areas', 'input': 'short text inputs', 'mixed': 'radio (Yes/No/N/A) + optional text' };
+      parts.push(`Answer input: ${aMap[state.answerType]}`);
+    }
+
+    if (!state.showCancel) parts.push('No cancel button on form');
+    if (!state.showDraft) parts.push('No save draft option');
+    if (!state.showFailedAttempt) parts.push('No "Log Failed Attempt" button on form');
+  }
+
+  const nonDefaultCount = parts.length - 1;
+  if (nonDefaultCount === 0) {
+    parts.push('Using default TC Portal conventions — all standard settings.');
+  }
+
+  document.getElementById('prompt-output').textContent = parts.join('. ') + '.';
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-output').textContent;
+  navigator.clipboard.writeText(text);
+  const btn = document.querySelector('.copy-btn');
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 1500);
+}
+
+// ── Update ──
+
+function updateAll() {
+  if (state.view === 'dashboard') renderDashboard();
+  else renderForm();
+  updatePrompt();
+}
+
+// Initial render
+updateAll();
+</script>
+</body>
+</html>

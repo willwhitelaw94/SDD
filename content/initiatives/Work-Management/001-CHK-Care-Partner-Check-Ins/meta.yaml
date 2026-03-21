@@ -1,0 +1,30 @@
+title: 'Care Partner Check-Ins'
+prefix: CHK
+status: release
+summary: "Re-enable structured quarterly check-in calls between care partners/coordinators and their clients, replacing Excel-based tracking"
+created: 2026-03-03
+linear_project_id: c79508fc-792d-4158-a65c-1ba8e673ac7e
+linear_url: https://linear.app/trilogycare/project/chk-care-partner-check-ins-7cb3902aa404
+linear_initiative_id: fa7e6ba5-4141-4569-8641-6dc8ba64f901
+gates:
+  idea:
+    passed: true
+    date: 2026-03-03
+    notes: "Idea brief approved, Linear epic created"
+  spec:
+    passed: true
+    date: 2026-03-03
+    notes: "12 user stories validated, 26 FRs, 16 clarifications resolved, business alignment confirmed"
+  design:
+    passed: true
+    date: 2026-03-03
+    notes: "5 screens mocked up, 6 UX/UI decisions finalised, 15 edge cases documented, Gate 2 passed 14/14 checks"
+  dev:
+    passed: true
+    date: 2026-03-05
+    pr: "https://github.com/Trilogy-Care/tc-portal/pull/6281"
+    notes: "73 tests passing (190 assertions), Pint clean, 12 PHP violations fixed, 3 Vue violations fixed, all 12 AC verified"
+  qa:
+    passed: true
+    date: 2026-03-05
+    notes: "39/42 test cases pass (3 blocked — coordinator seed data), 0 open Sev 1-3 issues, human tested, Chrome verified"

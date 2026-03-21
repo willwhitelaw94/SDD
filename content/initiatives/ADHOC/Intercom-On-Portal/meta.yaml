@@ -1,0 +1,23 @@
+jira_key: TP-3028
+title: 'Intercom (on Portal)'
+prefix: ITC
+summary: "AI chatbot for website enquiries"
+description: |
+  Trilogy Care receives a large volume of enquiries from prospective clients, current clients, suppliers, and general website visitors. These arrive through several channels - emails, web forms, and phone calls - creating delays, inconsistent responses, and duplicated effort across Intake, Care Partners, and Compliance teams.
+
+  Many questions are routine (pricing, onboarding steps, Support at Home reforms, supplier obligations, portal access) yet require manual triage and manual drafting, slowing down response times and reducing capacity for higher-value work.
+
+  Expanding the implementation of Intercom will streamline communication, reduce manual workloads, improve response times, and deliver a more consistent and responsive experience across Trilogy Care.
+linear_project_id: 9c288ef5-7ff2-4717-9ad4-dd1a61faa4ee
+linear_url: https://linear.app/trilogycare/project/itc-intercom-9d205f43d98d
+status: In Progress
+priority: Medium
+assignee: Naveen Rodrigo
+created: '2025-11-20T13:06:09.941+1000'
+updated: '2026-01-05T11:26:51.263+1000'
+last_synced: '2026-01-08T00:00:00.000Z'
+parent_initiative: TP-2141
+
+phases: []
+
+stories: []

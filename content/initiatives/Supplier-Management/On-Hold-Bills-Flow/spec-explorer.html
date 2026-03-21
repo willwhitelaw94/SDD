@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec Explorer — On Hold Bills Flow (OHB)</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#263348;--border:#334155;
+  --teal:#007F7E;--teal-light:#43C0BE;--blue:#2C4C79;
+  --p1:#ef4444;--p2:#fbbf24;--p3:#64748b;
+  --given:#43C0BE;--when:#fbbf24;--then:#a78bfa;
+  --text:#e2e8f0;--text-muted:#94a3b8;--text-dim:#64748b;
+  --sidebar-w:320px;--detail-w:460px;
+}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text)}
+a{color:var(--teal-light);text-decoration:none}
+
+/* Layout */
+.app{display:flex;height:100vh;width:100vw}
+.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:20}
+.canvas-area{flex:1;position:relative;overflow:hidden}
+.detail-panel{width:0;overflow:hidden;background:var(--surface);border-left:1px solid var(--border);transition:width .3s ease;z-index:20;display:flex;flex-direction:column}
+.detail-panel.open{width:var(--detail-w);min-width:var(--detail-w)}
+.prompt-bar{position:fixed;bottom:0;left:var(--sidebar-w);right:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 16px;z-index:30;display:flex;align-items:center;gap:12px;transition:right .3s ease}
+.prompt-bar.detail-open{right:var(--detail-w)}
+
+/* Sidebar */
+.sidebar-header{padding:16px;border-bottom:1px solid var(--border)}
+.sidebar-header h1{font-size:14px;font-weight:700;color:var(--teal-light);margin-bottom:2px}
+.sidebar-header .subtitle{font-size:11px;color:var(--text-muted)}
+.sidebar-header .epic-tag{font-size:10px;color:var(--text-dim);margin-top:2px}
+.sidebar-header .counts{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.sidebar-header .counts span{font-size:11px;padding:2px 8px;border-radius:9999px;background:var(--surface2)}
+.count-p1{color:var(--p1)!important}.count-p2{color:var(--p2)!important}.count-p3{color:var(--p3)!important}
+.search-box{padding:8px 16px}
+.search-box input{width:100%;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;outline:none}
+.search-box input:focus{border-color:var(--teal)}
+.search-box input::placeholder{color:var(--text-dim)}
+.sidebar-tabs{display:flex;border-bottom:1px solid var(--border)}
+.sidebar-tabs button{flex:1;padding:8px;font-size:12px;font-weight:600;background:none;border:none;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.sidebar-tabs button:hover{color:var(--text)}
+.sidebar-tabs button.active{color:var(--teal-light);border-bottom-color:var(--teal-light)}
+.sidebar-content{flex:1;overflow-y:auto;padding:8px}
+.sidebar-content::-webkit-scrollbar{width:4px}
+.sidebar-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* Sidebar cards */
+.s-card{padding:10px 12px;margin-bottom:6px;border-radius:8px;background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.s-card:hover{border-color:var(--teal);background:var(--surface2)}
+.s-card.selected{border-color:var(--teal-light);background:var(--surface2)}
+.s-card-title{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.s-card-meta{font-size:11px;color:var(--text-muted);margin-top:4px;display:flex;gap:8px}
+.priority-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}
+.priority-dot.p1{background:var(--p1)}.priority-dot.p2{background:var(--p2)}.priority-dot.p3{background:var(--p3)}
+
+/* FR cards */
+.fr-group-header{font-size:11px;font-weight:700;padding:6px 12px;margin:8px 0 4px;border-radius:4px;color:#fff}
+.fr-card{padding:8px 12px;margin-bottom:4px;border-radius:6px;background:var(--bg);border:1px solid var(--border);font-size:11px;cursor:pointer;transition:all .15s;line-height:1.5}
+.fr-card:hover{border-color:var(--teal)}
+.fr-card .fr-id{font-weight:700;color:var(--teal-light)}
+
+/* Scenario cards */
+.sc-card{padding:8px 12px;margin-bottom:4px;border-radius:6px;background:var(--bg);border:1px solid var(--border);font-size:11px;cursor:pointer;line-height:1.5;transition:all .15s}
+.sc-card:hover{border-color:var(--teal)}
+.sc-card .sc-parent{font-size:10px;color:var(--text-dim);margin-bottom:4px;font-weight:600}
+
+/* Canvas */
+.canvas{width:100%;height:100%;cursor:grab}
+.canvas:active{cursor:grabbing}
+.canvas-inner{transform-origin:0 0}
+
+/* Story nodes */
+.story-node{position:absolute;width:260px;background:var(--surface);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:box-shadow .2s,border-color .2s;overflow:hidden;user-select:none}
+.story-node:hover{border-color:var(--teal);box-shadow:0 0 20px rgba(67,192,190,.15)}
+.story-node.selected{border-color:var(--teal-light);box-shadow:0 0 24px rgba(67,192,190,.25)}
+.story-node .priority-stripe{height:4px;width:100%}
+.story-node .priority-stripe.p1{background:var(--p1)}.story-node .priority-stripe.p2{background:var(--p2)}.story-node .priority-stripe.p3{background:var(--p3)}
+.story-node .node-body{padding:12px}
+.story-node .node-id{font-size:11px;font-weight:700;color:var(--teal-light)}
+.story-node .node-title{font-size:12px;font-weight:600;margin-top:4px;line-height:1.4}
+.story-node .node-actor{font-size:10px;color:var(--text-muted);margin-top:4px}
+.story-node .node-stats{display:flex;gap:8px;margin-top:8px}
+.story-node .node-stat{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--bg);color:var(--text-muted)}
+
+/* Swim lanes */
+.swim-lane{position:absolute;border:1px dashed var(--border);border-radius:12px;pointer-events:none}
+.swim-lane-label{position:absolute;top:8px;left:16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.swim-lane.p1{background:rgba(239,68,68,.03)}.swim-lane.p1 .swim-lane-label{color:var(--p1)}
+.swim-lane.p2{background:rgba(251,191,36,.03)}.swim-lane.p2 .swim-lane-label{color:var(--p2)}
+.swim-lane.p3{background:rgba(100,116,139,.03)}.swim-lane.p3 .swim-lane-label{color:var(--p3)}
+
+/* Detail panel */
+.detail-scroll{flex:1;overflow-y:auto;padding:20px}
+.detail-scroll::-webkit-scrollbar{width:4px}
+.detail-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.detail-close{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;z-index:5;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px}
+.detail-close:hover{background:var(--surface2);color:var(--text)}
+.detail-header{margin-bottom:16px}
+.detail-header .d-id{font-size:12px;color:var(--teal-light);font-weight:700}
+.detail-header .d-title{font-size:16px;font-weight:700;margin-top:4px}
+.detail-header .d-actor{font-size:12px;color:var(--text-muted);margin-top:4px}
+.detail-header .d-priority{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;padding:4px 10px;border-radius:6px;background:var(--bg)}
+.detail-header .d-stats{display:flex;gap:12px;margin-top:8px}
+.detail-header .d-stats span{font-size:11px;color:var(--text-muted)}
+.detail-section{margin-top:20px}
+.detail-section h3{font-size:12px;font-weight:700;color:var(--teal-light);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.detail-rationale{font-size:12px;color:var(--text-muted);line-height:1.6;padding:10px;background:var(--bg);border-radius:6px}
+.detail-deps{display:flex;flex-wrap:wrap;gap:6px}
+.detail-dep{font-size:11px;padding:4px 10px;border-radius:6px;background:var(--bg);border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.detail-dep:hover{border-color:var(--teal-light);color:var(--teal-light)}
+
+/* Scenarios in detail */
+.detail-scenario{padding:10px;margin-bottom:8px;background:var(--bg);border-radius:6px;font-size:12px;line-height:1.7}
+.detail-scenario .kw-given{color:var(--given);font-weight:700}
+.detail-scenario .kw-when{color:var(--when);font-weight:700}
+.detail-scenario .kw-then{color:var(--then);font-weight:700}
+
+/* FR badges in detail */
+.detail-fr-list{display:flex;flex-wrap:wrap;gap:6px}
+.detail-fr-badge{font-size:11px;padding:4px 10px;border-radius:6px;cursor:pointer;border:1px solid;transition:all .15s}
+.detail-fr-badge:hover{opacity:.8}
+
+/* Edge cases */
+.detail-edge{padding:10px;margin-bottom:6px;background:var(--bg);border-radius:6px;font-size:12px;line-height:1.5}
+.detail-edge .edge-q{font-weight:600;color:var(--text)}
+.detail-edge .edge-a{color:var(--text-muted);margin-top:4px}
+
+/* Prompt bar */
+.prompt-text{flex:1;font-size:12px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prompt-text.has-prompt{color:var(--text)}
+.prompt-copy{padding:8px 16px;border-radius:6px;background:var(--teal);color:#fff;border:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
+.prompt-copy:hover{background:var(--teal-light);color:var(--bg)}
+.prompt-copy.copied{background:#22c55e}
+
+/* Tooltip */
+.tooltip{position:fixed;max-width:340px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:11px;line-height:1.5;pointer-events:none;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.tooltip .tt-title{font-weight:700;margin-bottom:4px}.tooltip .tt-actor{color:var(--text-muted)}.tooltip .tt-rationale{color:var(--text-muted);margin-top:6px;font-style:italic}
+.tooltip .tt-stats{display:flex;gap:8px;margin-top:6px}
+.tooltip .tt-stats span{padding:2px 6px;border-radius:4px;background:var(--bg);color:var(--text-muted);font-size:10px}
+
+/* SVG arrows */
+svg.arrows{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+svg.arrows path{fill:none;stroke:var(--border);stroke-width:1.5;marker-end:url(#arrowhead)}
+svg.arrows path.highlighted{stroke:var(--teal-light);stroke-width:2}
+
+/* Fit button */
+.canvas-controls{position:absolute;top:12px;right:12px;display:flex;gap:6px;z-index:10}
+.canvas-btn{padding:6px 12px;border-radius:6px;background:var(--surface);border:1px solid var(--border);color:var(--text-muted);font-size:11px;cursor:pointer;transition:all .15s}
+.canvas-btn:hover{border-color:var(--teal);color:var(--text)}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h1>On Hold Bills Flow</h1>
+      <div class="subtitle">OHB — Supplier Management</div>
+      <div class="epic-tag">TP-3787 | Ready for Implementation</div>
+      <div class="counts">
+        <span class="count-p1">2 P1</span>
+        <span class="count-p2">3 P2</span>
+        <span class="count-p3">4 P3</span>
+        <span style="color:var(--teal-light)">25 FRs</span>
+        <span style="color:var(--text-muted)">25 ACs</span>
+      </div>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search stories, FRs, scenarios..." />
+    </div>
+    <div class="sidebar-tabs">
+      <button class="active" data-tab="stories">Stories</button>
+      <button data-tab="requirements">Requirements</button>
+      <button data-tab="scenarios">Scenarios</button>
+    </div>
+    <div class="sidebar-content" id="sidebarContent"></div>
+  </div>
+
+  <!-- Canvas Area -->
+  <div class="canvas-area">
+    <div class="canvas-controls">
+      <button class="canvas-btn" id="fitBtn">Fit All</button>
+      <button class="canvas-btn" id="resetBtn">Reset</button>
+    </div>
+    <svg class="arrows" id="arrowsSvg">
+      <defs>
+        <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#334155"/>
+        </marker>
+        <marker id="arrowhead-hl" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#43C0BE"/>
+        </marker>
+      </defs>
+    </svg>
+    <div class="canvas" id="canvas">
+      <div class="canvas-inner" id="canvasInner"></div>
+    </div>
+  </div>
+
+  <!-- Detail Panel -->
+  <div class="detail-panel" id="detailPanel">
+    <button class="detail-close" id="detailClose">&times;</button>
+    <div class="detail-scroll" id="detailScroll"></div>
+  </div>
+</div>
+
+<!-- Prompt Bar -->
+<div class="prompt-bar" id="promptBar">
+  <div class="prompt-text" id="promptText">Select a story to generate an implementation prompt</div>
+  <button class="prompt-copy" id="promptCopy">Copy Prompt</button>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip hidden" id="tooltip"></div>
+
+<script>
+// ============================================================
+// DATA — parsed directly from spec.md
+// ============================================================
+const STORIES = [
+  {
+    id:'US1', title:'Multi-Issue Diagnosis', priority:'P1',
+    actor:'Bill Processor',
+    rationale:'This is the core value proposition. Currently bills can only have ONE on-hold reason at a time, causing 60-70% of resubmissions to fail again due to undiscovered issues.',
+    scenarios:[
+      {text:'Given a bill submission with 3 distinct issues (ABN error, calculation error, missing itemization), When the bill processor initiates diagnosis, Then all 3 issues are identified and displayed simultaneously.'},
+      {text:'Given a bill with both invoice-level issues (ABN error) and contextual issues (funding pending), When diagnosis completes, Then both issue types are captured with their respective attributes (Touches_Invoice, Requires_Internal_Action).'},
+      {text:'Given a bill submission with no detectable issues, When diagnosis completes, Then the system indicates the bill is ready for payment processing with zero issues.'}
+    ],
+    frs:['FR-001','FR-002','FR-003','FR-004'],
+    deps:[]
+  },
+  {
+    id:'US2', title:'AI Auto-Reject for Disqualifiers', priority:'P1',
+    actor:'Bill Processor',
+    rationale:'25% of reasons (9 out of 36) are auto-reject eligible. Instant rejection for these frees significant processing capacity.',
+    scenarios:[
+      {text:'Given a bill with an invalid ABN, When submitted, Then the system auto-rejects within seconds with clear reason "ABN/GST error" and no human review required.'},
+      {text:'Given a bill with a calculation error (line items don\'t sum to total), When submitted, Then the system auto-rejects with specific error details showing expected vs actual totals.'},
+      {text:'Given a bill with issues that require human judgment (service type verification), When submitted, Then the system does NOT auto-reject and routes to appropriate department.'}
+    ],
+    frs:['FR-005','FR-006'],
+    deps:['US1']
+  },
+  {
+    id:'US3', title:'Department Routing with Discrete Outcome Tracking', priority:'P2',
+    actor:'Department User (Care/Compliance/Accounts)',
+    rationale:'Internal coordination is a key bottleneck. This enables parallel processing across departments without blocking each other.',
+    scenarios:[
+      {text:'Given a bill with "Client approval required" reason, When diagnosis completes, Then the issue is routed to Care team queue with client context and approval request actions.'},
+      {text:'Given a Care team member resolves "Client approval required" by obtaining approval, When they mark the reason as Resolved, Then the reason status updates and the system continues processing remaining issues.'},
+      {text:'Given a bill with 3 issues across 3 departments (Care, Compliance, Accounts), When routed, Then all 3 departments can work their reasons in parallel without waiting for each other.'}
+    ],
+    frs:['FR-007','FR-008','FR-009'],
+    deps:['US1']
+  },
+  {
+    id:'US4', title:'Temporal Re-validation Before Communication', priority:'P2',
+    actor:'System',
+    rationale:'Context decay is a significant edge case. Funding available on Day 0 may be depleted by Day 15 when supplier resubmits.',
+    scenarios:[
+      {text:'Given a bill on hold with funding_balance=$5000 at diagnosis, When temporal re-validation runs and funding_balance is now $0, Then a new reason "Insufficient balance" is added to the issue list.'},
+      {text:'Given a bill ready for payment after all reasons resolved, When temporal re-validation discovers supplier status changed to "Terminated", Then the communication type changes to REJECT PERIOD.'},
+      {text:'Given a bill with no time-sensitive qualifier changes, When temporal re-validation runs, Then no new reasons are added and processing continues.'}
+    ],
+    frs:['FR-010','FR-011','FR-012'],
+    deps:['US1']
+  },
+  {
+    id:'US5', title:'Three Communication Types', priority:'P2',
+    actor:'Supplier',
+    rationale:'Clear communication reduces supplier confusion and prevents wasted resubmission attempts.',
+    scenarios:[
+      {text:'Given a bill with at least one reason that touches invoice (ABN error), When communication is generated, Then type is REJECT-RESUBMIT with resubmit link and actionable fix instructions.'},
+      {text:'Given a bill where supplier is terminated, When communication is generated, Then type is REJECT PERIOD with no resubmit link and clear "do not resubmit" message.'},
+      {text:'Given a bill with only contextual reasons awaiting external action (client approval pending), When communication is generated, Then type is ON HOLD with "no action needed from you" message.'}
+    ],
+    frs:['FR-013','FR-014','FR-025'],
+    deps:['US1','US3','US4']
+  },
+  {
+    id:'US6', title:'Cadence Management for ON HOLD', priority:'P3',
+    actor:'Bill Processor',
+    rationale:'Without cadence, ON HOLD bills accumulate without resolution. Timeout forces closure.',
+    scenarios:[
+      {text:'Given a bill with ON HOLD communication sent on Day 0, When Day 3 is reached without resolution, Then a reminder communication is automatically sent.'},
+      {text:'Given an ON HOLD bill at Day 7, When Day 10 is reached without external party action, Then the bill is automatically rejected with REJECTED FINAL outcome.'},
+      {text:'Given an ON HOLD bill at Day 5, When the external party takes action resolving the hold, Then cadence stops, temporal re-validation runs, and processing continues toward payment.'}
+    ],
+    frs:['FR-017','FR-018','FR-019'],
+    deps:['US5']
+  },
+  {
+    id:'US7', title:'Resolution Outreach vs Submitter Notification Streams', priority:'P3',
+    actor:'System',
+    rationale:'Client-specific issues should not be disclosed to suppliers. Different recipients need different messages.',
+    scenarios:[
+      {text:'Given a bill with "Client approval required" reason, When Resolution Outreach is triggered, Then the client receives approval request, NOT the supplier.'},
+      {text:'Given a reason resolved within the 1-day Resolution Window, When processing completes, Then the supplier is never notified that the issue existed.'},
+      {text:'Given a reason NOT resolved within 1-day window, When the window expires, Then supplier receives generic "other processes required" notification without client-specific details.'}
+    ],
+    frs:['FR-016','FR-020','FR-021','FR-022'],
+    deps:['US5']
+  },
+  {
+    id:'US8', title:'Can Coexist Filter for Communication Clarity', priority:'P3',
+    actor:'Supplier',
+    rationale:'Listing "fix ABN" to a terminated supplier is confusing and wastes their time.',
+    scenarios:[
+      {text:'Given a bill with "Supplier terminated" and 3 other invoice errors, When communication is generated, Then primary message focuses on termination with other issues listed only as "for future reference".'},
+      {text:'Given a bill with multiple coexisting invoice errors (ABN + calculation), When communication is generated, Then all errors are listed as actionable items.'}
+    ],
+    frs:['FR-015'],
+    deps:['US5']
+  },
+  {
+    id:'US9', title:'Linked Resubmissions', priority:'P3',
+    actor:'Bill Processor',
+    rationale:'Understanding resubmission patterns helps identify systematic issues and measure improvement.',
+    scenarios:[
+      {text:'Given a rejected bill (ID: SUB-001) that supplier resubmits, When the new submission is received, Then it is automatically or manually linked to SUB-001 as a resubmission.'},
+      {text:'Given a linked resubmission chain (SUB-001 -> SUB-002 -> SUB-003), When viewing any submission, Then the full history chain is visible.'}
+    ],
+    frs:['FR-023','FR-024'],
+    deps:['US2','US5']
+  }
+];
+
+const FRS = [
+  {id:'FR-001',cat:'Diagnosis & Detection',text:'System MUST identify ALL issues with a bill submission during diagnosis (not just the first issue found)'},
+  {id:'FR-002',cat:'Diagnosis & Detection',text:'System MUST classify each reason with Touches_Invoice (Boolean) attribute'},
+  {id:'FR-003',cat:'Diagnosis & Detection',text:'System MUST classify each reason with Requires_Internal_Action (Boolean) attribute'},
+  {id:'FR-004',cat:'Diagnosis & Detection',text:'System MUST support 36 defined on-hold reasons across 3 departments (16 Compliance, 14 Care, 6 Accounts)'},
+  {id:'FR-005',cat:'AI Auto-Reject',text:'System MUST auto-reject bills with AI-detectable disqualifiers at 99% confidence threshold'},
+  {id:'FR-006',cat:'AI Auto-Reject',text:'System MUST support 9 auto-reject eligible reasons (ABN/GST error, Calculation error, Client name error, Itemisation error, Supplier terminated, Itemisation for contribution categories, Commencement date error, Termination date error, Finance QA failure)'},
+  {id:'FR-007',cat:'Department Routing',text:'System MUST route reasons requiring internal action to appropriate department queues (Care/Compliance/Accounts)'},
+  {id:'FR-008',cat:'Department Routing',text:'System MUST allow department users to mark reason outcomes as Resolved, Unresolved, or Awaiting'},
+  {id:'FR-009',cat:'Department Routing',text:'System MUST support parallel processing of reasons across departments'},
+  {id:'FR-010',cat:'Temporal Re-validation',text:'System MUST re-validate time-sensitive qualifiers before sending any communication'},
+  {id:'FR-011',cat:'Temporal Re-validation',text:'System MUST check: funding_balance, funding_period, authorization_status, supplier_status, service_eligibility'},
+  {id:'FR-012',cat:'Temporal Re-validation',text:'System MUST add new reasons if re-validation discovers changed context'},
+  {id:'FR-013',cat:'Communication',text:'System MUST determine one of three communication types: REJECT-RESUBMIT, REJECT PERIOD, ON HOLD'},
+  {id:'FR-014',cat:'Communication',text:'System MUST include resubmit link ONLY in REJECT-RESUBMIT communications'},
+  {id:'FR-015',cat:'Communication',text:'System MUST apply Can Coexist filter to hide dominated issues in communications'},
+  {id:'FR-016',cat:'Communication',text:'System MUST distinguish Resolution Outreach (to clients/coordinators) from Submitter Notification (to suppliers)'},
+  {id:'FR-017',cat:'Cadence',text:'System MUST implement Day 0->3->7->10 cadence ONLY for ON HOLD communication type'},
+  {id:'FR-018',cat:'Cadence',text:'System MUST auto-reject after Day 10 timeout on ON HOLD path'},
+  {id:'FR-019',cat:'Cadence',text:'System MUST NOT apply cadence to REJECT-RESUBMIT or REJECT PERIOD paths'},
+  {id:'FR-020',cat:'Resolution Window',text:'System MUST implement 1-day Resolution Window for reasons requiring client/coordinator action'},
+  {id:'FR-021',cat:'Resolution Window',text:'System MUST NOT notify supplier of issues resolved within Resolution Window'},
+  {id:'FR-022',cat:'Resolution Window',text:'System MUST notify supplier of "other processes required" if window expires without resolution'},
+  {id:'FR-023',cat:'Submissions',text:'System MUST treat resubmissions as discrete submissions (not version tracking)'},
+  {id:'FR-024',cat:'Submissions',text:'System MUST support linking resubmissions to original submission for audit trail'},
+  {id:'FR-025',cat:'Outcomes',text:'System MUST support three final outcomes: PAID, REJECTED FINAL, REJECTED RESUBMIT'}
+];
+
+const EDGE_CASES = [
+  {q:'Context Decay After Rejection: What happens when funding available at rejection is depleted by resubmission?',a:'Temporal re-validation catches this but creates poor UX ("fix ABN" then "no funding"). Acknowledged trade-off.',keywords:['funding','rejection','context','resubmission','decay']},
+  {q:'Multiple Departments Working Same Bill: What if one department is slow and blocks the entire bill?',a:'No hard timeouts on internal work - management visibility via analytics instead.',keywords:['department','slow','blocks','parallel']},
+  {q:'Supplier Terminated Mid-Process: What if supplier is terminated while bill is on hold for client approval?',a:'Re-validation should catch termination and flip to REJECT PERIOD.',keywords:['terminated','supplier','hold','re-validation']},
+  {q:'Resubmission Introduces NEW Issues: What if fixed ABN submission has new calculation error?',a:'Treat as discrete submission diagnosed fresh, but linked to original for history.',keywords:['resubmission','new','issues','fresh','linked']},
+  {q:'Maximum Revalidation Loops: What if context keeps changing (oscillating)?',a:'After 5 loops, trigger manual intervention.',keywords:['revalidation','loops','oscillating','manual']}
+];
+
+const SUCCESS_CRITERIA = [
+  {id:'SC-001',text:'60-70% reduction in resubmission cycles (suppliers fix all issues in one go instead of discovering issues sequentially)'},
+  {id:'SC-002',text:'50% faster processing for auto-reject eligible bills (instant rejection vs manual review)'},
+  {id:'SC-003',text:'40% reduction in duplicate work across departments (parallel processing instead of sequential handoffs)'},
+  {id:'SC-004',text:'100% of communications include ALL relevant issues (no single-issue rejections requiring multiple rounds)'},
+  {id:'SC-005',text:'Day 10 timeout enforced on 100% of ON HOLD bills without external party action'},
+  {id:'SC-006',text:'99% accuracy maintained for AI auto-reject (monitored via human review sampling)'},
+  {id:'SC-007',text:'0% of supplier communications reveal client-specific details (privacy preserved via Resolution Outreach stream)'},
+  {id:'SC-008',text:'Audit trail available for 100% of submissions showing full reason history and linkage to resubmissions'}
+];
+
+const CAT_COLOURS = {
+  'Diagnosis & Detection':'#f59e0b',
+  'AI Auto-Reject':'#ef4444',
+  'Department Routing':'#3b82f6',
+  'Temporal Re-validation':'#22c55e',
+  'Communication':'#a855f7',
+  'Cadence':'#ec4899',
+  'Resolution Window':'#06b6d4',
+  'Submissions':'#fb923c',
+  'Outcomes':'#14b8a6'
+};
+
+// Build reverse FR->story map
+const frToStories = {};
+FRS.forEach(fr => { frToStories[fr.id] = []; });
+STORIES.forEach(s => s.frs.forEach(frId => { if(frToStories[frId]) frToStories[frId].push(s.id); }));
+
+// ============================================================
+// STATE
+// ============================================================
+let selectedStory = null;
+let currentTab = 'stories';
+let searchQuery = '';
+let canvasTransform = {x:0, y:0, scale:1};
+let isDragging = false;
+let dragTarget = null;
+let dragOffset = {x:0,y:0};
+let isPanning = false;
+let panStart = {x:0,y:0};
+
+const nodePositions = {};
+const NODE_W = 260;
+const NODE_H = 145;
+const LANE_PAD = 40;
+const NODE_GAP_X = 40;
+const NODE_GAP_Y = 30;
+
+// ============================================================
+// LAYOUT
+// ============================================================
+function layoutNodes() {
+  const lanes = {P1:[], P2:[], P3:[]};
+  STORIES.forEach(s => lanes[s.priority].push(s));
+
+  let yOffset = 60;
+  ['P1','P2','P3'].forEach(p => {
+    const stories = lanes[p];
+    if(!stories.length) return;
+    const cols = Math.min(stories.length, 3);
+    stories.forEach((s, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      nodePositions[s.id] = {
+        x: LANE_PAD + col * (NODE_W + NODE_GAP_X),
+        y: yOffset + LANE_PAD + row * (NODE_H + NODE_GAP_Y)
+      };
+    });
+    const rows = Math.ceil(stories.length / cols);
+    yOffset += LANE_PAD * 2 + rows * (NODE_H + NODE_GAP_Y) + 40;
+  });
+}
+
+// ============================================================
+// RENDER CANVAS
+// ============================================================
+function renderCanvas() {
+  const inner = document.getElementById('canvasInner');
+  inner.innerHTML = '';
+
+  // Swim lanes
+  const lanes = {P1:[], P2:[], P3:[]};
+  STORIES.forEach(s => lanes[s.priority].push(s));
+  const laneLabels = {P1:'Priority 1 \u2014 Critical', P2:'Priority 2 \u2014 Important', P3:'Priority 3 \u2014 Enhancement'};
+
+  let yOffset = 60;
+  ['P1','P2','P3'].forEach(p => {
+    const stories = lanes[p];
+    if(!stories.length) return;
+    const cols = Math.min(stories.length, 3);
+    const rows = Math.ceil(stories.length / cols);
+    const laneW = cols * (NODE_W + NODE_GAP_X) + LANE_PAD * 2 - NODE_GAP_X + LANE_PAD;
+    const laneH = LANE_PAD * 2 + rows * (NODE_H + NODE_GAP_Y) - NODE_GAP_Y + LANE_PAD;
+    const lane = document.createElement('div');
+    lane.className = 'swim-lane ' + p.toLowerCase();
+    lane.style.cssText = `left:0;top:${yOffset}px;width:${laneW}px;height:${laneH}px;`;
+    lane.innerHTML = `<div class="swim-lane-label">${laneLabels[p]}</div>`;
+    inner.appendChild(lane);
+    yOffset += laneH + 40;
+  });
+
+  // Story nodes
+  STORIES.forEach(s => {
+    const pos = nodePositions[s.id];
+    const node = document.createElement('div');
+    node.className = 'story-node' + (selectedStory === s.id ? ' selected' : '');
+    node.dataset.id = s.id;
+    node.style.cssText = `left:${pos.x}px;top:${pos.y}px;`;
+    node.innerHTML = `
+      <div class="priority-stripe ${s.priority.toLowerCase()}"></div>
+      <div class="node-body">
+        <div class="node-id">${s.id}</div>
+        <div class="node-title">${s.title}</div>
+        <div class="node-actor">${s.actor}</div>
+        <div class="node-stats">
+          <span>${s.scenarios.length} ACs</span>
+          <span>${s.frs.length} FRs</span>
+          ${s.deps.length ? `<span>${s.deps.length} deps</span>` : ''}
+        </div>
+      </div>
+    `;
+    node.addEventListener('click', (e) => { if(!isDragging) selectStory(s.id); });
+    node.addEventListener('mousedown', startDragNode);
+    node.addEventListener('mouseenter', (e) => showTooltip(e, s));
+    node.addEventListener('mouseleave', hideTooltip);
+    inner.appendChild(node);
+  });
+
+  drawArrows();
+}
+
+function drawArrows() {
+  const svg = document.getElementById('arrowsSvg');
+  // Keep defs, remove all paths
+  const paths = svg.querySelectorAll('path');
+  paths.forEach(p => p.remove());
+
+  STORIES.forEach(s => {
+    s.deps.forEach(depId => {
+      const from = nodePositions[depId];
+      const to = nodePositions[s.id];
+      if(!from || !to) return;
+
+      const fx = (from.x + NODE_W/2) * canvasTransform.scale + canvasTransform.x;
+      const fy = (from.y + NODE_H) * canvasTransform.scale + canvasTransform.y;
+      const tx = (to.x + NODE_W/2) * canvasTransform.scale + canvasTransform.x;
+      const ty = to.y * canvasTransform.scale + canvasTransform.y;
+
+      const midY = (fy + ty) / 2;
+      const isHL = selectedStory && (s.id === selectedStory || depId === selectedStory);
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', `M${fx},${fy} C${fx},${midY} ${tx},${midY} ${tx},${ty}`);
+      if(isHL) {
+        path.classList.add('highlighted');
+        path.setAttribute('marker-end','url(#arrowhead-hl)');
+      }
+      svg.appendChild(path);
+    });
+  });
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+function renderSidebar() {
+  const container = document.getElementById('sidebarContent');
+  container.innerHTML = '';
+  const q = searchQuery.toLowerCase();
+
+  if(currentTab === 'stories') {
+    STORIES.forEach(s => {
+      if(q && !s.title.toLowerCase().includes(q) && !s.id.toLowerCase().includes(q) && !s.actor.toLowerCase().includes(q) && !s.rationale.toLowerCase().includes(q)) return;
+      const card = document.createElement('div');
+      card.className = 's-card' + (selectedStory === s.id ? ' selected' : '');
+      card.innerHTML = `
+        <div class="s-card-title"><span class="priority-dot ${s.priority.toLowerCase()}"></span>${s.id}: ${s.title}</div>
+        <div class="s-card-meta"><span>${s.actor}</span><span>${s.scenarios.length} ACs</span><span>${s.frs.length} FRs</span></div>
+      `;
+      card.addEventListener('click', () => selectStory(s.id));
+      container.appendChild(card);
+    });
+  } else if(currentTab === 'requirements') {
+    const groups = {};
+    FRS.forEach(fr => {
+      if(q && !fr.text.toLowerCase().includes(q) && !fr.id.toLowerCase().includes(q) && !fr.cat.toLowerCase().includes(q)) return;
+      if(!groups[fr.cat]) groups[fr.cat] = [];
+      groups[fr.cat].push(fr);
+    });
+    Object.keys(groups).forEach(cat => {
+      const hdr = document.createElement('div');
+      hdr.className = 'fr-group-header';
+      hdr.style.background = CAT_COLOURS[cat] || '#475569';
+      hdr.textContent = cat + ' (' + groups[cat].length + ')';
+      container.appendChild(hdr);
+      groups[cat].forEach(fr => {
+        const card = document.createElement('div');
+        card.className = 'fr-card';
+        card.innerHTML = `<span class="fr-id">${fr.id}</span> ${fr.text}`;
+        card.addEventListener('click', () => {
+          const stories = frToStories[fr.id];
+          if(stories.length) selectStory(stories[0]);
+        });
+        container.appendChild(card);
+      });
+    });
+  } else if(currentTab === 'scenarios') {
+    STORIES.forEach(s => {
+      s.scenarios.forEach((sc, i) => {
+        const text = sc.text;
+        if(q && !text.toLowerCase().includes(q) && !s.id.toLowerCase().includes(q)) return;
+        const card = document.createElement('div');
+        card.className = 'sc-card';
+        card.innerHTML = `<div class="sc-parent">${s.id} \u2014 ${s.title}</div>${highlightGWT(text)}`;
+        card.addEventListener('click', () => selectStory(s.id));
+        container.appendChild(card);
+      });
+    });
+  }
+}
+
+function highlightGWT(text) {
+  return text
+    .replace(/\bGiven\b/g, '<span class="kw-given">Given</span>')
+    .replace(/\bWhen\b/g, '<span class="kw-when">When</span>')
+    .replace(/\bThen\b/g, '<span class="kw-then">Then</span>');
+}
+
+// ============================================================
+// DETAIL PANEL
+// ============================================================
+function renderDetail(s) {
+  const panel = document.getElementById('detailPanel');
+  const scroll = document.getElementById('detailScroll');
+  panel.classList.add('open');
+  document.getElementById('promptBar').classList.add('detail-open');
+
+  const pColor = s.priority === 'P1' ? 'var(--p1)' : s.priority === 'P2' ? 'var(--p2)' : 'var(--p3)';
+  const pLabel = s.priority === 'P1' ? 'Critical' : s.priority === 'P2' ? 'Important' : 'Enhancement';
+
+  // Find related edge cases
+  const titleWords = s.title.toLowerCase().split(/\s+/);
+  const relatedEdges = EDGE_CASES.filter(ec =>
+    ec.keywords.some(kw =>
+      titleWords.some(tw => tw.includes(kw) || kw.includes(tw)) ||
+      s.rationale.toLowerCase().includes(kw)
+    )
+  );
+
+  let html = `
+    <div class="detail-header">
+      <div class="d-id">${s.id}</div>
+      <div class="d-title">${s.title}</div>
+      <div class="d-actor">${s.actor}</div>
+      <div class="d-priority"><span class="priority-dot ${s.priority.toLowerCase()}"></span> <span style="color:${pColor}">${s.priority} ${pLabel}</span></div>
+      <div class="d-stats">
+        <span>${s.scenarios.length} Scenarios</span>
+        <span>${s.frs.length} Requirements</span>
+        <span>${s.deps.length} Dependencies</span>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3>Why This Priority</h3>
+      <div class="detail-rationale">${s.rationale}</div>
+    </div>
+  `;
+
+  if(s.deps.length) {
+    html += `<div class="detail-section"><h3>Dependencies</h3><div class="detail-deps">`;
+    s.deps.forEach(depId => {
+      const dep = STORIES.find(st => st.id === depId);
+      html += `<div class="detail-dep" onclick="selectStory('${depId}')">${depId}: ${dep ? dep.title : depId}</div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  // Dependents (stories that depend on this one)
+  const dependents = STORIES.filter(st => st.deps.includes(s.id));
+  if(dependents.length) {
+    html += `<div class="detail-section"><h3>Dependents (blocked by this)</h3><div class="detail-deps">`;
+    dependents.forEach(d => {
+      html += `<div class="detail-dep" onclick="selectStory('${d.id}')">${d.id}: ${d.title}</div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  html += `<div class="detail-section"><h3>Acceptance Scenarios (${s.scenarios.length})</h3>`;
+  s.scenarios.forEach((sc, i) => {
+    html += `<div class="detail-scenario"><strong>AC ${i+1}:</strong> ${highlightGWT(sc.text)}</div>`;
+  });
+  html += `</div>`;
+
+  html += `<div class="detail-section"><h3>Functional Requirements</h3><div class="detail-fr-list">`;
+  s.frs.forEach(frId => {
+    const fr = FRS.find(f => f.id === frId);
+    if(!fr) return;
+    const col = CAT_COLOURS[fr.cat] || '#475569';
+    html += `<div class="detail-fr-badge" style="color:${col};border-color:${col}" title="${fr.text}">${fr.id} \u2014 ${fr.cat}</div>`;
+  });
+  html += `</div></div>`;
+
+  if(relatedEdges.length) {
+    html += `<div class="detail-section"><h3>Related Edge Cases</h3>`;
+    relatedEdges.forEach(ec => {
+      html += `<div class="detail-edge"><div class="edge-q">${ec.q}</div><div class="edge-a">${ec.a}</div></div>`;
+    });
+    html += `</div>`;
+  }
+
+  scroll.innerHTML = html;
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.getElementById('promptBar').classList.remove('detail-open');
+  selectedStory = null;
+  renderCanvas();
+  renderSidebar();
+  updatePrompt();
+}
+
+// ============================================================
+// SELECT STORY
+// ============================================================
+function selectStory(id) {
+  selectedStory = id;
+  const s = STORIES.find(st => st.id === id);
+  if(!s) return;
+  renderDetail(s);
+  renderCanvas();
+  renderSidebar();
+  updatePrompt();
+  flyToNode(id);
+}
+
+function flyToNode(id) {
+  const pos = nodePositions[id];
+  if(!pos) return;
+  const area = document.querySelector('.canvas-area');
+  const areaW = area.clientWidth;
+  const areaH = area.clientHeight;
+  const targetX = areaW / 2 - (pos.x + NODE_W / 2) * canvasTransform.scale;
+  const targetY = areaH / 2 - (pos.y + NODE_H / 2) * canvasTransform.scale;
+  canvasTransform.x = targetX;
+  canvasTransform.y = targetY;
+  applyTransform();
+  drawArrows();
+}
+
+// ============================================================
+// PROMPT
+// ============================================================
+function updatePrompt() {
+  const textEl = document.getElementById('promptText');
+  const copyBtn = document.getElementById('promptCopy');
+  copyBtn.classList.remove('copied');
+  copyBtn.textContent = 'Copy Prompt';
+
+  if(!selectedStory) {
+    textEl.textContent = 'Select a story to generate an implementation prompt';
+    textEl.classList.remove('has-prompt');
+    return;
+  }
+  textEl.classList.add('has-prompt');
+  const s = STORIES.find(st => st.id === selectedStory);
+  const prompt = buildPrompt(s);
+  textEl.textContent = prompt.substring(0, 200) + '...';
+  textEl.dataset.fullPrompt = prompt;
+}
+
+function buildPrompt(s) {
+  let p = `Implement ${s.id}: ${s.title}\n\n`;
+  p += `Actor: ${s.actor}\nPriority: ${s.priority}\n\n`;
+  p += `Purpose: ${s.rationale}\n\n`;
+  p += `Acceptance Criteria:\n`;
+  s.scenarios.forEach((sc, i) => { p += `${i+1}. ${sc.text}\n`; });
+  p += `\nFunctional Requirements:\n`;
+  s.frs.forEach(frId => {
+    const fr = FRS.find(f => f.id === frId);
+    if(fr) p += `- ${fr.id}: ${fr.text}\n`;
+  });
+  if(s.deps.length) {
+    p += `\nDependencies: ${s.deps.join(', ')}\n`;
+  }
+  p += `\nThis is part of the On Hold Bills Flow (OHB) epic in TC Portal. Uses Inertia v2 + Vue 3 + Tailwind v3. OHB domain code goes in domain/Bill/ and app/Actions/Bill/. Vue pages in resources/js/Pages/Bills/. Hook into existing ReviewBillAction / BillValidator. Follow existing Common components from resources/js/Components/Common/.`;
+  return p;
+}
+
+document.getElementById('promptCopy').addEventListener('click', () => {
+  const textEl = document.getElementById('promptText');
+  const full = textEl.dataset.fullPrompt;
+  if(!full) return;
+  navigator.clipboard.writeText(full).then(() => {
+    const btn = document.getElementById('promptCopy');
+    btn.classList.add('copied');
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy Prompt'; }, 2000);
+  });
+});
+
+// ============================================================
+// TOOLTIP
+// ============================================================
+function showTooltip(e, s) {
+  if(isDragging) return;
+  const tt = document.getElementById('tooltip');
+  const pLabel = s.priority === 'P1' ? 'Critical' : s.priority === 'P2' ? 'Important' : 'Enhancement';
+  const pColor = s.priority === 'P1' ? 'var(--p1)' : s.priority === 'P2' ? 'var(--p2)' : 'var(--p3)';
+  tt.innerHTML = `
+    <div class="tt-title"><span class="priority-dot ${s.priority.toLowerCase()}" style="margin-right:4px"></span>${s.id}: ${s.title}</div>
+    <div class="tt-actor">${s.actor} &middot; <span style="color:${pColor}">${s.priority} ${pLabel}</span></div>
+    <div class="tt-rationale">${s.rationale}</div>
+    <div class="tt-stats">
+      <span>${s.scenarios.length} scenarios</span>
+      <span>${s.frs.length} FRs</span>
+      <span>${s.deps.length} deps</span>
+    </div>
+  `;
+  tt.classList.remove('hidden');
+  positionTooltip(e);
+}
+
+function positionTooltip(e) {
+  const tt = document.getElementById('tooltip');
+  let x = e.clientX + 16;
+  let y = e.clientY + 16;
+  if(x + 340 > window.innerWidth) x = e.clientX - 356;
+  if(y + 200 > window.innerHeight) y = e.clientY - 200;
+  tt.style.left = x + 'px';
+  tt.style.top = y + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').classList.add('hidden');
+}
+
+// ============================================================
+// CANVAS INTERACTION
+// ============================================================
+function applyTransform() {
+  const inner = document.getElementById('canvasInner');
+  inner.style.transform = `translate(${canvasTransform.x}px,${canvasTransform.y}px) scale(${canvasTransform.scale})`;
+}
+
+// Pan
+document.getElementById('canvas').addEventListener('mousedown', (e) => {
+  if(e.target.closest('.story-node')) return;
+  isPanning = true;
+  panStart = {x: e.clientX - canvasTransform.x, y: e.clientY - canvasTransform.y};
+});
+
+document.addEventListener('mousemove', (e) => {
+  if(isPanning) {
+    canvasTransform.x = e.clientX - panStart.x;
+    canvasTransform.y = e.clientY - panStart.y;
+    applyTransform();
+    drawArrows();
+  }
+  if(dragTarget) {
+    isDragging = true;
+    const x = (e.clientX - canvasTransform.x) / canvasTransform.scale - dragOffset.x;
+    const y = (e.clientY - canvasTransform.y) / canvasTransform.scale - dragOffset.y;
+    nodePositions[dragTarget] = {x, y};
+    const node = document.querySelector(`.story-node[data-id="${dragTarget}"]`);
+    if(node) { node.style.left = x + 'px'; node.style.top = y + 'px'; }
+    drawArrows();
+  }
+  if(!document.getElementById('tooltip').classList.contains('hidden')) {
+    positionTooltip(e);
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  isPanning = false;
+  if(dragTarget) {
+    setTimeout(() => { isDragging = false; }, 50);
+    dragTarget = null;
+  }
+});
+
+// Zoom
+document.getElementById('canvas').addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? 0.9 : 1.1;
+  const newScale = Math.max(0.3, Math.min(2.5, canvasTransform.scale * delta));
+  const rect = document.querySelector('.canvas-area').getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  canvasTransform.x = mx - (mx - canvasTransform.x) * (newScale / canvasTransform.scale);
+  canvasTransform.y = my - (my - canvasTransform.y) * (newScale / canvasTransform.scale);
+  canvasTransform.scale = newScale;
+  applyTransform();
+  drawArrows();
+}, {passive: false});
+
+// Drag node
+function startDragNode(e) {
+  const node = e.target.closest('.story-node');
+  if(!node) return;
+  const id = node.dataset.id;
+  const pos = nodePositions[id];
+  dragTarget = id;
+  dragOffset = {
+    x: (e.clientX - canvasTransform.x) / canvasTransform.scale - pos.x,
+    y: (e.clientY - canvasTransform.y) / canvasTransform.scale - pos.y
+  };
+  e.stopPropagation();
+}
+
+// Fit all
+document.getElementById('fitBtn').addEventListener('click', fitAll);
+document.getElementById('resetBtn').addEventListener('click', () => {
+  layoutNodes();
+  canvasTransform = {x:40,y:20,scale:1};
+  applyTransform();
+  renderCanvas();
+});
+
+function fitAll() {
+  let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+  Object.values(nodePositions).forEach(p => {
+    if(p.x < minX) minX = p.x;
+    if(p.y < minY) minY = p.y;
+    if(p.x + NODE_W > maxX) maxX = p.x + NODE_W;
+    if(p.y + NODE_H > maxY) maxY = p.y + NODE_H;
+  });
+  const area = document.querySelector('.canvas-area');
+  const aW = area.clientWidth - 80;
+  const aH = area.clientHeight - 100;
+  const cW = maxX - minX;
+  const cH = maxY - minY;
+  if(cW <= 0 || cH <= 0) return;
+  const scale = Math.min(aW / cW, aH / cH, 1.2);
+  canvasTransform.scale = scale;
+  canvasTransform.x = (aW - cW * scale) / 2 + 40 - minX * scale;
+  canvasTransform.y = (aH - cH * scale) / 2 + 20 - minY * scale;
+  applyTransform();
+  drawArrows();
+}
+
+// ============================================================
+// SIDEBAR TABS & SEARCH
+// ============================================================
+document.querySelectorAll('.sidebar-tabs button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sidebar-tabs button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTab = btn.dataset.tab;
+    renderSidebar();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchQuery = e.target.value;
+  renderSidebar();
+});
+
+document.getElementById('detailClose').addEventListener('click', closeDetail);
+
+// ============================================================
+// INIT
+// ============================================================
+layoutNodes();
+canvasTransform = {x:40, y:20, scale:1};
+renderCanvas();
+renderSidebar();
+updatePrompt();
+applyTransform();
+setTimeout(fitAll, 100);
+</script>
+</body>
+</html>

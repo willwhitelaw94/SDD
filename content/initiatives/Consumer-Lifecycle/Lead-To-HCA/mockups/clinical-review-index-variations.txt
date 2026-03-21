@@ -1,0 +1,368 @@
+================================================================================
+       CLINICAL REVIEW INDEX — LAYOUT VARIATIONS (6 OPTIONS)
+================================================================================
+
+The Clinical Review Index is a dedicated page under Consumers where Clinical
+Nurses see clients flagged for review (~2% of conversions).
+
+Key requirements:
+  - Show pending reviews with SLA countdown (24hr target)
+  - Allow recording Clinical Screening Outcome
+  - Three outcomes: Cleared for Preferred, SM+ Required, Not Suitable
+  - Notify Sales when review is complete (FR-035)
+  - Show SLA status (FR-038)
+
+================================================================================
+OPTION A: Data Table with Filters
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Clinical Review Index                                          3 Pending   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Filter: [All ▼]  [Pending ●]  [Completed]  [Expired]     🔍 Search...    │
+│                                                                             │
+│  ┌───────┬──────────────────┬────────────┬──────────────┬─────────┬──────┐ │
+│  │ SLA   │ Client           │ Risk Flags │ Flagged      │ Sales   │      │ │
+│  ├───────┼──────────────────┼────────────┼──────────────┼─────────┼──────┤ │
+│  │ ⚠ 2h  │ Joan Smith       │ Previously │ 02/02 2:35PM │ David H │ [→]  │ │
+│  │       │ TC-26-000142     │ Offboarded │ 22h ago      │         │      │ │
+│  │       │                  │ High Care  │              │         │      │ │
+│  ├───────┼──────────────────┼────────────┼──────────────┼─────────┼──────┤ │
+│  │ 18h   │ Robert Chen      │ Safety     │ 02/02 8:00AM │ Sarah M │ [→]  │ │
+│  │       │ TC-26-000139     │ Concern    │ 6h ago       │         │      │ │
+│  ├───────┼──────────────────┼────────────┼──────────────┼─────────┼──────┤ │
+│  │ 23h   │ Agnes Williams   │ Previously │ 02/02 1:00PM │ David H │ [→]  │ │
+│  │       │ TC-26-000141     │ Offboarded │ 1h ago       │         │      │ │
+│  └───────┴──────────────────┴────────────┴──────────────┴─────────┴──────┘ │
+│                                                                             │
+│  Showing 3 of 3 pending reviews                                            │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+--- EXPANDED ROW / DETAIL VIEW ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Clinical Review: Joan Smith                               [← Back to List]│
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ⚠ SLA: 2 hours remaining                    Flagged: 22 hours ago  │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  CLIENT SUMMARY                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│  Name:            Joan Smith (TC-26-000142)                                 │
+│  Classification:  Support@Home Ongoing                                     │
+│  Preferred Mgmt:  SM+                                                       │
+│  Sales Person:    David H                                                   │
+│  Referral Code:   2-123456789101                                            │
+│                                                                             │
+│  RISK FLAGS                                                                 │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│  ┌──────────────────┐  ┌──────────────────┐                                │
+│  │ Previously Off-  │  │ High Care Need   │                                │
+│  │ boarded          │  │                  │                                │
+│  └──────────────────┘  └──────────────────┘                                │
+│                                                                             │
+│  ASSESSMENT SUMMARY                                                         │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│  Risk Score Outcome:  Needs Clinical Attention                              │
+│  Assessment Date:     02/02/2026 2:35 PM                                    │
+│  Assessment Reason:   Previously offboarded by Trilogy Care;                │
+│                       High care needs without informal support              │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  RECORD CLINICAL SCREENING OUTCOME                                          │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  Clinical Call Session ID                                                   │
+│  [___________________________________]                                      │
+│                                                                             │
+│  Clinical Call Date *                   Clinician Name *                     │
+│  [02/02/2026 4:00PM        📅]          [Nurse Sarah Chen_______]           │
+│                                                                             │
+│  Clinical Screening Outcome *                                               │
+│  ○ Cleared for Preferred — Client can proceed with SM+ (preferred)          │
+│  ○ SM+ Required — Client requires SM+ management regardless of preference  │
+│  ○ Not Suitable — Client is not eligible for Trilogy Care services          │
+│                                                                             │
+│  Notes                                                                      │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                             [Cancel]   [Save Outcome →]    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Familiar data table, sortable, SLA prominent, full detail view for recording
+**Cons:** Two views (list + detail), table may feel clinical (pun intended)
+
+================================================================================
+OPTION B: Card Grid
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Clinical Review Index                                          3 Pending   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [Pending (3)]  [Completed]  [Expired]                     🔍 Search...    │
+│                                                                             │
+│  ┌───────────────────────────────────┐  ┌───────────────────────────────┐   │
+│  │  ⚠ 2h remaining                  │  │  18h remaining               │   │
+│  │                                   │  │                              │   │
+│  │  Joan Smith                       │  │  Robert Chen                 │   │
+│  │  TC-26-000142                     │  │  TC-26-000139                │   │
+│  │                                   │  │                              │   │
+│  │  [Previously Offboarded]          │  │  [Safety Concern]            │   │
+│  │  [High Care Need]                 │  │                              │   │
+│  │                                   │  │  Classification:             │   │
+│  │  Classification:                  │  │  End of Life                 │   │
+│  │  Support@Home Ongoing             │  │  Preferred: Coordinated      │   │
+│  │  Preferred: SM+                   │  │                              │   │
+│  │                                   │  │  Sales: Sarah M              │   │
+│  │  Sales: David H                   │  │  Flagged: 6h ago             │   │
+│  │  Flagged: 22h ago                 │  │                              │   │
+│  │                                   │  │  [Start Review →]            │   │
+│  │  [Start Review →]                 │  │                              │   │
+│  └───────────────────────────────────┘  └───────────────────────────────┘   │
+│                                                                             │
+│  ┌───────────────────────────────────┐                                     │
+│  │  23h remaining                    │                                     │
+│  │                                   │                                     │
+│  │  Agnes Williams                   │                                     │
+│  │  TC-26-000141                     │                                     │
+│  │                                   │                                     │
+│  │  [Previously Offboarded]          │                                     │
+│  │                                   │                                     │
+│  │  Classification:                  │                                     │
+│  │  Assistive Technology             │                                     │
+│  │  Preferred: SM                    │                                     │
+│  │                                   │                                     │
+│  │  Sales: David H                   │                                     │
+│  │  Flagged: 1h ago                  │                                     │
+│  │                                   │                                     │
+│  │  [Start Review →]                 │                                     │
+│  └───────────────────────────────────┘                                     │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Visual, easy to scan, risk flags prominent on each card
+**Cons:** Less dense than table, doesn't scale as well for large queues
+
+================================================================================
+OPTION C: Split Panel (List Left, Detail Right)
+================================================================================
+
+┌──────────────────────────────┬──────────────────────────────────────────────┐
+│  CLINICAL REVIEWS            │  Joan Smith                                  │
+│  3 Pending                   │  TC-26-000142                                │
+│  ────────────────────────── │  ──────────────────────────────────────────  │
+│                              │                                              │
+│  ┌────────────────────────┐ │  SLA                                         │
+│  │ ⚠ Joan Smith      2h   │ │  ┌──────────────────────────────────────────┐│
+│  │   Previously Offboarded│ │  │  ⚠ 2 hours remaining       22h elapsed   ││
+│  │   High Care Need       │ │  │  ████████████████████████████████████░░░░ ││
+│  │   Sales: David H  ◀───┤ │  └──────────────────────────────────────────┘│
+│  └────────────────────────┘ │                                              │
+│  ┌────────────────────────┐ │  RISK FLAGS                                  │
+│  │   Robert Chen     18h  │ │  [Previously Offboarded]  [High Care Need]   │
+│  │   Safety Concern       │ │                                              │
+│  │   Sales: Sarah M       │ │  CONVERSION SUMMARY                          │
+│  └────────────────────────┘ │  Classification:  Support@Home Ongoing       │
+│  ┌────────────────────────┐ │  Preferred Mgmt:  SM+                        │
+│  │   Agnes Williams  23h  │ │  Sales Person:    David H                    │
+│  │   Previously Offboarded│ │  Flagged:         02/02/2026 2:35 PM         │
+│  │   Sales: David H       │ │                                              │
+│  └────────────────────────┘ │  ASSESSMENT REASON                           │
+│                              │  Previously offboarded by Trilogy Care;      │
+│                              │  High care needs without informal support.   │
+│                              │                                              │
+│                              │  ──────────────────────────────────────────  │
+│                              │                                              │
+│                              │  RECORD OUTCOME                              │
+│                              │                                              │
+│                              │  Session ID  [___________________]           │
+│                              │  Call Date   [02/02/2026 4:00PM 📅]         │
+│                              │  Clinician   [Sarah Chen_________]           │
+│                              │                                              │
+│                              │  Outcome *                                   │
+│                              │  ○ Cleared for Preferred                     │
+│                              │  ○ SM+ Required                              │
+│                              │  ○ Not Suitable                              │
+│                              │                                              │
+│                              │              [Cancel]  [Save Outcome →]      │
+│                              │                                              │
+└──────────────────────────────┴──────────────────────────────────────────────┘
+
+**Pros:** No page navigation, select client and record outcome in one view, efficient
+**Cons:** Requires wide viewport, less detail space when many clients in queue
+
+================================================================================
+OPTION D: Queue / Inbox Style
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Clinical Review Queue                                                      │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  You have 3 clients awaiting clinical review                         │   │
+│  │  1 approaching SLA deadline (< 4 hours)                              │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  URGENT (SLA < 4h)                                                          │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │ ⚠  Joan Smith • TC-26-000142                              2h left   │   │
+│  │    Support@Home Ongoing • Preferred: SM+                             │   │
+│  │    [Previously Offboarded]  [High Care Need]        Sales: David H   │   │
+│  │                                                                      │   │
+│  │    Flagged 22 hours ago                        [Start Review →]      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  STANDARD                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │    Robert Chen • TC-26-000139                             18h left   │   │
+│  │    End of Life • Preferred: Coordinated                              │   │
+│  │    [Safety Concern]                                 Sales: Sarah M   │   │
+│  │                                                                      │   │
+│  │    Flagged 6 hours ago                             [Start Review →]  │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │    Agnes Williams • TC-26-000141                          23h left   │   │
+│  │    Assistive Technology • Preferred: SM                               │   │
+│  │    [Previously Offboarded]                              Sales: David  │   │
+│  │                                                                      │   │
+│  │    Flagged 1 hour ago                                  [Start Review →]│   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Clear urgency grouping, inbox metaphor familiar, SLA countdown prominent
+**Cons:** Separate detail page needed, urgent/standard split may be overkill for 2-3 items
+
+================================================================================
+OPTION E: Notification-Style with Inline Recording
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Clinical Reviews                                                3 pending  │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ⚠ Joan Smith                                         SLA: 2h left  │   │
+│  │  TC-26-000142 • Support@Home • SM+ preferred                         │   │
+│  │  Flags: [Previously Offboarded] [High Care Need]                     │   │
+│  │  ──────────────────────────────────────────────────────────────────  │   │
+│  │                                                                      │   │
+│  │  Outcome: [▼ Select outcome________________]                        │   │
+│  │                                                                      │   │
+│  │  ┌──────────────────────────────────────────────────────┐            │   │
+│  │  │ ○ Cleared for Preferred                               │            │   │
+│  │  │ ○ SM+ Required                                        │            │   │
+│  │  │ ○ Not Suitable                                        │            │   │
+│  │  └──────────────────────────────────────────────────────┘            │   │
+│  │                                                                      │   │
+│  │  Session ID [__________]  Clinician [__________]  [Save →]          │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │    Robert Chen                                        SLA: 18h left  │   │
+│  │    TC-26-000139 • End of Life • Coordinated preferred                │   │
+│  │    Flags: [Safety Concern]                                           │   │
+│  │                                                                      │   │
+│  │    Outcome: [▼ Select outcome________________]         [Save →]      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │    Agnes Williams                                     SLA: 23h left  │   │
+│  │    TC-26-000141 • Assistive Technology • SM preferred                 │   │
+│  │    Flags: [Previously Offboarded]                                    │   │
+│  │                                                                      │   │
+│  │    Outcome: [▼ Select outcome________________]         [Save →]      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Record outcome without leaving the list, fastest workflow, no navigation
+**Cons:** Less context visible (no assessment reason), may be too rushed for clinical decision
+
+================================================================================
+OPTION F: Priority-Sorted with SLA Progress Bars
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  Clinical Review Index                                                      │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  3 reviews pending  •  1 approaching deadline  •  0 expired          │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Sorted by SLA urgency (most urgent first)                                 │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  Joan Smith • TC-26-000142                                           │   │
+│  │  Support@Home Ongoing • Preferred: SM+                               │   │
+│  │                                                                      │   │
+│  │  SLA:  ████████████████████████████████████████████████░░  2h left   │   │
+│  │                                                                      │   │
+│  │  Risk: [Previously Offboarded]  [High Care Need]                     │   │
+│  │  Sales: David H  •  Flagged: 02/02/2026 2:35 PM                     │   │
+│  │                                                                      │   │
+│  │                                                    [Review →]        │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  Robert Chen • TC-26-000139                                          │   │
+│  │  End of Life • Preferred: Coordinated                                │   │
+│  │                                                                      │   │
+│  │  SLA:  █████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░  18h left  │   │
+│  │                                                                      │   │
+│  │  Risk: [Safety Concern]                                              │   │
+│  │  Sales: Sarah M  •  Flagged: 02/02/2026 8:00 AM                     │   │
+│  │                                                                      │   │
+│  │                                                    [Review →]        │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  Agnes Williams • TC-26-000141                                       │   │
+│  │  Assistive Technology • Preferred: SM                                 │   │
+│  │                                                                      │   │
+│  │  SLA:  ████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  23h left  │   │
+│  │                                                                      │   │
+│  │  Risk: [Previously Offboarded]                                       │   │
+│  │  Sales: David H  •  Flagged: 02/02/2026 1:00 PM                     │   │
+│  │                                                                      │   │
+│  │                                                    [Review →]        │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** SLA bars give instant urgency sense, auto-sorted, clean cards
+**Cons:** Redundant progress bars when count is low, separate detail page needed
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+**Option C (Split Panel)** recommended because:
+- Clinical nurses can select a client and record outcome without page navigation
+- SLA visible in both list and detail
+- Risk flags and assessment context visible before making clinical decision
+- Mirrors CommonSplitPanel pattern already used in Portal
+- Works well for the expected volume (~2-3 reviews at any time)
+
+**Option D (Queue/Inbox)** is best if urgent/standard grouping adds value.
+
+**Option A (Data Table)** is the safe fallback — familiar, sortable, scales well
+if volume unexpectedly grows.

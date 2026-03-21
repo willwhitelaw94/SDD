@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LES Challenge — Superhuman Sam — Journey Stage Wizard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',300:'#94DBDA',400:'#66CCCA',500:'#43C0BE',600:'#2F9E9C',700:'#007F7E',800:'#005656',900:'#003D3D' },
+            'primary-blue': { 50:'#F0F4FA',100:'#D6E1F0',200:'#BCCEE7',300:'#96B2D9',400:'#7197CC',500:'#4B7BBE',600:'#39639D',700:'#2C4C79',800:'#1E3452',900:'#101C2D' },
+            info: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',500:'#43C0BE',700:'#007F7E',900:'#003D3D' },
+            success: { 50:'#F6FBFE',100:'#DBEFFA',200:'#BCE2F6',500:'#35A8E4',700:'#156F9D' },
+            warning: { 50:'#FFF9F5',100:'#FFDAC6',200:'#FFC19F',500:'#E0763C',700:'#9C481A' },
+            danger: { 50:'#FFF5F5',100:'#FFCCCE',200:'#FFA8AC',500:'#E04B51',700:'#9C262A' },
+          },
+          fontFamily: { sans: ['"Roboto Flex"', 'system-ui', 'sans-serif'] },
+          borderRadius: { 'input': '8px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    .text-primary { color: #13171D; }
+    .text-secondary { color: #666666; }
+    .text-tertiary { color: #808080; }
+
+    @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; background: #0f1117; color: #e4e4e7; }
+
+    /* Split pane */
+    .split-pane { display: flex; height: 100vh; }
+    .list-pane { width: 280px; min-width: 280px; border-right: 1px solid #27272a; background: #18181b; overflow-y: auto; }
+    .detail-pane { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: #0f1117; position: relative; }
+
+    /* List rows */
+    .lead-row { padding: 12px 16px; border-bottom: 1px solid #27272a; cursor: pointer; transition: background 0.1s; border-left: 3px solid transparent; }
+    .lead-row:hover { background: #1f1f23; }
+    .lead-row.active { background: #1a2332; border-left-color: #007F7E; }
+
+    /* Stage dots */
+    .stage-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .stage-dot-lg { width: 10px; height: 10px; }
+    .stage-pre-care { background: #808080; }
+    .stage-acat-booked { background: #E0763C; }
+    .stage-approved { background: #43C0BE; }
+    .stage-allocated { background: #4B7BBE; }
+    .stage-active { background: #35A8E4; }
+    .stage-converted { background: #007F7E; }
+
+    /* Badges */
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; position: relative; }
+    .badge-stage { background: rgba(0, 127, 126, 0.15); color: #43C0BE; transition: all 0.1s; }
+    .badge-stage:hover { background: rgba(0, 127, 126, 0.25); }
+    .badge-status { background: rgba(67, 192, 190, 0.1); color: #94DBDA; }
+
+    /* Action bar */
+    .action-key { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 4px; background: #27272a; color: #a1a1aa; font-size: 11px; font-weight: 600; font-family: 'Roboto Flex', monospace; }
+    .action-btn { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.1s; color: #a1a1aa; font-size: 13px; border: none; background: transparent; }
+    .action-btn:hover { background: #27272a; color: #e4e4e7; }
+    .action-btn:hover .action-key { background: #3f3f46; color: #e4e4e7; }
+
+    /* Popover */
+    .stage-popover { position: absolute; top: 0; left: 0; width: 340px; background: #18181b; border: 1px solid #27272a; border-radius: 12px; box-shadow: 0 8px 48px rgba(0,0,0,0.6); z-index: 60; overflow: hidden; display: none; }
+    .stage-popover.show { display: block; animation: popoverIn 0.15s cubic-bezier(0.25, 0.1, 0.25, 1.0); }
+
+    @keyframes popoverIn {
+      from { transform: translateY(-4px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .stage-option { display: flex; align-items: center; padding: 10px 16px; cursor: pointer; transition: background 0.05s; gap: 12px; }
+    .stage-option:hover { background: #1f1f23; }
+    .stage-option.current { background: rgba(0, 127, 126, 0.1); }
+    .stage-option.completed { }
+    .stage-option.future { }
+    .stage-option .check-icon { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .stage-option .stage-info { flex: 1; }
+    .stage-option .stage-name { font-size: 13px; color: #e4e4e7; font-weight: 500; }
+    .stage-option .stage-count { font-size: 11px; color: #52525b; }
+
+    /* Inline form within popover */
+    .inline-form { padding: 16px; border-top: 1px solid #27272a; display: none; }
+    .inline-form.show { display: block; animation: formIn 0.15s ease-out; }
+
+    @keyframes formIn {
+      from { opacity: 0; max-height: 0; }
+      to { opacity: 1; max-height: 300px; }
+    }
+
+    .inline-form label { font-size: 11px; color: #52525b; display: block; margin-bottom: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.03em; }
+    .inline-form input, .inline-form select {
+      width: 100%;
+      background: #0f1117;
+      border: 1px solid #27272a;
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: #e4e4e7;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.1s;
+      margin-bottom: 12px;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .inline-form input:focus, .inline-form select:focus { border-color: #007F7E; }
+    .inline-form .form-hint { font-size: 11px; color: #3f3f46; margin-top: 4px; }
+
+    /* Hints bar */
+    .hints-bar { background: #18181b; border-top: 1px solid #27272a; padding: 8px 16px; font-size: 12px; color: #52525b; display: flex; gap: 16px; align-items: center; }
+    .hints-bar kbd { background: #27272a; padding: 2px 6px; border-radius: 3px; font-size: 11px; color: #71717a; font-family: 'Roboto Flex', monospace; }
+
+    /* Undo toast */
+    .undo-toast { position: fixed; bottom: 56px; left: 50%; transform: translateX(-50%); background: #27272a; color: #e4e4e7; padding: 10px 20px; border-radius: 8px; font-size: 13px; display: none; align-items: center; gap: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.4); z-index: 70; white-space: nowrap; }
+    .undo-toast.show { display: flex; animation: slideUp 0.2s cubic-bezier(0.25, 0.1, 0.25, 1.0); }
+    .undo-toast kbd { background: #3f3f46; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-family: 'Roboto Flex', monospace; }
+
+    @keyframes slideUp {
+      from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+    /* Backdrop for popover */
+    .popover-backdrop { position: fixed; inset: 0; z-index: 55; display: none; }
+    .popover-backdrop.show { display: block; }
+  </style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+  <!-- Popover backdrop -->
+  <div class="popover-backdrop" id="popoverBackdrop" onclick="closePopover()"></div>
+
+  <!-- Split Pane Layout -->
+  <div class="split-pane">
+
+    <!-- LEFT: Compact Lead List -->
+    <div class="list-pane">
+      <div style="padding: 16px; border-bottom: 1px solid #27272a;">
+        <div style="font-size: 13px; font-weight: 600; color: #a1a1aa; text-transform: uppercase; letter-spacing: 0.05em;">Leads</div>
+      </div>
+
+      <div class="lead-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-acat-booked"></span>
+          <span style="font-size: 14px; font-weight: 500; color: #e4e4e7;">Margaret Chen</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">ACAT Booked &middot; 2h ago</div>
+      </div>
+
+      <div class="lead-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-approved"></span>
+          <span style="font-size: 14px; font-weight: 500; color: #e4e4e7;">Dorothy Wilson</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">Approved &middot; Yesterday</div>
+      </div>
+
+      <div class="lead-row active">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-approved"></span>
+          <span style="font-size: 14px; font-weight: 600; color: #ffffff;">Harold Patterson</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">Approved &middot; 45m ago</div>
+      </div>
+
+      <div class="lead-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-pre-care"></span>
+          <span style="font-size: 14px; font-weight: 600; color: #ffffff;">Betty Nakamura</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">Pre-Care &middot; Just now</div>
+      </div>
+
+      <div class="lead-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-active"></span>
+          <span style="font-size: 14px; font-weight: 500; color: #e4e4e7;">Robert Fitzgerald</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">Active &middot; 3d ago</div>
+      </div>
+
+      <div class="lead-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="stage-dot stage-acat-booked"></span>
+          <span style="font-size: 14px; font-weight: 500; color: #e4e4e7;">Evelyn O'Brien</span>
+        </div>
+        <div style="font-size: 12px; color: #52525b; margin-top: 4px; padding-left: 16px;">ACAT Booked &middot; 5h ago</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Detail Pane -->
+    <div class="detail-pane">
+
+      <!-- Header -->
+      <div style="padding: 20px 28px 0; flex-shrink: 0;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+          <div>
+            <h1 style="font-size: 24px; font-weight: 600; color: #ffffff; margin-bottom: 8px;">Harold Patterson</h1>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; position: relative;">
+              <!-- Stage badge (clickable to open popover) -->
+              <span class="badge badge-stage" id="stageBadge" onclick="togglePopover(event)">
+                <span class="stage-dot" id="stageBadgeDot" style="background: #43C0BE;"></span>
+                <span id="stageBadgeText">Approved</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </span>
+
+              <!-- Stage Popover (appears from the badge) -->
+              <div class="stage-popover" id="stagePopover">
+                <div style="padding: 12px 16px; border-bottom: 1px solid #27272a;">
+                  <div style="font-size: 11px; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em;">Journey Stage</div>
+                </div>
+
+                <!-- Stage list -->
+                <div id="stageList">
+                  <div class="stage-option completed" data-stage="pre-care" onclick="selectStage('pre-care')">
+                    <div class="check-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <span class="stage-dot stage-dot-lg stage-pre-care"></span>
+                    <div class="stage-info">
+                      <div class="stage-name" style="color: #71717a;">Pre-Care</div>
+                      <div class="stage-count">142 leads</div>
+                    </div>
+                  </div>
+
+                  <div class="stage-option completed" data-stage="acat-booked" onclick="selectStage('acat-booked')">
+                    <div class="check-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <span class="stage-dot stage-dot-lg stage-acat-booked"></span>
+                    <div class="stage-info">
+                      <div class="stage-name" style="color: #71717a;">ACAT Booked</div>
+                      <div class="stage-count">23 leads</div>
+                    </div>
+                  </div>
+
+                  <div class="stage-option current" data-stage="approved" onclick="selectStage('approved')">
+                    <div class="check-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#43C0BE" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6" fill="#43C0BE"></circle></svg>
+                    </div>
+                    <span class="stage-dot stage-dot-lg stage-approved"></span>
+                    <div class="stage-info">
+                      <div class="stage-name" style="color: #43C0BE;">Approved</div>
+                      <div class="stage-count">18 leads &middot; Current</div>
+                    </div>
+                  </div>
+
+                  <div class="stage-option future" data-stage="allocated" onclick="selectStage('allocated')">
+                    <div class="check-icon"></div>
+                    <span class="stage-dot stage-dot-lg stage-allocated"></span>
+                    <div class="stage-info">
+                      <div class="stage-name">Allocated</div>
+                      <div class="stage-count">7 leads</div>
+                    </div>
+                  </div>
+
+                  <div class="stage-option future" data-stage="active" onclick="selectStage('active')">
+                    <div class="check-icon"></div>
+                    <span class="stage-dot stage-dot-lg stage-active"></span>
+                    <div class="stage-info">
+                      <div class="stage-name">Active</div>
+                      <div class="stage-count">4 leads</div>
+                    </div>
+                  </div>
+
+                  <div class="stage-option future" data-stage="converted" onclick="selectStage('converted')">
+                    <div class="check-icon"></div>
+                    <span class="stage-dot stage-dot-lg stage-converted"></span>
+                    <div class="stage-info">
+                      <div class="stage-name">Converted</div>
+                      <div class="stage-count">2 leads</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Inline form (appears when selecting a future stage) -->
+                <div class="inline-form" id="inlineForm">
+                  <div style="font-size: 12px; color: #a1a1aa; font-weight: 500; margin-bottom: 12px;">
+                    Moving to <span id="targetStageName" style="color: #43C0BE;">Allocated</span>
+                  </div>
+
+                  <div id="formFields">
+                    <!-- Fields populated by JS based on target stage -->
+                  </div>
+
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 4px;">
+                    <span class="form-hint">Press <kbd style="background: #27272a; padding: 1px 5px; border-radius: 3px; font-size: 10px; font-family: 'Roboto Flex', monospace;">Enter</kbd> to confirm</span>
+                    <button id="confirmBtn" onclick="confirmStageChange()" style="background: #007F7E; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500; transition: background 0.1s;" onmouseenter="this.style.background='#2F9E9C'" onmouseleave="this.style.background='#007F7E'">Confirm</button>
+                  </div>
+                </div>
+              </div>
+
+              <span class="badge badge-status">Made Contact</span>
+              <span style="font-size: 12px; color: #52525b;">Created 14 days ago</span>
+            </div>
+          </div>
+          <div style="font-size: 13px; color: #52525b;">TC-3847</div>
+        </div>
+
+        <!-- Quick Action Bar -->
+        <div style="display: flex; gap: 4px; margin-top: 20px; padding: 8px 0; border-top: 1px solid #1f1f23; border-bottom: 1px solid #1f1f23;">
+          <button class="action-btn" title="Call">
+            <span class="action-key">C</span>
+            <span>Call</span>
+          </button>
+          <button class="action-btn" title="Add Note">
+            <span class="action-key">N</span>
+            <span>Note</span>
+          </button>
+          <button class="action-btn" title="Snooze">
+            <span class="action-key">H</span>
+            <span>Snooze</span>
+          </button>
+          <button class="action-btn" title="Mark Done">
+            <span class="action-key">E</span>
+            <span>Done</span>
+          </button>
+          <button class="action-btn" title="Change Stage" onclick="togglePopover(event)" style="background: rgba(0, 127, 126, 0.1); color: #43C0BE;">
+            <span class="action-key" style="background: rgba(0, 127, 126, 0.2); color: #43C0BE;">G</span>
+            <span>Stage</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div style="flex: 1; overflow-y: auto; padding: 20px 28px;">
+        <!-- Contact and care details (abbreviated for this screen) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+          <div style="padding: 16px; background: #18181b; border-radius: 8px;">
+            <div style="font-size: 11px; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">Contact</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: #71717a;">Phone</span>
+                <span style="color: #43C0BE; cursor: pointer;">(02) 9876 5432</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: #71717a;">Email</span>
+                <span style="color: #43C0BE; cursor: pointer;">h.patterson@email.com.au</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: #71717a;">DOB</span>
+                <span style="color: #a1a1aa;">12 Mar 1941 (84)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: #71717a;">Address</span>
+                <span style="color: #a1a1aa;">Chatswood NSW 2067</span>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 16px; background: #18181b; border-radius: 8px;">
+            <div style="font-size: 11px; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">Care Needs</div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: #71717a;">Care Type</span>
+                <span style="color: #a1a1aa;">Home Care Package</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: #71717a;">Services</span>
+                <span style="color: #a1a1aa;">Personal Care, Transport</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: #71717a;">Funding</span>
+                <span style="color: #a1a1aa;">HCP Level 3</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                <span style="color: #71717a;">Agent</span>
+                <span style="color: #a1a1aa;">Sarah Chen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div>
+          <div style="font-size: 11px; font-weight: 600; color: #52525b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">Recent Activity</div>
+
+          <div style="padding: 10px 0; border-bottom: 1px solid #1f1f23;">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #43C0BE; margin-top: 6px; flex-shrink: 0;"></div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Stage changed to Approved</span>
+                  <span style="font-size: 12px; color: #52525b;">45m ago</span>
+                </div>
+                <div style="font-size: 12px; color: #71717a; margin-top: 2px;">by Sarah Chen &mdash; HCP Level 3 approved</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 10px 0; border-bottom: 1px solid #1f1f23;">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #4B7BBE; margin-top: 6px; flex-shrink: 0;"></div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">Phone call &mdash; Made Contact</span>
+                  <span style="font-size: 12px; color: #52525b;">2 days ago</span>
+                </div>
+                <div style="font-size: 12px; color: #71717a; margin-top: 2px;">by Sarah Chen &mdash; Spoke with son David, keen to proceed</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 10px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: #E0763C; margin-top: 6px; flex-shrink: 0;"></div>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-size: 13px; color: #e4e4e7; font-weight: 500;">ACAT assessment completed</span>
+                  <span style="font-size: 12px; color: #52525b;">5 days ago</span>
+                </div>
+                <div style="font-size: 12px; color: #71717a; margin-top: 2px;">Level 3 recommended. Approval expected 48hrs.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hints bar -->
+      <div class="hints-bar" id="hintsBar">
+        <span><kbd>G</kbd> Stage</span>
+        <span><kbd>C</kbd> Call</span>
+        <span><kbd>N</kbd> Note</span>
+        <span><kbd>E</kbd> Done</span>
+        <span><kbd>H</kbd> Snooze</span>
+        <span><kbd>Enter</kbd> Confirm</span>
+        <span><kbd>Esc</kbd> Cancel</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Undo Toast -->
+  <div class="undo-toast" id="undoToast">
+    <span id="undoToastMessage"></span>
+    <span>Press <kbd>Z</kbd> to undo</span>
+    <span id="undoCountdown" style="color: #52525b;">(5s)</span>
+  </div>
+
+  <script>
+    // State
+    let popoverOpen = false;
+    let selectedTargetStage = null;
+    let currentStage = 'approved';
+    let undoTimer = null;
+
+    const stageOrder = ['pre-care', 'acat-booked', 'approved', 'allocated', 'active', 'converted'];
+    const stageLabels = {
+      'pre-care': 'Pre-Care',
+      'acat-booked': 'ACAT Booked',
+      'approved': 'Approved',
+      'allocated': 'Allocated',
+      'active': 'Active',
+      'converted': 'Converted'
+    };
+    const stageDotClasses = {
+      'pre-care': 'stage-pre-care',
+      'acat-booked': 'stage-acat-booked',
+      'approved': 'stage-approved',
+      'allocated': 'stage-allocated',
+      'active': 'stage-active',
+      'converted': 'stage-converted'
+    };
+    const stageColors = {
+      'pre-care': '#808080',
+      'acat-booked': '#E0763C',
+      'approved': '#43C0BE',
+      'allocated': '#4B7BBE',
+      'active': '#35A8E4',
+      'converted': '#007F7E'
+    };
+
+    // Stage-specific required fields
+    const stageFields = {
+      'allocated': [
+        { id: 'region', label: 'Region', type: 'select', options: ['Chatswood', 'North Sydney', 'Parramatta', 'Bankstown', 'Liverpool'], default: 'Chatswood' },
+        { id: 'package_level', label: 'Package Level', type: 'select', options: ['HCP Level 1', 'HCP Level 2', 'HCP Level 3', 'HCP Level 4'], default: 'HCP Level 3' },
+      ],
+      'active': [
+        { id: 'start_date', label: 'Service Start Date', type: 'date', default: '' },
+        { id: 'coordinator', label: 'Care Coordinator', type: 'select', options: ['Sarah Chen', 'David Williams', 'Maria Santos', 'James Park', 'Lisa Thompson'], default: 'Sarah Chen' },
+      ],
+      'converted': [
+        { id: 'conversion_date', label: 'Conversion Date', type: 'date', default: '' },
+        { id: 'service_agreement', label: 'Service Agreement #', type: 'text', placeholder: 'e.g. SA-2026-0047' },
+      ],
+    };
+
+    function togglePopover(e) {
+      e.stopPropagation();
+      if (popoverOpen) {
+        closePopover();
+      } else {
+        openPopover();
+      }
+    }
+
+    function openPopover() {
+      const popover = document.getElementById('stagePopover');
+      const badge = document.getElementById('stageBadge');
+      const backdrop = document.getElementById('popoverBackdrop');
+
+      // Position the popover near the badge
+      const rect = badge.getBoundingClientRect();
+      popover.style.top = (rect.bottom + 8) + 'px';
+      popover.style.left = rect.left + 'px';
+
+      popover.classList.add('show');
+      backdrop.classList.add('show');
+      popoverOpen = true;
+      selectedTargetStage = null;
+
+      // Reset form
+      document.getElementById('inlineForm').classList.remove('show');
+
+      // Update stage list visual state
+      updateStageList();
+    }
+
+    function closePopover() {
+      document.getElementById('stagePopover').classList.remove('show');
+      document.getElementById('popoverBackdrop').classList.remove('show');
+      popoverOpen = false;
+      selectedTargetStage = null;
+    }
+
+    function updateStageList() {
+      const currentIdx = stageOrder.indexOf(currentStage);
+      document.querySelectorAll('.stage-option').forEach(option => {
+        const stage = option.dataset.stage;
+        const idx = stageOrder.indexOf(stage);
+        const nameEl = option.querySelector('.stage-name');
+        const checkEl = option.querySelector('.check-icon');
+
+        option.classList.remove('completed', 'current', 'future');
+
+        if (idx < currentIdx) {
+          option.classList.add('completed');
+          nameEl.style.color = '#71717a';
+          checkEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        } else if (idx === currentIdx) {
+          option.classList.add('current');
+          nameEl.style.color = '#43C0BE';
+          checkEl.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#43C0BE" stroke-width="2.5"><circle cx="12" cy="12" r="6" fill="#43C0BE"></circle></svg>';
+        } else {
+          option.classList.add('future');
+          nameEl.style.color = '#e4e4e7';
+          checkEl.innerHTML = '';
+        }
+      });
+    }
+
+    function selectStage(stage) {
+      const currentIdx = stageOrder.indexOf(currentStage);
+      const targetIdx = stageOrder.indexOf(stage);
+
+      // Can only move forward (or stay — which does nothing)
+      if (targetIdx <= currentIdx) return;
+
+      selectedTargetStage = stage;
+      document.getElementById('targetStageName').textContent = stageLabels[stage];
+
+      // Highlight the selected stage
+      document.querySelectorAll('.stage-option').forEach(option => {
+        if (option.dataset.stage === stage) {
+          option.style.background = 'rgba(0, 127, 126, 0.15)';
+        } else if (option.classList.contains('current')) {
+          option.style.background = 'rgba(0, 127, 126, 0.1)';
+        } else {
+          option.style.background = '';
+        }
+      });
+
+      // Build form fields
+      const formFields = document.getElementById('formFields');
+      const fields = stageFields[stage] || [];
+      formFields.innerHTML = '';
+
+      fields.forEach(field => {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = `<label for="${field.id}">${field.label}</label>`;
+
+        if (field.type === 'select') {
+          let options = field.options.map(o =>
+            `<option value="${o}" ${o === field.default ? 'selected' : ''}>${o}</option>`
+          ).join('');
+          wrapper.innerHTML += `<select id="${field.id}">${options}</select>`;
+        } else if (field.type === 'date') {
+          wrapper.innerHTML += `<input type="date" id="${field.id}" value="${field.default}" />`;
+        } else {
+          wrapper.innerHTML += `<input type="text" id="${field.id}" placeholder="${field.placeholder || ''}" value="${field.default || ''}" />`;
+        }
+
+        formFields.appendChild(wrapper);
+      });
+
+      if (fields.length === 0) {
+        formFields.innerHTML = '<div style="font-size: 12px; color: #52525b; margin-bottom: 8px;">No additional fields required.</div>';
+      }
+
+      // Show form
+      const form = document.getElementById('inlineForm');
+      form.classList.add('show');
+
+      // Focus first input
+      setTimeout(() => {
+        const firstInput = formFields.querySelector('input, select');
+        if (firstInput) firstInput.focus();
+      }, 100);
+    }
+
+    function confirmStageChange() {
+      if (!selectedTargetStage) return;
+
+      const previousStage = currentStage;
+      currentStage = selectedTargetStage;
+
+      // Update badge
+      document.getElementById('stageBadgeText').textContent = stageLabels[currentStage];
+      document.getElementById('stageBadgeDot').style.background = stageColors[currentStage];
+      document.getElementById('stageBadgeDot').className = 'stage-dot ' + stageDotClasses[currentStage];
+
+      // Close popover
+      closePopover();
+
+      // Show undo toast
+      showUndo(`Stage changed to ${stageLabels[currentStage]}. Press Z to undo`, previousStage);
+    }
+
+    function showUndo(message, previousStage) {
+      const toast = document.getElementById('undoToast');
+      const msgEl = document.getElementById('undoToastMessage');
+      const countdown = document.getElementById('undoCountdown');
+
+      msgEl.textContent = message;
+      toast.classList.add('show');
+      toast.dataset.previousStage = previousStage || '';
+
+      let seconds = 5;
+      countdown.textContent = `(${seconds}s)`;
+
+      if (undoTimer) clearInterval(undoTimer);
+      undoTimer = setInterval(() => {
+        seconds--;
+        countdown.textContent = `(${seconds}s)`;
+        if (seconds <= 0) {
+          clearInterval(undoTimer);
+          toast.classList.remove('show');
+        }
+      }, 1000);
+    }
+
+    function undoAction() {
+      const toast = document.getElementById('undoToast');
+      const previousStage = toast.dataset.previousStage;
+
+      if (previousStage && stageLabels[previousStage]) {
+        currentStage = previousStage;
+        document.getElementById('stageBadgeText').textContent = stageLabels[currentStage];
+        document.getElementById('stageBadgeDot').style.background = stageColors[currentStage];
+        document.getElementById('stageBadgeDot').className = 'stage-dot ' + stageDotClasses[currentStage];
+      }
+
+      toast.classList.remove('show');
+      if (undoTimer) clearInterval(undoTimer);
+    }
+
+    // Keyboard handlers
+    document.addEventListener('keydown', function(e) {
+      // Inside form inputs
+      if (popoverOpen && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          confirmStageChange();
+          return;
+        }
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closePopover();
+          return;
+        }
+        if (e.key === 'Tab') {
+          // Allow default tab behavior within form
+          return;
+        }
+        return; // Don't process other shortcuts while in form
+      }
+
+      if (e.key === 'Escape') {
+        if (popoverOpen) {
+          closePopover();
+          return;
+        }
+      }
+
+      if (e.key === 'Enter' && popoverOpen && selectedTargetStage) {
+        e.preventDefault();
+        confirmStageChange();
+        return;
+      }
+
+      // Global shortcuts (only when popover is closed)
+      if (!popoverOpen) {
+        switch(e.key.toLowerCase()) {
+          case 'g':
+            e.preventDefault();
+            openPopover();
+            break;
+          case 'z':
+            e.preventDefault();
+            undoAction();
+            break;
+        }
+      }
+
+      // Navigate stage options with arrow keys when popover is open
+      if (popoverOpen && !selectedTargetStage) {
+        const currentIdx = stageOrder.indexOf(currentStage);
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          // Find next future stage
+          for (let i = currentIdx + 1; i < stageOrder.length; i++) {
+            selectStage(stageOrder[i]);
+            break;
+          }
+        }
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          // Noop for now — can't go backward
+        }
+      }
+    });
+  </script>
+</body>
+</html>

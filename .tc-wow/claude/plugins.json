@@ -1,0 +1,10 @@
+{
+    "php-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "figma@claude-plugins-official": true,
+    "posthog@claude-plugins-official": true,
+    "playground@claude-plugins-official": true,
+    "laravel-boost@claude-plugins-official": true,
+    "linear@claude-plugins-official": true,
+    "laravel-simplifier@laravel": true
+}

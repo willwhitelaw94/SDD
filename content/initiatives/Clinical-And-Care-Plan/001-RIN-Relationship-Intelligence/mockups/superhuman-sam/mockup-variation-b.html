@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variation B: Focus Mode - Superhuman Sam</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: {
+              50: '#F0FAFA', 100: '#D5F1F0', 200: '#BAE8E7', 300: '#94DBDA',
+              400: '#66CCCA', 500: '#43C0BE', 600: '#2F9E9C', 700: '#007F7E',
+              800: '#005656', 900: '#003D3D'
+            },
+            'primary-blue': {
+              50: '#F0F4FA', 100: '#D6E1F0', 200: '#BCCEE7', 300: '#96B2D9',
+              400: '#7197CC', 500: '#4B7BBE', 600: '#39639D', 700: '#2C4C79',
+              800: '#1E3452', 900: '#101C2D'
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes drawRing {
+      from { stroke-dashoffset: 226; }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(67, 192, 190, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(67, 192, 190, 0); }
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+    .scale-in { animation: scaleIn 0.4s ease-out forwards; }
+    .draw-ring { animation: drawRing 1.2s ease-out forwards; }
+    .pulse-glow { animation: pulseGlow 2.5s ease-in-out infinite; }
+    .breathe { animation: breathe 3s ease-in-out infinite; }
+    .slide-up { animation: slideUp 0.5s ease-out forwards; }
+    .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+    .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+    .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+    .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+    .stagger-5 { animation-delay: 0.5s; opacity: 0; }
+    .stagger-6 { animation-delay: 0.6s; opacity: 0; }
+
+    /* Custom scrollbar */
+    .custom-scroll::-webkit-scrollbar { width: 4px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+
+    /* Glassmorphism */
+    .glass { background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(55, 65, 81, 0.5); }
+    .glass-card { background: rgba(17, 24, 39, 0.45); backdrop-filter: blur(12px); border: 1px solid rgba(55, 65, 81, 0.3); }
+
+    /* Kbd styling */
+    kbd {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 22px; height: 22px; padding: 0 6px;
+      font-family: ui-monospace, monospace; font-size: 11px; font-weight: 600;
+      background: #1f2937; border: 1px solid #374151; border-radius: 4px;
+      color: #9ca3af; box-shadow: 0 1px 0 #111827;
+    }
+
+    /* Gradient bg */
+    .bg-radial {
+      background: radial-gradient(ellipse at 50% 0%, rgba(0, 127, 126, 0.12) 0%, rgba(44, 76, 121, 0.06) 40%, transparent 70%);
+    }
+
+    /* Prompt hover */
+    .prompt-item { transition: all 0.15s ease; }
+    .prompt-item:hover { background: rgba(67, 192, 190, 0.08); transform: translateX(4px); }
+
+    /* Start Call button glow */
+    .start-call-btn {
+      transition: all 0.2s ease;
+      box-shadow: 0 0 0 0 rgba(67, 192, 190, 0);
+    }
+    .start-call-btn:hover {
+      box-shadow: 0 0 30px rgba(67, 192, 190, 0.3), 0 0 60px rgba(67, 192, 190, 0.1);
+      transform: translateY(-1px);
+    }
+
+    /* Context chip */
+    .context-chip { transition: all 0.15s ease; }
+    .context-chip:hover { border-color: rgba(67, 192, 190, 0.5); background: rgba(67, 192, 190, 0.05); }
+
+    /* Speed metric shimmer */
+    .speed-shimmer {
+      background: linear-gradient(90deg, transparent, rgba(67, 192, 190, 0.1), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 3s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white font-sans h-screen overflow-hidden">
+
+  <!-- Minimal Top Bar -->
+  <header class="h-11 bg-gray-900/80 backdrop-blur border-b border-gray-800/50 flex items-center px-6 justify-between z-50 relative">
+    <div class="flex items-center gap-3">
+      <button class="flex items-center gap-2 text-gray-400 hover:text-gray-300 transition text-xs group">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"/></svg>
+        <span>Back to Caseload</span>
+        <kbd class="opacity-0 group-hover:opacity-100 transition">Esc</kbd>
+      </button>
+    </div>
+    <div class="flex items-center gap-2 text-[10px] text-gray-500">
+      <div class="speed-shimmer rounded-full px-3 py-0.5 border border-gray-800">
+        <span class="text-teal-400 font-medium">3 of 12 briefed</span>
+        <span class="text-gray-600 mx-1">&middot;</span>
+        <span>~4 min saved this session</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="text-xs text-gray-500 hover:text-gray-300 transition flex items-center gap-1.5 group">
+        Skip
+        <kbd class="opacity-0 group-hover:opacity-100 transition">S</kbd>
+      </button>
+      <span class="text-gray-700">|</span>
+      <button class="text-xs text-gray-500 hover:text-gray-300 transition flex items-center gap-1.5 group">
+        Next Client
+        <kbd class="opacity-0 group-hover:opacity-100 transition">J</kbd>
+      </button>
+    </div>
+  </header>
+
+  <!-- Focus Mode Content -->
+  <main class="h-[calc(100vh-44px)] overflow-y-auto custom-scroll bg-radial">
+    <div class="max-w-2xl mx-auto px-6 py-10">
+
+      <!-- Client Identity (large, focused) -->
+      <div class="text-center mb-10 fade-in-up stagger-1">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-teal-600 to-primary-blue-700 flex items-center justify-center text-2xl font-bold mx-auto mb-4 pulse-glow">MC</div>
+        <h1 class="text-3xl font-bold text-white mb-1">Margaret Chen</h1>
+        <div class="flex items-center justify-center gap-3 text-sm text-gray-400">
+          <span class="font-mono">TC-4821</span>
+          <span class="text-gray-600">&middot;</span>
+          <span>Home Care Level 4</span>
+        </div>
+      </div>
+
+      <!-- Last Contact Warning -->
+      <div class="flex justify-center mb-8 fade-in-up stagger-2">
+        <div class="glass rounded-xl px-5 py-3 flex items-center gap-4">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-amber-400">18</div>
+            <div class="text-[10px] text-gray-500 uppercase tracking-wider">Days Ago</div>
+          </div>
+          <div class="w-px h-10 bg-gray-700"></div>
+          <div>
+            <div class="text-sm text-gray-300">Last contacted by <span class="text-white font-medium">Romy</span></div>
+            <div class="text-xs text-gray-500">Phone call &middot; Approaching 25-day threshold</div>
+            <div class="w-full bg-gray-700 rounded-full h-1.5 mt-1.5">
+              <div class="bg-gradient-to-r from-green-400 via-amber-400 to-amber-400 h-1.5 rounded-full" style="width: 72%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Completion Ring + Context Fields -->
+      <div class="mb-8 fade-in-up stagger-3">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-sm font-semibold text-gray-300 flex items-center gap-2">
+            <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            What I Know About Margaret
+          </h2>
+          <!-- Completion ring (large) -->
+          <div class="flex items-center gap-3">
+            <svg width="40" height="40" class="-rotate-90">
+              <circle cx="20" cy="20" r="16" stroke="#1f2937" stroke-width="3" fill="none"/>
+              <circle cx="20" cy="20" r="16" stroke="url(#ring-gradient)" stroke-width="3" fill="none"
+                stroke-dasharray="100.5" stroke-dashoffset="20.1" stroke-linecap="round" class="draw-ring"/>
+              <defs>
+                <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#007F7E"/>
+                  <stop offset="100%" stop-color="#43C0BE"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div>
+              <div class="text-sm font-semibold text-teal-400">4 of 5</div>
+              <div class="text-[10px] text-gray-500">Context filled</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Context chips (large, readable) -->
+        <div class="space-y-2">
+          <div class="context-chip glass-card rounded-xl p-4 flex items-center gap-4 cursor-default">
+            <span class="text-2xl w-10 text-center">🌱</span>
+            <div class="flex-1">
+              <div class="text-xs text-teal-400/70 uppercase tracking-wider font-medium mb-0.5">Interests</div>
+              <div class="text-base text-gray-200">Loves gardening &mdash; grows tomatoes</div>
+            </div>
+            <svg class="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="context-chip glass-card rounded-xl p-4 flex items-center gap-4 cursor-default">
+            <span class="text-2xl w-10 text-center">🏉</span>
+            <div class="flex-1">
+              <div class="text-xs text-teal-400/70 uppercase tracking-wider font-medium mb-0.5">Supports</div>
+              <div class="text-base text-gray-200">Sydney Swans</div>
+            </div>
+            <svg class="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="context-chip glass-card rounded-xl p-4 flex items-center gap-4 cursor-default">
+            <span class="text-2xl w-10 text-center">👨‍👩‍👧</span>
+            <div class="flex-1">
+              <div class="text-xs text-teal-400/70 uppercase tracking-wider font-medium mb-0.5">Family</div>
+              <div class="text-base text-gray-200">Grandkids visit every Sunday</div>
+            </div>
+            <svg class="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <div class="context-chip glass-card rounded-xl p-4 flex items-center gap-4 cursor-default">
+            <span class="text-2xl w-10 text-center">☀️</span>
+            <div class="flex-1">
+              <div class="text-xs text-teal-400/70 uppercase tracking-wider font-medium mb-0.5">Call Preferences</div>
+              <div class="text-base text-gray-200">Prefers morning calls before 10am</div>
+            </div>
+            <svg class="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <!-- Empty slot -->
+          <button class="context-chip w-full glass-card rounded-xl p-4 flex items-center gap-4 cursor-pointer border-dashed border-gray-700 hover:border-teal-600 group transition">
+            <span class="text-2xl w-10 text-center text-gray-600 group-hover:text-teal-400 transition">+</span>
+            <div class="flex-1 text-left">
+              <div class="text-xs text-gray-600 group-hover:text-teal-400/70 uppercase tracking-wider font-medium mb-0.5 transition">Pets / Other</div>
+              <div class="text-base text-gray-600 group-hover:text-gray-400 transition">Add context to improve this briefing...</div>
+            </div>
+            <kbd class="opacity-0 group-hover:opacity-100 transition">N</kbd>
+          </button>
+        </div>
+      </div>
+
+      <!-- Conversation Prompts (prominent, large) -->
+      <div class="mb-8 fade-in-up stagger-4">
+        <h2 class="text-sm font-semibold text-gray-300 flex items-center gap-2 mb-3">
+          <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          Open With...
+        </h2>
+        <div class="space-y-2">
+          <div class="prompt-item rounded-xl px-5 py-4 border border-gray-800 cursor-pointer flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-teal-700/20 flex items-center justify-center text-lg flex-shrink-0">🏉</div>
+            <div class="flex-1">
+              <p class="text-base text-white font-medium">"The Swans played on the weekend &mdash; did you catch the game?"</p>
+              <p class="text-xs text-gray-500 mt-0.5">Sports &middot; Sydney Swans supporter</p>
+            </div>
+            <div class="flex items-center gap-1 flex-shrink-0">
+              <kbd>1</kbd>
+            </div>
+          </div>
+          <div class="prompt-item rounded-xl px-5 py-4 border border-gray-800 cursor-pointer flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-teal-700/20 flex items-center justify-center text-lg flex-shrink-0">🎂</div>
+            <div class="flex-1">
+              <p class="text-base text-white font-medium">"I see your birthday is coming up on the 15th &mdash; any plans?"</p>
+              <p class="text-xs text-gray-500 mt-0.5">Upcoming event &middot; 15 March</p>
+            </div>
+            <div class="flex items-center gap-1 flex-shrink-0">
+              <kbd>2</kbd>
+            </div>
+          </div>
+          <div class="prompt-item rounded-xl px-5 py-4 border border-gray-800 cursor-pointer flex items-center gap-4">
+            <div class="w-10 h-10 rounded-full bg-teal-700/20 flex items-center justify-center text-lg flex-shrink-0">🌱</div>
+            <div class="flex-1">
+              <p class="text-base text-white font-medium">"How are the tomatoes coming along in the garden?"</p>
+              <p class="text-xs text-gray-500 mt-0.5">Interests &middot; Gardening</p>
+            </div>
+            <div class="flex items-center gap-1 flex-shrink-0">
+              <kbd>3</kbd>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operational Flags (compact, secondary) -->
+      <div class="mb-8 fade-in-up stagger-5">
+        <h2 class="text-sm font-semibold text-gray-300 flex items-center gap-2 mb-3">
+          <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Before You Call
+        </h2>
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Bills on hold (flagged) -->
+          <div class="glass-card rounded-xl p-4 border-l-2 border-amber-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">Bills on Hold</span>
+              <span class="text-2xl font-bold text-amber-400">2</span>
+            </div>
+            <p class="text-xs text-gray-400">Client may ask about pending invoices. Check billing tab before call.</p>
+          </div>
+          <!-- Incident -->
+          <div class="glass-card rounded-xl p-4 border-l-2 border-primary-blue-400">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs text-primary-blue-400 font-semibold uppercase tracking-wider">Recent Incident</span>
+              <span class="text-xs text-gray-500">12d ago</span>
+            </div>
+            <p class="text-xs text-gray-400">Fall risk assessment. Approach sensitively &mdash; may need reassurance.</p>
+          </div>
+          <!-- Complaints -->
+          <div class="glass-card rounded-xl p-4 border-l-2 border-green-500">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs text-green-400 font-semibold uppercase tracking-wider">Complaints</span>
+              <span class="text-2xl font-bold text-green-400">0</span>
+            </div>
+            <p class="text-xs text-gray-400">No active complaints. Positive relationship indicator.</p>
+          </div>
+          <!-- Care plan -->
+          <div class="glass-card rounded-xl p-4 border-l-2 border-teal-500">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs text-teal-400 font-semibold uppercase tracking-wider">Care Plan</span>
+              <span class="text-xs text-teal-400 font-medium">Active</span>
+            </div>
+            <p class="text-xs text-gray-400">Next review 15 March &mdash; mention care plan review is coming up.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start Call CTA -->
+      <div class="fade-in-up stagger-6 pb-16">
+        <button class="start-call-btn w-full bg-gradient-to-r from-teal-700 to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-semibold text-lg rounded-2xl px-6 py-5 transition flex items-center justify-center gap-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Start Call &mdash; Margaret Chen
+        </button>
+        <div class="flex items-center justify-center gap-6 mt-4 text-xs text-gray-500">
+          <span class="flex items-center gap-1.5">
+            <kbd>Enter</kbd>
+            Start Call
+          </span>
+          <span class="text-gray-700">|</span>
+          <span class="flex items-center gap-1.5">
+            <kbd>L</kbd>
+            Log Without Calling
+          </span>
+          <span class="text-gray-700">|</span>
+          <span class="flex items-center gap-1.5">
+            <kbd>S</kbd>
+            Skip
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom Status Bar -->
+  <div class="fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur border-t border-gray-800/50 px-6 py-1.5 flex items-center justify-between z-40">
+    <div class="flex items-center gap-4 text-[10px] text-gray-500">
+      <span class="flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-amber-400 breathe"></span>
+        18 days since last contact
+      </span>
+      <span class="text-gray-700">|</span>
+      <span>Auto-advance: <span class="text-teal-400">ON</span></span>
+    </div>
+    <div class="flex items-center gap-4 text-[10px] text-gray-500">
+      <span><kbd>Esc</kbd> Back</span>
+      <span class="text-gray-700">|</span>
+      <span><kbd>1</kbd>-<kbd>3</kbd> Select prompt</span>
+      <span class="text-gray-700">|</span>
+      <span><kbd>Enter</kbd> Start</span>
+      <span class="text-gray-700">|</span>
+      <span><kbd>J</kbd>/<kbd>K</kbd> Nav</span>
+    </div>
+  </div>
+
+  <script>
+    // Keyboard shortcuts for focus mode
+    document.addEventListener('keydown', (e) => {
+      if (e.target.matches('input, textarea, select')) return;
+
+      switch(e.key) {
+        case 'Enter':
+          // Simulate starting call
+          const btn = document.querySelector('.start-call-btn');
+          btn.innerHTML = '<svg class="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Connecting...';
+          btn.classList.add('opacity-75');
+          break;
+        case 'Escape':
+          // Would navigate back to caseload
+          break;
+        case 's':
+        case 'S':
+          // Skip to next client
+          break;
+        case 'j':
+        case 'J':
+          // Next client
+          break;
+        case 'k':
+        case 'K':
+          // Previous client
+          break;
+        case 'n':
+        case 'N':
+          // Add context
+          break;
+        case 'l':
+        case 'L':
+          // Log touchpoint without calling
+          break;
+      }
+    });
+  </script>
+</body>
+</html>

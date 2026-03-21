@@ -1,0 +1,19 @@
+jira_key: TP-2778
+title: 'Re-Assignment Rules'
+prefix: RAR
+summary: "Automated care partner re-assignment"
+linear_project_id: 1f244908-b349-400f-9074-c179ef3ee1f1
+linear_url: https://linear.app/trilogycare/project/rar-re-assignment-rules-tp-2778-e3e948275cef
+description: ''
+status: Backlog
+priority: Medium
+assignee: null
+created: '2025-11-07T11:41:48.888+1000'
+updated: '2026-01-05T07:02:08.861+1000'
+last_synced: '2026-01-08T00:00:00.000Z'
+parent_initiative: TP-2141
+
+phases: []
+
+stories: []
+bounty_value: 5000

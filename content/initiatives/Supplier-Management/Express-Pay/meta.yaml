@@ -1,0 +1,11 @@
+jira_key: TP-2779
+title: 'Express Pay'
+status: 'Backlog'
+prefix: EXP
+summary: "Fast-track payment processing for suppliers"
+linear_project_id: 26855b97-77fc-4283-9f36-907770b4f127
+linear_url: https://linear.app/trilogycare/project/exp-express-pay-8b16521665ea
+description: null
+due_date: null
+last_synced: null
+bounty_value: 20000

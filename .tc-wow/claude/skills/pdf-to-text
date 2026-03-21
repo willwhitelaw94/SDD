@@ -1,0 +1,93 @@
+# PDF to Text Conversion
+
+Convert PDF documents to searchable text files using Python's pypdf library.
+
+## When to Use
+
+Use this skill when:
+- User wants to convert a PDF to text
+- User has a large PDF that can't be read directly
+- User mentions "convert PDF", "extract text from PDF", "PDF to text"
+- User wants to make a PDF searchable
+
+## Process
+
+1. **Identify the PDF file** - Get the full path to the PDF
+2. **Determine output location** - Default to `.tc-docs/content/context/government-resources/` for government/regulatory documents
+3. **Run the conversion** using Python pypdf:
+
+```bash
+python3 << 'EOF'
+import pypdf
+
+pdf_path = "/path/to/input.pdf"
+output_path = "/path/to/output.txt"
+
+reader = pypdf.PdfReader(pdf_path)
+print(f"Total pages: {len(reader.pages)}")
+
+with open(output_path, 'w') as f:
+    for i, page in enumerate(reader.pages):
+        text = page.extract_text()
+        f.write(f"\n--- Page {i+1} ---\n")
+        f.write(text)
+
+print(f"Saved to: {output_path}")
+EOF
+```
+
+4. **Confirm success** and tell user where the file was saved
+
+## Output Location Guidelines
+
+| Document Type | Save Location |
+|--------------|---------------|
+| Government/regulatory manuals | `.tc-docs/content/context/government-resources/` |
+| Meeting transcripts | Scratchpad or `.tc-docs/content/context/` |
+| Temporary analysis | Scratchpad directory |
+| Project documentation | `.tc-docs/content/` appropriate subfolder |
+
+## Naming Convention
+
+Use descriptive kebab-case names with version if applicable:
+- `support-at-home-program-manual-v4.2.txt`
+- `aged-care-act-2024.txt`
+- `quality-standards-guide.txt`
+
+## After Conversion
+
+Once converted, you can:
+- **Search** the text file using `grep` for specific topics
+- **Read sections** using `Read` tool with offset/limit for large files
+- **Create domain docs** by extracting relevant sections
+
+## Example Usage
+
+User: "Convert the Support at Home PDF to text"
+
+```bash
+python3 << 'EOF'
+import pypdf
+
+pdf_path = "/Users/williamwhitelaw/Herd/tc-portal/support-at-home-program-manual.pdf"
+output_path = "/Users/williamwhitelaw/Herd/tc-portal/.tc-docs/content/context/government-resources/support-at-home-program-manual-v4.2.txt"
+
+reader = pypdf.PdfReader(pdf_path)
+print(f"Total pages: {len(reader.pages)}")
+
+with open(output_path, 'w') as f:
+    for i, page in enumerate(reader.pages):
+        text = page.extract_text()
+        f.write(f"\n--- Page {i+1} ---\n")
+        f.write(text)
+
+print(f"Saved to: {output_path}")
+EOF
+```
+
+## Troubleshooting
+
+- **pypdf not installed**: Use `pip install pypdf` or check if PyPDF2 is available
+- **Encrypted PDF**: May need password or different tool
+- **Scanned PDF (images)**: pypdf won't work - need OCR tool like `tesseract`
+- **Poor extraction**: Some PDFs have complex layouts that don't extract cleanly

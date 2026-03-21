@@ -1,0 +1,377 @@
+================================================================================
+         STEP 1: CONVERSION ESSENTIALS — LAYOUT VARIATIONS (6 OPTIONS)
+================================================================================
+
+Lead: Joan Smith | From Zoho CRM
+
+These mockups show how Step 1 fields are organized. Step 1 captures:
+- Identifiers (Consumer Name, Preferred Name, TCID, Referral Code, Type)
+- Primary Funding (Classification, Dates, Preferred Management Option)
+- Other Classifications (Opt-out consent model)
+- Representative / Care Circle
+- Attribution (Stage, Pipeline, Lead Source)
+
+================================================================================
+OPTION A: Two-Column Grouped Sections
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 1: CONVERSION ESSENTIALS                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  IDENTIFIERS                                                                │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  Consumer Name                  Preferred Name                              │
+│  Joan Smith                     [Joanie________________]                    │
+│                                                                             │
+│  TCID                           Referral Code *                             │
+│  TC-26-000142 (auto)            [2-123456789101____] ✓                      │
+│                                                                             │
+│  Type *                                                                     │
+│  [New Consumer ▼]                                                           │
+│                                                                             │
+│  PRIMARY CLASSIFICATION & DATES                                             │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  Primary Classification *                Preferred Management Option *      │
+│  [Support@Home Ongoing ▼]                [SM+ ▼]                            │
+│                                                                             │
+│  First Approval Date *       Take-up / Expiry Date *                        │
+│  [15/01/2026          📅]    [15/03/2026              📅]                   │
+│                                                                             │
+│  Commencement Date *         Cessation Date                                 │
+│  [02/02/2026          📅]    [dd/mm/yyyy              📅]                   │
+│                                                                             │
+│  Closing Date                                                               │
+│  [dd/mm/yyyy          📅]                                                   │
+│                                                                             │
+│  OTHER CLASSIFICATIONS                                                      │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  ☑ Consent to all classifications (opt-out: uncheck to exclude specific)    │
+│                                                                             │
+│  REPRESENTATIVE / CARE CIRCLE                                               │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  Representative Name *            Email                                     │
+│  [Mary Smith______________]       [mary.smith@email.com__________]          │
+│                                                                             │
+│  Relationship *                   Representative Type *                     │
+│  [Daughter ▼]                     [☑ Primary rep ☑ EPOA ☐ Emergency ▼]     │
+│                                                                             │
+│  ☑ Representative has consented to contact                                  │
+│                                                                             │
+│  ATTRIBUTION                                                                │
+│  ───────────────────────────────────────────────────────────────────────── │
+│                                                                             │
+│  Stage *                    Pipeline               Lead Source              │
+│  [Home care approved ▼]     [Standard ▼]           [Website ▼]             │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                [Save Draft]   [Continue →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** All fields visible at once, logical grouping, familiar form layout
+**Cons:** Long scroll, may feel overwhelming with all fields showing
+
+================================================================================
+OPTION B: Tabbed Sub-Sections
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 1: CONVERSION ESSENTIALS                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌────────────┬────────────────┬──────────────┬─────────────┐              │
+│  │ Identifiers│ Classification │ Representative│ Attribution │              │
+│  │  ✓ Done    │  ● Active      │  ○ Pending    │  ○ Pending  │              │
+│  └────────────┴────────────────┴──────────────┴─────────────┘              │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                     │   │
+│  │  PRIMARY CLASSIFICATION & DATES                                     │   │
+│  │                                                                     │   │
+│  │  Primary Classification *                                           │   │
+│  │  ┌─────────────────────────────────────────────────────────────┐    │   │
+│  │  │ Support@Home Ongoing                                     ▼  │    │   │
+│  │  └─────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                     │   │
+│  │  Preferred Management Option *                                      │   │
+│  │  ┌─────────────────────────────────────────────────────────────┐    │   │
+│  │  │ SM+                                                      ▼  │    │   │
+│  │  └─────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                     │   │
+│  │  First Approval Date *             Take-up / Expiry Date *          │   │
+│  │  ┌─────────────────────┐           ┌─────────────────────┐          │   │
+│  │  │ 15/01/2026      📅  │           │ 15/03/2026      📅  │          │   │
+│  │  └─────────────────────┘           └─────────────────────┘          │   │
+│  │                                                                     │   │
+│  │  Commencement Date *               Cessation Date                   │   │
+│  │  ┌─────────────────────┐           ┌─────────────────────┐          │   │
+│  │  │ 02/02/2026      📅  │           │ dd/mm/yyyy      📅  │          │   │
+│  │  └─────────────────────┘           └─────────────────────┘          │   │
+│  │                                                                     │   │
+│  │  Closing Date                                                       │   │
+│  │  ┌─────────────────────┐                                            │   │
+│  │  │ dd/mm/yyyy      📅  │                                            │   │
+│  │  └─────────────────────┘                                            │   │
+│  │                                                                     │   │
+│  │  ──────────────────────────────────────────────────────────────    │   │
+│  │                                                                     │   │
+│  │  OTHER CLASSIFICATIONS                                              │   │
+│  │                                                                     │   │
+│  │  ☑ Consent to all classifications                                   │   │
+│  │  ℹ Uncheck to exclude specific funding streams                      │   │
+│  │                                                                     │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Identifiers]                           [Save Draft]   [Representative →]│
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Smaller form chunks, less overwhelming, progress tracking per sub-section
+**Cons:** Extra navigation, user can't see all sections at once, more clicks
+
+================================================================================
+OPTION C: Card-Based Sections (Expandable)
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 1: CONVERSION ESSENTIALS                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ ✓ IDENTIFIERS                                                  [▼] │   │
+│  │   Joan Smith • TC-26-000142 • Ref: 2-123456789101 • New Consumer   │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌═════════════════════════════════════════════════════════════════════┐   │
+│  ║ ● CLASSIFICATION & DATES                                           ║   │
+│  ╠═════════════════════════════════════════════════════════════════════╣   │
+│  ║                                                                     ║   │
+│  ║  Primary Classification *        Preferred Management Option *      ║   │
+│  ║  [Support@Home Ongoing ▼]        [SM+ ▼]                            ║   │
+│  ║                                                                     ║   │
+│  ║  First Approval       Take-up/Expiry      Commencement              ║   │
+│  ║  [15/01/2026 📅]      [15/03/2026 📅]     [02/02/2026 📅]          ║   │
+│  ║                                                                     ║   │
+│  ║  Cessation            Closing                                       ║   │
+│  ║  [dd/mm/yyyy 📅]      [dd/mm/yyyy 📅]                              ║   │
+│  ║                                                                     ║   │
+│  ║  ─────────────────────────────────────────────────────────────     ║   │
+│  ║                                                                     ║   │
+│  ║  ☑ Consent to all classifications                                   ║   │
+│  ║  ℹ Client consents to all funding streams by default.               ║   │
+│  ║    Uncheck to select specific exclusions.                           ║   │
+│  ║                                                                     ║   │
+│  ╚═════════════════════════════════════════════════════════════════════╝   │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ ○ REPRESENTATIVE / CARE CIRCLE                                 [▼] │   │
+│  │   Not yet completed                                                │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ ○ ATTRIBUTION                                                  [▼] │   │
+│  │   Not yet completed                                                │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                [Save Draft]   [Continue →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Mirrors main accordion pattern (nested accordions), clear progress, reduces cognitive load
+**Cons:** Nested accordions can be confusing, more interactions to expand sections
+
+================================================================================
+OPTION D: Split Panel (Lead Context Left, Form Right)
+================================================================================
+
+┌───────────────────────────┬─────────────────────────────────────────────────┐
+│  LEAD CONTEXT             │  STEP 1: CONVERSION ESSENTIALS                  │
+│  ─────────────────────── │  ───────────────────────────────────────────── │
+│                           │                                                 │
+│  Joan Smith               │  Type *                  Referral Code *        │
+│  Lead since: 15/01/2026   │  [New Consumer ▼]        [2-123456789101__] ✓   │
+│                           │                                                 │
+│  ┌───────────────────┐   │  Preferred Name                                 │
+│  │ From Zoho CRM     │   │  [Joanie___________________]                    │
+│  │                   │   │                                                 │
+│  │ Phone:            │   │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │
+│  │  0412 345 678     │   │                                                 │
+│  │ Email:            │   │  Primary Classification *                       │
+│  │  joan@email.com   │   │  [Support@Home Ongoing ▼]                       │
+│  │ Preferred:        │   │                                                 │
+│  │  SM+              │   │  Preferred Management Option *                  │
+│  │ Source:           │   │  [SM+ ▼]                                        │
+│  │  Website          │   │                                                 │
+│  └───────────────────┘   │  First Approval *      Take-up/Expiry *         │
+│                           │  [15/01/2026 📅]       [15/03/2026 📅]          │
+│  ┌───────────────────┐   │                                                 │
+│  │ Representative    │   │  Commencement *        Cessation                │
+│  │                   │   │  [02/02/2026 📅]       [dd/mm/yyyy 📅]          │
+│  │ Mary Smith        │   │                                                 │
+│  │ Daughter          │   │  Closing                                        │
+│  │ 0412 999 888      │   │  [dd/mm/yyyy 📅]                                │
+│  │ EPOA              │   │                                                 │
+│  └───────────────────┘   │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │
+│                           │                                                 │
+│  ┌───────────────────┐   │  ☑ Consent to all classifications               │
+│  │ Pre-fill from     │   │                                                 │
+│  │ lead data ↑       │   │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │
+│  │                   │   │                                                 │
+│  │ Lead Source       │   │  Representative                                 │
+│  │ Pipeline          │   │  [Mary Smith________]  [Daughter ▼]             │
+│  │ Stage             │   │  [mary@email.com____]  [☑ Primary ☑ EPOA ▼]    │
+│  │ Campaign          │   │  ☑ Consent to contact                           │
+│  └───────────────────┘   │                                                 │
+│                           │  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ │
+│                           │                                                 │
+│                           │  Stage [Home care approved ▼]                   │
+│                           │  Pipeline [Standard ▼]  Source [Website ▼]      │
+│                           │                                                 │
+│                           ├─────────────────────────────────────────────────┤
+│                           │                    [Save Draft]   [Continue →]  │
+└───────────────────────────┴─────────────────────────────────────────────────┘
+
+**Pros:** Lead context always visible, pre-fill from Zoho clear, efficient for power users
+**Cons:** Requires wide viewport, form feels cramped, information overload
+
+================================================================================
+OPTION E: Progressive Disclosure (Show Fields as Needed)
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 1: CONVERSION ESSENTIALS                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Joan Smith                                    TCID: TC-26-000142 (auto)    │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  Type *                           Referral Code *                           │
+│  ┌────────────────────────┐       ┌────────────────────────┐                │
+│  │ New Consumer        ▼  │       │ 2-123456789101      ✓  │                │
+│  └────────────────────────┘       └────────────────────────┘                │
+│                                                                             │
+│  Primary Classification *                                                   │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │ Support@Home Ongoing                                              ▼  │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ℹ Classification selected. The following date fields are now       │   │
+│  │    required for Support@Home Ongoing:                               │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  First Approval *        Take-up/Expiry *        Commencement *             │
+│  [15/01/2026 📅]         [15/03/2026 📅]         [02/02/2026 📅]           │
+│                                                                             │
+│  Cessation               Closing                                            │
+│  [dd/mm/yyyy 📅]         [dd/mm/yyyy 📅]                                   │
+│                                                                             │
+│  Preferred Management Option *                                              │
+│  ○ SM          ● SM+          ○ Coordinated                                 │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  ☑ Consent to all classifications                                           │
+│    ℹ Default: client consents to all funding streams. Uncheck to exclude.   │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  Representative / Care Circle                                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ┌─────────────────────────────────────────────┐                     │   │
+│  │  │  Mary Smith                                  │                     │   │
+│  │  │  Daughter • EPOA • Primary Representative    │                     │   │
+│  │  │  mary.smith@email.com                        │                     │   │
+│  │  │  ☑ Consented                         [Edit]  │                     │   │
+│  │  └─────────────────────────────────────────────┘                     │   │
+│  │                                                                      │   │
+│  │  [+ Add Representative]                                              │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  Attribution                                                                │
+│  Stage [Home care approved ▼]  Pipeline [Standard ▼]  Source [Website ▼]    │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                [Save Draft]   [Continue →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Date fields appear contextually, radio buttons for management option, rep shown as cards
+**Cons:** Long form still, progressive disclosure may be confusing if classification is changed
+
+================================================================================
+OPTION F: Compact Two-Column with Opt-Out Drawer
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 1: CONVERSION ESSENTIALS                Joan Smith • TC-26-000142     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Type              Referral Code           Preferred Name                   │
+│  [New Consumer ▼]  [2-123456789101___] ✓   [Joanie_______________]         │
+│                                                                             │
+│  ─── Classification ────────────────────────────────────────────────────── │
+│                                                                             │
+│  Classification *              Management Option *                          │
+│  [Support@Home Ongoing ▼]      ○ SM  ● SM+  ○ Coordinated                  │
+│                                                                             │
+│  First Approval    Take-up/Expiry   Commencement    Cessation    Closing    │
+│  [15/01/26 📅]     [15/03/26 📅]    [02/02/26 📅]   [_____ 📅]   [_____ 📅]│
+│                                                                             │
+│  ☑ Consent to all classifications                         [Manage exclusions]│
+│                                                                             │
+│  ─── Representative ───────────────────────────────────────────────────── │
+│                                                                             │
+│  Name *                    Relationship *     Type *                         │
+│  [Mary Smith__________]    [Daughter ▼]       [Primary rep, EPOA ▼]        │
+│  Email                     ☑ Consented                                      │
+│  [mary.smith@email.com]                                                     │
+│                                                                             │
+│  ─── Attribution ──────────────────────────────────────────────────────── │
+│                                                                             │
+│  Stage                    Pipeline           Lead Source                     │
+│  [Home care approved ▼]   [Standard ▼]       [Website ▼]                   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                [Save Draft]   [Continue →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+     ┌─────────────────────────────────────────────┐
+     │  CLASSIFICATION EXCLUSIONS (Drawer)          │
+     │                                              │
+     │  Uncheck streams the client does NOT         │
+     │  want to receive:                            │
+     │                                              │
+     │  ☑ Support@Home Ongoing (Primary)            │
+     │  ☑ Assistive Technology                      │
+     │  ☑ AT Specific Needs                         │
+     │  ☐ Home Modifications  ← excluded            │
+     │  ☑ End of Life                               │
+     │  ☑ Restorative Care                          │
+     │                                              │
+     │                              [Done]          │
+     └─────────────────────────────────────────────┘
+
+**Pros:** Compact, everything above the fold, drawer for rarely-used exclusions
+**Cons:** Dense, date fields truncated, may need horizontal scroll on small screens
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+**Option E (Progressive Disclosure)** recommended because:
+- Classification-dependent date fields appear contextually (less confusion)
+- Radio buttons for Management Option make the 3 choices obvious
+- Representative shown as cards allows for future multi-rep support
+- Opt-out consent is clean and inline
+- Balances information density with clarity
+
+**Option A (Two-Column)** is the safe fallback — conventional, everything visible.
+
+**Option F (Compact)** best for power users who want minimal scrolling.

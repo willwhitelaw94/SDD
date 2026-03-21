@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REF-00312 — Action Plan — Clinical Chris</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+            'triage-1': '#DC2626',
+          },
+          fontFamily: { sans: ['Roboto Flex', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto Flex', system-ui, sans-serif; }
+    .section-header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; padding: 8px 0 6px; border-bottom: 1px solid #e2e8f0; margin-bottom: 12px; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <div class="flex min-h-screen">
+    <!-- Skeleton Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 flex-shrink-0 p-4 space-y-3">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-8 h-8 bg-tc-teal-700 rounded-lg"></div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <div class="h-3 w-32 bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-r animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="mt-6 h-3 w-28 bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col">
+      <!-- Record Banner (compact) -->
+      <div class="bg-triage-1 text-white px-6 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-lg font-bold font-mono">REF-00312</span>
+          <span class="text-[11px] bg-white/20 px-2 py-0.5 rounded font-semibold">CAT 1 — CRITICAL</span>
+          <span class="text-white/70 text-sm">Medication administered 4hrs late — fall risk</span>
+        </div>
+        <a href="03-detail-view.html" class="text-xs text-white/70 hover:text-white flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Back to Record
+        </a>
+      </div>
+
+      <!-- Section Header -->
+      <div class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <svg class="w-4 h-4 text-tc-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+          <h2 class="text-sm font-semibold text-gray-700">Care Plan — Action Items</h2>
+        </div>
+        <div class="flex items-center gap-4">
+          <!-- Progress -->
+          <div class="flex items-center gap-2">
+            <div class="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-tc-teal-700 rounded-full" style="width: 60%"></div>
+            </div>
+            <span class="text-xs font-semibold text-gray-600">3 of 5 complete</span>
+          </div>
+          <button class="bg-tc-teal-700 hover:bg-tc-teal-500 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 transition">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Action
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Items Content -->
+      <div class="flex-1 overflow-auto p-6 space-y-6">
+
+        <!-- Active Items -->
+        <div>
+          <div class="section-header flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            Active Items (2)
+          </div>
+
+          <!-- Action 4 — Overdue -->
+          <div class="bg-white rounded border-l-4 border-red-500 border border-red-200 p-4 mb-3">
+            <div class="flex items-start justify-between">
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded border-2 border-red-300 flex-shrink-0 mt-0.5 flex items-center justify-center">
+                  <span class="text-[9px] font-bold text-red-400">4</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-gray-800">Implement medication window alerts in scheduling system</h4>
+                  <p class="text-xs text-gray-500 mt-0.5">Configure automated alert when medication administration exceeds 30-minute window from scheduled time for high fall-risk clients.</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                  OVERDUE
+                </span>
+              </div>
+            </div>
+            <div class="grid grid-cols-4 gap-4 mt-3 pt-3 border-t border-red-100">
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Responsible</span>
+                <p class="text-xs text-gray-700 mt-0.5">IT Team / A. Patel</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Target Date</span>
+                <p class="text-xs text-red-600 font-semibold mt-0.5">07 Mar 2026</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Status</span>
+                <p class="text-xs mt-0.5"><span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-medium">Overdue — 3 days</span></p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Notes</span>
+                <p class="text-xs text-gray-500 mt-0.5">IT confirmed feasibility. Implementation delayed by sprint priority conflict.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action 5 — Active -->
+          <div class="bg-white rounded border-l-4 border-amber-500 border border-gray-200 p-4 mb-3">
+            <div class="flex items-start justify-between">
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded border-2 border-amber-300 flex-shrink-0 mt-0.5 flex items-center justify-center">
+                  <span class="text-[9px] font-bold text-amber-500">5</span>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-gray-800">Draft and send formal written response to complainant</h4>
+                  <p class="text-xs text-gray-500 mt-0.5">Prepare written response to Sarah Thompson outlining findings, corrective actions taken, and ongoing monitoring commitments.</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded">ACTIVE</span>
+            </div>
+            <div class="grid grid-cols-4 gap-4 mt-3 pt-3 border-t border-gray-100">
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Responsible</span>
+                <p class="text-xs text-gray-700 mt-0.5">S. Chen</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Target Date</span>
+                <p class="text-xs text-gray-700 mt-0.5">14 Mar 2026</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Status</span>
+                <p class="text-xs mt-0.5"><span class="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">In Progress</span></p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Notes</span>
+                <p class="text-xs text-gray-500 mt-0.5">Draft started. Pending final review of monitoring data before sending.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Completed Items -->
+        <div>
+          <div class="section-header flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            Completed Items (3)
+          </div>
+
+          <!-- Action 1 — Complete -->
+          <div class="bg-gray-50/50 rounded border border-gray-200 p-4 mb-3 opacity-80">
+            <div class="flex items-start justify-between">
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded bg-green-100 flex-shrink-0 mt-0.5 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-gray-600 line-through">Verify medication administration records for 27 February</h4>
+                  <p class="text-xs text-gray-400 mt-0.5">Pull and review the medication chart for the date in question to confirm the reported delay.</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded">COMPLETE</span>
+            </div>
+            <div class="grid grid-cols-4 gap-4 mt-3 pt-3 border-t border-gray-100">
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Responsible</span>
+                <p class="text-xs text-gray-500 mt-0.5">S. Chen</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Target Date</span>
+                <p class="text-xs text-gray-500 mt-0.5">01 Mar 2026</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Completed</span>
+                <p class="text-xs text-green-600 font-medium mt-0.5">01 Mar 2026</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Completion Notes</span>
+                <p class="text-xs text-gray-500 mt-0.5">Confirmed: medication administered at 22:15, 4h 15m late. Chart attached to clinical notes.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action 2 — Complete -->
+          <div class="bg-gray-50/50 rounded border border-gray-200 p-4 mb-3 opacity-80">
+            <div class="flex items-start justify-between">
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded bg-green-100 flex-shrink-0 mt-0.5 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-gray-600 line-through">Conduct carer interview with Clinical Lead</h4>
+                  <p class="text-xs text-gray-400 mt-0.5">K. Nguyen to interview carer Lisa M. about the events of 27 February to determine root cause.</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded">COMPLETE</span>
+            </div>
+            <div class="grid grid-cols-4 gap-4 mt-3 pt-3 border-t border-gray-100">
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Responsible</span>
+                <p class="text-xs text-gray-500 mt-0.5">K. Nguyen</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Target Date</span>
+                <p class="text-xs text-gray-500 mt-0.5">05 Mar 2026</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Completed</span>
+                <p class="text-xs text-green-600 font-medium mt-0.5">05 Mar 2026</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Completion Notes</span>
+                <p class="text-xs text-gray-500 mt-0.5">Root cause: cascade scheduling failure from prior client emergency. Carer counselled on delay notification protocol.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action 3 — Complete -->
+          <div class="bg-gray-50/50 rounded border border-gray-200 p-4 mb-3 opacity-80">
+            <div class="flex items-start justify-between">
+              <div class="flex items-start gap-3">
+                <div class="w-6 h-6 rounded bg-green-100 flex-shrink-0 mt-0.5 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div>
+                  <h4 class="text-sm font-semibold text-gray-600 line-through">Retrain evening carers on delay notification protocol</h4>
+                  <p class="text-xs text-gray-400 mt-0.5">All 3 rostered evening carers to complete refresher training on mandatory delay notifications.</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded">COMPLETE</span>
+            </div>
+            <div class="grid grid-cols-4 gap-4 mt-3 pt-3 border-t border-gray-100">
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Responsible</span>
+                <p class="text-xs text-gray-500 mt-0.5">K. Nguyen / S. Chen</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Target Date</span>
+                <p class="text-xs text-gray-500 mt-0.5">08 Mar 2026</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Completed</span>
+                <p class="text-xs text-green-600 font-medium mt-0.5">07 Mar 2026</p>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-gray-400 uppercase">Completion Notes</span>
+                <p class="text-xs text-gray-500 mt-0.5">All 3 carers completed training. Acknowledgment forms signed and filed. Protocol poster displayed in office.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Action Form -->
+        <div class="bg-white rounded border-2 border-dashed border-tc-teal-500/40 p-5">
+          <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-tc-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Action Item
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="col-span-2">
+              <label class="text-xs font-semibold text-gray-600 block mb-1">Task Description *</label>
+              <input type="text" class="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500" placeholder="What needs to be done?">
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-gray-600 block mb-1">Responsible Person *</label>
+              <select class="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500">
+                <option value="">Select...</option>
+                <option>S. Chen</option>
+                <option>K. Nguyen</option>
+                <option>J. Williams</option>
+                <option>A. Patel</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-semibold text-gray-600 block mb-1">Target Date *</label>
+              <input type="date" class="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500">
+            </div>
+            <div class="col-span-2">
+              <label class="text-xs font-semibold text-gray-600 block mb-1">Notes</label>
+              <textarea class="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500" rows="2" placeholder="Additional context or instructions..."></textarea>
+            </div>
+            <div class="col-span-2 flex justify-end">
+              <button class="bg-tc-teal-700 hover:bg-tc-teal-500 text-white text-xs font-semibold px-4 py-2 rounded transition">
+                Add to Care Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

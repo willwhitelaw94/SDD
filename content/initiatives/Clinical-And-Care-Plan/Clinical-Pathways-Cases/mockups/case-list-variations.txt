@@ -1,0 +1,207 @@
+## Cases Tab — Case List View — 6 Variations
+
+Context: This is the primary working view for the Cases tab on a Package.
+It sits inside PackageViewLayout, wrapped in a CommonCard.
+Primary user: Clinical Lead (governance), Secondary: Coordinator (daily case work).
+Design principle: "Transparency over efficiency" — show more, not less.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION A: CommonTable — Flat Table (Matches Incidents Tab Pattern)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ [🔍 Search cases...]              Filter: [All Statuses ▼] [All Types ▼]  │
+├──────────┬──────────────────────────┬──────────┬────────────┬──────────┬───┤
+│ Type     │ Clinical Concern         │ Status   │ Next Review│ Assigned │   │
+├──────────┼──────────────────────────┼──────────┼────────────┼──────────┼───┤
+│ ●Mandatory│ Post-fall monitoring —  │ ●Active  │ 15 Feb 2026│ Ian S.   │ ⋮ │
+│          │ recipient fell on 10 Feb │          │            │          │   │
+├──────────┼──────────────────────────┼──────────┼────────────┼──────────┼───┤
+│ ●Recomm. │ Medication review after │ ●Active  │ ⚠ Overdue  │ Sarah K. │ ⋮ │
+│          │ dosage change on 3 Feb   │          │ (3 days)   │          │   │
+├──────────┼──────────────────────────┼──────────┼────────────┼──────────┼───┤
+│ ●Mandatory│ Elder abuse concern —   │ ●Escalat.│ 20 Feb 2026│ Ian S.   │ ⋮ │
+│          │ dignity of risk review   │          │            │          │   │
+├──────────┼──────────────────────────┼──────────┼────────────┼──────────┼───┤
+│ ●Self-Srv│ Falls prevention info   │ ●Active  │ —          │ Sarah K. │ ⋮ │
+│          │ pack sent to recipient   │          │            │          │   │
+├──────────┼──────────────────────────┼──────────┼────────────┼──────────┼───┤
+│ ●Recomm. │ Post-hospital discharge │ ●Closed  │ —          │ Ian S.   │ ⋮ │
+│          │ monitoring completed     │          │            │          │   │
+└──────────┴──────────────────────────┴──────────┴────────────┴──────────┴───┘
+                                               Showing 5 of 5 cases
+
+Badge colours:
+  Type:   ●Mandatory = red-soft  ●Recomm. = blue-soft  ●Self-Srv = gray-soft
+  Status: ●Active = green  ●Escalat. = red  ●Closed = gray
+  Overdue: ⚠ amber warning badge with days count
+
+Pros: Familiar CommonTable pattern. Sortable columns. Built-in search & filter.
+      Matches Incidents tab — consistency across package tabs.
+Cons: Flat — all cases look equal regardless of urgency. Clinical leads must
+      scan the full table to find overdue cases.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION B: Status-Grouped Sections (GitHub Issues Style)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ⚠ OVERDUE (1)                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │ ●Recomm.  Medication review after dosage change   ●Active         │    │
+│  │           ⚠ 3 days overdue · Assigned: Sarah K.   [Review →]      │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+│                                                                             │
+│  🔴 ESCALATED (1)                                                          │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │ ●Mandatory Elder abuse concern — dignity of risk  ●Escalated      │    │
+│  │           Next review: 20 Feb · Assigned: Ian S.  [Review →]      │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+│                                                                             │
+│  ● ACTIVE (2)                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │ ●Mandatory Post-fall monitoring — fell on 10 Feb  ●Active         │    │
+│  │           Next review: 15 Feb · Assigned: Ian S.  [Review →]      │    │
+│  ├─────────────────────────────────────────────────────────────────────┤    │
+│  │ ●Self-Srv  Falls prevention info pack sent        ●Active         │    │
+│  │           No review required · Assigned: Sarah K.                  │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+│                                                                             │
+│  ▸ CLOSED (1)                                            [Show closed ▼]   │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Pros: Surfaces urgency automatically. Overdue + Escalated at top — clinical
+      leads see what needs attention first. Aligns with "Transparency" principle.
+Cons: More vertical space. Doesn't use CommonTable (custom layout). Sorting
+      within sections is less obvious. Closed cases collapsed by default.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION C: Summary Cards + Table (Dashboard Hybrid)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐      │
+│  │    3         │ │    1         │ │    1         │ │    1         │      │
+│  │  Active      │ │  Overdue     │ │  Escalated   │ │  Closed      │      │
+│  │  ● green     │ │  ⚠ amber    │ │  🔴 red     │ │  ○ gray      │      │
+│  └──────────────┘ └──────────────┘ └──────────────┘ └──────────────┘      │
+│                                                                             │
+├──────────┬──────────────────────────┬──────────┬────────────┬──────────┬───┤
+│ Type     │ Clinical Concern         │ Status   │ Next Review│ Assigned │   │
+├──────────┼──────────────────────────┼──────────┼────────────┼──────────┼───┤
+│ ●Recomm. │ Medication review after │ ●Active  │ ⚠ Overdue  │ Sarah K. │ ⋮ │
+│          │ dosage change on 3 Feb   │          │ (3 days)   │          │   │
+├──────────┼──────────────────────────┼──────────┼────────────┼──────────┼───┤
+│ ...      │ (remaining cases)        │          │            │          │   │
+└──────────┴──────────────────────────┴──────────┴────────────┴──────────┴───┘
+
+Pros: KPI summary cards give instant governance snapshot. Table below for detail.
+      Clinical leads see aggregate counts at a glance. Overdue count prominent.
+Cons: Takes vertical space for summary row. Cards may feel redundant with 1-5
+      cases (more useful at population/reporting level). Slight over-engineering
+      for a per-package view.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION D: Compact Card List (Linear-Inspired)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                         [Filter ▼]  [+ Create Case] │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌───┬──────────────────────────────────────────────────────────────────┐  │
+│  │ ⚠ │ Medication review after dosage change              ●Recomm.    │  │
+│  │   │ ●Active · ⚠ 3 days overdue · Sarah K.             [Review →]  │  │
+│  ├───┼──────────────────────────────────────────────────────────────────┤  │
+│  │ ! │ Elder abuse concern — dignity of risk               ●Mandatory  │  │
+│  │   │ ●Escalated · Review: 20 Feb · Ian S.              [Review →]  │  │
+│  ├───┼──────────────────────────────────────────────────────────────────┤  │
+│  │   │ Post-fall monitoring — fell on 10 Feb               ●Mandatory  │  │
+│  │   │ ●Active · Review: 15 Feb · Ian S.                 [View →]    │  │
+│  ├───┼──────────────────────────────────────────────────────────────────┤  │
+│  │   │ Falls prevention info pack sent                     ●Self-Srv   │  │
+│  │   │ ●Active · No review required · Sarah K.                        │  │
+│  ├───┼──────────────────────────────────────────────────────────────────┤  │
+│  │ ○ │ Post-hospital discharge monitoring completed        ●Recomm.    │  │
+│  │   │ ●Closed · Closed 8 Feb · Ian S.                                │  │
+│  └───┴──────────────────────────────────────────────────────────────────┘  │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Left gutter: ⚠ = overdue, ! = escalated, ○ = closed, (blank) = on track
+
+Pros: Compact. Urgency gutter gives instant scan column. Two-line per case
+      shows all key info. Clean, modern feel.
+Cons: Not a standard CommonTable — custom component. Harder to sort by column.
+      Less structured than a table for reporting-minded clinical leads.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION E: Table with Inline Status Row (Overdue Callout)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌─────────────────────────────────────────────────────────────────────┐   │
+│  │ ⚠ 1 case overdue for review · 1 case escalated                    │   │
+│  └─────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│ [🔍 Search...]                    [All Statuses ▼] [All Types ▼]          │
+├──────────┬──────────────────────────┬──────────┬────────────┬──────────┬───┤
+│ Type     │ Clinical Concern         │ Status   │ Next Review│ Assigned │   │
+├──────────┼──────────────────────────┼──────────┼────────────┼──────────┼───┤
+│ ...      │ (same table as Option A) │          │            │          │   │
+└──────────┴──────────────────────────┴──────────┴────────────┴──────────┴───┘
+
+Pros: Best of both worlds — CommonTable for familiarity + alert banner for
+      urgency. Clinical leads see overdue count without scanning. Minimal
+      extra space. Easy to implement (banner + existing table).
+Cons: Banner could feel "noisy" if always present. Needs logic to show/hide.
+      Less impactful than full status-grouped sections (Option B).
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION F: Tabbed Status View (Active | Escalated | Closed)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Cases                                                    [+ Create Case]   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  [ Active (3) ]  [ Escalated (1) ]  [ Closed (1) ]                        │
+│  ─────────────                                                              │
+│                                                                             │
+│ [🔍 Search...]                                         [All Types ▼]      │
+├──────────┬──────────────────────────┬────────────┬──────────┬──────────────┤
+│ Type     │ Clinical Concern         │ Next Review│ Assigned │ Actions      │
+├──────────┼──────────────────────────┼────────────┼──────────┼──────────────┤
+│ ●Recomm. │ Medication review after │ ⚠ Overdue  │ Sarah K. │ [Review →]   │
+│          │ dosage change on 3 Feb   │ (3 days)   │          │              │
+├──────────┼──────────────────────────┼────────────┼──────────┼──────────────┤
+│ ●Mandatory│ Post-fall monitoring   │ 15 Feb 2026│ Ian S.   │ [View]       │
+├──────────┼──────────────────────────┼────────────┼──────────┼──────────────┤
+│ ●Self-Srv│ Falls prevention info   │ —          │ Sarah K. │ [View]       │
+└──────────┴──────────────────────────┴────────────┴──────────┴──────────────┘
+                                            Showing 3 active cases
+
+Pros: Clean separation by status. Counts in tabs give instant overview.
+      Status column removed (redundant with tab). Overdue still visible in
+      review date column.
+Cons: Escalated cases hidden behind a tab — clinical leads must click to see
+      them. Fragments the view. Overdue cases not surfaced automatically
+      across tabs. Violates "Transparency" principle.

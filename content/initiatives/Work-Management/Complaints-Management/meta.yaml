@@ -1,0 +1,17 @@
+title: Complaints Management
+prefix: COM
+summary: "Feedback records management — create, view, edit, stage manage complaints and remediations on Portal. CRM is read-only mirror."
+status: planned
+priority: P2
+owner: Sian H
+linear_project_id: a152f556-f0c4-423f-8546-c84103e4b9cf
+linear_url: https://linear.app/trilogycare/project/com-complaints-management-eeffdcc4e0cc
+linear_issues:
+  - TRI-99
+  - TRI-100
+gates:
+  spec:
+    passed: true
+    date: 2026-03-10
+    notes: "8 user stories validated, 2 clarification sessions complete (22 questions total), all open items resolved"
+bounty_value: 5000

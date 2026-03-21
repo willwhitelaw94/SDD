@@ -1,0 +1,6 @@
+title: 'Funding Reconciliation'
+status: In Progress
+prefix: FRR
+summary: "Automatic MYOB adjustment detection and consumption-driven SA claims pipeline with credit netting to resolve $500K overclaim issue"
+description: null
+due_date: null

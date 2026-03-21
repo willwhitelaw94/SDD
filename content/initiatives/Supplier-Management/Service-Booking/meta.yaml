@@ -1,0 +1,11 @@
+jira_key: TP-2293
+title: 'Service Booking'
+status: Backlog
+prefix: APA
+summary: "Book and manage supplier services"
+linear_project_id: 8d381aaa-b10f-4f2a-b419-eafc9fba4bb3
+linear_url: https://linear.app/trilogycare/project/sap-service-booking-tp-2293-0b8954a454ab
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+bounty_value: 10000

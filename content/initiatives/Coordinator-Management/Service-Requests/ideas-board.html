@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRQ: Service Requests — Cab Charge & Meals — Ideas Board</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #2c4c79; --teal: #007F7E; --light-blue: #64BCEA; --light-teal: #43C0BE;
+  --bg: #0f1419; --surface: #1a2130; --surface2: #222d3d; --surface3: #2a3749;
+  --border: #334155; --text: #e2e8f0; --text-dim: #94a3b8; --text-muted: #64748b;
+  --green: #22c55e; --red: #ef4444; --yellow: #eab308; --orange: #f97316;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+.header { background: linear-gradient(135deg, var(--blue) 0%, #1a3357 100%); padding: 20px 28px; border-bottom: 2px solid var(--teal); position: sticky; top: 0; z-index: 100; }
+.header h1 { font-size: 20px; font-weight: 700; color: #fff; } .header h1 span { color: var(--light-teal); }
+.header p { font-size: 12px; color: var(--light-blue); margin-top: 3px; }
+.header .raci { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 10px 28px; background: var(--surface); border-bottom: 1px solid var(--border); }
+.toolbar label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+.toolbar select, .toolbar input[type="text"] { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 5px 9px; border-radius: 6px; font-size: 12px; outline: none; }
+.toolbar select:focus, .toolbar input:focus { border-color: var(--teal); }
+.toolbar .spacer { flex: 1; }
+.btn { padding: 5px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 12px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.btn:hover { background: var(--surface3); border-color: var(--teal); }
+.btn.primary { background: var(--teal); border-color: var(--teal); color: #fff; } .btn.primary:hover { background: #009190; }
+.layout { display: flex; min-height: calc(100vh - 130px); }
+.main { flex: 1; padding: 16px 20px; overflow-y: auto; }
+.sidebar { width: 320px; min-width: 320px; background: var(--surface); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; position: sticky; top: 76px; height: calc(100vh - 130px); }
+.view-tabs { display: flex; gap: 2px; background: var(--surface2); border-radius: 7px; padding: 2px; }
+.view-tab { padding: 5px 12px; border-radius: 5px; border: none; background: transparent; color: var(--text-dim); font-size: 11px; cursor: pointer; transition: all 0.15s; }
+.view-tab.active { background: var(--teal); color: #fff; }
+.cat-filters { display: flex; gap: 5px; flex-wrap: wrap; padding: 0 20px 10px; }
+.cat-pill { padding: 3px 10px; border-radius: 16px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); font-size: 11px; cursor: pointer; transition: all 0.15s; }
+.cat-pill.active { border-color: var(--teal); color: var(--light-teal); background: rgba(0,127,126,0.15); }
+.cat-pill .count { font-size: 10px; opacity: 0.6; margin-left: 3px; }
+.phase-badge { font-size: 9px; padding: 1px 6px; border-radius: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.phase-badge.p1 { background: var(--green); color: #000; } .phase-badge.p2 { background: var(--yellow); color: #000; } .phase-badge.future { background: var(--light-blue); color: #000; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 10px; }
+.idea-card { background: var(--surface); border: 1px solid var(--border); border-radius: 9px; padding: 14px; transition: all 0.2s; cursor: default; position: relative; }
+.idea-card:hover { border-color: var(--teal); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+.idea-card .card-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.idea-card .card-num { font-size: 10px; color: var(--text-muted); font-family: monospace; }
+.idea-card .card-cat { font-size: 9px; text-transform: uppercase; letter-spacing: 0.4px; padding: 1px 7px; border-radius: 3px; }
+.idea-card h3 { font-size: 13px; font-weight: 600; margin: 7px 0 4px; line-height: 1.35; }
+.idea-card .card-desc { font-size: 11px; color: var(--text-dim); line-height: 1.45; margin-bottom: 10px; }
+.card-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.vote-btn { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); font-size: 12px; cursor: pointer; transition: all 0.2s; }
+.vote-btn:hover { border-color: var(--text-dim); }
+.vote-btn .hands { display: inline-flex; letter-spacing: -2px; transition: all 0.3s; }
+.vote-btn.voted { border-color: var(--teal); color: var(--light-teal); background: rgba(0,127,126,0.15); }
+.vote-btn.voted .hands { animation: raise 0.4s ease-out; }
+@keyframes raise { 0% { transform: translateY(0); } 40% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+.vote-count { font-weight: 600; font-family: monospace; min-width: 18px; text-align: center; }
+.rating-group { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text-muted); }
+.rating-group select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 1px 3px; border-radius: 3px; font-size: 11px; outline: none; width: 38px; }
+.priority-select { background: var(--surface2); border: 1px solid var(--border); color: var(--text); padding: 3px 7px; border-radius: 5px; font-size: 10px; outline: none; margin-left: auto; }
+.priority-select.must { border-color: var(--green); color: var(--green); }
+.priority-select.should { border-color: var(--light-blue); color: var(--light-blue); }
+.priority-select.could { border-color: var(--yellow); color: var(--yellow); }
+.priority-select.wont { border-color: var(--red); color: var(--red); }
+.kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; min-height: 350px; }
+.kanban-col { background: var(--surface); border-radius: 9px; border: 1px solid var(--border); padding: 10px; min-height: 250px; }
+.kanban-col.drag-over { border-color: var(--teal); background: rgba(0,127,126,0.05); }
+.kanban-col h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; padding-bottom: 7px; border-bottom: 2px solid var(--border); display: flex; justify-content: space-between; }
+.kanban-col h4 .cnt { background: var(--surface2); padding: 1px 7px; border-radius: 8px; font-size: 10px; }
+.kanban-col.must h4 { border-color: var(--green); color: var(--green); }
+.kanban-col.should h4 { border-color: var(--light-blue); color: var(--light-blue); }
+.kanban-col.could h4 { border-color: var(--yellow); color: var(--yellow); }
+.kanban-col.wont h4 { border-color: var(--red); color: var(--red); }
+.kanban-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; margin-bottom: 6px; font-size: 11px; cursor: grab; transition: all 0.15s; }
+.kanban-card:active { cursor: grabbing; } .kanban-card:hover { border-color: var(--teal); }
+.kanban-card .kc-num { color: var(--text-muted); font-family: monospace; font-size: 9px; }
+.kanban-card .kc-title { margin-top: 3px; font-weight: 500; line-height: 1.3; }
+.kanban-card .kc-meta { margin-top: 5px; display: flex; gap: 6px; color: var(--text-muted); font-size: 9px; }
+.kanban-card .kc-hands { font-size: 10px; }
+.matrix-container { background: var(--surface); border-radius: 9px; border: 1px solid var(--border); padding: 20px; position: relative; height: 550px; }
+.matrix-container .axis-label { position: absolute; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+.matrix-container .axis-label.x { bottom: 3px; left: 50%; transform: translateX(-50%); }
+.matrix-container .axis-label.y { top: 50%; left: -4px; transform: translateY(-50%) rotate(-90deg); }
+.matrix-dot { position: absolute; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: 2px solid; z-index: 1; }
+.matrix-dot:hover { transform: scale(1.4); z-index: 10; }
+.matrix-quadrant { position: absolute; font-size: 9px; color: var(--text-muted); opacity: 0.5; pointer-events: none; }
+.stat-section { margin-bottom: 20px; }
+.stat-section h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted); margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; }
+.stat-row .label { color: var(--text-dim); } .stat-row .value { font-weight: 600; font-family: monospace; font-size: 11px; }
+.stat-bar { height: 5px; background: var(--surface2); border-radius: 3px; margin-top: 3px; overflow: hidden; }
+.stat-bar .fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.top-ideas { list-style: none; }
+.top-ideas li { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; display: flex; align-items: flex-start; gap: 6px; }
+.top-ideas li .rank { font-family: monospace; color: var(--teal); font-weight: 700; min-width: 18px; }
+.top-ideas li .score { margin-left: auto; color: var(--light-teal); font-family: monospace; font-size: 10px; white-space: nowrap; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; width: 90%; max-width: 750px; max-height: 85vh; overflow-y: auto; }
+.modal h2 { font-size: 15px; margin-bottom: 14px; }
+.modal pre { background: var(--bg); padding: 14px; border-radius: 7px; font-size: 11px; font-family: 'SF Mono', Monaco, monospace; white-space: pre-wrap; word-break: break-word; max-height: 55vh; overflow-y: auto; line-height: 1.5; }
+.modal .modal-actions { display: flex; gap: 7px; margin-top: 14px; justify-content: flex-end; }
+.tooltip { position: fixed; background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 9px 12px; font-size: 11px; max-width: 280px; z-index: 150; pointer-events: none; box-shadow: 0 6px 24px rgba(0,0,0,0.4); display: none; }
+.toast { position: fixed; bottom: 20px; right: 20px; background: var(--teal); color: #fff; padding: 8px 18px; border-radius: 7px; font-size: 12px; z-index: 300; opacity: 0; transform: translateY(10px); transition: all 0.3s; }
+.toast.show { opacity: 1; transform: translateY(0); }
+.unp-label { font-size: 10px; color: var(--text-muted); padding: 10px 0 3px; }
+@media (max-width: 1100px) { .sidebar { display: none; } .kanban { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 700px) { .header { padding: 14px; } .toolbar { padding: 7px 14px; } .main { padding: 10px; } .cards-grid { grid-template-columns: 1fr; } .kanban { grid-template-columns: 1fr; } .cat-filters { padding: 0 10px 7px; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1><span>SRQ</span> Service Requests &mdash; Cab Charge &amp; Meals &mdash; Ideas Board</h1>
+  <p>50 Ideas &middot; Migrating Cab Charge and Meal service request workflows from Zoho CRM to TC Portal &middot; Vote, Rate, Prioritize</p>
+  <div class="raci">R: William Whitelaw &middot; A: Patrick Hawker &middot; C: Romy Blacklaw &middot; Session: 26 Feb 2026</div>
+</div>
+<div class="toolbar">
+  <div class="view-tabs">
+    <button class="view-tab active" data-view="grid" onclick="setView('grid')">Cards</button>
+    <button class="view-tab" data-view="kanban" onclick="setView('kanban')">Kanban</button>
+    <button class="view-tab" data-view="matrix" onclick="setView('matrix')">Matrix</button>
+  </div>
+  <label>Sort <select id="sortBy" onchange="render()">
+    <option value="id">Number</option><option value="votes">Votes</option><option value="impact">Impact</option>
+    <option value="effort-asc">Effort (low first)</option><option value="ratio">Impact/Effort</option><option value="priority">Priority</option>
+  </select></label>
+  <label>Search <input type="text" id="searchBox" placeholder="Filter..." oninput="render()" style="width:140px"></label>
+  <div class="spacer"></div>
+  <button class="btn" onclick="resetAll()">Reset</button>
+  <button class="btn primary" onclick="showExport()">Export Session Prompt</button>
+</div>
+<div class="cat-filters" id="catFilters"></div>
+<div class="layout"><div class="main" id="mainContent"></div><div class="sidebar" id="sidebar"></div></div>
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal"><h2 id="modalTitle">Export &mdash; Session Prompt for Claude</h2><pre id="exportContent"></pre>
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">Close</button><button class="btn primary" onclick="copyExport()">Copy to Clipboard</button></div></div>
+</div>
+<div class="tooltip" id="tooltip"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const EPIC = {
+  name: 'Service Requests — Cab Charge & Meals',
+  code: 'SRQ',
+  raci: { r: 'William Whitelaw', a: 'Patrick Hawker', c: 'Romy Blacklaw' },
+  date: '2026-02-26',
+};
+
+const CATEGORIES = [
+  { id:'cab-lifecycle', name:'Cab Charge Lifecycle', color:'#22c55e', short:'Cab Charge' },
+  { id:'meal-lifecycle', name:'Meal Service Lifecycle', color:'#64BCEA', short:'Meals' },
+  { id:'zoho-migration', name:'Zoho Migration & History', color:'#a78bfa', short:'Zoho Migration' },
+  { id:'recipient-profile', name:'Recipient Profile Integration', color:'#43C0BE', short:'Profile' },
+  { id:'stage-workflow', name:'Stage & Workflow Engine', color:'#f472b6', short:'Workflow' },
+  { id:'reporting', name:'Reporting & Visibility', color:'#fb923c', short:'Reporting' },
+  { id:'future-enhancements', name:'Future Enhancements', color:'#eab308', short:'Future' },
+];
+
+const IDEAS = [
+  // CAB CHARGE LIFECYCLE (1-8)
+  { id:1, cat:'cab-lifecycle', phase:'P1', title:'Cab Charge request form', desc:'Create new request with delivery option, budget, and auto-linked care plan.' },
+  { id:2, cat:'cab-lifecycle', phase:'P1', title:'Stage progression controls', desc:'Move request through Requested \u2192 Declaration \u2192 Ordered \u2192 Sent \u2192 Delivered.' },
+  { id:3, cat:'cab-lifecycle', phase:'P1', title:'Declaration checkbox', desc:'Coordinator confirms recipient completed external declaration before progressing.' },
+  { id:4, cat:'cab-lifecycle', phase:'P1', title:'Cancellation flow', desc:'Pending Cancellation \u2192 Cancellation Lodged \u2192 Closed with date tracking.' },
+  { id:5, cat:'cab-lifecycle', phase:'P2', title:'Replacement card linking', desc:'New request linked to original, original auto-moves to Pending Cancellation.' },
+  { id:6, cat:'cab-lifecycle', phase:'P2', title:'Digital Fast Card routing', desc:'Show SMS or email fields conditionally based on delivery option selection.' },
+  { id:7, cat:'cab-lifecycle', phase:'P2', title:'Tracking number capture', desc:'Add postal tracking number when card dispatched, display on detail view.' },
+  { id:8, cat:'cab-lifecycle', phase:'future', title:'In-Portal declaration form', desc:'Replace checkbox with digital signing document for recipient consent.' },
+
+  // MEAL SERVICE LIFECYCLE (9-15)
+  { id:9, cat:'meal-lifecycle', phase:'P1', title:'Meal request form', desc:'Create request with provider, budget, occurrence, state, and auto-linked care plan.' },
+  { id:10, cat:'meal-lifecycle', phase:'P1', title:'Meal stage progression', desc:'Added to Plan \u2192 Requested \u2192 Approved \u2192 Finalised with validation.' },
+  { id:11, cat:'meal-lifecycle', phase:'P1', title:'Provider selection', desc:'Dropdown of 7 providers (Gourmet Meals, LiteNeasy, etc.) plus Other.' },
+  { id:12, cat:'meal-lifecycle', phase:'P2', title:'Budget occurrence display', desc:'Show budget as "$40/week" or "$220/month" formatted inline.' },
+  { id:13, cat:'meal-lifecycle', phase:'P2', title:'Existing customer flag', desc:'Track and display whether recipient is already a customer of the provider.' },
+  { id:14, cat:'meal-lifecycle', phase:'P2', title:'Phone order authority', desc:'Record whether provider has authority to take phone orders.' },
+  { id:15, cat:'meal-lifecycle', phase:'future', title:'Provider API integration', desc:'Auto-submit meal orders to LiteNeasy/YouFoodz via provider APIs.' },
+
+  // ZOHO MIGRATION & HISTORY (16-22)
+  { id:16, cat:'zoho-migration', phase:'P1', title:'Zoho Cab Charge import', desc:'Import ~15,000 historical Cab Charge records as read-only.' },
+  { id:17, cat:'zoho-migration', phase:'P1', title:'Zoho Meals import', desc:'Import ~10,000 historical Meal records as read-only.' },
+  { id:18, cat:'zoho-migration', phase:'P1', title:'Read-only historical badge', desc:'Visual indicator distinguishing imported Zoho records from Portal-created ones.' },
+  { id:19, cat:'zoho-migration', phase:'P2', title:'Stage history import', desc:'Import Cabcharge_Stage_History and Stage_History_Meals for full audit trail.' },
+  { id:20, cat:'zoho-migration', phase:'P2', title:'Zoho record deep link', desc:'Link back to original Zoho record for imported data verification.' },
+  { id:21, cat:'zoho-migration', phase:'P2', title:'Migration validation report', desc:'Automated comparison of imported vs Zoho data to verify integrity.' },
+  { id:22, cat:'zoho-migration', phase:'future', title:'Zoho sunset dashboard', desc:'Track coordinator adoption \u2014 when all coordinators use Portal, decommission Zoho modules.' },
+
+  // RECIPIENT PROFILE INTEGRATION (23-29)
+  { id:23, cat:'recipient-profile', phase:'P1', title:'Cab Charge tab', desc:'New tab on recipient staff profile showing all Cab Charge requests.' },
+  { id:24, cat:'recipient-profile', phase:'P1', title:'Meals tab', desc:'New tab on recipient staff profile showing all Meal requests.' },
+  { id:25, cat:'recipient-profile', phase:'P1', title:'Empty states', desc:'Meaningful empty states with create action for both tabs.' },
+  { id:26, cat:'recipient-profile', phase:'P2', title:'Active request indicators', desc:'Badge count on tabs showing number of active requests.' },
+  { id:27, cat:'recipient-profile', phase:'P2', title:'Quick status cards', desc:'Summary cards at top of recipient profile showing active services at a glance.' },
+  { id:28, cat:'recipient-profile', phase:'P2', title:'Cross-tab navigation', desc:'Deep link from budget items to related service requests and vice versa.' },
+  { id:29, cat:'recipient-profile', phase:'future', title:'Unified services hub', desc:'Combined tab showing all external services (Cab Charge, Meals, future: Equipment, Home Mods) in one view.' },
+
+  // STAGE & WORKFLOW ENGINE (30-37)
+  { id:30, cat:'stage-workflow', phase:'P1', title:'Stage transition validation', desc:'Enforce valid transitions only (e.g., can\'t skip from Requested to Delivered).' },
+  { id:31, cat:'stage-workflow', phase:'P1', title:'Stage history timeline', desc:'Visual timeline showing all stage changes with who/when/duration.' },
+  { id:32, cat:'stage-workflow', phase:'P1', title:'Auto-cancel on exit', desc:'Automatically cancel all active requests when recipient\'s care plan closes.' },
+  { id:33, cat:'stage-workflow', phase:'P2', title:'Duplicate request warning', desc:'Show warning when creating a second active Cab Charge request for same recipient.' },
+  { id:34, cat:'stage-workflow', phase:'P2', title:'Stage colour badges', desc:'Consistent colour-coded stage indicators matching Zoho conventions.' },
+  { id:35, cat:'stage-workflow', phase:'P2', title:'Bulk stage update', desc:'Select multiple requests and advance them to the next stage simultaneously.' },
+  { id:36, cat:'stage-workflow', phase:'P2', title:'Stage transition notes', desc:'Optional note field when changing stage (e.g., reason for cancellation).' },
+  { id:37, cat:'stage-workflow', phase:'future', title:'Automated stage rules', desc:'Auto-progress stages based on triggers (e.g., tracking number entered \u2192 Sent to Recipient).' },
+
+  // REPORTING & VISIBILITY (38-43)
+  { id:38, cat:'reporting', phase:'P2', title:'Coordinator request dashboard', desc:'Overview of all active requests across coordinators with stage breakdown.' },
+  { id:39, cat:'reporting', phase:'P2', title:'Stage aging report', desc:'Highlight requests stuck in a stage too long (e.g., Ordered > 14 days).' },
+  { id:40, cat:'reporting', phase:'P2', title:'Monthly budget summary', desc:'Aggregate Cab Charge and Meal budgets per recipient for financial oversight.' },
+  { id:41, cat:'reporting', phase:'P2', title:'Export to CSV', desc:'Export filtered request lists for external reporting.' },
+  { id:42, cat:'reporting', phase:'future', title:'Service utilisation analytics', desc:'Track which meal providers and delivery options are most used.' },
+  { id:43, cat:'reporting', phase:'future', title:'Cost trend analysis', desc:'Track budget trends over time per recipient or across the organisation.' },
+
+  // FUTURE ENHANCEMENTS (44-50)
+  { id:44, cat:'future-enhancements', phase:'P2', title:'Feature flag rollout', desc:'Independent Pennant flags for Cab Charge and Meals modules.' },
+  { id:45, cat:'future-enhancements', phase:'P2', title:'Cab Charge card number masking', desc:'Only show last 4 digits, mask rest for privacy.' },
+  { id:46, cat:'future-enhancements', phase:'future', title:'Email notifications on delivery', desc:'Notify coordinator when Cab Charge card is marked as Delivered.' },
+  { id:47, cat:'future-enhancements', phase:'future', title:'Recipient self-service portal', desc:'Recipients can view their active Cab Charge card and meal service status.' },
+  { id:48, cat:'future-enhancements', phase:'future', title:'Meal dietary preferences', desc:'Capture dietary requirements and allergies linked to meal requests.' },
+  { id:49, cat:'future-enhancements', phase:'future', title:'Provider performance tracking', desc:'Rate meal providers on delivery reliability and food quality.' },
+  { id:50, cat:'future-enhancements', phase:'future', title:'Service request templates', desc:'Pre-fill common configurations (e.g., "Standard LiteNeasy \u2014 $40/week \u2014 QLD").' },
+];
+
+const PHASE_LABELS = { P1: 'Phase 1', P2: 'Phase 2', future: 'Future' };
+const PHASE_COLORS = { P1: 'var(--green)', P2: 'var(--yellow)', future: 'var(--light-blue)' };
+
+const state = {
+  view: 'grid',
+  activeCats: new Set(CATEGORIES.map(c => c.id)),
+  ideas: IDEAS.map(idea => ({ ...idea, votes: 0, impact: 0, effort: 0, priority: 'none' })),
+};
+
+function getCat(id) { return CATEGORIES.find(c => c.id === id); }
+function getFiltered() {
+  const s = document.getElementById('searchBox').value.toLowerCase();
+  return state.ideas.filter(i => {
+    if (!state.activeCats.has(i.cat)) return false;
+    if (s && !i.title.toLowerCase().includes(s) && !i.desc.toLowerCase().includes(s) && !i.phase.toLowerCase().includes(s)) return false;
+    return true;
+  });
+}
+function getSorted(ideas) {
+  const sortBy = document.getElementById('sortBy').value;
+  const arr = [...ideas];
+  switch (sortBy) {
+    case 'votes': arr.sort((a,b) => b.votes - a.votes); break;
+    case 'impact': arr.sort((a,b) => b.impact - a.impact); break;
+    case 'effort-asc': arr.sort((a,b) => (a.effort||99) - (b.effort||99)); break;
+    case 'ratio': arr.sort((a,b) => { const ra = a.effort ? a.impact/a.effort : 0; const rb = b.effort ? b.impact/b.effort : 0; return rb - ra; }); break;
+    case 'priority': { const o = {must:0,should:1,could:2,wont:3,none:4}; arr.sort((a,b) => o[a.priority] - o[b.priority]); } break;
+    default: arr.sort((a,b) => a.id - b.id);
+  }
+  return arr;
+}
+function setView(v) { state.view = v; document.querySelectorAll('.view-tab').forEach(t => t.classList.toggle('active', t.dataset.view === v)); render(); }
+function toggleCat(id) { if (state.activeCats.has(id)) { if (state.activeCats.size === 1) CATEGORIES.forEach(c => state.activeCats.add(c.id)); else state.activeCats.delete(id); } else state.activeCats.add(id); render(); }
+
+function vote(id) {
+  const i = state.ideas.find(x => x.id === id);
+  i.votes++;
+  render();
+}
+function unvote(id) {
+  const i = state.ideas.find(x => x.id === id);
+  if (i.votes > 0) i.votes--;
+  render();
+}
+
+function handsForVotes(v) {
+  if (v <= 0) return '';
+  const count = Math.min(v, 8);
+  return '<span class="hands">' + '&#9995;'.repeat(count) + '</span>';
+}
+
+function setImpact(id, v) { state.ideas.find(i => i.id === id).impact = parseInt(v); render(); }
+function setEffort(id, v) { state.ideas.find(i => i.id === id).effort = parseInt(v); render(); }
+function setPriority(id, v) { state.ideas.find(i => i.id === id).priority = v; render(); }
+
+function renderCatFilters() {
+  document.getElementById('catFilters').innerHTML = CATEGORIES.map(c => {
+    const n = state.ideas.filter(i => i.cat === c.id).length;
+    const a = state.activeCats.has(c.id);
+    return `<button class="cat-pill ${a?'active':''}" style="${a?`border-color:${c.color};color:${c.color};background:${c.color}15`:''}" onclick="toggleCat('${c.id}')">${c.short}<span class="count">${n}</span></button>`;
+  }).join('');
+}
+
+function renderGrid(ideas) {
+  return `<div class="cards-grid">${getSorted(ideas).map(i => {
+    const c = getCat(i.cat);
+    const pc = i.priority !== 'none' ? i.priority : '';
+    const hasVotes = i.votes > 0;
+    return `<div class="idea-card">
+      <div class="card-top">
+        <span class="card-num">#${String(i.id).padStart(2,'0')}</span>
+        <span class="card-cat" style="background:${c.color}20;color:${c.color}">${c.short}</span>
+        <span class="phase-badge ${i.phase.toLowerCase()}">${PHASE_LABELS[i.phase]}</span>
+      </div>
+      <h3>${i.title}</h3>
+      <div class="card-desc">${i.desc}</div>
+      <div class="card-actions">
+        <button class="vote-btn ${hasVotes?'voted':''}" onclick="vote(${i.id})" title="Raise hand">
+          ${hasVotes ? handsForVotes(i.votes) : '&#9995;'}
+          <span class="vote-count">${i.votes || ''}</span>
+        </button>
+        ${hasVotes ? `<button class="vote-btn" onclick="unvote(${i.id})" title="Lower hand" style="padding:4px 6px;font-size:10px">-1</button>` : ''}
+        <span class="rating-group">I:<select onchange="setImpact(${i.id},this.value)">${[0,1,2,3,4,5].map(v=>`<option value="${v}" ${i.impact===v?'selected':''}>${v||'\u2014'}</option>`).join('')}</select></span>
+        <span class="rating-group">E:<select onchange="setEffort(${i.id},this.value)">${[0,1,2,3,4,5].map(v=>`<option value="${v}" ${i.effort===v?'selected':''}>${v||'\u2014'}</option>`).join('')}</select></span>
+        <select class="priority-select ${pc}" onchange="setPriority(${i.id},this.value)">
+          <option value="none" ${i.priority==='none'?'selected':''}>-- Priority --</option>
+          <option value="must" ${i.priority==='must'?'selected':''}>Must Have</option>
+          <option value="should" ${i.priority==='should'?'selected':''}>Should Have</option>
+          <option value="could" ${i.priority==='could'?'selected':''}>Could Have</option>
+          <option value="wont" ${i.priority==='wont'?'selected':''}>Won't Have</option>
+        </select>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderKanban(ideas) {
+  const b = {must:[],should:[],could:[],wont:[]}; const unp = [];
+  ideas.forEach(i => { if (i.priority !== 'none') b[i.priority].push(i); else unp.push(i); });
+  const kc = i => { const c = getCat(i.cat); return `<div class="kanban-card" draggable="true" data-id="${i.id}" ondragstart="ds(event,${i.id})">
+    <span class="kc-num">#${String(i.id).padStart(2,'0')}</span> <span style="color:${c.color};font-size:9px">${c.short}</span> <span class="phase-badge ${i.phase.toLowerCase()}" style="font-size:8px">${i.phase}</span>
+    <div class="kc-title">${i.title}</div>
+    <div class="kc-meta"><span>${i.votes ? '<span class="kc-hands">' + '&#9995;'.repeat(Math.min(i.votes,5)) + '</span> ' + i.votes : 'No votes'}</span>${i.impact?`<span>I:${i.impact}</span>`:''}${i.effort?`<span>E:${i.effort}</span>`:''}</div>
+  </div>`; };
+  const cols = [{k:'must',l:'Must Have',c:'must'},{k:'should',l:'Should Have',c:'should'},{k:'could',l:'Could Have',c:'could'},{k:'wont',l:"Won't Have",c:'wont'}];
+  let h = `<div class="kanban">${cols.map(col => `<div class="kanban-col ${col.c}" ondragover="dov(event)" ondragleave="dlv(event)" ondrop="drp(event,'${col.k}')">
+    <h4>${col.l} <span class="cnt">${b[col.k].length}</span></h4>${b[col.k].map(kc).join('')}</div>`).join('')}</div>`;
+  if (unp.length) {
+    h += `<div class="unp-label">${unp.length} unprioritized &mdash; drag above or use Cards view</div>`;
+    h += `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">${unp.map(i => {
+      const c = getCat(i.cat);
+      return `<div class="kanban-card" draggable="true" data-id="${i.id}" ondragstart="ds(event,${i.id})" style="width:220px">
+        <span class="kc-num">#${String(i.id).padStart(2,'0')}</span> <span style="color:${c.color};font-size:9px">${c.short}</span>
+        <div class="kc-title">${i.title}</div></div>`;
+    }).join('')}</div>`;
+  }
+  return h;
+}
+
+let dragId = null;
+function ds(e,id) { dragId = id; e.dataTransfer.effectAllowed = 'move'; }
+function dov(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+function dlv(e) { e.currentTarget.classList.remove('drag-over'); }
+function drp(e,p) { e.preventDefault(); e.currentTarget.classList.remove('drag-over'); if (dragId !== null) setPriority(dragId, p); dragId = null; }
+
+function renderMatrix(ideas) {
+  const rated = ideas.filter(i => i.impact > 0 && i.effort > 0);
+  const unrated = ideas.filter(i => !i.impact || !i.effort);
+  let h = `<div class="matrix-container" id="matrixBox">
+    <div class="axis-label x">EFFORT &rarr;</div><div class="axis-label y">IMPACT &rarr;</div>
+    <div class="matrix-quadrant" style="top:16px;right:16px;text-align:right">HIGH IMPACT / HIGH EFFORT<br><small>Strategic Bets</small></div>
+    <div class="matrix-quadrant" style="top:16px;left:36px">HIGH IMPACT / LOW EFFORT<br><small style="color:var(--green)">Quick Wins &#9733;</small></div>
+    <div class="matrix-quadrant" style="bottom:16px;left:36px">LOW IMPACT / LOW EFFORT<br><small>Fill-ins</small></div>
+    <div class="matrix-quadrant" style="bottom:16px;right:16px;text-align:right">LOW IMPACT / HIGH EFFORT<br><small style="color:var(--red)">Avoid</small></div>`;
+  rated.forEach(i => {
+    const c = getCat(i.cat);
+    const x = 36 + ((i.effort-1)/4) * 82;
+    const y = 16 + ((5-i.impact)/4) * 82;
+    const jx = (i.id%7-3)*1.1; const jy = (i.id%5-2)*1.1;
+    h += `<div class="matrix-dot" style="left:${x+jx}%;top:${y+jy}%;background:${c.color}30;border-color:${c.color};color:${c.color}" onmouseenter="showTip(event,${i.id})" onmouseleave="hideTip()">${i.id}</div>`;
+  });
+  h += `</div>`;
+  if (unrated.length) h += `<div style="margin-top:12px;font-size:11px;color:var(--text-muted)">${unrated.length} ideas need Impact + Effort ratings to appear on the matrix.</div>`;
+  return h;
+}
+
+function showTip(e,id) {
+  const i = state.ideas.find(x => x.id === id); const c = getCat(i.cat);
+  const t = document.getElementById('tooltip');
+  t.innerHTML = `<strong>#${i.id} ${i.title}</strong><br><span style="color:${c.color}">${c.name}</span> &middot; ${PHASE_LABELS[i.phase]}<br><br>${i.desc}<br><br>&#9995; ${i.votes} votes &middot; I:${i.impact} E:${i.effort} Ratio:${i.effort?(i.impact/i.effort).toFixed(1):'?'}`;
+  t.style.display = 'block';
+  t.style.left = Math.min(e.clientX+10, window.innerWidth-280) + 'px';
+  t.style.top = Math.min(e.clientY+10, window.innerHeight-180) + 'px';
+}
+function hideTip() { document.getElementById('tooltip').style.display = 'none'; }
+
+function renderSidebar() {
+  const el = document.getElementById('sidebar');
+  const all = state.ideas;
+  const pri = all.filter(i => i.priority !== 'none');
+  const rated = all.filter(i => i.impact > 0);
+  const voted = all.filter(i => i.votes > 0);
+  const cnts = {must:0,should:0,could:0,wont:0};
+  all.forEach(i => { if (cnts[i.priority] !== undefined) cnts[i.priority]++; });
+  const topR = all.filter(i => i.impact>0&&i.effort>0).sort((a,b)=>(b.impact/b.effort)-(a.impact/a.effort)).slice(0,6);
+  const topV = [...all].sort((a,b)=>b.votes-a.votes).filter(i=>i.votes>0).slice(0,5);
+  const phases = {}; all.forEach(i => { phases[i.phase] = (phases[i.phase]||0) + 1; });
+  const totalHands = all.reduce((s,i) => s + i.votes, 0);
+
+  el.innerHTML = `
+    <div class="stat-section"><h3>Session Progress</h3>
+      <div class="stat-row"><span class="label">&#9995; Hands Raised</span><span class="value">${totalHands}</span></div>
+      <div class="stat-row"><span class="label">Prioritized</span><span class="value">${pri.length}/50</span></div>
+      <div class="stat-bar"><div class="fill" style="width:${pri.length*2}%;background:var(--teal)"></div></div>
+      <div class="stat-row"><span class="label">Rated</span><span class="value">${rated.length}/50</span></div>
+      <div class="stat-bar"><div class="fill" style="width:${rated.length*2}%;background:var(--light-blue)"></div></div>
+      <div class="stat-row"><span class="label">Voted</span><span class="value">${voted.length}/50</span></div>
+      <div class="stat-bar"><div class="fill" style="width:${voted.length*2}%;background:var(--light-teal)"></div></div>
+    </div>
+    <div class="stat-section"><h3>By Phase</h3>
+      ${Object.entries(PHASE_LABELS).map(([k,l]) => `<div class="stat-row"><span class="label" style="color:${PHASE_COLORS[k]}">${l}</span><span class="value">${phases[k]||0}</span></div>`).join('')}
+    </div>
+    <div class="stat-section"><h3>MoSCoW Distribution</h3>
+      <div class="stat-row"><span class="label" style="color:var(--green)">Must Have</span><span class="value">${cnts.must}</span></div>
+      <div class="stat-bar"><div class="fill" style="width:${cnts.must*2}%;background:var(--green)"></div></div>
+      <div class="stat-row"><span class="label" style="color:var(--light-blue)">Should Have</span><span class="value">${cnts.should}</span></div>
+      <div class="stat-bar"><div class="fill" style="width:${cnts.should*2}%;background:var(--light-blue)"></div></div>
+      <div class="stat-row"><span class="label" style="color:var(--yellow)">Could Have</span><span class="value">${cnts.could}</span></div>
+      <div class="stat-bar"><div class="fill" style="width:${cnts.could*2}%;background:var(--yellow)"></div></div>
+      <div class="stat-row"><span class="label" style="color:var(--red)">Won't Have</span><span class="value">${cnts.wont}</span></div>
+      <div class="stat-bar"><div class="fill" style="width:${cnts.wont*2}%;background:var(--red)"></div></div>
+    </div>
+    ${topV.length?`<div class="stat-section"><h3>&#9995; Most Hands</h3><ul class="top-ideas">${topV.map((i,x)=>`<li><span class="rank">${x+1}</span><span>${i.title}</span><span class="score">${'&#9995;'.repeat(Math.min(i.votes,3))} ${i.votes}</span></li>`).join('')}</ul></div>`:''}
+    ${topR.length?`<div class="stat-section"><h3>Best Impact/Effort</h3><ul class="top-ideas">${topR.map((i,x)=>`<li><span class="rank">${x+1}</span><span>${i.title}</span><span class="score">${(i.impact/i.effort).toFixed(1)}x</span></li>`).join('')}</ul></div>`:''}
+    <div class="stat-section"><h3>By Category</h3>
+      ${CATEGORIES.map(c => { const ci = all.filter(i=>i.cat===c.id); const tv = ci.reduce((s,i)=>s+i.votes,0); return `<div class="stat-row"><span class="label" style="color:${c.color}">${c.short}</span><span class="value" style="font-size:10px">${ci.length} &middot; ${tv ? '&#9995;'.repeat(Math.min(tv,3))+' '+tv : '0 votes'}</span></div>`; }).join('')}
+    </div>`;
+}
+
+function render() {
+  const ideas = getFiltered();
+  const main = document.getElementById('mainContent');
+  renderCatFilters();
+  switch (state.view) {
+    case 'grid': main.innerHTML = renderGrid(ideas); break;
+    case 'kanban': main.innerHTML = renderKanban(ideas); break;
+    case 'matrix': main.innerHTML = renderMatrix(ideas); break;
+  }
+  renderSidebar(); saveState();
+}
+
+function showExport() {
+  const all = state.ideas;
+  const b = {must:[],should:[],could:[],wont:[],none:[]};
+  all.forEach(i => b[i.priority].push(i));
+  const totalVotes = all.reduce((s,i) => s + i.votes, 0);
+  const priCount = all.filter(i => i.priority !== 'none').length;
+  const ratedCount = all.filter(i => i.impact > 0 && i.effort > 0).length;
+
+  let md = `# Idea Spawn Session Results: ${EPIC.name} (${EPIC.code})\n\n`;
+  md += `## Session Context\n`;
+  md += `- **Epic**: ${EPIC.name}\n`;
+  md += `- **Date**: ${EPIC.date}\n`;
+  md += `- **R**: ${EPIC.raci.r}\n`;
+  md += `- **A**: ${EPIC.raci.a}\n`;
+  md += `- **C**: ${EPIC.raci.c}\n`;
+  md += `- **Ideas Generated**: ${all.length}\n`;
+  md += `- **Ideas Prioritized**: ${priCount}/${all.length}\n`;
+  md += `- **Ideas Rated**: ${ratedCount}/${all.length}\n`;
+  md += `- **Total Votes (Hands Raised)**: ${totalVotes}\n\n`;
+
+  const labels = {must:'Must Have',should:'Should Have',could:'Could Have',wont:"Won't Have (Not Now)",none:'Unprioritized'};
+  for (const [k,l] of Object.entries(labels)) {
+    const items = b[k].sort((a,b) => b.votes - a.votes);
+    if (!items.length) continue;
+    md += `## ${l} (${items.length})\n\n`;
+    items.forEach(i => {
+      const c = getCat(i.cat);
+      md += `- **#${String(i.id).padStart(2,'0')} ${i.title}** [${c.name}] [${PHASE_LABELS[i.phase]}]`;
+      const m = [];
+      if (i.votes) m.push(`${i.votes} hands raised`);
+      if (i.impact) m.push(`Impact: ${i.impact}/5`);
+      if (i.effort) m.push(`Effort: ${i.effort}/5`);
+      if (i.impact && i.effort) m.push(`Ratio: ${(i.impact/i.effort).toFixed(1)}x`);
+      if (m.length) md += ` \u2014 ${m.join(', ')}`;
+      md += `\n  ${i.desc}\n\n`;
+    });
+  }
+
+  const rated = all.filter(i=>i.impact>0&&i.effort>0);
+  if (rated.length) {
+    md += `## Top 10 by Impact/Effort Ratio (Quick Wins)\n\n`;
+    rated.sort((a,b)=>(b.impact/b.effort)-(a.impact/a.effort)).slice(0,10).forEach((i,x) => {
+      md += `${x+1}. #${String(i.id).padStart(2,'0')} ${i.title} \u2014 ${(i.impact/i.effort).toFixed(1)}x (I:${i.impact} E:${i.effort}) [${PHASE_LABELS[i.phase]}]\n`;
+    });
+    md += '\n';
+  }
+  const topVoted = [...all].sort((a,b)=>b.votes-a.votes).filter(i=>i.votes>0).slice(0,10);
+  if (topVoted.length) {
+    md += `## Top 10 by Votes (Team Consensus)\n\n`;
+    topVoted.forEach((i,x) => {
+      md += `${x+1}. #${String(i.id).padStart(2,'0')} ${i.title} \u2014 ${i.votes} hands [${PHASE_LABELS[i.phase]}]\n`;
+    });
+    md += '\n';
+  }
+
+  md += `---\n\n## Instruction for Claude\n\n`;
+  md += `Use these prioritized ideas to inform the specification for the **${EPIC.name}** epic.\n\n`;
+  md += `- **Must Have** ideas should map directly to User Stories in spec.md with full acceptance criteria\n`;
+  md += `- **Should Have** ideas should be considered for Phase 2 scope or enhancement tickets\n`;
+  md += `- **Could Have** and **Won't Have** ideas provide context for what was explicitly deprioritized\n`;
+  md += `- Focus on the **top-voted** and **highest-ratio** ideas when creating acceptance criteria\n`;
+  md += `- The voting data represents team consensus \u2014 weight higher-voted ideas in specification priority\n\n`;
+  md += `If a Fireflies transcript is available, cross-reference these voted ideas with discussion themes to identify alignment or gaps.\n`;
+
+  document.getElementById('exportContent').textContent = md;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+function copyExport() { navigator.clipboard.writeText(document.getElementById('exportContent').textContent); toast('Copied! Paste into Claude to inform your spec.'); closeModal(); }
+function toast(m) { const t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2500); }
+function resetAll() { if (!confirm('Reset all votes, ratings, and priorities?')) return; state.ideas.forEach(i => { i.votes=0;i.impact=0;i.effort=0;i.priority='none'; }); state.activeCats = new Set(CATEGORIES.map(c=>c.id)); document.getElementById('searchBox').value=''; document.getElementById('sortBy').value='id'; localStorage.removeItem('srq-ideas-state'); render(); }
+function saveState() { localStorage.setItem('srq-ideas-state', JSON.stringify(state.ideas.map(i=>({id:i.id,votes:i.votes,impact:i.impact,effort:i.effort,priority:i.priority})))); }
+function loadState() { try { const s=JSON.parse(localStorage.getItem('srq-ideas-state')); if(s) s.forEach(x=>{const i=state.ideas.find(y=>y.id===x.id);if(i)Object.assign(i,x);}); } catch(e){} }
+loadState(); render();
+</script>
+</body>
+</html>

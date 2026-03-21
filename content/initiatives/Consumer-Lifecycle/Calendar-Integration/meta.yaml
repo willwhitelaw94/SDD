@@ -1,0 +1,11 @@
+jira_key: TP-2316
+title: 'Calendar Integration'
+status: Backlog
+prefix: CIP
+summary: "Calendar sync for appointments and schedules"
+linear_project_id: b17ef828-a475-4e62-9751-2b7b63a9e60e
+linear_url: https://linear.app/trilogycare/project/cip-calendar-integration-tp-2316-9e6b4ec890dc
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+bounty_value: 5000

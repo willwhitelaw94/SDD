@@ -1,0 +1,244 @@
+## Create Case Form — 5 Variations
+
+Context: Right-slide Inertia modal opened from Cases tab.
+Fields: Case type, Clinical concern, Review interval (+ custom days),
+        Trigger source, Trigger incident (conditional), Assigned to, Risk links.
+Pattern: Follows existing Risk/Contact create modals.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION A: Single Column — All Fields Visible
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Create Clinical Case               │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  Case Type *                         │
+                                    │  [▼ Select type...              ]   │
+                                    │                                      │
+                                    │  Clinical Concern *                  │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │  Describe the clinical concern      │
+                                    │                                      │
+                                    │  Review Interval *                   │
+                                    │  [▼ Select interval...          ]   │
+                                    │                                      │
+                                    │  Trigger Source                      │
+                                    │  [▼ Select trigger...           ]   │
+                                    │                                      │
+                                    │  Assigned To *                       │
+                                    │  [▼ Select coordinator...       ]   │
+                                    │                                      │
+                                    │  Linked Risks                        │
+                                    │  [▼ Select risks (multi)...     ]   │
+                                    │                                      │
+                                    │  ┌──────────┐  ┌────────────────┐   │
+                                    │  │  Cancel   │  │  Create Case → │   │
+                                    │  └──────────┘  └────────────────┘   │
+                                    └──────────────────────────────────────┘
+
+Pros: Simple. All fields visible at once — no scrolling for most screen
+      heights. Matches existing Risk/Contact create form pattern exactly.
+Cons: Long form if "Custom" interval chosen (adds days input). No visual
+      hierarchy between required and optional fields beyond asterisks.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION B: Grouped Sections — Required vs Optional
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Create Clinical Case               │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  ── Case Details ──────────────      │
+                                    │                                      │
+                                    │  Case Type *                         │
+                                    │  [▼ Select type...              ]   │
+                                    │                                      │
+                                    │  Clinical Concern *                  │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  Review Interval *                   │
+                                    │  [▼ Select interval...          ]   │
+                                    │                                      │
+                                    │  Assigned To *                       │
+                                    │  [▼ Select coordinator...       ]   │
+                                    │                                      │
+                                    │  ── Trigger & Links ───────────      │
+                                    │                                      │
+                                    │  Trigger Source                      │
+                                    │  [▼ Select trigger...           ]   │
+                                    │                                      │
+                                    │  Linked Risks                        │
+                                    │  [▼ Select risks (multi)...     ]   │
+                                    │                                      │
+                                    │  ┌──────────┐  ┌────────────────┐   │
+                                    │  │  Cancel   │  │  Create Case → │   │
+                                    │  └──────────┘  └────────────────┘   │
+                                    └──────────────────────────────────────┘
+
+Pros: Clear visual grouping. Required fields grouped at top ("Case Details"),
+      optional fields below ("Trigger & Links"). Coordinators can fill top
+      section and skip bottom if creating from clinical judgement.
+Cons: Section headers add vertical space. May feel over-structured for a
+      6-field form.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION C: Case Type as Radio Cards (Top Choice First)
+═══════════════════════════════════════════════════════════════════════════════
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Create Clinical Case               │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  Case Type *                         │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ ◉ Mandatory                  │   │
+                                    │  │   Duty of care — cannot be   │   │
+                                    │  │   closed without justification│   │
+                                    │  ├──────────────────────────────┤   │
+                                    │  │ ○ Recommended                │   │
+                                    │  │   Standard clinical follow-up│   │
+                                    │  ├──────────────────────────────┤   │
+                                    │  │ ○ Self-Service               │   │
+                                    │  │   Low risk, no review needed │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  Clinical Concern *                  │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  Review Interval *                   │
+                                    │  [▼ Fortnightly (14 days)       ]   │
+                                    │                                      │
+                                    │  Assigned To *                       │
+                                    │  [▼ Select coordinator...       ]   │
+                                    │                                      │
+                                    │  ▸ Trigger & Links (optional)        │
+                                    │                                      │
+                                    │  ┌──────────┐  ┌────────────────┐   │
+                                    │  │  Cancel   │  │  Create Case → │   │
+                                    │  └──────────┘  └────────────────┘   │
+                                    └──────────────────────────────────────┘
+
+Notes:
+- Radio cards with descriptions make the duty of care implication clear
+- Review Interval field hidden when Self-Service selected
+- "Trigger & Links" is a collapsible section (▸ expands)
+- ℹ️ Notice appears below radio when Mandatory is selected:
+  "Mandatory cases require documented outcomes at every review"
+
+Pros: Makes case type selection intentional — descriptions explain implications.
+      Collapsible optional section saves space. Mandatory notice educates.
+Cons: Radio cards take more vertical space than a dropdown. May be too heavy
+      for experienced coordinators who know the types.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION D: Two-Column Layout
+═══════════════════════════════════════════════════════════════════════════════
+
+                          ┌────────────────────────────────────────────────────┐
+                          │                                        ✕ Close    │
+                          │  Create Clinical Case                             │
+                          │  ─────────────────────                            │
+                          │                                                    │
+                          │  Case Type *              Review Interval *        │
+                          │  [▼ Mandatory        ]   [▼ Fortnightly     ]    │
+                          │                                                    │
+                          │  Clinical Concern *                                │
+                          │  ┌────────────────────────────────────────────┐   │
+                          │  │                                            │   │
+                          │  │                                            │   │
+                          │  └────────────────────────────────────────────┘   │
+                          │                                                    │
+                          │  Trigger Source             Assigned To *          │
+                          │  [▼ Select trigger... ]   [▼ Select coord... ]   │
+                          │                                                    │
+                          │  Trigger Incident           Linked Risks           │
+                          │  [▼ Select incident.. ]   [▼ Select risks.. ]    │
+                          │                                                    │
+                          │  ┌──────────┐              ┌────────────────┐     │
+                          │  │  Cancel   │              │  Create Case → │     │
+                          │  └──────────┘              └────────────────┘     │
+                          └────────────────────────────────────────────────────┘
+
+Pros: Compact. Fewer scrolls. Pairs related fields (type+interval, trigger+incident).
+      Wider modal utilises horizontal space better.
+Cons: Wider modal may feel unusual (existing modals are narrower). Clinical
+      concern textarea spanning full width breaks the two-column rhythm.
+      Pairing may not feel logical to all users.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+OPTION E: Progressive Disclosure — Type First, Then Context
+═══════════════════════════════════════════════════════════════════════════════
+
+Step 1 (initial state):
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Create Clinical Case               │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  What type of case is this?          │
+                                    │                                      │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │ ◉ Mandatory                  │   │
+                                    │  │   Duty of care obligation    │   │
+                                    │  ├──────────────────────────────┤   │
+                                    │  │ ○ Recommended                │   │
+                                    │  │   Standard clinical follow-up│   │
+                                    │  ├──────────────────────────────┤   │
+                                    │  │ ○ Self-Service               │   │
+                                    │  │   Low risk, informational    │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    └──────────────────────────────────────┘
+
+Step 2 (after type selected — remaining fields appear):
+
+                                    ┌──────────────────────────────────────┐
+                                    │                          ✕ Close    │
+                                    │  Create Clinical Case               │
+                                    │  ─────────────────────              │
+                                    │                                      │
+                                    │  ●Mandatory ✕                        │
+                                    │  ℹ Requires documented outcomes      │
+                                    │                                      │
+                                    │  Clinical Concern *                  │
+                                    │  ┌──────────────────────────────┐   │
+                                    │  │                              │   │
+                                    │  └──────────────────────────────┘   │
+                                    │                                      │
+                                    │  Review Interval *                   │
+                                    │  [▼ Select interval...          ]   │
+                                    │                                      │
+                                    │  Assigned To *                       │
+                                    │  [▼ Select coordinator...       ]   │
+                                    │                                      │
+                                    │  ▸ Trigger & Links (optional)        │
+                                    │                                      │
+                                    │  ┌──────────┐  ┌────────────────┐   │
+                                    │  │  Cancel   │  │  Create Case → │   │
+                                    │  └──────────┘  └────────────────┘   │
+                                    └──────────────────────────────────────┘
+
+Pros: Forces intentional type selection. Form adapts to type (Self-Service
+      hides interval). Reduces cognitive load — fewer fields initially.
+      Case type shown as badge with ✕ to change.
+Cons: Two "steps" in a single modal may feel over-engineered. Extra click
+      for experienced users. Not a standard pattern in TC Portal.

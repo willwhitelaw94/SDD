@@ -1,0 +1,8 @@
+jira_key: TP-4295
+title: 'Portal Bill Submission'
+status: Draft
+prefix: PBS
+brp_priority: P2
+description: Self-service invoice submission for suppliers via the Supplier Portal
+due_date: null
+last_synced: '2026-02-03T00:00:00.000Z'

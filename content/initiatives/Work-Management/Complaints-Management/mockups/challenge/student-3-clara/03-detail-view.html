@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Records — Card Detail Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          },
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 min-h-screen flex">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="w-60 bg-white border-r border-gray-200 min-h-screen flex-shrink-0 p-4 space-y-3">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-8 h-8 rounded-lg bg-tc-teal-700 flex items-center justify-center text-white text-xs font-bold">TC</div>
+      <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+    <div class="space-y-1">
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-md flex items-center px-3">
+        <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+      </div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+    </div>
+  </aside>
+
+  <!-- Main Content — Board (dimmed) -->
+  <main class="flex-1 flex min-h-screen overflow-hidden relative">
+    <!-- Dimmed Board Background -->
+    <div class="flex-1 opacity-40 pointer-events-none p-4">
+      <div class="flex gap-4 h-full min-w-max">
+        <!-- Simplified ghost columns -->
+        <div class="w-72 flex-shrink-0 space-y-3">
+          <div class="px-3 py-2"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span><span class="text-sm font-semibold text-gray-700">Triage</span></div></div>
+          <div class="bg-white rounded-lg border border-gray-200 p-3 h-20"></div>
+        </div>
+        <div class="w-72 flex-shrink-0 space-y-3">
+          <div class="px-3 py-2"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-violet-500"></span><span class="text-sm font-semibold text-gray-700">Investigation</span></div></div>
+          <div class="bg-white rounded-lg border border-gray-200 border-l-[3px] border-l-red-500 p-3 h-20 ring-2 ring-tc-teal-500"></div>
+          <div class="bg-white rounded-lg border border-gray-200 p-3 h-20"></div>
+        </div>
+        <div class="w-72 flex-shrink-0 space-y-3">
+          <div class="px-3 py-2"><div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span class="text-sm font-semibold text-gray-700">Resolution</span></div></div>
+          <div class="bg-white rounded-lg border border-gray-200 p-3 h-20"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide-Over Panel -->
+    <div class="absolute top-0 right-0 bottom-0 w-[60%] min-w-[520px] bg-white border-l border-gray-200 shadow-2xl flex flex-col overflow-y-auto">
+      <!-- Panel Header -->
+      <div class="border-b border-gray-200 px-6 py-4 flex-shrink-0">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <span class="text-lg font-semibold font-mono text-gray-900">REF-00142</span>
+            <span class="inline-flex items-center gap-1 text-xs font-medium text-tc-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">Complaint</span>
+            <span class="inline-flex items-center gap-1 text-xs font-medium text-red-700 bg-red-50 px-2 py-0.5 rounded-full">
+              <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Urgent
+            </span>
+          </div>
+          <button class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Stage Progress Dots -->
+        <div class="flex items-center gap-1">
+          <div class="flex items-center gap-1">
+            <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white flex items-center justify-center text-[9px] font-bold">0</div>
+            <div class="w-8 h-0.5 bg-tc-teal-700"></div>
+            <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white flex items-center justify-center text-[9px] font-bold">1</div>
+            <div class="w-8 h-0.5 bg-tc-teal-700"></div>
+            <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white flex items-center justify-center text-[9px] font-bold">2</div>
+            <div class="w-8 h-0.5 bg-tc-teal-700"></div>
+            <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white flex items-center justify-center text-[9px] font-bold">3</div>
+            <div class="w-8 h-0.5 bg-tc-teal-700"></div>
+            <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white flex items-center justify-center text-[9px] font-bold ring-2 ring-tc-teal-500/50 ring-offset-2">4</div>
+            <div class="w-8 h-0.5 bg-gray-200"></div>
+            <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center text-[9px] font-bold">5</div>
+            <div class="w-8 h-0.5 bg-gray-200"></div>
+            <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-400 flex items-center justify-center text-[9px] font-bold">6</div>
+          </div>
+          <span class="text-xs text-gray-500 ml-2">Investigation</span>
+        </div>
+      </div>
+
+      <!-- Panel Body -->
+      <div class="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+        <!-- Subject -->
+        <div>
+          <h2 class="text-base font-semibold text-gray-900 mb-1">Pressure injury developed — care plan not followed by agency staff</h2>
+          <div class="flex items-center gap-3 text-xs text-gray-400">
+            <span>Created 15 Feb 2026</span>
+            <span>&middot;</span>
+            <span>Last updated 8 Mar 2026</span>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <h3 class="text-sm font-semibold text-gray-700 mb-2">Description</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">Margaret Thompson's family reported that a Grade 2 pressure injury was identified during a routine nursing visit. The family believes the injury developed because the agency care worker assigned during the regular care partner's leave did not follow the documented repositioning schedule in the care plan.</p>
+        </div>
+
+        <!-- Background -->
+        <div>
+          <h3 class="text-sm font-semibold text-gray-700 mb-2">Background</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">Margaret has limited mobility and requires 2-hourly repositioning as documented in her HCP care plan. The regular care partner was on annual leave from 10-14 Feb. Agency staff were briefed but no handover documentation was signed off.</p>
+        </div>
+
+        <!-- Metadata Grid -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Categories</h3>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-full">Clinical Care</span>
+              <span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-full">Wound Management</span>
+              <span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-full">Agency Staff</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Source</h3>
+            <p class="text-sm text-gray-700">Family Member (Daughter)</p>
+          </div>
+          <div>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Classification</h3>
+            <p class="text-sm text-gray-700">Open Disclosure Required</p>
+          </div>
+          <div>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Safety Event</h3>
+            <span class="inline-flex items-center gap-1.5 text-sm text-amber-700">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              Yes — SIRS Reportable
+            </span>
+          </div>
+        </div>
+
+        <!-- People -->
+        <div>
+          <h3 class="text-sm font-semibold text-gray-700 mb-3">People</h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold">JT</div>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">Jennifer Thompson</p>
+                <p class="text-xs text-gray-500">Complainant &middot; Daughter of Margaret</p>
+              </div>
+              <span class="text-xs text-gray-400">0412 345 678</span>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="w-8 h-8 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-xs font-bold">AT</div>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">Alice Turner</p>
+                <p class="text-xs text-gray-500">Assigned Coordinator</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold">MT</div>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">Margaret Thompson</p>
+                <p class="text-xs text-gray-500">Impacted Recipient &middot; HCP Level 4</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Action -->
+        <div class="flex items-center gap-3 p-4 bg-tc-teal-700/5 border border-tc-teal-700/20 rounded-lg">
+          <div class="flex-1">
+            <p class="text-sm font-medium text-gray-900">Ready to advance?</p>
+            <p class="text-xs text-gray-500">Action plan is 60% complete (3 of 5 items)</p>
+          </div>
+          <button class="inline-flex items-center gap-2 bg-tc-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-tc-teal-700/90 transition">
+            Move to Resolution
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </button>
+        </div>
+
+        <!-- CRM Sync Badge -->
+        <div class="flex items-center gap-2 px-3 py-2 bg-blue-50 rounded-lg">
+          <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span class="text-xs text-blue-700 font-medium">Synced to CRM</span>
+          <span class="text-xs text-blue-500">Last sync: 8 Mar 2026, 2:14 PM</span>
+        </div>
+      </div>
+
+      <!-- Panel Footer Tabs -->
+      <div class="border-t border-gray-200 flex-shrink-0">
+        <div class="flex border-b border-gray-100">
+          <button class="flex-1 py-3 text-sm font-medium text-tc-teal-700 border-b-2 border-tc-teal-700 bg-tc-teal-700/5">Notes</button>
+          <button class="flex-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Action Plan</button>
+          <button class="flex-1 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Activity</button>
+        </div>
+        <div class="px-6 py-3 max-h-48 overflow-y-auto space-y-3">
+          <!-- Latest Note Preview -->
+          <div class="flex gap-3">
+            <div class="w-6 h-6 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-[9px] font-bold flex-shrink-0 mt-0.5">AT</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-xs font-medium text-gray-900">Alice Turner</span>
+                <span class="text-[10px] text-gray-400">8 Mar, 2:10 PM</span>
+              </div>
+              <p class="text-xs text-gray-600">Spoke with agency manager — they've confirmed the handover gap. Arranging a joint review meeting for next week.</p>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <div class="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[9px] font-bold flex-shrink-0 mt-0.5">SL</div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-xs font-medium text-gray-900">Sarah Lee</span>
+                <span class="text-[10px] text-gray-400">5 Mar, 10:30 AM</span>
+              </div>
+              <p class="text-xs text-gray-600">Wound care nurse has assessed — Grade 2 confirmed, treatment plan initiated.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

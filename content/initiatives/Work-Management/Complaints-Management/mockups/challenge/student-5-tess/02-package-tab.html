@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Package — Feedback Records Tab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .timeline-line { position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: #e5e7eb; }
+    .timeline-dot { position: absolute; left: 8px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; z-index: 1; }
+    .timeline-dot-urgent { background: #ef4444; }
+    .timeline-dot-medium { background: #f59e0b; }
+    .timeline-dot-standard { background: #007F7E; }
+    .card-expand { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .card-expand.open { max-height: 600px; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 min-h-screen">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="fixed left-0 top-0 bottom-0 w-60 bg-white border-r border-gray-200 z-40" style="padding-top: var(--toolbar-h, 0px);">
+    <div class="p-4">
+      <div class="flex items-center gap-2 mb-8">
+        <div class="w-8 h-8 bg-tc-teal-700 rounded-lg"></div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <nav class="space-y-1">
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-lg flex items-center px-3">
+          <span class="text-sm font-medium text-tc-teal-700">Clients</span>
+        </div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-60" style="padding-top: var(--toolbar-h, 0px);">
+    <!-- Package Header -->
+    <div class="bg-white border-b border-gray-200 px-8 pt-6 pb-0">
+      <div class="flex items-center gap-2 text-xs text-gray-400 mb-4">
+        <a href="#" class="hover:text-tc-teal-700">Clients</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-600">Margaret Thompson</span>
+      </div>
+      <div class="flex items-center gap-4 mb-6">
+        <div class="w-14 h-14 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-xl font-bold">MT</div>
+        <div>
+          <h1 class="text-xl font-bold text-gray-900">Margaret Thompson</h1>
+          <div class="flex items-center gap-3 mt-1">
+            <span class="text-sm text-gray-500">HCP Level 4</span>
+            <span class="text-gray-300">|</span>
+            <span class="text-sm text-gray-500">DOB: 14 Mar 1942</span>
+            <span class="text-gray-300">|</span>
+            <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700">Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="flex items-center gap-0 -mb-px">
+        <a href="#" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Overview</a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Services</a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Budget</a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Documents</a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-tc-teal-700 border-b-2 border-tc-teal-700">
+          Feedback Records
+          <span class="ml-1.5 px-1.5 py-0.5 text-xs bg-tc-teal-700 text-white rounded-full">3</span>
+        </a>
+        <a href="#" class="px-5 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Notes</a>
+      </div>
+    </div>
+
+    <!-- Feedback Records Content -->
+    <div class="p-8">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-lg font-bold text-gray-900">Feedback Records</h2>
+          <p class="text-sm text-gray-500 mt-0.5">3 records for this package</p>
+        </div>
+        <button class="bg-tc-teal-700 hover:bg-tc-teal-700/90 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          New Record
+        </button>
+      </div>
+
+      <!-- Package Timeline Feed -->
+      <div class="relative pl-10">
+        <div class="timeline-line"></div>
+
+        <!-- Record 1 — Urgent (Active) -->
+        <div class="relative mb-4">
+          <div class="timeline-dot timeline-dot-urgent" style="top: 16px;"></div>
+          <div class="bg-white rounded-xl border border-red-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="this.querySelector('.card-expand').classList.toggle('open')">
+            <div class="p-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-xs font-mono font-bold text-gray-500">REF-00156</span>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-purple-100 text-purple-700">Complaint</span>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-700">Urgent</span>
+                  <span class="text-red-500 text-sm" style="animation: flame 1.5s ease-in-out infinite;">🔥</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">Investigation</span>
+                  <div class="w-7 h-7 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-xs font-bold">JP</div>
+                  <span class="text-xs text-gray-400">2 hours ago</span>
+                  <svg class="w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+              </div>
+              <p class="text-sm font-semibold text-gray-900 mt-2">Medication administration error — wrong dosage</p>
+              <p class="text-xs text-gray-500 mt-1">Reported by Lisa Thompson regarding incorrect medication dosage on 10 Feb</p>
+            </div>
+            <div class="card-expand open">
+              <div class="border-t border-gray-100 px-4 py-3 bg-gray-50/50 rounded-b-xl">
+                <div class="grid grid-cols-3 gap-4 text-xs">
+                  <div><span class="text-gray-400 block">Complainant</span><span class="font-medium text-gray-700">Lisa Thompson (daughter)</span></div>
+                  <div><span class="text-gray-400 block">Assigned Coordinator</span><span class="font-medium text-gray-700">James Patel</span></div>
+                  <div><span class="text-gray-400 block">Target Resolution</span><span class="font-medium text-red-600">8 Mar 2026 (overdue)</span></div>
+                </div>
+                <div class="mt-3 flex items-center gap-3">
+                  <div class="flex -space-x-1">
+                    <div class="w-5 h-5 rounded-full bg-gray-300 border border-white text-[8px] flex items-center justify-center text-gray-600 font-bold">💬</div>
+                    <div class="w-5 h-5 rounded-full bg-gray-300 border border-white text-[8px] flex items-center justify-center text-gray-600 font-bold">🔄</div>
+                    <div class="w-5 h-5 rounded-full bg-gray-300 border border-white text-[8px] flex items-center justify-center text-gray-600 font-bold">✅</div>
+                  </div>
+                  <span class="text-xs text-gray-400">12 events</span>
+                  <a href="03-detail-view.html" class="px-3 py-1.5 text-xs rounded-lg bg-tc-teal-700 text-white font-medium hover:bg-tc-teal-700/90 ml-auto">View Timeline</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Record 2 — Medium (Active) -->
+        <div class="relative mb-4">
+          <div class="timeline-dot timeline-dot-medium" style="top: 16px;"></div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer" onclick="this.querySelector('.card-expand').classList.toggle('open')">
+            <div class="p-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-xs font-mono font-bold text-gray-500">REF-00148</span>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-purple-100 text-purple-700">Complaint</span>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-amber-100 text-amber-700">Medium</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Resolution</span>
+                  <div class="w-7 h-7 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">SC</div>
+                  <span class="text-xs text-gray-400">1 week ago</span>
+                  <svg class="w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+              </div>
+              <p class="text-sm font-semibold text-gray-900 mt-2">Care plan not updated after hospital discharge</p>
+              <p class="text-xs text-gray-500 mt-1">Margaret's care plan was not reviewed after her return from hospital on 20 Jan</p>
+            </div>
+            <div class="card-expand">
+              <div class="border-t border-gray-100 px-4 py-3 bg-gray-50/50 rounded-b-xl">
+                <div class="grid grid-cols-3 gap-4 text-xs">
+                  <div><span class="text-gray-400 block">Complainant</span><span class="font-medium text-gray-700">Lisa Thompson (daughter)</span></div>
+                  <div><span class="text-gray-400 block">Assigned Coordinator</span><span class="font-medium text-gray-700">Sarah Chen</span></div>
+                  <div><span class="text-gray-400 block">Target Resolution</span><span class="font-medium text-gray-700">15 Mar 2026</span></div>
+                </div>
+                <div class="flex items-center gap-2 mt-3">
+                  <span class="text-xs text-gray-400">9 events · Last note 3d ago</span>
+                  <a href="#" class="px-3 py-1.5 text-xs rounded-lg bg-tc-teal-700 text-white font-medium hover:bg-tc-teal-700/90 ml-auto">View Timeline</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Record 3 — Standard, Closed -->
+        <div class="relative mb-4">
+          <div class="timeline-dot" style="top: 16px; background: #9ca3af;"></div>
+          <div class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer opacity-75" onclick="this.querySelector('.card-expand').classList.toggle('open')">
+            <div class="p-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <span class="text-xs font-mono font-bold text-gray-500">REF-00131</span>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700">Remediation</span>
+                  <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-tc-teal-700/10 text-tc-teal-700">Standard</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Closed — Resolved</span>
+                  <span class="text-xs text-gray-400">4 weeks ago</span>
+                  <svg class="w-4 h-4 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+              </div>
+              <p class="text-sm font-semibold text-gray-900 mt-2">Service scheduling conflict — double-booked care visit</p>
+              <p class="text-xs text-gray-500 mt-1">Two care partners assigned to the same time slot, resulting in missed visit</p>
+            </div>
+            <div class="card-expand">
+              <div class="border-t border-gray-100 px-4 py-3 bg-gray-50/50 rounded-b-xl">
+                <div class="grid grid-cols-3 gap-4 text-xs">
+                  <div><span class="text-gray-400 block">Complainant</span><span class="font-medium text-gray-700">Lisa Thompson</span></div>
+                  <div><span class="text-gray-400 block">Resolved</span><span class="font-medium text-green-600">10 Feb 2026</span></div>
+                  <div><span class="text-gray-400 block">Outcome</span><span class="font-medium text-gray-700">Process updated</span></div>
+                </div>
+                <div class="flex items-center gap-2 mt-3">
+                  <span class="text-xs text-gray-400">5 events · Resolved</span>
+                  <a href="#" class="px-3 py-1.5 text-xs rounded-lg bg-tc-teal-700 text-white font-medium ml-auto">View Timeline</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- End of timeline -->
+        <div class="relative mb-4 pl-6">
+          <div class="timeline-dot" style="top: 4px; background: #d1d5db; width: 10px; height: 10px; left: 11px;"></div>
+          <p class="text-xs text-gray-400 italic">End of feedback records for this package</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

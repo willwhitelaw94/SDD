@@ -1,0 +1,12 @@
+epic_code: RRA
+title: Risk Radar
+status: design
+linear_id: null
+linear_initiative_id: c5b5d7de-81ff-4b73-8c81-b1e71aaa006d
+created: 2026-02-14
+gates:
+  spec:
+    passed: true
+    date: 2026-03-05
+    notes: "8 user stories validated (INVEST compliant), 19 clarification Q&As across 7 rounds, 36 FRs, 10 success criteria, business alignment confirmed"
+bounty_value: 5000

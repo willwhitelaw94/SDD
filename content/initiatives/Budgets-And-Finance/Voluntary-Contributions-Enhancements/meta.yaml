@@ -1,0 +1,11 @@
+jira_key: TP-XXXX
+title: 'Voluntary Contributions Enhancements'
+status: Idea
+prefix: VCE
+summary: "Improved voluntary contribution management"
+linear_project_id: 03d4f688-01f9-4c42-a627-a9b97c33343e
+linear_url: https://linear.app/trilogycare/project/vce-voluntary-contributions-enhancements-898ec49af054
+description: Complete VC feature set - remove caps, enable editing, add verification workflow, utilization modal
+due_date: null
+last_synced: null
+bounty_value: 5000

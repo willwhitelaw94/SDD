@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REF-00142 — Record Timeline</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .tl-line { position: absolute; left: 19px; top: 0; bottom: 0; width: 2px; background: #e5e7eb; }
+    .tl-dot { position: absolute; left: 12px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; z-index: 1; }
+    .tl-dot-create { background: #007F7E; }
+    .tl-dot-stage { background: #6366f1; }
+    .tl-dot-assign { background: #2C4C79; }
+    .tl-dot-note { background: #f59e0b; }
+    .tl-dot-action { background: #10b981; }
+    .tl-dot-triage { background: #ef4444; }
+    .note-expand { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .note-expand.open { max-height: 400px; }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 min-h-screen">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="fixed left-0 top-0 bottom-0 w-60 bg-white border-r border-gray-200 z-40" style="padding-top: var(--toolbar-h, 0px);">
+    <div class="p-4">
+      <div class="flex items-center gap-2 mb-8">
+        <div class="w-8 h-8 bg-tc-teal-700 rounded-lg"></div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <nav class="space-y-1">
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-lg flex items-center px-3">
+          <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+        </div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div class="h-9 bg-gray-100 rounded-lg animate-pulse"></div>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-60" style="padding-top: var(--toolbar-h, 0px);">
+    <!-- Record Header -->
+    <div class="bg-white border-b border-gray-200 px-8 py-6">
+      <div class="flex items-center gap-2 text-xs text-gray-400 mb-3">
+        <a href="01-index.html" class="hover:text-tc-teal-700">Feedback Records</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-gray-600">REF-00142</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <h1 class="text-xl font-bold text-gray-900">Medication administration error — wrong dosage</h1>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded">REF-00142</span>
+            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-700">Complaint</span>
+            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">Urgent</span>
+            <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">Investigation</span>
+          </div>
+        </div>
+        <div class="relative">
+          <button class="bg-tc-teal-700 hover:bg-tc-teal-700/90 text-white px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm" onclick="document.getElementById('add-menu').classList.toggle('hidden')">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Event
+          </button>
+          <div id="add-menu" class="hidden absolute right-0 top-12 bg-white border border-gray-200 rounded-xl shadow-lg py-2 w-48 z-10">
+            <a href="05-notes-section.html" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+              <span class="w-3 h-3 rounded-full bg-amber-400"></span> Add Note
+            </a>
+            <a href="#" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+              <span class="w-3 h-3 rounded-full bg-indigo-500"></span> Change Stage
+            </a>
+            <a href="06-action-plan.html" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span> Add Action Item
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex">
+      <!-- Timeline Column -->
+      <div class="flex-1 p-8">
+        <h2 class="text-sm font-bold text-gray-700 uppercase tracking-wider mb-6">Record Timeline</h2>
+
+        <div class="relative pl-10">
+          <div class="tl-line"></div>
+
+          <!-- Event 1: Record Created -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-create" style="top: 4px;"></div>
+            <div class="bg-white rounded-lg border border-gray-200 p-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">📝</span>
+                  <span class="text-sm font-semibold text-gray-900">Record created</span>
+                  <span class="text-xs text-gray-400">by Sarah Chen</span>
+                </div>
+                <span class="text-xs text-gray-400">15 Feb 2026 · 9:15 AM</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-2">Complaint logged regarding medication administration error. Reported by Lisa Thompson (daughter of Margaret Thompson).</p>
+            </div>
+          </div>
+
+          <!-- Event 2: Stage Change New → Received -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-stage" style="top: 4px;"></div>
+            <div class="flex items-center gap-3 py-2">
+              <span class="text-base">🔄</span>
+              <span class="text-sm text-gray-700">Stage changed: <span class="font-medium">New</span> → <span class="font-medium">Received</span></span>
+              <span class="text-xs text-gray-400">15 Feb 2026 · 9:15 AM</span>
+            </div>
+          </div>
+
+          <!-- Event 3: Stage Change Received → Triage -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-stage" style="top: 4px;"></div>
+            <div class="flex items-center gap-3 py-2">
+              <span class="text-base">🔄</span>
+              <span class="text-sm text-gray-700">Stage changed: <span class="font-medium">Received</span> → <span class="font-medium">Triage</span></span>
+              <span class="text-xs text-gray-400">16 Feb 2026 · 10:30 AM</span>
+            </div>
+          </div>
+
+          <!-- Event 4: Assigned -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-assign" style="top: 4px;"></div>
+            <div class="flex items-center gap-3 py-2">
+              <span class="text-base">👤</span>
+              <span class="text-sm text-gray-700">Assigned to <span class="font-medium">James Patel</span></span>
+              <div class="w-5 h-5 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-[8px] font-bold">JP</div>
+              <span class="text-xs text-gray-400">16 Feb 2026 · 10:32 AM</span>
+            </div>
+          </div>
+
+          <!-- Event 5: Triage set -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-triage" style="top: 4px;"></div>
+            <div class="flex items-center gap-3 py-2">
+              <span class="text-base">📋</span>
+              <span class="text-sm text-gray-700">Triage set to <span class="px-1.5 py-0.5 text-xs font-medium rounded-full bg-red-100 text-red-700">Urgent</span></span>
+              <span class="text-xs text-gray-400">16 Feb 2026 · 10:35 AM</span>
+            </div>
+          </div>
+
+          <!-- Event 6: Stage Change Triage → Owner Accepted -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-stage" style="top: 4px;"></div>
+            <div class="flex items-center gap-3 py-2">
+              <span class="text-base">🔄</span>
+              <span class="text-sm text-gray-700">Stage changed: <span class="font-medium">Triage</span> → <span class="font-medium">Owner Accepted</span></span>
+              <span class="text-xs text-gray-400">18 Feb 2026 · 2:00 PM</span>
+            </div>
+          </div>
+
+          <!-- Event 7: Note by James Patel (expandable) -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-note" style="top: 4px;"></div>
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm cursor-pointer" onclick="this.querySelector('.note-expand').classList.toggle('open')">
+              <div class="p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">💬</span>
+                    <span class="text-sm font-semibold text-gray-900">Note added</span>
+                    <div class="w-5 h-5 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-[8px] font-bold">JP</div>
+                    <span class="text-xs text-gray-500">James Patel · Coordinator</span>
+                  </div>
+                  <span class="text-xs text-gray-400">20 Feb 2026 · 11:00 AM</span>
+                </div>
+                <div class="note-expand open">
+                  <div class="mt-3 p-3 bg-amber-50/50 rounded-lg border border-amber-100 text-sm text-gray-700">
+                    Contacted the pharmacy to review dispensing records for 10 Feb. Pharmacy confirmed a labelling error on the blister pack — the evening dose was marked as morning dose. Have requested the pharmacy's incident report and will follow up with their quality team by end of week.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Event 8: Stage Change Owner Accepted → Investigation -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-stage" style="top: 4px;"></div>
+            <div class="flex items-center gap-3 py-2">
+              <span class="text-base">🔄</span>
+              <span class="text-sm text-gray-700">Stage changed: <span class="font-medium">Owner Accepted</span> → <span class="font-medium">Investigation</span></span>
+              <span class="text-xs text-gray-400">22 Feb 2026 · 9:00 AM</span>
+            </div>
+          </div>
+
+          <!-- Event 9: Action item completed -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-action" style="top: 4px;"></div>
+            <div class="bg-white rounded-lg border border-green-200 p-4">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-base">✅</span>
+                  <span class="text-sm font-semibold text-gray-900">Action item completed</span>
+                </div>
+                <span class="text-xs text-gray-400">25 Feb 2026 · 3:30 PM</span>
+              </div>
+              <div class="mt-2 flex items-center gap-2">
+                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                <span class="text-sm text-gray-700 line-through">Contact pharmacy for incident report</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Completed by James Patel</p>
+            </div>
+          </div>
+
+          <!-- Event 10: Note by Priya Sharma -->
+          <div class="relative mb-6">
+            <div class="tl-dot tl-dot-note" style="top: 4px;"></div>
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm cursor-pointer" onclick="this.querySelector('.note-expand').classList.toggle('open')">
+              <div class="p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">💬</span>
+                    <span class="text-sm font-semibold text-gray-900">Note added</span>
+                    <div class="w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center text-white text-[8px] font-bold">PS</div>
+                    <span class="text-xs text-gray-500">Priya Sharma · Care Partner</span>
+                  </div>
+                  <span class="text-xs text-gray-400">28 Feb 2026 · 4:15 PM</span>
+                </div>
+                <div class="note-expand open">
+                  <div class="mt-3 p-3 bg-amber-50/50 rounded-lg border border-amber-100 text-sm text-gray-700">
+                    Spoke with Lisa Thompson to provide an update on the investigation. She appreciates the transparency and is satisfied with the pharmacy's corrective action plan. Requested a written summary of findings once the investigation concludes. Margaret is doing well and has had no further medication issues.
+                  </div>
+                  <div class="mt-2 flex items-center gap-2">
+                    <div class="flex items-center gap-1.5 px-2 py-1 bg-gray-50 rounded border border-gray-200">
+                      <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                      <span class="text-xs text-gray-600">phone-call-notes-28feb.pdf</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline continues indicator -->
+          <div class="relative mb-4">
+            <div class="tl-dot" style="top: 4px; background: #d1d5db; width: 10px; height: 10px; left: 15px;"></div>
+            <p class="text-xs text-gray-400 italic py-2">Investigation in progress — awaiting pharmacy report</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Sidebar: Properties -->
+      <div class="w-80 border-l border-gray-200 bg-white p-6" style="min-height: calc(100vh - var(--toolbar-h, 0px) - 120px);">
+        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Properties</h3>
+
+        <div class="space-y-5">
+          <!-- Stage -->
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Stage</label>
+            <span class="px-3 py-1.5 text-sm font-medium rounded-lg bg-amber-100 text-amber-800 inline-block">Investigation</span>
+          </div>
+
+          <!-- Triage -->
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Triage Level</label>
+            <span class="px-3 py-1.5 text-sm font-medium rounded-lg bg-red-100 text-red-700 inline-block">Urgent</span>
+          </div>
+
+          <!-- Type -->
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Type</label>
+            <span class="px-3 py-1.5 text-sm font-medium rounded-lg bg-purple-100 text-purple-700 inline-block">Complaint</span>
+          </div>
+
+          <hr class="border-gray-100">
+
+          <!-- People -->
+          <div>
+            <label class="text-xs text-gray-400 block mb-2">Complainant</label>
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-full bg-pink-200 flex items-center justify-center text-pink-700 text-xs font-bold">LT</div>
+              <div>
+                <p class="text-sm font-medium text-gray-900">Lisa Thompson</p>
+                <p class="text-xs text-gray-400">Daughter</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs text-gray-400 block mb-2">Impacted Recipient</label>
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-xs font-bold">MT</div>
+              <div>
+                <p class="text-sm font-medium text-gray-900">Margaret Thompson</p>
+                <p class="text-xs text-gray-400">HCP Level 4</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs text-gray-400 block mb-2">Assigned Coordinator</label>
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-full bg-tc-blue-700 flex items-center justify-center text-white text-xs font-bold">JP</div>
+              <div>
+                <p class="text-sm font-medium text-gray-900">James Patel</p>
+                <p class="text-xs text-gray-400">Coordinator</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="border-gray-100">
+
+          <!-- Dates -->
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Created</label>
+            <p class="text-sm text-gray-700">15 Feb 2026</p>
+          </div>
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Target Resolution</label>
+            <p class="text-sm text-red-600 font-medium">8 Mar 2026 (overdue)</p>
+          </div>
+
+          <hr class="border-gray-100">
+
+          <!-- Categories -->
+          <div>
+            <label class="text-xs text-gray-400 block mb-2">Categories</label>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">Medication</span>
+              <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">Clinical Care</span>
+              <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">Safety</span>
+            </div>
+          </div>
+
+          <!-- Safety Flag -->
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">Safety Concern</label>
+            <span class="flex items-center gap-1 text-sm text-red-600 font-medium">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              Yes
+            </span>
+          </div>
+
+          <hr class="border-gray-100">
+
+          <!-- CRM Sync -->
+          <div>
+            <label class="text-xs text-gray-400 block mb-1">CRM Sync</label>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-green-400"></span>
+              <span class="text-sm text-gray-600">Synced to Zoho</span>
+            </div>
+            <p class="text-xs text-gray-400 mt-0.5">Last sync: 10 Mar 2026, 8:00 AM</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

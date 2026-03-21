@@ -1,0 +1,11 @@
+jira_key: TP-2329
+title: 'Collections v1'
+status: Backlog
+prefix: COL
+summary: "Debt collection for outstanding balances"
+linear_project_id: 658b7b88-c9e3-48e5-b8fe-2ccceb3c7555
+linear_url: https://linear.app/trilogycare/project/col-collections-v1-tp-2329-6253dd4b8fda
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+bounty_value: 5000

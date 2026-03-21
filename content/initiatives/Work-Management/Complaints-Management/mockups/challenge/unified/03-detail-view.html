@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REF-00142 — Record Detail</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          },
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 flex">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="w-60 bg-white border-r border-gray-200 min-h-screen flex-shrink-0 p-4 space-y-3">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-8 h-8 rounded-lg bg-tc-teal-700 flex items-center justify-center text-white text-xs font-bold">TC</div>
+      <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+    <div class="space-y-1">
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-md flex items-center px-3">
+        <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+      </div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col min-h-screen">
+    <!-- Triage Banner (Amber = Medium) -->
+    <div class="bg-gradient-to-r from-amber-500 to-amber-400 px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+          <span class="text-white font-bold text-sm uppercase tracking-wide">Medium</span>
+        </div>
+        <span class="text-white/60">|</span>
+        <span class="text-white font-mono font-bold text-sm">REF-00142</span>
+        <span class="text-white/60">|</span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white/20 text-white">Complaint</span>
+        <span class="text-white/60">|</span>
+        <span class="text-white text-sm">Stage: 4. Investigation</span>
+        <span class="text-white/60">|</span>
+        <span class="flex items-center gap-1.5 text-white text-sm">
+          <span class="w-5 h-5 rounded-full bg-white/30 text-white text-[9px] font-bold flex items-center justify-center">JP</span>
+          James Patel
+        </span>
+      </div>
+      <button class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-lg transition">
+        Advance Stage
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- Stage Pipeline Bar -->
+    <div class="bg-white border-b border-gray-200 px-6 py-3">
+      <div class="flex items-center justify-between max-w-3xl">
+        <!-- Stage 0 -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white text-[10px] font-bold flex items-center justify-center">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <span class="text-xs text-tc-teal-700 font-medium hidden sm:inline">New</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-tc-teal-700 mx-2"></div>
+        <!-- Stage 1 -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white text-[10px] font-bold flex items-center justify-center">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <span class="text-xs text-tc-teal-700 font-medium hidden sm:inline">Received</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-tc-teal-700 mx-2"></div>
+        <!-- Stage 2 -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white text-[10px] font-bold flex items-center justify-center">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <span class="text-xs text-tc-teal-700 font-medium hidden sm:inline">Triage</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-tc-teal-700 mx-2"></div>
+        <!-- Stage 3 -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-tc-teal-700 text-white text-[10px] font-bold flex items-center justify-center">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          </div>
+          <span class="text-xs text-tc-teal-700 font-medium hidden sm:inline">Investigation</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+        <!-- Stage 4 (current) -->
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-full bg-tc-teal-700 text-white text-xs font-bold flex items-center justify-center ring-4 ring-tc-teal-500/30">4</div>
+          <span class="text-xs text-tc-teal-700 font-bold hidden sm:inline">Resolution</span>
+        </div>
+        <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+        <!-- Stage 5 -->
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-400 text-[10px] font-bold flex items-center justify-center">5</div>
+          <span class="text-xs text-gray-400 hidden sm:inline">Closed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Two-Column Content -->
+    <div class="flex-1 overflow-auto">
+      <div class="flex gap-6 p-6">
+        <!-- LEFT COLUMN (65%) -->
+        <div class="flex-1 min-w-0 space-y-6" style="flex: 0 0 65%;">
+          <!-- Breadcrumb -->
+          <div class="flex items-center gap-2 text-sm text-gray-400">
+            <a href="01-index.html" class="hover:text-tc-teal-700">Feedback Records</a>
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+            <span class="text-gray-600">REF-00142</span>
+          </div>
+
+          <!-- Subject -->
+          <h2 class="text-xl font-bold text-gray-900">Incorrect medication administration — wrong dosage</h2>
+
+          <!-- Description -->
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Description</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">Family member reported that Margaret Thompson received an incorrect dosage of her evening blood pressure medication on 28 February. The prescribed dose is 5mg Ramipril but the care notes indicate 10mg was administered. The family noticed the discrepancy when reviewing the medication chart during their visit on 1 March.</p>
+          </div>
+
+          <!-- Background -->
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">Background</h3>
+            <p class="text-sm text-gray-600 leading-relaxed">Margaret has a complex medication regime involving 7 daily medications across morning, afternoon, and evening schedules. She has been a Level 4 HCP recipient since October 2024. A previous medication concern (REF-00098) was raised in November 2025 and resolved through staff retraining.</p>
+          </div>
+
+          <!-- Metadata Grid -->
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <div class="grid grid-cols-3 gap-4">
+              <div>
+                <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Categories</p>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Medication</span>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">Clinical Safety</span>
+                </div>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Source</p>
+                <p class="text-sm text-gray-700">Family Member</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">Classification</p>
+                <p class="text-sm text-gray-700">Direct</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================ -->
+          <!-- ACTION PLAN — Primary section, large & bold -->
+          <!-- ============================================ -->
+          <div class="bg-white rounded-xl border-2 border-tc-teal-700/30 p-6" id="action-plan">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-tc-teal-700 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900">Action Plan</h3>
+              </div>
+              <a href="06-action-plan.html" class="text-sm text-tc-teal-700 hover:underline font-medium">View full plan &rarr;</a>
+            </div>
+
+            <!-- Progress Bar — Large & Prominent -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-semibold text-gray-700">3 of 5 complete</span>
+                <span class="text-2xl font-bold text-tc-teal-700">60%</span>
+              </div>
+              <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-tc-teal-700 rounded-full transition-all" style="width: 60%"></div>
+              </div>
+              <div class="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-tc-teal-700"></span>3 Done</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span>1 Overdue</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-gray-300"></span>1 Pending</span>
+              </div>
+            </div>
+
+            <!-- Action Items -->
+            <div class="space-y-3">
+              <!-- Item 1: Complete -->
+              <div class="flex items-start gap-3 p-3 rounded-lg bg-green-50/50 border border-green-100">
+                <div class="mt-0.5">
+                  <div class="w-5 h-5 rounded bg-tc-teal-700 flex items-center justify-center">
+                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-500 line-through">Contact pharmacy to verify medication schedule</p>
+                  <div class="flex items-center gap-3 mt-1.5">
+                    <span class="inline-flex items-center gap-1 text-xs text-gray-500"><span class="w-4 h-4 rounded-full bg-pink-600 text-white text-[8px] font-bold flex items-center justify-center">KJ</span>Karen Jones</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600">Nursing</span>
+                    <span class="text-xs text-green-600 font-medium">Done 2 Mar</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 2: Complete -->
+              <div class="flex items-start gap-3 p-3 rounded-lg bg-green-50/50 border border-green-100">
+                <div class="mt-0.5">
+                  <div class="w-5 h-5 rounded bg-tc-teal-700 flex items-center justify-center">
+                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-500 line-through">Review medication administration records for past 30 days</p>
+                  <div class="flex items-center gap-3 mt-1.5">
+                    <span class="inline-flex items-center gap-1 text-xs text-gray-500"><span class="w-4 h-4 rounded-full bg-tc-blue-700 text-white text-[8px] font-bold flex items-center justify-center">JP</span>James Patel</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-50 text-purple-600">Clinical</span>
+                    <span class="text-xs text-green-600 font-medium">Done 5 Mar</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 3: OVERDUE -->
+              <div class="flex items-start gap-3 p-3 rounded-lg bg-red-50 border-2 border-red-200">
+                <div class="mt-0.5">
+                  <div class="w-5 h-5 rounded border-2 border-red-300 bg-white"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-900 font-medium">Interview care staff on evening shift procedures</p>
+                  <div class="flex items-center gap-3 mt-1.5">
+                    <span class="inline-flex items-center gap-1 text-xs text-gray-600"><span class="w-4 h-4 rounded-full bg-tc-blue-700 text-white text-[8px] font-bold flex items-center justify-center">JP</span>James Patel</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-50 text-purple-600">Clinical</span>
+                    <span class="inline-flex items-center gap-1 text-xs text-red-600 font-medium">
+                      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                      Due 8 Mar (OVERDUE)
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 4: Pending -->
+              <div class="flex items-start gap-3 p-3 rounded-lg bg-white border border-gray-200">
+                <div class="mt-0.5">
+                  <div class="w-5 h-5 rounded border-2 border-gray-300 bg-white"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-900">Draft findings report for complainant</p>
+                  <div class="flex items-center gap-3 mt-1.5">
+                    <span class="inline-flex items-center gap-1 text-xs text-gray-600"><span class="w-4 h-4 rounded-full bg-purple-600 text-white text-[8px] font-bold flex items-center justify-center">SC</span>Sarah Chen</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-emerald-50 text-emerald-600">Quality</span>
+                    <span class="text-xs text-gray-500">Due 15 Mar</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Item 5: Pending -->
+              <div class="flex items-start gap-3 p-3 rounded-lg bg-white border border-gray-200">
+                <div class="mt-0.5">
+                  <div class="w-5 h-5 rounded border-2 border-gray-300 bg-white"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm text-gray-900">Schedule follow-up meeting with family</p>
+                  <div class="flex items-center gap-3 mt-1.5">
+                    <span class="inline-flex items-center gap-1 text-xs text-gray-600"><span class="w-4 h-4 rounded-full bg-tc-blue-700 text-white text-[8px] font-bold flex items-center justify-center">JP</span>James Patel</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-purple-50 text-purple-600">Clinical</span>
+                    <span class="text-xs text-gray-500">Due 20 Mar</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add Action Item -->
+              <button class="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:border-tc-teal-500 hover:text-tc-teal-700 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Add Action Item
+              </button>
+            </div>
+          </div>
+
+          <!-- ================ -->
+          <!-- NOTES SECTION    -->
+          <!-- ================ -->
+          <div class="bg-white rounded-xl border border-gray-200 p-5" id="notes">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                Notes
+                <span class="bg-gray-100 text-gray-600 text-xs font-bold px-1.5 py-0.5 rounded-full">5</span>
+              </h3>
+              <a href="05-notes-section.html" class="text-sm text-tc-teal-700 hover:underline font-medium">View all &rarr;</a>
+            </div>
+
+            <!-- Latest Notes (condensed) -->
+            <div class="space-y-3">
+              <div class="flex gap-3">
+                <span class="w-7 h-7 rounded-full bg-tc-blue-700 text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">JP</span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-0.5">
+                    <span class="text-sm font-medium text-gray-900">James Patel</span>
+                    <span class="text-xs text-gray-400">Coordinator &middot; 2 hours ago</span>
+                  </div>
+                  <p class="text-sm text-gray-600">Pharmacy confirmed the prescription is for 5mg Ramipril. They have no record of any changes to the dosage. Waiting on shift records from the evening of 28 Feb.</p>
+                </div>
+              </div>
+              <div class="flex gap-3">
+                <span class="w-7 h-7 rounded-full bg-pink-600 text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">KJ</span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 mb-0.5">
+                    <span class="text-sm font-medium text-gray-900">Karen Jones</span>
+                    <span class="text-xs text-gray-400">Nurse &middot; 1 day ago</span>
+                  </div>
+                  <p class="text-sm text-gray-600">Medication chart reviewed. The 10mg entry appears to be a transcription error — the blister pack contained the correct 5mg tablets.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Note -->
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <div class="flex gap-3">
+                <span class="w-7 h-7 rounded-full bg-gray-300 text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0">You</span>
+                <div class="flex-1">
+                  <textarea rows="2" placeholder="Add a note..." class="w-full text-sm border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 resize-none"></textarea>
+                  <div class="flex items-center justify-between mt-2">
+                    <button class="text-gray-400 hover:text-gray-600 text-sm flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                      Attach
+                    </button>
+                    <button class="px-4 py-1.5 bg-tc-teal-700 text-white text-sm font-medium rounded-lg hover:bg-tc-teal-700/90 transition">Post Note</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR (35%) -->
+        <div class="space-y-4" style="flex: 0 0 32%;">
+          <!-- People Card -->
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">People</h3>
+            <div class="space-y-4">
+              <div>
+                <p class="text-xs text-gray-400 mb-1">Complainant</p>
+                <p class="text-sm font-medium text-gray-900">David Thompson</p>
+                <p class="text-xs text-gray-500">Son of recipient &middot; 0412 345 678</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400 mb-1">Assigned Coordinator</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="w-7 h-7 rounded-full bg-tc-blue-700 text-white text-[9px] font-bold flex items-center justify-center">JP</span>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">James Patel</p>
+                    <p class="text-xs text-gray-500">Clinical Coordinator</p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p class="text-xs text-gray-400 mb-1">Impacted Recipient</p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="w-7 h-7 rounded-full bg-tc-blue-700/70 text-white text-[9px] font-bold flex items-center justify-center">MT</span>
+                  <div>
+                    <p class="text-sm font-medium text-gray-900">Margaret Thompson</p>
+                    <p class="text-xs text-gray-500">HCP Level 4 &middot; PKG-4521</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Properties Card -->
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">Properties</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Type</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700">Complaint</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Triage</span>
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span><span class="text-xs font-medium text-amber-700">Medium</span></span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Department</span>
+                <span class="text-xs text-gray-700">Clinical</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Classification</span>
+                <span class="text-xs text-gray-700">Direct</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Safety Concern</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-700">Yes</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dates Card -->
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">Dates</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Created</span>
+                <span class="text-xs text-gray-700">1 Mar 2026</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Last Updated</span>
+                <span class="text-xs text-gray-700">11 Mar 2026</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Due Date</span>
+                <span class="text-xs text-red-600 font-medium flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                  8 Mar 2026 (overdue)
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CRM Sync Card -->
+          <div class="bg-white rounded-xl border border-gray-200 p-5">
+            <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">CRM Sync</h3>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Status</span>
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-50 text-green-700">
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                  Synced
+                </span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-400">Last Synced</span>
+                <span class="text-xs text-gray-700">11 Mar 2026, 09:42</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

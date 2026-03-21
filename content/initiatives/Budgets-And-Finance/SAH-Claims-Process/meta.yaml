@@ -1,0 +1,68 @@
+jira_key: TP-900
+title: 'S@H Claims Process'
+status: Blocked
+prefix: SCP
+summary: "Support at Home claims to Services Australia"
+linear_project_id: edc7d96b-76f3-4acb-b32e-00f64db2510e
+linear_url: https://linear.app/trilogycare/project/scp-sh-claims-process-eafa1eaf873f
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+phases:
+  -
+    key: TP-3025
+    name: 'SCP - Discovery'
+    type: Phases
+    status: Done
+    assignee:
+      accountId: acc1
+      displayName: 'Sarah Chen'
+      email: null
+    parent: TP-900
+    created: '2025-01-15T00:00:00Z'
+    updated: '2025-01-22T00:00:00Z'
+  -
+    key: TP-3026
+    name: 'SCP - Design'
+    type: Phases
+    status: 'To Do'
+    assignee:
+      accountId: acc2
+      displayName: 'Mike Rodriguez'
+      email: null
+    parent: TP-900
+    created: '2025-01-29T00:00:00Z'
+    updated: '2025-02-05T00:00:00Z'
+  -
+    key: TP-3027
+    name: 'SCP - Development'
+    type: Phases
+    status: 'To Do'
+    assignee:
+      accountId: acc3
+      displayName: 'Emily Watson'
+      email: null
+    parent: TP-900
+    created: '2025-02-12T00:00:00Z'
+    updated: '2025-02-19T00:00:00Z'
+  -
+    key: TP-3028
+    name: 'SCP - QA'
+    type: Phases
+    status: 'To Do'
+    assignee:
+      accountId: acc4
+      displayName: 'David Kim'
+      email: null
+    parent: TP-900
+    created: '2025-02-26T00:00:00Z'
+    updated: '2025-03-05T00:00:00Z'
+  -
+    key: TP-3029
+    name: 'SCP - Release'
+    type: Phases
+    status: 'To Do'
+    assignee: null
+    parent: TP-900
+    created: '2025-03-12T00:00:00Z'
+    updated: '2025-03-19T00:00:00Z'

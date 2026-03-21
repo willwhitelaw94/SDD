@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LES Challenge — Notion Nick — Lead Profile Overview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',300:'#94DBDA',400:'#66CCCA',500:'#43C0BE',600:'#2F9E9C',700:'#007F7E',800:'#005656',900:'#003D3D' },
+            'primary-blue': { 50:'#F0F4FA',100:'#D6E1F0',200:'#BCCEE7',300:'#96B2D9',400:'#7197CC',500:'#4B7BBE',600:'#39639D',700:'#2C4C79',800:'#1E3452',900:'#101C2D' },
+            info: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',500:'#43C0BE',700:'#007F7E',900:'#003D3D' },
+            success: { 50:'#F6FBFE',100:'#DBEFFA',200:'#BCE2F6',500:'#35A8E4',700:'#156F9D' },
+            warning: { 50:'#FFF9F5',100:'#FFDAC6',200:'#FFC19F',500:'#E0763C',700:'#9C481A' },
+            danger: { 50:'#FFF5F5',100:'#FFCCCE',200:'#FFA8AC',500:'#E04B51',700:'#9C262A' },
+          },
+          fontFamily: { sans: ['"Roboto Flex"', 'system-ui', 'sans-serif'] },
+          borderRadius: { 'input': '8px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    .text-primary { color: #13171D; }
+    .text-secondary { color: #666666; }
+    .text-tertiary { color: #808080; }
+
+    /* Notion-style base */
+    body { background: #ffffff; }
+
+    /* Click-to-edit hover state */
+    .editable-cell {
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.1s;
+      min-height: 28px;
+      display: flex;
+      align-items: center;
+    }
+    .editable-cell:hover {
+      background: rgba(55, 53, 47, 0.06);
+    }
+    .editable-cell.editing {
+      background: rgba(55, 53, 47, 0.06);
+      box-shadow: inset 0 0 0 1px rgba(55, 53, 47, 0.16);
+    }
+    .editable-cell input,
+    .editable-cell select {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: #37352f;
+      padding: 0;
+    }
+
+    /* Property row */
+    .property-row {
+      display: flex;
+      align-items: flex-start;
+      padding: 6px 0;
+      border-bottom: 1px solid transparent;
+    }
+    .property-row:hover {
+      background: rgba(55, 53, 47, 0.02);
+    }
+    .property-label {
+      width: 160px;
+      flex-shrink: 0;
+      font-size: 13px;
+      color: rgba(55, 53, 47, 0.5);
+      padding: 5px 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .property-value {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Notion pill/tag styles */
+    .notion-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 13px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    /* Section header */
+    .section-header {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: rgba(55, 53, 47, 0.5);
+      padding: 16px 8px 6px;
+      border-top: 1px solid rgba(55, 53, 47, 0.09);
+      margin-top: 4px;
+    }
+
+    /* Block editor styles */
+    .block-editor .block {
+      padding: 3px 2px;
+      border-radius: 3px;
+      transition: background 0.1s;
+      position: relative;
+    }
+    .block-editor .block:hover {
+      background: rgba(55, 53, 47, 0.03);
+    }
+    .block-editor .block:hover .block-handle {
+      opacity: 1;
+    }
+    .block-handle {
+      position: absolute;
+      left: -24px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0;
+      cursor: grab;
+      color: rgba(55, 53, 47, 0.3);
+      transition: opacity 0.1s;
+    }
+
+    /* Slash command menu */
+    .slash-menu {
+      position: absolute;
+      width: 280px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px rgba(55, 53, 47, 0.09), 0 3px 12px rgba(55, 53, 47, 0.16);
+      padding: 4px 0;
+      z-index: 50;
+      display: none;
+    }
+    .slash-menu.visible { display: block; }
+    .slash-menu-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #37352f;
+    }
+    .slash-menu-item:hover {
+      background: rgba(55, 53, 47, 0.06);
+    }
+    .slash-menu-item .icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 3px;
+      background: rgba(55, 53, 47, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    /* Details panel */
+    .details-panel {
+      width: 0;
+      overflow: hidden;
+      transition: width 0.2s ease, opacity 0.2s ease;
+      opacity: 0;
+      border-left: 1px solid rgba(55, 53, 47, 0.09);
+    }
+    .details-panel.open {
+      width: 320px;
+      opacity: 1;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: 13px;
+      color: rgba(55, 53, 47, 0.5);
+    }
+    .breadcrumb a {
+      color: rgba(55, 53, 47, 0.5);
+      text-decoration: none;
+    }
+    .breadcrumb a:hover {
+      color: #37352f;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #37352f;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 100;
+      transition: transform 0.3s ease;
+      pointer-events: none;
+    }
+    .toast.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Pinned property */
+    .pinned-prop {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .pinned-prop:hover {
+      background: rgba(55, 53, 47, 0.06);
+    }
+
+    /* Dropdown popover */
+    .dropdown-popover {
+      position: fixed;
+      min-width: 200px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px rgba(55, 53, 47, 0.09), 0 3px 12px rgba(55, 53, 47, 0.16);
+      padding: 4px 0;
+      z-index: 60;
+      display: none;
+    }
+    .dropdown-popover.visible { display: block; }
+    .dropdown-option {
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dropdown-option:hover {
+      background: rgba(55, 53, 47, 0.06);
+    }
+  </style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body class="min-h-screen bg-white">
+
+  <!-- Top navigation bar -->
+  <div class="h-11 border-b border-gray-200 flex items-center px-4 justify-between bg-white sticky top-0 z-40">
+    <div class="flex items-center gap-2">
+      <!-- Sidebar toggle -->
+      <button class="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="rgba(55,53,47,0.45)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <!-- Breadcrumb -->
+      <div class="breadcrumb flex items-center gap-1.5">
+        <a href="#" class="flex items-center gap-1">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="rgba(55,53,47,0.45)" stroke-width="1.2"/><path d="M4 5h6M4 7h6M4 9h4" stroke="rgba(55,53,47,0.45)" stroke-width="1" stroke-linecap="round"/></svg>
+          Leads Database
+        </a>
+        <span class="text-gray-300">/</span>
+        <span class="text-gray-800 font-medium">Margaret Wilson</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-1">
+      <button class="text-xs px-2.5 py-1 rounded hover:bg-gray-100 text-gray-500">Share</button>
+      <button class="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="1" fill="rgba(55,53,47,0.45)"/><circle cx="8" cy="8" r="1" fill="rgba(55,53,47,0.45)"/><circle cx="8" cy="12" r="1" fill="rgba(55,53,47,0.45)"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex">
+    <!-- Sidebar nav (slim) -->
+    <div class="w-60 border-r border-gray-200 min-h-screen bg-gray-50/50 flex-shrink-0">
+      <div class="p-3">
+        <div class="flex items-center gap-2 px-2 py-1.5 mb-4">
+          <div class="w-5 h-5 rounded bg-teal-700 flex items-center justify-center text-white text-[10px] font-bold">TC</div>
+          <span class="text-sm font-medium text-gray-800">Trilogy Care Portal</span>
+        </div>
+
+        <!-- Search -->
+        <button class="w-full flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-500 mb-3">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M9.5 9.5l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Search
+        </button>
+
+        <div class="space-y-0.5">
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l5-5 5 5M3.5 5.5V12h3V9h1v3h3V5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Dashboard
+          </a>
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.2"/></svg>
+            Consumers
+          </a>
+          <div>
+            <a href="#" class="flex items-center gap-2 px-2 py-1 rounded bg-gray-200/80 text-sm font-medium text-gray-900">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M4 5h6M4 7h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+              Leads Database
+            </a>
+            <div class="ml-5 mt-0.5 space-y-0.5">
+              <a href="#" class="flex items-center gap-1.5 px-2 py-0.5 text-xs text-gray-500 hover:bg-gray-200/60 rounded">
+                <span class="w-1 h-1 rounded-full bg-gray-400"></span> All Leads
+              </a>
+              <a href="#" class="flex items-center gap-1.5 px-2 py-0.5 text-xs text-gray-500 hover:bg-gray-200/60 rounded">
+                <span class="w-1 h-1 rounded-full bg-gray-400"></span> Pipeline Board
+              </a>
+              <a href="#" class="flex items-center gap-1.5 px-2 py-0.5 text-xs text-gray-500 hover:bg-gray-200/60 rounded">
+                <span class="w-1 h-1 rounded-full bg-gray-400"></span> Follow-ups
+              </a>
+            </div>
+          </div>
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 1v4M10 1v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Calendar
+          </a>
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Settings
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content area -->
+    <div class="flex-1 flex min-w-0">
+      <div class="flex-1 min-w-0 max-w-4xl mx-auto px-12 py-8">
+
+        <!-- Page icon + title -->
+        <div class="mb-1">
+          <div class="text-4xl mb-2 cursor-pointer hover:opacity-80" title="Click to change icon">&#128100;</div>
+          <h1 class="text-[40px] font-bold text-gray-900 leading-tight" style="color: #37352f;">Margaret Wilson</h1>
+        </div>
+
+        <!-- Pinned properties (4 below title) -->
+        <div class="flex flex-wrap items-center gap-3 mt-3 mb-6">
+          <!-- Journey Stage -->
+          <div class="pinned-prop" onclick="openDropdown(event, 'stage-dropdown')">
+            <span class="text-xs text-gray-400 mr-1">Stage</span>
+            <span class="notion-pill bg-blue-100 text-blue-700" id="pinned-stage">Approved</span>
+          </div>
+          <!-- Lead Status -->
+          <div class="pinned-prop" onclick="openDropdown(event, 'status-dropdown')">
+            <span class="text-xs text-gray-400 mr-1">Status</span>
+            <span class="notion-pill bg-green-100 text-green-700" id="pinned-status">Made Contact</span>
+          </div>
+          <!-- Assigned Agent -->
+          <div class="pinned-prop">
+            <span class="text-xs text-gray-400 mr-1">Agent</span>
+            <div class="flex items-center gap-1.5">
+              <div class="w-5 h-5 rounded-full bg-teal-600 flex items-center justify-center text-white text-[10px] font-medium">SC</div>
+              <span class="text-sm text-gray-700">Sarah Chen</span>
+            </div>
+          </div>
+          <!-- Last Contact -->
+          <div class="pinned-prop">
+            <span class="text-xs text-gray-400 mr-1">Last Contact</span>
+            <span class="text-sm text-gray-700">18 Feb 2026</span>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200 mb-2"></div>
+
+        <!-- View details toggle -->
+        <div class="flex justify-end mb-3">
+          <button onclick="toggleDetailsPanel()" class="text-xs px-3 py-1 rounded hover:bg-gray-100 text-gray-500 flex items-center gap-1" id="details-toggle">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M9 1v12" stroke="currentColor" stroke-width="1.2"/></svg>
+            View details
+          </button>
+        </div>
+
+        <!-- Property Groups -->
+        <div class="mb-8">
+          <!-- Contact Information -->
+          <div class="section-header">Contact Information</div>
+          <div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12v8H1z" stroke="currentColor" stroke-width="1"/><path d="M1 3l6 4 6-4" stroke="currentColor" stroke-width="1"/></svg>
+                First Name
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="makeEditable(this, 'text')">Margaret</div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12v8H1z" stroke="currentColor" stroke-width="1"/><path d="M1 3l6 4 6-4" stroke="currentColor" stroke-width="1"/></svg>
+                Last Name
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="makeEditable(this, 'text')">Wilson</div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12v8H1z" stroke="currentColor" stroke-width="1"/><path d="M1 3l6 4 6-4" stroke="currentColor" stroke-width="1"/></svg>
+                Email
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="makeEditable(this, 'text')">margaret.wilson@email.com.au</div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 1.5C3 1.5 1.5 3 1.5 4.5c0 4 4 8 8.5 8.5 1.5 0 3-1.5 3-1.5l-2.5-2.5-2 1.5c-1.5-1-3-2.5-4-4L6 5 3 1.5z" stroke="currentColor" stroke-width="1"/></svg>
+                Phone
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="makeEditable(this, 'text')">0412 345 678</div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M4 1v2M10 1v2M1 5h12" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                Date of Birth
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="makeEditable(this, 'date')">15 Mar 1948</div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1C4 1 1.5 5 1.5 7S4 13 7 13s5.5-4 5.5-6S10 1 7 1z" stroke="currentColor" stroke-width="1"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1"/></svg>
+                Address
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="makeEditable(this, 'text')">42 Wattle Street, Toowong QLD 4066</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lead Details -->
+          <div class="section-header">Lead Details</div>
+          <div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1"/><path d="M7 4v3l2 2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                Journey Stage
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="openDropdown(event, 'stage-dropdown-inline')">
+                  <span class="notion-pill bg-blue-100 text-blue-700">Approved</span>
+                </div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Lead Status
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="openDropdown(event, 'status-dropdown-inline')">
+                  <span class="notion-pill bg-green-100 text-green-700">Made Contact</span>
+                </div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 7h6M4 4h6M4 10h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                Lead Source
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="openDropdown(event, 'source-dropdown')">
+                  <span class="notion-pill bg-purple-100 text-purple-700">Website Enquiry</span>
+                </div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l2 4h4l-3.5 3 1.5 4L7 9.5 3 12l1.5-4L1 5h4z" stroke="currentColor" stroke-width="1"/></svg>
+                Purchase Intent
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="openDropdown(event, 'intent-dropdown')">
+                  <span class="notion-pill bg-amber-100 text-amber-700">High</span>
+                </div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1"/></svg>
+                Referral Source
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="makeEditable(this, 'text')">Dr. Patricia Hughes (GP)</div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1"/><path d="M5 2V1M9 2V1M2 5h10" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                TC Number
+              </div>
+              <div class="property-value">
+                <div class="editable-cell text-sm" style="color: rgba(55,53,47,0.5); font-family: 'SF Mono', monospace;">TC-4821</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Care Needs -->
+          <div class="section-header">Care Needs</div>
+          <div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2.5C5.5 1 3 1.5 2 3.5S2.5 8 7 12c4.5-4 5.5-6.5 5-8.5S8.5 1 7 2.5z" stroke="currentColor" stroke-width="1"/></svg>
+                Care Type
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="openDropdown(event, 'care-dropdown')">
+                  <span class="notion-pill bg-teal-100 text-teal-700">Home Care Package</span>
+                </div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7l4 4L13 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Preferred Services
+              </div>
+              <div class="property-value">
+                <div class="editable-cell">
+                  <span class="notion-pill bg-gray-100 text-gray-600 mr-1">Personal Care</span>
+                  <span class="notion-pill bg-gray-100 text-gray-600 mr-1">Domestic Assistance</span>
+                  <span class="notion-pill bg-gray-100 text-gray-600">Nursing</span>
+                </div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="5" width="12" height="7" rx="1" stroke="currentColor" stroke-width="1"/><path d="M4 5V3a3 3 0 016 0v2" stroke="currentColor" stroke-width="1"/></svg>
+                Funding Type
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="openDropdown(event, 'funding-dropdown')">
+                  <span class="notion-pill bg-indigo-100 text-indigo-700">Government Funded (HCP)</span>
+                </div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="1.5" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1"/><path d="M4 7h6M7 4v6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                ACAT Status
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" onclick="openDropdown(event, 'acat-dropdown')">
+                  <span class="notion-pill bg-green-100 text-green-700">Approved - Level 3</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- System -->
+          <div class="section-header">System</div>
+          <div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M4 1v2M10 1v2M1 5h12" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                Created Date
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" style="color: rgba(55,53,47,0.5);">5 Jan 2026</div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M4 1v2M10 1v2M1 5h12" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                Updated Date
+              </div>
+              <div class="property-value">
+                <div class="editable-cell" style="color: rgba(55,53,47,0.5);">18 Feb 2026</div>
+              </div>
+            </div>
+            <div class="property-row">
+              <div class="property-label">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="6" stroke="currentColor" stroke-width="1"/><path d="M4 7.5l2 2 4-4" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Profile Completion
+              </div>
+              <div class="property-value">
+                <div class="editable-cell flex items-center gap-2">
+                  <div class="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden" style="max-width: 200px;">
+                    <div class="h-full bg-teal-500 rounded-full" style="width: 85%"></div>
+                  </div>
+                  <span class="text-sm text-gray-500">85%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider before content body -->
+        <div class="border-t border-gray-200 mb-6"></div>
+
+        <!-- Content Body - Block Editor -->
+        <div class="block-editor mb-12" id="block-editor">
+          <div class="block py-1.5 pl-6 relative">
+            <div class="block-handle">&#9776;</div>
+            <h3 class="text-lg font-semibold" style="color: #37352f;">Call Notes</h3>
+          </div>
+          <div class="block py-1 pl-6 relative">
+            <div class="block-handle">&#9776;</div>
+            <p class="text-sm leading-relaxed" style="color: #37352f;">
+              <span class="text-gray-400 text-xs font-medium mr-2">18 Feb 2026</span>
+              Spoke with Margaret's daughter Karen about home care options. Margaret has been approved for a Level 3 Home Care Package. She's currently living independently at her Toowong home but needs support with personal care and domestic tasks. Karen mentioned Margaret had a fall last month and they want to get services started quickly.
+            </p>
+          </div>
+          <div class="block py-1 pl-6 relative">
+            <div class="block-handle">&#9776;</div>
+            <p class="text-sm leading-relaxed" style="color: #37352f;">
+              <span class="text-gray-400 text-xs font-medium mr-2">12 Feb 2026</span>
+              Initial phone call with Margaret. She was referred by her GP Dr. Patricia Hughes. Margaret expressed interest in home care services and mentioned she'd completed her ACAT assessment. Very pleasant and receptive. Daughter Karen is the primary contact for care decisions.
+            </p>
+          </div>
+          <div class="block py-1 pl-6 relative">
+            <div class="block-handle">&#9776;</div>
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded-r text-sm" style="color: #37352f;">
+              <strong>Next steps:</strong> Schedule home visit with Margaret and Karen. Prepare Level 3 HCP service proposal. Follow up by Friday 21 Feb.
+            </div>
+          </div>
+          <div class="block py-1 pl-6 relative">
+            <div class="block-handle">&#9776;</div>
+            <div class="flex items-start gap-2 text-sm" style="color: #37352f;">
+              <input type="checkbox" class="mt-0.5 rounded" checked>
+              <span class="line-through text-gray-400">Send welcome pack to Margaret</span>
+            </div>
+          </div>
+          <div class="block py-1 pl-6 relative">
+            <div class="block-handle">&#9776;</div>
+            <div class="flex items-start gap-2 text-sm" style="color: #37352f;">
+              <input type="checkbox" class="mt-0.5 rounded">
+              <span>Schedule home visit for care assessment</span>
+            </div>
+          </div>
+          <div class="block py-1 pl-6 relative">
+            <div class="block-handle">&#9776;</div>
+            <div class="flex items-start gap-2 text-sm" style="color: #37352f;">
+              <input type="checkbox" class="mt-0.5 rounded">
+              <span>Prepare Level 3 HCP service proposal</span>
+            </div>
+          </div>
+
+          <!-- Slash command trigger area -->
+          <div class="py-2 pl-6 relative" id="slash-trigger">
+            <div class="text-sm text-gray-300 cursor-text" onclick="showSlashMenu(this)" id="empty-block">Type '/' for commands...</div>
+            <div class="slash-menu" id="slash-menu">
+              <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Basic blocks</div>
+              <div class="slash-menu-item" onclick="insertBlock('text')">
+                <div class="icon">Aa</div>
+                <div>
+                  <div class="text-sm">Text</div>
+                  <div class="text-xs text-gray-400">Plain text block</div>
+                </div>
+              </div>
+              <div class="slash-menu-item" onclick="insertBlock('heading')">
+                <div class="icon font-bold">H</div>
+                <div>
+                  <div class="text-sm">Heading 3</div>
+                  <div class="text-xs text-gray-400">Small section heading</div>
+                </div>
+              </div>
+              <div class="slash-menu-item" onclick="insertBlock('todo')">
+                <div class="icon">&#9744;</div>
+                <div>
+                  <div class="text-sm">To-do list</div>
+                  <div class="text-xs text-gray-400">Track tasks with a checklist</div>
+                </div>
+              </div>
+              <div class="slash-menu-item" onclick="insertBlock('callout')">
+                <div class="icon">&#128161;</div>
+                <div>
+                  <div class="text-sm">Callout</div>
+                  <div class="text-xs text-gray-400">Highlight important information</div>
+                </div>
+              </div>
+              <div class="slash-menu-item" onclick="insertBlock('divider')">
+                <div class="icon">&mdash;</div>
+                <div>
+                  <div class="text-sm">Divider</div>
+                  <div class="text-xs text-gray-400">Visual separator</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right details panel (collapsible) -->
+      <div class="details-panel bg-gray-50/50" id="details-panel">
+        <div class="p-4 w-80">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-sm font-semibold" style="color: #37352f;">Details</h3>
+            <button onclick="toggleDetailsPanel()" class="w-6 h-6 flex items-center justify-center rounded hover:bg-gray-200 text-gray-400">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M10 4L4 10M4 4l6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <!-- Related Consumer -->
+          <div class="mb-5">
+            <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Related Consumer</div>
+            <a href="#" class="flex items-center gap-2 p-2 rounded-md hover:bg-gray-200/60 transition">
+              <div class="w-8 h-8 rounded bg-primary-blue-100 flex items-center justify-center text-primary-blue-700 text-xs font-medium">MW</div>
+              <div>
+                <div class="text-sm font-medium" style="color: #37352f;">Margaret Wilson</div>
+                <div class="text-xs text-gray-400">Consumer Record</div>
+              </div>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="ml-auto"><path d="M4 2l4 4-4 4" stroke="rgba(55,53,47,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </a>
+          </div>
+
+          <!-- Referral Source Company -->
+          <div class="mb-5">
+            <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Referral Source Company</div>
+            <a href="#" class="flex items-center gap-2 p-2 rounded-md hover:bg-gray-200/60 transition">
+              <div class="w-8 h-8 rounded bg-purple-100 flex items-center justify-center text-purple-700 text-xs font-medium">TM</div>
+              <div>
+                <div class="text-sm font-medium" style="color: #37352f;">Toowong Medical Centre</div>
+                <div class="text-xs text-gray-400">Referral Partner</div>
+              </div>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" class="ml-auto"><path d="M4 2l4 4-4 4" stroke="rgba(55,53,47,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </a>
+          </div>
+
+          <!-- Assigned Agent Details -->
+          <div class="mb-5">
+            <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Assigned Agent</div>
+            <div class="flex items-center gap-2 p-2">
+              <div class="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-white text-xs font-medium">SC</div>
+              <div>
+                <div class="text-sm font-medium" style="color: #37352f;">Sarah Chen</div>
+                <div class="text-xs text-gray-400">Sales Agent</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Summary -->
+          <div>
+            <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Activity</div>
+            <div class="space-y-2">
+              <div class="flex items-start gap-2 text-xs">
+                <div class="w-1.5 h-1.5 rounded-full bg-teal-400 mt-1.5 flex-shrink-0"></div>
+                <div>
+                  <span class="text-gray-500">18 Feb</span>
+                  <span class="ml-1" style="color: #37352f;">Follow-up call with daughter Karen</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-2 text-xs">
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-400 mt-1.5 flex-shrink-0"></div>
+                <div>
+                  <span class="text-gray-500">12 Feb</span>
+                  <span class="ml-1" style="color: #37352f;">Initial contact call</span>
+                </div>
+              </div>
+              <div class="flex items-start gap-2 text-xs">
+                <div class="w-1.5 h-1.5 rounded-full bg-purple-400 mt-1.5 flex-shrink-0"></div>
+                <div>
+                  <span class="text-gray-500">5 Jan</span>
+                  <span class="ml-1" style="color: #37352f;">Lead created from website enquiry</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dropdown popovers (hidden by default) -->
+  <div class="dropdown-popover" id="stage-dropdown">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Journey Stage</div>
+    <div class="dropdown-option" onclick="selectDropdown('stage', 'Pre-Care', 'bg-gray-100 text-gray-600')">
+      <span class="w-2 h-2 rounded-full bg-gray-400"></span> Pre-Care
+    </div>
+    <div class="dropdown-option" onclick="selectDropdown('stage', 'ACAT Booked', 'bg-yellow-100 text-yellow-700')">
+      <span class="w-2 h-2 rounded-full bg-yellow-400"></span> ACAT Booked
+    </div>
+    <div class="dropdown-option" onclick="selectDropdown('stage', 'Approved', 'bg-blue-100 text-blue-700')">
+      <span class="w-2 h-2 rounded-full bg-blue-400"></span> Approved
+    </div>
+    <div class="dropdown-option" onclick="selectDropdown('stage', 'Allocated', 'bg-indigo-100 text-indigo-700')">
+      <span class="w-2 h-2 rounded-full bg-indigo-400"></span> Allocated
+    </div>
+    <div class="dropdown-option" onclick="selectDropdown('stage', 'Active', 'bg-green-100 text-green-700')">
+      <span class="w-2 h-2 rounded-full bg-green-400"></span> Active
+    </div>
+    <div class="dropdown-option" onclick="selectDropdown('stage', 'Converted', 'bg-teal-100 text-teal-700')">
+      <span class="w-2 h-2 rounded-full bg-teal-400"></span> Converted
+    </div>
+  </div>
+
+  <div class="dropdown-popover" id="stage-dropdown-inline">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Journey Stage</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Pre-Care', 'bg-gray-100 text-gray-600')"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Pre-Care</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'ACAT Booked', 'bg-yellow-100 text-yellow-700')"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> ACAT Booked</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Approved', 'bg-blue-100 text-blue-700')"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Approved</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Allocated', 'bg-indigo-100 text-indigo-700')"><span class="w-2 h-2 rounded-full bg-indigo-400"></span> Allocated</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Active', 'bg-green-100 text-green-700')"><span class="w-2 h-2 rounded-full bg-green-400"></span> Active</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Converted', 'bg-teal-100 text-teal-700')"><span class="w-2 h-2 rounded-full bg-teal-400"></span> Converted</div>
+  </div>
+
+  <div class="dropdown-popover" id="status-dropdown">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Lead Status</div>
+    <div class="dropdown-option" onclick="selectDropdown('status', 'Not Contacted', 'bg-gray-100 text-gray-600')"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Not Contacted</div>
+    <div class="dropdown-option" onclick="selectDropdown('status', 'Attempted Contact', 'bg-yellow-100 text-yellow-700')"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> Attempted Contact</div>
+    <div class="dropdown-option" onclick="selectDropdown('status', 'Made Contact', 'bg-green-100 text-green-700')"><span class="w-2 h-2 rounded-full bg-green-400"></span> Made Contact</div>
+    <div class="dropdown-option" onclick="selectDropdown('status', 'Lost', 'bg-red-100 text-red-700')"><span class="w-2 h-2 rounded-full bg-red-400"></span> Lost</div>
+  </div>
+
+  <div class="dropdown-popover" id="status-dropdown-inline">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Lead Status</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Not Contacted', 'bg-gray-100 text-gray-600')"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Not Contacted</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Attempted Contact', 'bg-yellow-100 text-yellow-700')"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> Attempted Contact</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Made Contact', 'bg-green-100 text-green-700')"><span class="w-2 h-2 rounded-full bg-green-400"></span> Made Contact</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Lost', 'bg-red-100 text-red-700')"><span class="w-2 h-2 rounded-full bg-red-400"></span> Lost</div>
+  </div>
+
+  <div class="dropdown-popover" id="source-dropdown">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Lead Source</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Website Enquiry', 'bg-purple-100 text-purple-700')"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Website Enquiry</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Phone Call', 'bg-blue-100 text-blue-700')"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Phone Call</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'GP Referral', 'bg-green-100 text-green-700')"><span class="w-2 h-2 rounded-full bg-green-400"></span> GP Referral</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Hospital Referral', 'bg-teal-100 text-teal-700')"><span class="w-2 h-2 rounded-full bg-teal-400"></span> Hospital Referral</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'My Aged Care', 'bg-amber-100 text-amber-700')"><span class="w-2 h-2 rounded-full bg-amber-400"></span> My Aged Care</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Word of Mouth', 'bg-pink-100 text-pink-700')"><span class="w-2 h-2 rounded-full bg-pink-400"></span> Word of Mouth</div>
+  </div>
+
+  <div class="dropdown-popover" id="intent-dropdown">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Purchase Intent</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'High', 'bg-amber-100 text-amber-700')"><span class="w-2 h-2 rounded-full bg-amber-400"></span> High</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Medium', 'bg-yellow-100 text-yellow-700')"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> Medium</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Low', 'bg-gray-100 text-gray-600')"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Low</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Unknown', 'bg-gray-100 text-gray-500')"><span class="w-2 h-2 rounded-full bg-gray-300"></span> Unknown</div>
+  </div>
+
+  <div class="dropdown-popover" id="care-dropdown">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Care Type</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Home Care Package', 'bg-teal-100 text-teal-700')"><span class="w-2 h-2 rounded-full bg-teal-400"></span> Home Care Package</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'CHSP', 'bg-blue-100 text-blue-700')"><span class="w-2 h-2 rounded-full bg-blue-400"></span> CHSP</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Residential Care', 'bg-purple-100 text-purple-700')"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Residential Care</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Respite Care', 'bg-amber-100 text-amber-700')"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Respite Care</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Private Care', 'bg-pink-100 text-pink-700')"><span class="w-2 h-2 rounded-full bg-pink-400"></span> Private Care</div>
+  </div>
+
+  <div class="dropdown-popover" id="funding-dropdown">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Funding Type</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Government Funded (HCP)', 'bg-indigo-100 text-indigo-700')"><span class="w-2 h-2 rounded-full bg-indigo-400"></span> Government Funded (HCP)</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'CHSP', 'bg-blue-100 text-blue-700')"><span class="w-2 h-2 rounded-full bg-blue-400"></span> CHSP</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Private (Self-Funded)', 'bg-amber-100 text-amber-700')"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Private (Self-Funded)</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'DVA', 'bg-green-100 text-green-700')"><span class="w-2 h-2 rounded-full bg-green-400"></span> DVA</div>
+  </div>
+
+  <div class="dropdown-popover" id="acat-dropdown">
+    <div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">ACAT Status</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Not Assessed', 'bg-gray-100 text-gray-600')"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Not Assessed</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Assessment Booked', 'bg-yellow-100 text-yellow-700')"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> Assessment Booked</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Approved - Level 2', 'bg-blue-100 text-blue-700')"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Approved - Level 2</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Approved - Level 3', 'bg-green-100 text-green-700')"><span class="w-2 h-2 rounded-full bg-green-400"></span> Approved - Level 3</div>
+    <div class="dropdown-option" onclick="selectInline(this, 'Approved - Level 4', 'bg-teal-100 text-teal-700')"><span class="w-2 h-2 rounded-full bg-teal-400"></span> Approved - Level 4</div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast">Property updated</div>
+
+  <script>
+    // Track currently open dropdown
+    let activeDropdown = null;
+    let activeCell = null;
+
+    // Close all dropdowns on outside click
+    document.addEventListener('click', (e) => {
+      if (activeDropdown && !e.target.closest('.dropdown-popover') && !e.target.closest('.editable-cell') && !e.target.closest('.pinned-prop')) {
+        closeAllDropdowns();
+      }
+      // Close slash menu
+      const slashMenu = document.getElementById('slash-menu');
+      if (!e.target.closest('#slash-trigger')) {
+        slashMenu.classList.remove('visible');
+      }
+    });
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.dropdown-popover').forEach(d => d.classList.remove('visible'));
+      activeDropdown = null;
+      activeCell = null;
+    }
+
+    function openDropdown(event, dropdownId) {
+      event.stopPropagation();
+      closeAllDropdowns();
+
+      const dropdown = document.getElementById(dropdownId);
+      const rect = event.currentTarget.getBoundingClientRect();
+
+      dropdown.style.left = rect.left + 'px';
+      dropdown.style.top = (rect.bottom + 4) + 'px';
+      dropdown.classList.add('visible');
+      activeDropdown = dropdown;
+      activeCell = event.currentTarget;
+    }
+
+    function selectDropdown(type, value, classes) {
+      if (type === 'stage') {
+        const pinned = document.getElementById('pinned-stage');
+        pinned.className = 'notion-pill ' + classes;
+        pinned.textContent = value;
+      } else if (type === 'status') {
+        const pinned = document.getElementById('pinned-status');
+        pinned.className = 'notion-pill ' + classes;
+        pinned.textContent = value;
+      }
+      closeAllDropdowns();
+      showToast('Property updated');
+    }
+
+    function selectInline(optionEl, value, classes) {
+      if (activeCell) {
+        const pill = activeCell.querySelector('.notion-pill');
+        if (pill) {
+          pill.className = 'notion-pill ' + classes;
+          pill.textContent = value;
+        }
+      }
+      closeAllDropdowns();
+      showToast('Property updated');
+    }
+
+    function makeEditable(cell, type) {
+      if (cell.querySelector('input')) return;
+
+      const currentValue = cell.textContent.trim();
+      cell.classList.add('editing');
+
+      if (type === 'text' || type === 'date') {
+        const input = document.createElement('input');
+        input.type = type === 'date' ? 'date' : 'text';
+        input.value = currentValue;
+        input.style.fontSize = '14px';
+        input.style.color = '#37352f';
+
+        cell.textContent = '';
+        cell.appendChild(input);
+        input.focus();
+        input.select();
+
+        input.addEventListener('blur', () => {
+          cell.classList.remove('editing');
+          const newValue = input.value || currentValue;
+          cell.textContent = newValue;
+          if (newValue !== currentValue) {
+            showToast('Property updated');
+          }
+        });
+
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') input.blur();
+          if (e.key === 'Escape') {
+            input.value = currentValue;
+            input.blur();
+          }
+        });
+      }
+    }
+
+    // Details panel toggle
+    function toggleDetailsPanel() {
+      const panel = document.getElementById('details-panel');
+      panel.classList.toggle('open');
+    }
+
+    // Slash command menu
+    function showSlashMenu(el) {
+      const menu = document.getElementById('slash-menu');
+      menu.classList.toggle('visible');
+    }
+
+    function insertBlock(type) {
+      const editor = document.getElementById('block-editor');
+      const trigger = document.getElementById('slash-trigger');
+      const newBlock = document.createElement('div');
+      newBlock.className = 'block py-1 pl-6 relative';
+
+      const handle = '<div class="block-handle">&#9776;</div>';
+
+      switch (type) {
+        case 'text':
+          newBlock.innerHTML = handle + '<p class="text-sm outline-none" contenteditable="true" style="color: #37352f;" data-placeholder="Type something..."></p>';
+          break;
+        case 'heading':
+          newBlock.innerHTML = handle + '<h3 class="text-lg font-semibold outline-none" contenteditable="true" style="color: #37352f;" data-placeholder="Heading"></h3>';
+          break;
+        case 'todo':
+          newBlock.innerHTML = handle + '<div class="flex items-start gap-2 text-sm" style="color: #37352f;"><input type="checkbox" class="mt-0.5 rounded"><span contenteditable="true" class="outline-none" data-placeholder="To-do"></span></div>';
+          break;
+        case 'callout':
+          newBlock.innerHTML = handle + '<div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded-r text-sm outline-none" contenteditable="true" style="color: #37352f;" data-placeholder="Type something..."></div>';
+          break;
+        case 'divider':
+          newBlock.innerHTML = '<hr class="border-gray-200 my-2">';
+          break;
+      }
+
+      editor.insertBefore(newBlock, trigger);
+      document.getElementById('slash-menu').classList.remove('visible');
+
+      // Focus the new editable element
+      const editable = newBlock.querySelector('[contenteditable]');
+      if (editable) {
+        editable.focus();
+      }
+    }
+
+    // Toast notification
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2000);
+    }
+  </script>
+
+</body>
+</html>

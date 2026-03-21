@@ -1,0 +1,17 @@
+jira_key: TP-2507
+title: 'Timeline Uplift'
+status: Backlog
+prefix: TLU
+summary: "Enhanced activity timeline view"
+linear_project_id: 40774d0b-8c62-403b-a6ce-9f208eaa50ab
+linear_url: https://linear.app/trilogycare/project/tlu-timeline-uplift-10990ba0f464
+description: Visual timeline showing all communications and activities across clients/suppliers with links to training materials. Goal is to improve handle time and first touch resolution.
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+stakeholder: Luke Traini
+tags:
+  - work-management
+  - communications
+  - timeline
+  - training
+bounty_value: 5000

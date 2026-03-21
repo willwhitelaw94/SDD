@@ -1,0 +1,68 @@
+title: "ATHM Funding Commitment"
+prefix: AFC
+epic_code: AFC
+status: design
+summary: "Hold AT/HM funding for specific budget items to prevent other bills consuming reserved funds"
+linear_project_id: cf467dcc-de36-4a02-85b7-401f0c4bb9dd
+linear_url: https://linear.app/trilogycare/project/afc-athm-funding-commitment-4b9a28d2fc3d
+linear_team: Matt - Fuelled
+last_synced: 2026-02-15T09:27:00Z
+
+stories:
+  # US1: 15 sub-issues (8 foundation + 7 story tasks) → one branch/PR
+  - identifier: FUE-34
+    title: "US01: Hold ATHM Funds for a Budget Item"
+    local_ref: US1
+    state: Backlog
+    sub_issues:
+      - { identifier: FUE-38, local_ref: T001, title: "Create migration — add is_funding_held" }
+      - { identifier: FUE-39, local_ref: T002, title: "Update BudgetPlanItem model" }
+      - { identifier: FUE-41, local_ref: T004, title: "Update SubmitBudgetPlanItemData" }
+      - { identifier: FUE-42, local_ref: T005, title: "Update BudgetPlanItemServicesViewData" }
+      - { identifier: FUE-43, local_ref: T006, title: "Update BudgetPlanItemSubmitted event" }
+      - { identifier: FUE-44, local_ref: T007, title: "Update BudgetPlanItemAggregateRoot" }
+      - { identifier: FUE-45, local_ref: T008, title: "Update BudgetPlanItemProjector" }
+      - { identifier: FUE-47, local_ref: T010, title: "Write SubmitBudgetPlanItemDataTest" }
+      - { identifier: FUE-48, local_ref: T011, title: "Update SubmitBudgetPlanItem — persist with auto-clear" }
+      - { identifier: FUE-49, local_ref: T012, title: "Update DuplicateBudgetPlanAction" }
+      - { identifier: FUE-50, local_ref: T013, title: "Update AssembleBudgetItemsViewData" }
+      - { identifier: FUE-51, local_ref: T014, title: "Add is_funding_held checkbox to BudgetItem.vue" }
+      - { identifier: FUE-52, local_ref: T015, title: "Write persistence + event sourcing test" }
+      - { identifier: FUE-53, local_ref: T016, title: "Write auto-clear test" }
+      - { identifier: FUE-54, local_ref: T017, title: "Write DuplicateBudgetPlanAction test" }
+
+  # US2: 6 sub-issues (2 foundation + 4 story tasks) → one branch/PR
+  - identifier: FUE-35
+    title: "US02: Allocation Logic Respects Held Amounts"
+    local_ref: US2
+    state: Backlog
+    sub_issues:
+      - { identifier: FUE-40, local_ref: T003, title: "Update FundingStream — HM constant + isAthmSpecific()" }
+      - { identifier: FUE-46, local_ref: T009, title: "Write FundingStreamTest" }
+      - { identifier: FUE-55, local_ref: T018, title: "Update AllocateFundingsAction — held ATHM priority" }
+      - { identifier: FUE-56, local_ref: T019, title: "Write test — held item gets AT priority" }
+      - { identifier: FUE-57, local_ref: T020, title: "Write test — non-ATHM streams unaffected" }
+      - { identifier: FUE-58, local_ref: T021, title: "Write test — multiple held items cumulative" }
+
+  # US3: 5 sub-issues → one branch/PR
+  - identifier: FUE-36
+    title: "US03: Bill Processing Respects Held Funds"
+    local_ref: US3
+    state: Backlog
+    sub_issues:
+      - { identifier: FUE-59, local_ref: T022, title: "Update CalculateBillFundingAllocations" }
+      - { identifier: FUE-60, local_ref: T023, title: "Write test — different item can't draw held" }
+      - { identifier: FUE-61, local_ref: T024, title: "Write test — same item CAN draw held" }
+      - { identifier: FUE-62, local_ref: T025, title: "Write test — draft holds ignored" }
+      - { identifier: FUE-63, local_ref: T026, title: "Write zero-regression test" }
+
+  # US4: 2 sub-issues → one branch/PR
+  - identifier: FUE-37
+    title: "US04: Visual Indicator for Held Budget Items"
+    local_ref: US4
+    state: Backlog
+    sub_issues:
+      - { identifier: FUE-64, local_ref: T027, title: "Add held badge to collapsed row" }
+      - { identifier: FUE-65, local_ref: T028, title: "Write browser test — badge visibility" }
+
+# Phase 5 tasks (T029-T031) converted to PR checklist items, issues canceled in Linear

@@ -1,0 +1,30 @@
+jira_key: TP-2141
+title: 'Work Management'
+description: 'Enhance work management tools including tasks, threads, activities, and communication features for care coordinators.'
+status: active
+epic_count: 7
+last_synced: '2025-11-09T04:22:50.014Z'
+
+# Strategic Context
+objective: 'Empower care coordinators with intuitive work management tools that reduce administrative burden and enable focus on high-value client interactions.'
+aligns_to: 'Q1 2025 OKR - Operational Excellence'
+target_quarter: 'Q2 2025'
+priority: medium
+sponsor: 'Sarah Johnson (Director of Care Operations)'
+
+leads:
+  discovery:
+    name: 'Lisa Morgan'
+    email: lisa.morgan@trilogycare.com
+  design:
+    name: 'Brian Scott'
+    email: brian.scott@trilogycare.com
+  development:
+    name: 'Patricia Moore'
+    email: patricia.moore@trilogycare.com
+  qa:
+    name: 'Eric Turner'
+    email: eric.turner@trilogycare.com
+  release:
+    name: 'Michelle Collins'
+    email: michelle.collins@trilogycare.com

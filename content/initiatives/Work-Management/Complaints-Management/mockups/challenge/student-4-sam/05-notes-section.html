@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes Section — Feedback Records</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: { 500: '#43C0BE', 700: '#007F7E' },
+            'primary-blue': { 700: '#2C4C79' }
+          },
+          fontFamily: { sans: ['Roboto Flex', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto Flex', system-ui, sans-serif; }
+    .resizer { cursor: col-resize; user-select: none; }
+    .resizer:hover, .resizer:active { background: #43C0BE; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="fixed left-0 top-[var(--toolbar-h,0px)] bottom-0 w-[220px] bg-white border-r border-gray-200 z-50">
+    <div class="p-4 border-b border-gray-100">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-8 h-8 rounded-lg bg-teal-700 flex items-center justify-center text-white text-xs font-bold">TC</div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <nav class="space-y-1">
+        <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50">
+          <div class="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+          <div class="h-3 w-20 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50">
+          <div class="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+          <div class="h-3 w-24 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-teal-700/10 border-l-2 border-teal-700">
+          <div class="w-4 h-4 bg-teal-700/30 rounded"></div>
+          <span class="text-sm font-medium text-teal-700">Feedback Records</span>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50">
+          <div class="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+          <div class="h-3 w-16 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50">
+          <div class="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+          <div class="h-3 w-20 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Main Content: Split Panel -->
+  <main class="ml-[220px] h-[calc(100vh-var(--toolbar-h,0px))] flex" style="margin-top: var(--toolbar-h, 0px);">
+
+    <!-- LEFT PANEL: Record List -->
+    <div class="w-[38%] min-w-[320px] bg-white border-r border-gray-200 flex flex-col h-full overflow-hidden">
+
+      <div class="px-4 py-3 border-b border-gray-100">
+        <div class="flex items-center justify-between mb-2">
+          <h1 class="text-lg font-semibold text-gray-900">Feedback Records</h1>
+          <button class="px-3 py-1.5 bg-teal-700 text-white text-xs font-medium rounded-lg">+ New</button>
+        </div>
+        <div class="relative">
+          <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Search records..." class="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg">
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto">
+        <!-- Selected -->
+        <div class="border-l-[3px] border-teal-700 bg-teal-50/60 px-4 py-3 cursor-pointer">
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-red-500"></span>
+              <span class="text-xs font-bold text-gray-900">REF-00142</span>
+              <span class="px-1.5 py-0.5 text-[10px] font-medium rounded bg-orange-100 text-orange-700">Complaint</span>
+            </div>
+            <span class="text-[10px] text-gray-400">3d ago</span>
+          </div>
+          <p class="text-xs text-gray-700 truncate mb-1">Medication administered at incorrect time</p>
+          <span class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-blue-100 text-blue-700">Investigation</span>
+        </div>
+
+        <div class="border-l-[3px] border-transparent hover:bg-gray-50 px-4 py-3 cursor-pointer border-b border-gray-50">
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-red-500"></span>
+              <span class="text-xs font-bold text-gray-900">REF-00141</span>
+            </div>
+            <span class="text-[10px] text-gray-400">4d ago</span>
+          </div>
+          <p class="text-xs text-gray-700 truncate mb-1">Fall incident not reported to family</p>
+          <span class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-purple-100 text-purple-700">Triage</span>
+        </div>
+
+        <div class="border-l-[3px] border-transparent hover:bg-gray-50 px-4 py-3 cursor-pointer border-b border-gray-50">
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span class="text-xs font-bold text-gray-900">REF-00140</span>
+            </div>
+            <span class="text-[10px] text-gray-400">5d ago</span>
+          </div>
+          <p class="text-xs text-gray-700 truncate mb-1">Request for different shower time</p>
+          <span class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-green-100 text-green-700">In Progress</span>
+        </div>
+
+        <div class="border-l-[3px] border-transparent hover:bg-gray-50 px-4 py-3 cursor-pointer border-b border-gray-50">
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span class="text-xs font-bold text-gray-900">REF-00139</span>
+            </div>
+            <span class="text-[10px] text-gray-400">1w ago</span>
+          </div>
+          <p class="text-xs text-gray-700 truncate mb-1">Care plan not updated after hospital</p>
+          <span class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-yellow-100 text-yellow-700">Owner Accepted</span>
+        </div>
+
+        <div class="border-l-[3px] border-transparent hover:bg-gray-50 px-4 py-3 cursor-pointer">
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-red-500"></span>
+              <span class="text-xs font-bold text-gray-900">REF-00137</span>
+            </div>
+            <span class="text-[10px] text-gray-400">2w ago</span>
+          </div>
+          <p class="text-xs text-gray-700 truncate mb-1">Aggressive behaviour not addressed</p>
+          <span class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-indigo-100 text-indigo-700">Resolution</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resizable Divider -->
+    <div class="resizer w-[3px] bg-gray-200 hover:bg-teal-500 transition-colors flex-shrink-0"></div>
+
+    <!-- RIGHT PANEL: Notes -->
+    <div class="flex-1 bg-white flex flex-col h-full overflow-hidden">
+
+      <!-- Record Header Strip -->
+      <div class="px-6 py-3 border-b border-gray-100 bg-white flex items-center justify-between flex-shrink-0">
+        <div class="flex items-center gap-3">
+          <h2 class="text-base font-bold text-gray-900">REF-00142</h2>
+          <span class="px-2 py-0.5 text-[11px] font-medium rounded bg-orange-100 text-orange-700">Complaint</span>
+          <span class="px-2 py-0.5 text-[11px] font-medium rounded bg-red-100 text-red-700">Urgent</span>
+          <span class="px-2 py-0.5 text-[11px] font-medium rounded-full bg-blue-100 text-blue-700">Investigation</span>
+        </div>
+        <button class="px-3 py-1.5 bg-teal-700 text-white text-xs font-medium rounded-lg hover:bg-teal-700/90 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          Advance
+        </button>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="px-6 border-b border-gray-200 bg-white flex-shrink-0">
+        <nav class="flex gap-6">
+          <a href="#" class="py-2.5 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Overview</a>
+          <a href="#" class="py-2.5 text-sm font-medium text-teal-700 border-b-2 border-teal-700">Notes</a>
+          <a href="#" class="py-2.5 text-sm font-medium text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Action Plan</a>
+        </nav>
+      </div>
+
+      <!-- Notes Thread -->
+      <div class="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+
+        <!-- Note 1 -->
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-full bg-primary-blue-700 flex items-center justify-center text-[10px] text-white font-medium flex-shrink-0">SK</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm font-medium text-gray-900">Sarah Kennedy</span>
+              <span class="text-[10px] text-gray-400">Coordinator</span>
+              <span class="text-[10px] text-gray-400">&middot; 3 days ago</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 leading-relaxed">
+              <p>Initial intake completed. Complaint received via phone from David Thompson (son of Margaret Thompson). He reported that his mother's evening medication was administered late on two consecutive evenings — Monday 5th and Tuesday 6th March. He noticed the discrepancy from the medication log when visiting Wednesday morning.</p>
+              <p class="mt-2">Triaged as Urgent due to medication timing impact on blood pressure management. Assigned to myself for investigation.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 2 -->
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-full bg-primary-blue-700 flex items-center justify-center text-[10px] text-white font-medium flex-shrink-0">SK</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm font-medium text-gray-900">Sarah Kennedy</span>
+              <span class="text-[10px] text-gray-400">Coordinator</span>
+              <span class="text-[10px] text-gray-400">&middot; 2 days ago</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 leading-relaxed">
+              <p>Spoke with Nurse Practitioner Janet Liu regarding the medication timing. She confirmed the delays were caused by staff changeover running 45 minutes behind schedule on both evenings due to a call-out. The evening nurse began rounds late as a result.</p>
+              <p class="mt-2">Requested roster data from HR for the relevant shifts to verify staffing levels.</p>
+            </div>
+            <!-- Attachment -->
+            <div class="mt-2 flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-100 w-fit">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+              <span class="text-xs text-teal-700 font-medium">medication-log-5-6-mar.pdf</span>
+              <span class="text-[10px] text-gray-400">142 KB</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 3 -->
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-full bg-teal-700 flex items-center justify-center text-[10px] text-white font-medium flex-shrink-0">JL</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm font-medium text-gray-900">Janet Liu</span>
+              <span class="text-[10px] text-gray-400">Nurse Practitioner</span>
+              <span class="text-[10px] text-gray-400">&middot; 2 days ago</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 leading-relaxed">
+              <p>Confirming the clinical assessment: Mrs. Thompson's blood pressure readings on both evenings were within acceptable range despite the late administration. No adverse clinical outcome observed. However, the prescribed window of 6:30-7:30 PM exists because of the interaction with her morning diabetes medication — consistent late dosing could accumulate risk.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 4 -->
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-full bg-primary-blue-700 flex items-center justify-center text-[10px] text-white font-medium flex-shrink-0">SK</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm font-medium text-gray-900">Sarah Kennedy</span>
+              <span class="text-[10px] text-gray-400">Coordinator</span>
+              <span class="text-[10px] text-gray-400">&middot; 1 day ago</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 leading-relaxed">
+              <p>Received roster data from HR. Confirmed that both evenings had one less staff member than rostered. The call-out on Monday was not backfilled, and the same gap occurred Tuesday due to the same staff member being unwell.</p>
+              <p class="mt-2">Next steps: Draft action plan items for (1) staffing contingency protocol, (2) medication priority flagging system, (3) family communication within 4 hours of medication timing deviation.</p>
+            </div>
+            <!-- Attachments -->
+            <div class="mt-2 flex flex-wrap gap-2">
+              <div class="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-100">
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                <span class="text-xs text-teal-700 font-medium">roster-5-6-mar.xlsx</span>
+                <span class="text-[10px] text-gray-400">38 KB</span>
+              </div>
+              <div class="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-100">
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                <span class="text-xs text-teal-700 font-medium">hr-callout-report.pdf</span>
+                <span class="text-[10px] text-gray-400">67 KB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 5 -->
+        <div class="flex gap-3">
+          <div class="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-[10px] text-white font-medium flex-shrink-0">DW</div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm font-medium text-gray-900">Diana Walsh</span>
+              <span class="text-[10px] text-gray-400">Clinical Manager</span>
+              <span class="text-[10px] text-gray-400">&middot; 6 hours ago</span>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 text-sm text-gray-700 leading-relaxed">
+              <p>Reviewed the investigation findings. Agree with the proposed action items. Please also add a review of the medication priority system — we should flag time-critical medications so they are administered first in the round regardless of room order. Adding this to the action plan.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Compose Bar (fixed bottom) -->
+      <div class="flex-shrink-0 border-t border-gray-200 bg-white px-6 py-3">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-full bg-primary-blue-700 flex items-center justify-center text-[10px] text-white font-medium flex-shrink-0 mt-0.5">SK</div>
+          <div class="flex-1">
+            <textarea rows="2" placeholder="Add a note..." class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 resize-none"></textarea>
+            <div class="flex items-center justify-between mt-2">
+              <button class="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                Attach file
+              </button>
+              <button class="px-4 py-1.5 bg-teal-700 text-white text-xs font-medium rounded-lg hover:bg-teal-700/90 transition">Post Note</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

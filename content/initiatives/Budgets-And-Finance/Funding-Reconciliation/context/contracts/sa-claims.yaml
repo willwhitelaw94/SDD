@@ -1,0 +1,566 @@
+# Funding Reconciliation & Refunds — SA Claims API Contract
+# Epic: FRR | Phase 2: Automated SA Claim Pipeline with Netting
+# Internal endpoints + External Services Australia API integration
+#
+# Updated 2026-02-12: Claim netting via modifying original claim line amounts
+# (not separate submissions). $36K already claimed this way.
+
+openapi: "3.0.3"
+info:
+  title: SA Claims API
+  version: "2.0.0"
+  description: |
+    API contract for the automated Services Australia claims pipeline with
+    credit netting. Covers both internal Portal endpoints (Inertia pages)
+    and external SA API integration schemas.
+
+    **Claim Flow**: Consumptions aggregated per funding → credits netted by
+    modifying original claim line amounts → Finance reviews → submitted to SA API → reconciled.
+
+    **Key Change (v2.0.0 — Meeting 2026-02-12):**
+    Netting is applied by modifying original claim line amounts, NOT by creating
+    separate adjustment line items. The $36K already claimed to SA was handled
+    this way — original claim amounts were reduced to account for adjustments.
+
+servers:
+  - url: https://tc-portal.test
+    description: Local development (Laravel Herd)
+
+paths:
+  # --- Internal Portal Endpoints (Inertia Pages) ---
+
+  /billing/claims:
+    get:
+      summary: SA Claims Index
+      description: |
+        List all SA claim submissions with status, netting breakdown, and SA references.
+        Rendered as Inertia page: `Billing/Claims/Index`.
+      operationId: sa-claims.index
+      tags: [SA Claims - Internal]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, submitted, reconciled, rejected]
+        - name: funding_stream_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by funding stream
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 25
+      responses:
+        "200":
+          description: Inertia page with paginated claims
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SAClaimsIndexProps"
+
+  /billing/claims/{claim}:
+    get:
+      summary: SA Claim Review
+      description: |
+        Review a pending claim before submission. Shows netting breakdown
+        with all adjustments applied via modified line amounts, consumption details,
+        and final claim amount.
+        Rendered as Inertia page: `Billing/Claims/SAClaimReview`.
+      operationId: sa-claims.show
+      tags: [SA Claims - Internal]
+      parameters:
+        - name: claim
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Inertia page with claim review details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SAClaimReviewProps"
+        "404":
+          description: Claim not found
+
+  /billing/claims/{claim}/submit:
+    post:
+      summary: Submit Claim to Services Australia
+      description: |
+        Submit a reviewed claim to the SA API. Dispatches `SubmitConsumptionToSAJob`
+        as a queued job. Updates claim status to `submitted`.
+
+        **Netting approach**: Original claim line amounts are modified (reduced)
+        to account for outstanding credits. No separate adjustment line items
+        are submitted to SA.
+
+        **Pre-conditions:**
+        - Claim must be in `pending` status
+        - Feature flag `sa-automated-claims` must be active
+        - All consumptions must be in CLEANSED status
+      operationId: sa-claims.submit
+      tags: [SA Claims - Internal]
+      parameters:
+        - name: claim
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "302":
+          description: Redirect to claim detail with "Submission queued" toast
+        "403":
+          description: Not authorized or feature flag inactive
+        "422":
+          description: Claim not in valid state for submission
+
+  /billing/claims/{claim}/reconcile:
+    patch:
+      summary: Reconcile SA Claim Response
+      description: |
+        Process the SA API response for a submitted claim. Updates claim status
+        to `reconciled` or `rejected`. If reconciled, marks applied adjustments
+        as `applied`. If rejected, rolls back adjustment status to `approved`
+        and restores credit balances.
+
+        Typically called by `ReconcileSAClaimJob` (automated), but can be
+        triggered manually by Finance.
+      operationId: sa-claims.reconcile
+      tags: [SA Claims - Internal]
+      parameters:
+        - name: claim
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReconcileClaimData"
+      responses:
+        "302":
+          description: Redirect back with reconciliation result toast
+        "422":
+          description: Claim not in valid state for reconciliation
+
+  # --- Batch Assembly Endpoint ---
+
+  /billing/claims/assemble:
+    post:
+      summary: Assemble Claim Batch
+      description: |
+        Trigger batch assembly of consumptions into claim submissions.
+        Aggregates CLEANSED consumptions per funding allocation, calculates
+        netting from outstanding credits by modifying line amounts, and creates
+        `ConsumptionClaimSubmission` records in `pending` status for Finance review.
+
+        Typically triggered by scheduled job, but can be manually invoked.
+      operationId: sa-claims.assemble
+      tags: [SA Claims - Internal]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                funding_id:
+                  type: integer
+                  description: Optional — assemble for specific funding only
+                claim_period_start:
+                  type: string
+                  format: date
+                  description: Start of claim period
+                claim_period_end:
+                  type: string
+                  format: date
+                  description: End of claim period
+      responses:
+        "200":
+          description: Batch assembly result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BatchAssemblyResponse"
+
+components:
+  schemas:
+    # --- Request Data ---
+
+    ReconcileClaimData:
+      type: object
+      required: [sa_claim_reference, status]
+      properties:
+        sa_claim_reference:
+          type: string
+          description: Reference from SA API response
+        status:
+          type: string
+          enum: [reconciled, rejected]
+          description: SA response outcome
+        sa_response_message:
+          type: string
+          nullable: true
+          description: SA API response message (if any)
+
+    # --- Internal Response Props ---
+
+    SAClaimsIndexProps:
+      type: object
+      properties:
+        claims:
+          type: object
+          description: Laravel paginator
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/SAClaimResource"
+            current_page:
+              type: integer
+            last_page:
+              type: integer
+            total:
+              type: integer
+        filters:
+          type: object
+          properties:
+            status:
+              type: string
+              nullable: true
+            funding_stream_id:
+              type: integer
+              nullable: true
+
+    SAClaimReviewProps:
+      type: object
+      properties:
+        claim:
+          $ref: "#/components/schemas/SAClaimDetailResource"
+        can_submit:
+          type: boolean
+          description: Whether current user can submit this claim
+
+    SAClaimResource:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        funding_name:
+          type: string
+          description: "e.g., Home Support Ongoing - PKG-123"
+        funding_stream_name:
+          type: string
+        original_amount:
+          type: number
+          format: decimal
+        adjustments_netted:
+          type: number
+          format: decimal
+        claim_amount:
+          type: number
+          format: decimal
+          description: Final amount (original line amounts modified by netting)
+        sa_claim_reference:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [pending, submitted, reconciled, rejected]
+        submitted_by:
+          type: string
+          nullable: true
+          description: Submitter's full name
+        submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        reconciled_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    SAClaimDetailResource:
+      allOf:
+        - $ref: "#/components/schemas/SAClaimResource"
+        - type: object
+          properties:
+            funding:
+              type: object
+              properties:
+                id:
+                  type: integer
+                external_id:
+                  type: string
+                  description: SA funding identifier
+                package_reference:
+                  type: string
+                funding_stream:
+                  type: string
+            netting_breakdown:
+              type: array
+              description: Adjustments netted by modifying original claim line amounts
+              items:
+                type: object
+                properties:
+                  adjustment_uuid:
+                    type: string
+                    format: uuid
+                  adjustment_direction:
+                    type: string
+                    enum: [credit, debit]
+                  adjustment_reason:
+                    type: string
+                  bill_reference:
+                    type: string
+                  amount_applied:
+                    type: number
+                    format: decimal
+                  original_adjustment_amount:
+                    type: number
+                    format: decimal
+            consumptions:
+              type: array
+              description: Consumptions included in this claim batch (with modified line amounts)
+              items:
+                type: object
+                properties:
+                  consumption_id:
+                    type: integer
+                  service_type:
+                    type: string
+                  service_date:
+                    type: string
+                    format: date
+                  original_amount:
+                    type: number
+                    format: decimal
+                    description: Pre-netting line amount
+                  claimed_amount:
+                    type: number
+                    format: decimal
+                    description: Post-netting line amount (may differ if netting applied to this line)
+
+    BatchAssemblyResponse:
+      type: object
+      properties:
+        claims_created:
+          type: integer
+          description: Number of claim submissions created
+        total_original_amount:
+          type: number
+          format: decimal
+        total_adjustments_netted:
+          type: number
+          format: decimal
+        total_claim_amount:
+          type: number
+          format: decimal
+        claims:
+          type: array
+          items:
+            type: object
+            properties:
+              uuid:
+                type: string
+                format: uuid
+              funding_name:
+                type: string
+              original_amount:
+                type: number
+                format: decimal
+              adjustments_netted:
+                type: number
+                format: decimal
+              claim_amount:
+                type: number
+                format: decimal
+
+    # --- External SA API Schemas ---
+    # These define the request/response shapes for Services Australia API integration.
+    # Used by ServicesAustraliaAPIService.
+
+    SAValidationRequest:
+      type: object
+      description: |
+        Sent to SA API to validate a consumption before claiming.
+        POST /api/v1/consumption/validate
+      required:
+        - provider_abn
+        - participant_id
+        - service_date
+        - service_type_code
+        - amount
+      properties:
+        provider_abn:
+          type: string
+          pattern: '^\d{11}$'
+          description: Trilogy Care ABN
+        participant_id:
+          type: string
+          description: SA participant identifier (from Funding.external_id)
+        service_date:
+          type: string
+          format: date
+        service_type_code:
+          type: string
+          description: SA service type code
+        amount:
+          type: number
+          format: decimal
+          minimum: 0.01
+
+    SAValidationResponse:
+      type: object
+      properties:
+        is_valid:
+          type: boolean
+        participant_id:
+          type: string
+        available_budget:
+          type: number
+          format: decimal
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+
+    SAClaimRequest:
+      type: object
+      description: |
+        Sent to SA API to submit a claim with netting applied via modified line amounts.
+        POST /api/v1/consumption/claim
+
+        Netting is handled by modifying original claim line amounts (reducing them),
+        NOT by submitting separate adjustment line items.
+      required:
+        - provider_abn
+        - participant_id
+        - claim_amount
+        - original_amount
+      properties:
+        provider_abn:
+          type: string
+          pattern: '^\d{11}$'
+        participant_id:
+          type: string
+          description: SA participant identifier
+        claim_amount:
+          type: number
+          format: decimal
+          minimum: 0
+          description: Final amount after netting (line amounts modified)
+        original_amount:
+          type: number
+          format: decimal
+          minimum: 0.01
+          description: Pre-netting consumption total
+        adjustments_netted:
+          type: number
+          format: decimal
+          minimum: 0
+          description: Total credits deducted (for Portal audit trail only — not sent to SA)
+        consumptions:
+          type: array
+          description: Individual consumption line items with modified amounts
+          items:
+            type: object
+            required: [service_date, service_type_code, amount]
+            properties:
+              service_date:
+                type: string
+                format: date
+              service_type_code:
+                type: string
+              amount:
+                type: number
+                format: decimal
+                description: Modified line amount (reduced if netting applied to this line)
+              service_hours:
+                type: number
+                format: decimal
+                nullable: true
+
+    SAClaimResponse:
+      type: object
+      properties:
+        claim_reference:
+          type: string
+          description: SA-generated claim reference
+        status:
+          type: string
+          enum: [accepted, rejected, pending_review]
+        claimed_amount:
+          type: number
+          format: decimal
+        message:
+          type: string
+          nullable: true
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+              message:
+                type: string
+
+    SAClaimStatusResponse:
+      type: object
+      description: |
+        Response from SA API for checking claim status.
+        GET /api/v1/claim/{reference}/status
+      properties:
+        claim_reference:
+          type: string
+        status:
+          type: string
+          enum: [accepted, rejected, pending_review, processing]
+        claimed_amount:
+          type: number
+          format: decimal
+        reconciled_at:
+          type: string
+          format: date-time
+          nullable: true
+        message:
+          type: string
+          nullable: true
+
+  securitySchemes:
+    session:
+      type: apiKey
+      in: cookie
+      name: laravel_session
+      description: Laravel session authentication (internal endpoints)
+    sa_api_key:
+      type: http
+      scheme: bearer
+      description: Services Australia API bearer token (external endpoints)
+
+security:
+  - session: []

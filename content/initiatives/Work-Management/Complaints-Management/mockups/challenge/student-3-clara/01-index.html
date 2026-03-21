@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Records — Kanban Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          },
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 min-h-screen flex">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="w-60 bg-white border-r border-gray-200 min-h-screen flex-shrink-0 p-4 space-y-3">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-8 h-8 rounded-lg bg-tc-teal-700 flex items-center justify-center text-white text-xs font-bold">TC</div>
+      <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+    <div class="space-y-1">
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-md flex items-center px-3">
+        <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+      </div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+    </div>
+    <div class="pt-4 border-t border-gray-100 mt-4 space-y-1">
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 flex flex-col min-h-screen overflow-hidden">
+    <!-- Top Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h1 class="text-xl font-semibold text-gray-900">Feedback Records</h1>
+          <p class="text-sm text-gray-500 mt-0.5">14 active records across all stages</p>
+        </div>
+        <button class="inline-flex items-center gap-2 bg-tc-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-tc-teal-700/90 transition shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          New Record
+        </button>
+      </div>
+      <!-- Filter Bar -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-0.5">
+          <button class="px-3 py-1.5 text-xs font-medium rounded-md bg-white shadow-sm text-gray-900">All Types</button>
+          <button class="px-3 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:text-gray-700">Complaint</button>
+          <button class="px-3 py-1.5 text-xs font-medium rounded-md text-gray-500 hover:text-gray-700">Remediation</button>
+        </div>
+        <div class="h-5 w-px bg-gray-200"></div>
+        <div class="flex items-center gap-1.5">
+          <button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50">
+            <span class="w-2 h-2 rounded-full bg-red-500"></span> Urgent
+          </button>
+          <button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span> Medium
+          </button>
+          <button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50">
+            <span class="w-2 h-2 rounded-full bg-gray-400"></span> Standard
+          </button>
+        </div>
+        <div class="h-5 w-px bg-gray-200"></div>
+        <div class="relative">
+          <svg class="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input type="text" placeholder="Search records..." class="pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-md w-48 focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 focus:border-tc-teal-500">
+        </div>
+      </div>
+    </header>
+
+    <!-- Board -->
+    <div class="flex-1 overflow-x-auto p-4">
+      <div class="flex gap-4 h-full min-w-max">
+
+        <!-- Column: New -->
+        <div class="w-72 flex-shrink-0 flex flex-col">
+          <div class="flex items-center justify-between px-3 py-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+              <h2 class="text-sm font-semibold text-gray-700">New</h2>
+              <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">3</span>
+            </div>
+            <span class="text-[10px] text-gray-400">WIP 5</span>
+          </div>
+          <div class="flex-1 space-y-3">
+            <!-- Card: Urgent -->
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-red-500 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00156</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-red-700 bg-red-50 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Urgent
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Medication not administered at correct time — family complaint</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] font-bold">SL</div>
+                  <span class="text-[10px] text-gray-400">2 Mar</span>
+                </div>
+                <span class="text-[10px] text-red-500 flex items-center gap-0.5" title="Overdue">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/></svg>
+                </span>
+              </div>
+            </div>
+            <!-- Card: Standard -->
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-gray-300 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00157</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Standard
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Request to change shower schedule — preference not documented</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-teal-100 text-tc-teal-700 flex items-center justify-center text-[10px] font-bold">KP</div>
+                  <span class="text-[10px] text-gray-400">5 Mar</span>
+                </div>
+              </div>
+            </div>
+            <!-- Card: Medium -->
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-amber-400 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00158</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Medium
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Communication gap between day and night shift staff</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold">MJ</div>
+                  <span class="text-[10px] text-gray-400">7 Mar</span>
+                </div>
+              </div>
+            </div>
+            <!-- Add Card button -->
+            <button class="w-full py-2 border-2 border-dashed border-gray-200 rounded-lg text-xs text-gray-400 hover:border-tc-teal-500 hover:text-tc-teal-700 transition flex items-center justify-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              Add Card
+            </button>
+          </div>
+        </div>
+
+        <!-- Column: Received -->
+        <div class="w-72 flex-shrink-0 flex flex-col">
+          <div class="flex items-center justify-between px-3 py-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+              <h2 class="text-sm font-semibold text-gray-700">Received</h2>
+              <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">2</span>
+            </div>
+            <span class="text-[10px] text-gray-400">WIP 5</span>
+          </div>
+          <div class="flex-1 space-y-3">
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-amber-400 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00151</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Medium
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Billing discrepancy on March statement — $120 overcharge</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-[10px] font-bold">AT</div>
+                  <span class="text-[10px] text-gray-400">28 Feb</span>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-gray-300 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00152</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Standard
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Transport to appointment was late — rescheduling needed</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-[10px] font-bold">RB</div>
+                  <span class="text-[10px] text-gray-400">1 Mar</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column: Triage -->
+        <div class="w-72 flex-shrink-0 flex flex-col">
+          <div class="flex items-center justify-between px-3 py-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+              <h2 class="text-sm font-semibold text-gray-700">Triage</h2>
+              <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">2</span>
+            </div>
+            <span class="text-[10px] text-gray-400">WIP 4</span>
+          </div>
+          <div class="flex-1 space-y-3">
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-red-500 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00148</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-red-700 bg-red-50 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Urgent
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Fall incident in common area — family requesting investigation</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] font-bold">SL</div>
+                  <span class="text-[10px] text-gray-400">24 Feb</span>
+                </div>
+                <span class="text-[10px] text-red-500 flex items-center gap-0.5">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd"/></svg>
+                </span>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-amber-400 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00149</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Medium
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Dietary requirements not being met — vegetarian meals missing</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-teal-100 text-tc-teal-700 flex items-center justify-center text-[10px] font-bold">KP</div>
+                  <span class="text-[10px] text-gray-400">25 Feb</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column: Owner Accepted -->
+        <div class="w-72 flex-shrink-0 flex flex-col">
+          <div class="flex items-center justify-between px-3 py-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span>
+              <h2 class="text-sm font-semibold text-gray-700">Owner Accepted</h2>
+              <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">1</span>
+            </div>
+            <span class="text-[10px] text-gray-400">WIP 3</span>
+          </div>
+          <div class="flex-1 space-y-3">
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-gray-300 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00145</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-gray-600 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Standard
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Noise levels during evening — request for quiet hours policy</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold">MJ</div>
+                  <span class="text-[10px] text-gray-400">20 Feb</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column: Investigation -->
+        <div class="w-72 flex-shrink-0 flex flex-col">
+          <div class="flex items-center justify-between px-3 py-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-violet-500"></span>
+              <h2 class="text-sm font-semibold text-gray-700">Investigation</h2>
+              <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">2</span>
+            </div>
+            <span class="text-[10px] text-red-500 font-medium">WIP 2/2</span>
+          </div>
+          <div class="flex-1 space-y-3">
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-red-500 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00142</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-red-700 bg-red-50 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Urgent
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Pressure injury developed — care plan not followed by agency staff</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-[10px] font-bold">AT</div>
+                  <span class="text-[10px] text-gray-400">15 Feb</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="text-[10px] text-gray-400">3/5</span>
+                  <div class="w-12 h-1 bg-gray-100 rounded-full overflow-hidden"><div class="w-[60%] h-full bg-tc-teal-500 rounded-full"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-amber-400 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00140</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Medium
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Personal belongings misplaced during room transfer</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-[10px] font-bold">RB</div>
+                  <span class="text-[10px] text-gray-400">12 Feb</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="text-[10px] text-gray-400">1/4</span>
+                  <div class="w-12 h-1 bg-gray-100 rounded-full overflow-hidden"><div class="w-[25%] h-full bg-tc-teal-500 rounded-full"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column: Resolution -->
+        <div class="w-72 flex-shrink-0 flex flex-col">
+          <div class="flex items-center justify-between px-3 py-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <h2 class="text-sm font-semibold text-gray-700">Resolution</h2>
+              <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">1</span>
+            </div>
+            <span class="text-[10px] text-gray-400">WIP 3</span>
+          </div>
+          <div class="flex-1 space-y-3">
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-amber-400 hover:shadow-md transition cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00138</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Medium
+                </span>
+              </div>
+              <p class="text-sm font-medium text-gray-900 line-clamp-2 mb-2">Lack of social activities — resident feeling isolated</p>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] font-bold">SL</div>
+                  <span class="text-[10px] text-gray-400">8 Feb</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <span class="text-[10px] text-gray-400">4/4</span>
+                  <div class="w-12 h-1 bg-gray-100 rounded-full overflow-hidden"><div class="w-full h-full bg-emerald-500 rounded-full"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column: Closed -->
+        <div class="w-72 flex-shrink-0 flex flex-col">
+          <div class="flex items-center justify-between px-3 py-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+              <h2 class="text-sm font-semibold text-gray-700">Closed</h2>
+              <span class="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">3</span>
+            </div>
+          </div>
+          <div class="flex-1 space-y-3">
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-gray-200 opacity-70 cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00132</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">Resolved</span>
+              </div>
+              <p class="text-sm font-medium text-gray-500 line-clamp-2 mb-2">Care plan review delayed — scheduling issue resolved</p>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-teal-100 text-tc-teal-700 flex items-center justify-center text-[10px] font-bold">KP</div>
+                <span class="text-[10px] text-gray-400">Closed 1 Mar</span>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-gray-200 opacity-70 cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00129</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded-full">Withdrawn</span>
+              </div>
+              <p class="text-sm font-medium text-gray-500 line-clamp-2 mb-2">Equipment malfunction in bathroom — withdrawn by family</p>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold">MJ</div>
+                <span class="text-[10px] text-gray-400">Closed 25 Feb</span>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-3 border-l-[3px] border-l-gray-200 opacity-70 cursor-grab">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-xs font-mono text-gray-400">REF-00125</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full">Resolved</span>
+              </div>
+              <p class="text-sm font-medium text-gray-500 line-clamp-2 mb-2">Incorrect contact details used for GP referral</p>
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center text-[10px] font-bold">AT</div>
+                <span class="text-[10px] text-gray-400">Closed 20 Feb</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

@@ -1,0 +1,711 @@
+# Funding Reconciliation & Refunds — Adjustments API Contract
+# Epic: FRR | Phase 1: Adjustment System
+# Internal API endpoints for adjustment CRUD, workflow, and MYOB webhook
+#
+# Updated 2026-02-12: Added webhook endpoint, debit/credit direction support,
+# consumption_id/bill_item_id matching, MYOB status lifecycle
+
+openapi: "3.0.3"
+info:
+  title: Adjustments API
+  version: "2.0.0"
+  description: |
+    Internal API for managing funding adjustments (credits and debits against bills).
+    All endpoints require authentication and `finance_user` role authorization.
+    Adjustments are served as Inertia pages — these contracts define the controller
+    actions and data shapes, not standalone REST endpoints.
+
+    **Key Changes (v2.0.0 — Meeting 2026-02-12):**
+    - Both credit AND debit adjustment directions supported
+    - Matching via consumption_id (MYOB External Reference ID) + bill_item_id fallback
+    - Webhook endpoint for MYOB adjustment sync (replaces polling)
+    - MYOB status lifecycle tracking (balanced → open → closed)
+    - Service date filtering (SAH: Nov 1+ boundary)
+
+servers:
+  - url: https://tc-portal.test
+    description: Local development (Laravel Herd)
+
+paths:
+  /finance/adjustments:
+    get:
+      summary: Adjustments Index
+      description: |
+        List all adjustments with server-side pagination, filtering, and sorting.
+        Rendered as Inertia page: `Finance/Adjustments/Index`.
+      operationId: adjustments.index
+      tags: [Adjustments]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, approved, voided, applied]
+          description: Filter by adjustment status
+        - name: direction
+          in: query
+          schema:
+            type: string
+            enum: [credit, debit]
+          description: Filter by adjustment direction
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [myob_detected, manual]
+          description: Filter by adjustment type
+        - name: date_from
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter adjustments by service date from
+        - name: date_to
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filter adjustments by service date up to
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [amount, -amount, service_date, -service_date, created_at, -created_at, approved_at, -approved_at]
+          description: Sort field (prefix `-` for descending)
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 25
+            maximum: 100
+      responses:
+        "200":
+          description: Inertia page with paginated adjustments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdjustmentsIndexProps"
+
+  /finance/adjustments/create:
+    get:
+      summary: Create Adjustment Form
+      description: |
+        Display form for manually creating an adjustment.
+        Rendered as Inertia page: `Finance/Adjustments/Create`.
+      operationId: adjustments.create
+      tags: [Adjustments]
+      responses:
+        "200":
+          description: Inertia page with create form
+
+  /finance/adjustments-store:
+    post:
+      summary: Store Manual Adjustment
+      description: |
+        Create a new manual adjustment against a paid bill.
+        Validates amount does not exceed bill total. Creates adjustment in `pending` status.
+        Supports both credit and debit directions.
+        Redirects back to Adjustments Index with success toast.
+      operationId: adjustments.store
+      tags: [Adjustments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAdjustmentData"
+      responses:
+        "302":
+          description: Redirect to adjustments.index
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+  /finance/adjustments/{adjustment}:
+    get:
+      summary: Show Adjustment Detail
+      description: |
+        Display adjustment detail with bill info, consumption link, credit balances, and audit trail.
+        Rendered as Inertia page: `Finance/Adjustments/Show`.
+      operationId: adjustments.show
+      tags: [Adjustments]
+      parameters:
+        - name: adjustment
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Adjustment UUID
+      responses:
+        "200":
+          description: Inertia page with adjustment detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdjustmentShowProps"
+        "404":
+          description: Adjustment not found
+
+  /finance/adjustments/{adjustment}/approve:
+    patch:
+      summary: Approve Adjustment
+      description: |
+        Approve a pending adjustment. For debit adjustments, triggers budget restoration via
+        `ApproveAdjustmentAction` → `RestoreBudgetFromAdjustmentAction`.
+        Creates `OutstandingCreditBalance` records per funding allocation.
+        Event-sourced via `AdjustmentAggregateRoot`.
+      operationId: adjustments.approve
+      tags: [Adjustments]
+      parameters:
+        - name: adjustment
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApproveAdjustmentData"
+      responses:
+        "302":
+          description: Redirect back with success toast
+        "403":
+          description: Not authorized (requires finance_user role)
+        "422":
+          description: Invalid state transition (not pending)
+
+  /finance/adjustments/{adjustment}/void:
+    patch:
+      summary: Void Adjustment
+      description: |
+        Void a pending or approved adjustment. If approved, reverts budget restoration.
+        Requires mandatory reason. Event-sourced via `AdjustmentAggregateRoot`.
+      operationId: adjustments.void
+      tags: [Adjustments]
+      parameters:
+        - name: adjustment
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VoidAdjustmentData"
+      responses:
+        "302":
+          description: Redirect back with success toast
+        "403":
+          description: Not authorized
+        "422":
+          description: Invalid state (cannot void applied adjustments)
+
+  # --- MYOB Webhook Endpoint ---
+
+  /api/webhooks/myob/adjustments:
+    post:
+      summary: MYOB Adjustment Webhook
+      description: |
+        Receives webhook notifications from MYOB when adjustment status changes.
+        Only processes adjustments at `closed` status (after payment run).
+
+        **Matching Algorithm:**
+        1. External Reference ID → Portal `consumption_id` (budget_plan_item_funding_consumptions.id)
+        2. If consumption soft-deleted (post-split), fallback to `bill_item_id` from MYOB Bill Item ID
+        3. From bill_item_id, resolve bill_id for parent bill
+
+        **Service Date Filter:** Only imports adjustments with service_date >= 2024-11-01 (SAH boundary)
+
+        Creates adjustment in `pending` status for Finance review.
+      operationId: webhooks.myob.adjustments
+      tags: [MYOB Webhook]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MYOBWebhookPayload"
+      responses:
+        "200":
+          description: Webhook processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [accepted, skipped, error]
+                  message:
+                    type: string
+        "401":
+          description: Invalid webhook signature
+        "422":
+          description: Unprocessable payload
+
+  # --- Bulk Import Endpoint (Initial One-Time) ---
+
+  /api/adjustments/bulk-import:
+    post:
+      summary: Bulk Import MYOB Adjustments
+      description: |
+        One-time bulk import of historical MYOB adjustments.
+        Queries MYOB API for all adjustments with service_date >= 2024-11-01
+        and status = 'closed'. Creates adjustment records in `pending` status.
+      operationId: adjustments.bulkImport
+      tags: [Adjustments]
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service_date_from:
+                  type: string
+                  format: date
+                  default: "2024-11-01"
+                  description: Import adjustments with service date from this date
+                dry_run:
+                  type: boolean
+                  default: false
+                  description: If true, returns what would be imported without creating records
+      responses:
+        "200":
+          description: Bulk import result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BulkImportResponse"
+
+  /api/outstanding-credits:
+    get:
+      summary: Outstanding Credits List
+      description: |
+        List outstanding (unapplied) credit balances grouped by funding allocation.
+        Used by Outstanding Credits Dashboard Widget.
+      operationId: outstanding-credits.index
+      tags: [Outstanding Credits]
+      parameters:
+        - name: package_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by package
+        - name: funding_stream_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by funding stream
+      responses:
+        "200":
+          description: List of outstanding credit balances
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OutstandingCreditsResponse"
+
+  /api/outstanding-credits/summary:
+    get:
+      summary: Outstanding Credits Summary
+      description: |
+        Aggregated summary of outstanding credits across all funding streams.
+        Returns totals for dashboard display.
+      operationId: outstanding-credits.summary
+      tags: [Outstanding Credits]
+      responses:
+        "200":
+          description: Aggregated credit summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OutstandingCreditsSummaryResponse"
+
+components:
+  schemas:
+    # --- Request Data (Laravel Data classes) ---
+
+    CreateAdjustmentData:
+      type: object
+      required: [bill_id, amount, direction, reason]
+      properties:
+        bill_id:
+          type: integer
+          description: ID of the paid bill to adjust
+        bill_item_id:
+          type: integer
+          nullable: true
+          description: Specific bill line item (optional for manual)
+        amount:
+          type: number
+          format: decimal
+          description: Adjustment amount (signed — positive for credit, negative for debit)
+        direction:
+          type: string
+          enum: [credit, debit]
+          description: "'credit' = same direction as bill, 'debit' = reversal/opposite"
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: Mandatory reason for manual adjustment
+        myob_reference_number:
+          type: string
+          nullable: true
+          description: MYOB refund transaction reference (auto-populated for MYOB-detected)
+
+    ApproveAdjustmentData:
+      type: object
+      properties:
+        notes:
+          type: string
+          maxLength: 500
+          description: Optional approval notes
+
+    VoidAdjustmentData:
+      type: object
+      required: [reason]
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: Mandatory reason for voiding
+
+    MYOBWebhookPayload:
+      type: object
+      description: |
+        Payload from MYOB webhook notification for adjustment status changes.
+        Only adjustments at 'closed' status are processed.
+      required: [uid, type, status]
+      properties:
+        uid:
+          type: string
+          description: MYOB adjustment UID
+        type:
+          type: string
+          description: MYOB bill type
+        status:
+          type: string
+          enum: [balanced, open, closed]
+          description: MYOB adjustment lifecycle status
+        external_reference_id:
+          type: string
+          description: Portal consumption ID (budget_plan_item_funding_consumptions.id)
+        bill_item_id:
+          type: string
+          description: MYOB Bill Item ID (maps to Portal bill_items.id)
+        invoice_number:
+          type: string
+          description: MYOB invoice/reference number
+        total:
+          type: number
+          format: decimal
+          description: Adjustment total amount
+        adjustment_type:
+          type: string
+          enum: [credit, debit]
+          description: Credit (same direction as bill) or debit (reversal)
+        service_date:
+          type: string
+          format: date
+        date_occurred:
+          type: string
+          format: date-time
+
+    # --- Response Props (Inertia page props) ---
+
+    AdjustmentsIndexProps:
+      type: object
+      properties:
+        adjustments:
+          type: object
+          description: Laravel paginator
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/AdjustmentResource"
+            current_page:
+              type: integer
+            last_page:
+              type: integer
+            per_page:
+              type: integer
+            total:
+              type: integer
+        filters:
+          type: object
+          properties:
+            status:
+              type: string
+              nullable: true
+            direction:
+              type: string
+              nullable: true
+            type:
+              type: string
+              nullable: true
+            date_from:
+              type: string
+              nullable: true
+            date_to:
+              type: string
+              nullable: true
+            sort:
+              type: string
+              nullable: true
+
+    AdjustmentShowProps:
+      type: object
+      properties:
+        adjustment:
+          $ref: "#/components/schemas/AdjustmentDetailResource"
+
+    AdjustmentResource:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        bill_number:
+          type: string
+          description: Formatted bill reference (e.g., "BILL-456")
+        bill_id:
+          type: integer
+        bill_item_id:
+          type: integer
+          nullable: true
+        consumption_id:
+          type: integer
+          nullable: true
+          description: Portal consumption ID (may be soft-deleted)
+        myob_uid:
+          type: string
+          nullable: true
+        myob_reference_number:
+          type: string
+          nullable: true
+        myob_link:
+          type: string
+          format: uri
+          nullable: true
+          description: Deep link to MYOB transaction
+        amount:
+          type: number
+          format: decimal
+          description: Signed amount (positive=credit, negative=debit)
+        direction:
+          type: string
+          enum: [credit, debit]
+        type:
+          type: string
+          enum: [myob_detected, manual]
+        status:
+          type: string
+          enum: [pending, approved, voided, applied]
+        myob_status:
+          type: string
+          enum: [balanced, open, closed]
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        service_date:
+          type: string
+          format: date
+          nullable: true
+        approved_by:
+          type: string
+          nullable: true
+          description: Approver's full name
+        detected_at:
+          type: string
+          format: date-time
+          nullable: true
+        approved_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    AdjustmentDetailResource:
+      allOf:
+        - $ref: "#/components/schemas/AdjustmentResource"
+        - type: object
+          properties:
+            bill:
+              type: object
+              description: Full bill details (supplier, package, items)
+            bill_item:
+              type: object
+              nullable: true
+              description: Linked bill line item details
+            consumption:
+              type: object
+              nullable: true
+              description: Linked consumption details (if not soft-deleted)
+            credit_balances:
+              type: array
+              items:
+                $ref: "#/components/schemas/CreditBalanceResource"
+            claim_applications:
+              type: array
+              items:
+                $ref: "#/components/schemas/ClaimApplicationResource"
+            voided_by:
+              type: string
+              nullable: true
+            voided_at:
+              type: string
+              format: date-time
+              nullable: true
+            void_reason:
+              type: string
+              nullable: true
+
+    CreditBalanceResource:
+      type: object
+      properties:
+        funding_name:
+          type: string
+          description: "e.g., Home Support Ongoing - PKG-123"
+        funding_stream_name:
+          type: string
+        original_amount:
+          type: number
+          format: decimal
+        remaining_amount:
+          type: number
+          format: decimal
+        fully_applied:
+          type: boolean
+
+    ClaimApplicationResource:
+      type: object
+      properties:
+        claim_reference:
+          type: string
+          description: SA claim reference
+        amount_applied:
+          type: number
+          format: decimal
+        applied_at:
+          type: string
+          format: date-time
+
+    BulkImportResponse:
+      type: object
+      properties:
+        imported_count:
+          type: integer
+        skipped_count:
+          type: integer
+          description: Adjustments that couldn't be matched or were already imported
+        total_amount:
+          type: number
+          format: decimal
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              myob_uid:
+                type: string
+              status:
+                type: string
+                enum: [imported, skipped, error]
+              reason:
+                type: string
+                nullable: true
+
+    OutstandingCreditsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              funding_id:
+                type: integer
+              funding_name:
+                type: string
+              funding_stream_name:
+                type: string
+              package_id:
+                type: integer
+              package_reference:
+                type: string
+              outstanding_amount:
+                type: number
+                format: decimal
+              adjustment_count:
+                type: integer
+
+    OutstandingCreditsSummaryResponse:
+      type: object
+      properties:
+        total_outstanding:
+          type: number
+          format: decimal
+        total_adjustments:
+          type: integer
+        by_funding_stream:
+          type: array
+          items:
+            type: object
+            properties:
+              funding_stream_id:
+                type: integer
+              funding_stream_name:
+                type: string
+              outstanding_amount:
+                type: number
+                format: decimal
+              adjustment_count:
+                type: integer
+
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+  securitySchemes:
+    session:
+      type: apiKey
+      in: cookie
+      name: laravel_session
+      description: Laravel session authentication (Sanctum)
+    myob_webhook:
+      type: apiKey
+      in: header
+      name: X-MYOB-Signature
+      description: MYOB webhook signature for verification
+
+security:
+  - session: []

@@ -1,0 +1,66 @@
+jira_key: TP-3787
+title: 'On Hold Bills Flow'
+status: 'Ready for Implementation'
+prefix: OHB
+summary: "Workflow for bills placed on hold"
+linear_project_id: 649458dd-ef89-4f0f-a7f5-065e357a498f
+linear_url: https://linear.app/trilogycare/project/ohb-on-hold-bills-flow-tp-3787-d12b20444f80
+description: 'Multi-issue tracking system with AI-assisted diagnosis for bills on hold, enabling consolidated feedback and internal/external reason routing'
+due_date: null
+last_synced: '2026-01-16T15:30:00.000Z'
+bounty_value: 10000
+
+stories:
+  - key: TP-3894
+    title: '[OHB] US1: Multi-Issue Diagnosis'
+    local_ref: US1
+    priority: High
+    status: To Do
+
+  - key: TP-3895
+    title: '[OHB] US2: AI Auto-Reject for Disqualifiers'
+    local_ref: US2
+    priority: High
+    status: To Do
+
+  - key: TP-3896
+    title: '[OHB] US3: Department Routing with Discrete Outcome Tracking'
+    local_ref: US3
+    priority: Medium
+    status: To Do
+
+  - key: TP-3897
+    title: '[OHB] US4: Temporal Re-validation Before Communication'
+    local_ref: US4
+    priority: Medium
+    status: To Do
+
+  - key: TP-3898
+    title: '[OHB] US5: Three Communication Types'
+    local_ref: US5
+    priority: Medium
+    status: To Do
+
+  - key: TP-3899
+    title: '[OHB] US6: Cadence Management for ON HOLD'
+    local_ref: US6
+    priority: Low
+    status: To Do
+
+  - key: TP-3900
+    title: '[OHB] US7: Resolution Outreach vs Submitter Notification Streams'
+    local_ref: US7
+    priority: Low
+    status: To Do
+
+  - key: TP-3901
+    title: '[OHB] US8: Can Coexist Filter for Communication Clarity'
+    local_ref: US8
+    priority: Low
+    status: To Do
+
+  - key: TP-3902
+    title: '[OHB] US9: Linked Resubmissions'
+    local_ref: US9
+    priority: Low
+    status: To Do

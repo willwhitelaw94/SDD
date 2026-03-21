@@ -1,0 +1,131 @@
+{
+  "epic": "TP-3155",
+  "epicName": "Home Modifications Flow (HMF)",
+  "initiative": "TP-1857",
+  "initiativeName": "Supplier Management",
+  "generated": "2025-12-08",
+  "source": "spec.md",
+  "stories": [
+    {
+      "id": "US1",
+      "title": "As a product supplier, I can register and select product categories",
+      "description": "Product suppliers need to register and select Tier-3 categories they can supply so that they can receive orders for approved Inclusions.",
+      "acceptanceCriteria": [
+        "Supplier can complete registration with business name, ABN, and contact details",
+        "Supplier can view and select from canonical Tier-3 category list (Assistive Tech, Mobility, Self-care, Domestic Life, Comms/Info, Home Mods, Body Functions)",
+        "System stores verified categories for validation",
+        "Supplier can optionally create price lists linked to categories",
+        "Supplier can view profile and add more categories after registration"
+      ],
+      "persona": "Product Supplier",
+      "priority": "P1",
+      "rationale": "Simplest foundational workflow. Minimal onboarding validates basic supplier registration flow. Fastest path to value.",
+      "independentTest": "Complete supplier registration form, select Tier-3 categories, verify supplier profile created with verified categories stored"
+    },
+    {
+      "id": "US2",
+      "title": "As a home modifications contractor, I can complete verification with state-specific credentials",
+      "description": "Contractors need to complete verification with state-specific credentials (23 base + 8 state-specific documents) so that they can receive assessment requests for home modification projects.",
+      "acceptanceCriteria": [
+        "Contractor registers with standard supplier business details",
+        "Contractor selects service states/territories (VIC, NSW, QLD, WA, SA, TAS, ACT, NT)",
+        "System shows 23 required documents plus state-specific contracts for selected states",
+        "System prompts for expiry dates for 6 specific document types",
+        "System displays state-specific contract requirements and registration disclaimers",
+        "Contractor specifies capabilities (ramps, bathroom mods, stair lifts, etc.)",
+        "Contractor profile created with pending verification status",
+        "Contractor can optionally configure quote templates"
+      ],
+      "persona": "Home Modifications Contractor",
+      "priority": "P2",
+      "rationale": "More complex onboarding than product suppliers. Builds on basic registration flow with credential verification. Essential for home modifications.",
+      "independentTest": "Complete contractor registration with all required credentials, select service areas, verify contractor profile created with verification data"
+    },
+    {
+      "id": "US3",
+      "title": "As a contractor, I can receive assessment requests and submit quotes",
+      "description": "Contractors need to receive assessment requests and submit quotes with required documents so that compliance team can review and approve their work.",
+      "acceptanceCriteria": [
+        "Contractor receives notification when assessment request is sent",
+        "Contractor can view request details (client, modification, location, deadline)",
+        "System displays required documents based on project state/territory",
+        "Contractor can upload quote document (PDF with pricing, scope, timeline)",
+        "Contractor can upload required compliance documents (Quote, Permit, Photos)",
+        "Compliance team receives notification when submission is complete",
+        "Contractor can view submission status and documents in portal"
+      ],
+      "persona": "Home Modifications Contractor",
+      "priority": "P3",
+      "rationale": "Core contractor workflow after onboarding. Depends on contractor registration (P2) and ASS1 integration. Critical for home modification flow.",
+      "independentTest": "Create assessment request, contractor receives notification, views request, uploads quote and documents, verify submission received"
+    },
+    {
+      "id": "US4",
+      "title": "As a compliance team member, I can view all home modification works grouped by supplier",
+      "description": "Compliance team members need to view all home modification works grouped by supplier so that they can efficiently review and approve documents.",
+      "acceptanceCriteria": [
+        "Compliance team sees only Inclusions with supplier type = Home Modifications Contractor",
+        "Works are grouped by contractor/supplier",
+        "Work cards show: description, client name, budget item, state, quote amount, approved amount",
+        "Document section shows per-document approval status and aggregate count (X of Y approved)",
+        "Status indicators show work status (New, Quoted, Under Review, etc.) and payment status (Pending, Partial, Paid) separately",
+        "Compliance team can filter by supplier, state, work status, payment status"
+      ],
+      "persona": "Compliance Team Member",
+      "priority": "P4",
+      "rationale": "Primary interface for reviewing home modifications. Depends on contractor submissions (P3). Core value delivery for compliance oversight.",
+      "independentTest": "Create multiple home modification Inclusions with submissions, view Works dashboard, filter by supplier, verify all work details displayed"
+    },
+    {
+      "id": "US5",
+      "title": "As a compliance team member, I can approve or reject individual documents",
+      "description": "Compliance team members need to approve or reject each document individually so that contractors know exactly what needs fixing.",
+      "acceptanceCriteria": [
+        "Compliance team can view document and see approve/reject actions",
+        "Approving document changes status to 'Approved' with timestamp",
+        "Rejecting document requires rejection reason",
+        "Contractor receives notification with rejection reason and remediation instructions",
+        "Contractor can resubmit corrected document with version history retained",
+        "Compliance team can see approval status for each document",
+        "All required documents approved marks compliance criteria as satisfied (updates Inclusion via ASS2)"
+      ],
+      "persona": "Compliance Team Member",
+      "priority": "P5",
+      "rationale": "Enables granular document review essential for compliance quality. Depends on Works dashboard (P4). Core compliance functionality.",
+      "independentTest": "View submitted documents, approve some, reject others with reasons, verify contractor receives notifications, track status changes"
+    },
+    {
+      "id": "US6",
+      "title": "As the system, I validate product supplier is verified for Tier-3 category",
+      "description": "The system needs to validate product supplier is verified for Tier-3 category so that only qualified suppliers can bill for specific product categories.",
+      "acceptanceCriteria": [
+        "ASS2 validation checks supplier.verified_categories includes inclusion.tier3_category",
+        "Validation passes when supplier verified for category, allowing Inclusion to progress",
+        "Validation fails with reason code 'Supplier not verified for category: [name]' when not verified",
+        "Failed validation prevents Inclusion from progressing and logs reason code",
+        "Product supplier can add new Tier-3 category and future validations use updated list"
+      ],
+      "persona": "System / ASS2 Integration",
+      "priority": "P6",
+      "rationale": "Critical validation logic preventing billing errors. Integration point with ASS2 rather than standalone HMF functionality. Important for data integrity.",
+      "independentTest": "Create product Inclusion with specific Tier-3 category, attempt billing from supplier with/without matching category, verify validation behavior"
+    },
+    {
+      "id": "US7",
+      "title": "As a contractor or compliance team member, I receive automated notifications for key events",
+      "description": "Contractors and compliance team members need to receive automated notifications for key events so that they know when action is required.",
+      "acceptanceCriteria": [
+        "Contractor receives notification when assessment request is sent with details and deadline",
+        "Compliance team receives notification when contractor submits quote and documents",
+        "Contractor receives notification when document is approved",
+        "Contractor receives notification when document is rejected with reason and correction guidance",
+        "Relevant parties receive notification when payment milestone is reached",
+        "Compliance manager receives notification when work is escalated"
+      ],
+      "persona": "Contractor, Compliance Team Member",
+      "priority": "P7",
+      "rationale": "Improves user experience and reduces delays. Core workflows can function without notifications. Enhancement priority - valuable but not blocking.",
+      "independentTest": "Trigger each notification event, verify correct recipients receive notifications with correct content"
+    }
+  ]
+}

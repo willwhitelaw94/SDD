@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LES Challenge — Notion Nick — List View</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',300:'#94DBDA',400:'#66CCCA',500:'#43C0BE',600:'#2F9E9C',700:'#007F7E',800:'#005656',900:'#003D3D' },
+            'primary-blue': { 50:'#F0F4FA',100:'#D6E1F0',200:'#BCCEE7',300:'#96B2D9',400:'#7197CC',500:'#4B7BBE',600:'#39639D',700:'#2C4C79',800:'#1E3452',900:'#101C2D' },
+            info: { 50:'#F0FAFA',100:'#D5F1F0',200:'#BAE8E7',500:'#43C0BE',700:'#007F7E',900:'#003D3D' },
+            success: { 50:'#F6FBFE',100:'#DBEFFA',200:'#BCE2F6',500:'#35A8E4',700:'#156F9D' },
+            warning: { 50:'#FFF9F5',100:'#FFDAC6',200:'#FFC19F',500:'#E0763C',700:'#9C481A' },
+            danger: { 50:'#FFF5F5',100:'#FFCCCE',200:'#FFA8AC',500:'#E04B51',700:'#9C262A' },
+          },
+          fontFamily: { sans: ['"Roboto Flex"', 'system-ui', 'sans-serif'] },
+          borderRadius: { 'input': '8px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    .text-primary { color: #13171D; }
+    .text-secondary { color: #666666; }
+    .text-tertiary { color: #808080; }
+    body { background: #ffffff; }
+
+    /* Notion table styles */
+    .notion-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .notion-table th {
+      text-align: left;
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(55, 53, 47, 0.5);
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 5;
+    }
+    .notion-table th:hover {
+      background: rgba(55, 53, 47, 0.04);
+    }
+    .notion-table td {
+      padding: 0;
+      border-bottom: 1px solid rgba(55, 53, 47, 0.06);
+      font-size: 14px;
+      color: #37352f;
+      height: 36px;
+    }
+    .notion-table tr:hover td {
+      background: rgba(55, 53, 47, 0.02);
+    }
+    .notion-table .cell {
+      padding: 4px 8px;
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 0;
+      transition: box-shadow 0.1s;
+    }
+    .notion-table .cell:hover {
+      box-shadow: inset 0 0 0 1px rgba(55, 53, 47, 0.16);
+      border-radius: 2px;
+    }
+    .notion-table .cell-name {
+      font-weight: 500;
+      color: #37352f;
+      text-decoration: underline;
+      text-decoration-color: rgba(55, 53, 47, 0.2);
+      text-underline-offset: 2px;
+    }
+    .notion-table .cell-name:hover {
+      text-decoration-color: #37352f;
+    }
+
+    /* Notion pill/tag */
+    .notion-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    /* View tabs */
+    .view-tab {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      font-size: 13px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: rgba(55, 53, 47, 0.5);
+      white-space: nowrap;
+      transition: background 0.1s;
+    }
+    .view-tab:hover {
+      background: rgba(55, 53, 47, 0.06);
+      color: rgba(55, 53, 47, 0.8);
+    }
+    .view-tab.active {
+      color: #37352f;
+      font-weight: 500;
+      background: rgba(55, 53, 47, 0.06);
+    }
+
+    /* Group header */
+    .group-header {
+      padding: 10px 8px 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #37352f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .group-header:hover { background: rgba(55, 53, 47, 0.02); }
+    .group-header .toggle {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+      color: rgba(55, 53, 47, 0.35);
+    }
+    .group-header .toggle.collapsed { transform: rotate(-90deg); }
+    .group-count {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(55, 53, 47, 0.4);
+      padding: 1px 6px;
+      background: rgba(55, 53, 47, 0.06);
+      border-radius: 3px;
+    }
+
+    /* Avatar */
+    .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    /* Filter bar */
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      font-size: 13px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: rgba(55, 53, 47, 0.5);
+      transition: background 0.1s;
+      position: relative;
+    }
+    .filter-btn:hover {
+      background: rgba(55, 53, 47, 0.06);
+      color: rgba(55, 53, 47, 0.8);
+    }
+    .filter-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2F81F7;
+      position: absolute;
+      top: 2px;
+      right: 2px;
+    }
+
+    /* New row button */
+    .new-row-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 8px;
+      font-size: 13px;
+      color: rgba(55, 53, 47, 0.4);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .new-row-btn:hover {
+      background: rgba(55, 53, 47, 0.04);
+      color: rgba(55, 53, 47, 0.65);
+    }
+
+    /* Filter panel */
+    .filter-panel {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 0 1px rgba(55, 53, 47, 0.09), 0 3px 16px rgba(55, 53, 47, 0.16);
+      padding: 8px;
+      width: 520px;
+      position: absolute;
+      z-index: 30;
+      display: none;
+    }
+    .filter-panel.visible { display: block; }
+    .filter-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 0;
+    }
+    .filter-row select, .filter-row input {
+      font-size: 13px;
+      padding: 4px 8px;
+      border: 1px solid rgba(55, 53, 47, 0.16);
+      border-radius: 4px;
+      background: white;
+      color: #37352f;
+      outline: none;
+    }
+    .filter-row select:focus, .filter-row input:focus {
+      border-color: #2F81F7;
+      box-shadow: 0 0 0 2px rgba(47, 129, 247, 0.15);
+    }
+
+    /* Checkbox */
+    .row-checkbox {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      border: 1.5px solid rgba(55, 53, 47, 0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.1s;
+    }
+    .row-checkbox:hover { border-color: rgba(55, 53, 47, 0.4); }
+    .row-checkbox.checked {
+      background: #2F81F7;
+      border-color: #2F81F7;
+    }
+    .row-checkbox.checked::after {
+      content: '';
+      width: 8px;
+      height: 5px;
+      border-left: 2px solid white;
+      border-bottom: 2px solid white;
+      transform: rotate(-45deg) translateY(-1px);
+    }
+
+    /* Bulk action bar */
+    .bulk-bar {
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #37352f;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 50;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+    .bulk-bar.visible { transform: translateX(-50%) translateY(0); }
+    .bulk-bar button {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .bulk-bar button:hover { background: rgba(255,255,255,0.15); }
+
+    /* Sort indicator */
+    .sort-arrow {
+      display: inline-flex;
+      margin-left: 2px;
+      color: rgba(55, 53, 47, 0.35);
+    }
+
+    /* Summary bar */
+    .summary-bar {
+      padding: 8px;
+      font-size: 12px;
+      color: rgba(55, 53, 47, 0.4);
+      border-top: 1px solid rgba(55, 53, 47, 0.09);
+    }
+
+    /* Dropdown popover for inline editing */
+    .cell-dropdown {
+      position: fixed;
+      min-width: 180px;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 0 0 1px rgba(55, 53, 47, 0.09), 0 3px 12px rgba(55, 53, 47, 0.16);
+      padding: 4px 0;
+      z-index: 60;
+      display: none;
+    }
+    .cell-dropdown.visible { display: block; }
+    .cell-dropdown-item {
+      padding: 5px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cell-dropdown-item:hover { background: rgba(55, 53, 47, 0.06); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #37352f;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 100;
+      transition: transform 0.3s ease;
+      pointer-events: none;
+    }
+    .toast.visible { transform: translateX(-50%) translateY(0); }
+  </style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body class="min-h-screen bg-white">
+
+  <!-- Top navigation bar -->
+  <div class="h-11 border-b border-gray-200 flex items-center px-4 justify-between bg-white sticky top-0 z-40">
+    <div class="flex items-center gap-2">
+      <button class="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h12" stroke="rgba(55,53,47,0.45)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <div class="flex items-center gap-1.5 text-sm" style="color: rgba(55,53,47,0.5);">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M4 5h6M4 7h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        <span class="font-medium" style="color: #37352f;">Leads Database</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-1">
+      <button class="text-xs px-2.5 py-1 rounded hover:bg-gray-100 text-gray-500">Share</button>
+      <button class="w-7 h-7 flex items-center justify-center rounded hover:bg-gray-100">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="4" r="1" fill="rgba(55,53,47,0.45)"/><circle cx="8" cy="8" r="1" fill="rgba(55,53,47,0.45)"/><circle cx="8" cy="12" r="1" fill="rgba(55,53,47,0.45)"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-60 border-r border-gray-200 min-h-screen bg-gray-50/50 flex-shrink-0">
+      <div class="p-3">
+        <div class="flex items-center gap-2 px-2 py-1.5 mb-4">
+          <div class="w-5 h-5 rounded bg-teal-700 flex items-center justify-center text-white text-[10px] font-bold">TC</div>
+          <span class="text-sm font-medium text-gray-800">Trilogy Care Portal</span>
+        </div>
+        <button class="w-full flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-500 mb-3">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M9.5 9.5l3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Search
+        </button>
+        <div class="space-y-0.5">
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l5-5 5 5M3.5 5.5V12h3V9h1v3h3V5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Dashboard
+          </a>
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.2"/></svg>
+            Consumers
+          </a>
+          <div>
+            <a href="#" class="flex items-center gap-2 px-2 py-1 rounded bg-gray-200/80 text-sm font-medium text-gray-900">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M4 5h6M4 7h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+              Leads Database
+            </a>
+            <div class="ml-5 mt-0.5 space-y-0.5">
+              <a href="#" class="flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium text-gray-800 bg-gray-200/50 rounded">
+                <span class="w-1 h-1 rounded-full bg-gray-600"></span> All Leads
+              </a>
+              <a href="#" class="flex items-center gap-1.5 px-2 py-0.5 text-xs text-gray-500 hover:bg-gray-200/60 rounded">
+                <span class="w-1 h-1 rounded-full bg-gray-400"></span> Pipeline Board
+              </a>
+              <a href="#" class="flex items-center gap-1.5 px-2 py-0.5 text-xs text-gray-500 hover:bg-gray-200/60 rounded">
+                <span class="w-1 h-1 rounded-full bg-gray-400"></span> Follow-ups
+              </a>
+              <a href="#" class="flex items-center gap-1.5 px-2 py-0.5 text-xs text-gray-500 hover:bg-gray-200/60 rounded">
+                <span class="w-1 h-1 rounded-full bg-gray-400"></span> By Source
+              </a>
+            </div>
+          </div>
+          <a href="#" class="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-200/60 text-sm text-gray-600">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 1v4M10 1v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Calendar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex-1 min-w-0">
+      <div class="px-8 pt-6 pb-2">
+        <!-- Database title -->
+        <div class="flex items-center gap-3 mb-4">
+          <span class="text-2xl">&#128202;</span>
+          <h1 class="text-2xl font-bold" style="color: #37352f;">Leads Database</h1>
+        </div>
+
+        <!-- View tabs -->
+        <div class="flex items-center gap-0.5 border-b border-gray-200 mb-0 -mx-1 px-1">
+          <div class="view-tab active" onclick="switchView(this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="1" stroke="currentColor" stroke-width="1"/><path d="M1 5h12M5 5v7M9 5v7" stroke="currentColor" stroke-width="0.8"/></svg>
+            All Leads
+          </div>
+          <div class="view-tab" onclick="switchView(this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="3.5" height="10" rx="0.5" stroke="currentColor" stroke-width="0.8"/><rect x="5.25" y="2" width="3.5" height="7" rx="0.5" stroke="currentColor" stroke-width="0.8"/><rect x="9.5" y="2" width="3.5" height="5" rx="0.5" stroke="currentColor" stroke-width="0.8"/></svg>
+            Pipeline Board
+          </div>
+          <div class="view-tab" onclick="switchView(this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 4h8M3 7h8M3 10h6" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Follow-ups
+          </div>
+          <div class="view-tab" onclick="switchView(this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1"/><path d="M7 2v5l3 3" stroke="currentColor" stroke-width="0.8" stroke-linecap="round"/></svg>
+            By Source
+          </div>
+          <div class="view-tab" style="color: rgba(55,53,47,0.3);">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Add view
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter/Sort/Group controls -->
+      <div class="flex items-center gap-1 px-8 py-2 border-b border-gray-100 relative">
+        <div class="filter-btn" id="filter-toggle" onclick="toggleFilterPanel()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3h10M4 7h6M6 11h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          Filter
+          <div class="filter-dot"></div>
+        </div>
+        <div class="filter-btn" onclick="toggleSort()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 3v8M4 3L2 5M4 3l2 2M10 11V3M10 11l-2-2M10 11l2-2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sort
+        </div>
+        <div class="filter-btn" onclick="toggleGroup()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3h8M3 3v2M11 3v2M3 7h8M3 7v2M11 7v2M3 11h8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          Group
+        </div>
+        <div class="flex-1"></div>
+        <div class="flex items-center gap-1 bg-gray-100/80 rounded px-2.5 py-1.5" style="max-width: 220px;">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4.5" stroke="rgba(55,53,47,0.35)" stroke-width="1.2"/><path d="M9.5 9.5l3 3" stroke="rgba(55,53,47,0.35)" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <input type="text" placeholder="Search leads..." class="bg-transparent border-none outline-none text-sm flex-1 w-full" style="color: #37352f;">
+        </div>
+
+        <!-- Filter panel (hidden by default) -->
+        <div class="filter-panel" id="filter-panel" style="top: 40px; left: 32px;">
+          <div class="flex items-center justify-between mb-2 px-2">
+            <span class="text-xs font-medium text-gray-500">Active Filters</span>
+            <button class="text-xs text-blue-500 hover:text-blue-600" onclick="toggleFilterPanel()">Done</button>
+          </div>
+          <div class="filter-row px-2">
+            <select class="flex-shrink-0">
+              <option>Journey Stage</option>
+              <option>Lead Status</option>
+              <option>Assigned Agent</option>
+              <option>Lead Source</option>
+            </select>
+            <select class="flex-shrink-0">
+              <option>is any of</option>
+              <option>is</option>
+              <option>is not</option>
+            </select>
+            <div class="flex items-center gap-1 flex-1">
+              <span class="notion-pill bg-gray-100 text-gray-600 text-xs">Pre-Care</span>
+              <span class="notion-pill bg-yellow-100 text-yellow-700 text-xs">ACAT Booked</span>
+              <span class="notion-pill bg-blue-100 text-blue-700 text-xs">Approved</span>
+            </div>
+            <button class="text-gray-300 hover:text-gray-500 px-1">&times;</button>
+          </div>
+          <div class="px-2 pt-2">
+            <button class="text-xs text-blue-500 hover:text-blue-600 flex items-center gap-1">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2v8M2 6h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Add filter
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table content with groups -->
+      <div class="px-8 overflow-x-auto">
+        <!-- Group: Pre-Care -->
+        <div class="group-section" data-group="pre-care">
+          <div class="group-header" onclick="toggleGroup(this)">
+            <div class="toggle">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+            Pre-Care
+            <span class="group-count">3</span>
+          </div>
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th style="width: 28px; padding: 6px 4px;"></th>
+                <th style="width: 200px;">Lead Name <span class="sort-arrow">&darr;</span></th>
+                <th style="width: 130px;">Journey Stage</th>
+                <th style="width: 130px;">Lead Status</th>
+                <th style="width: 140px;">Assigned Agent</th>
+                <th style="width: 120px;">Phone</th>
+                <th style="width: 110px;">Last Contact</th>
+                <th style="width: 120px;">Lead Source</th>
+                <th style="width: 110px;">Purchase Intent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Dorothy')">Dorothy Thompson</div></td>
+                <td><div class="cell" onclick="openCellDropdown(event, 'stage')"><span class="notion-pill bg-gray-100 text-gray-600">Pre-Care</span></div></td>
+                <td><div class="cell" onclick="openCellDropdown(event, 'lead-status')"><span class="notion-pill bg-gray-100 text-gray-600">Not Contacted</span></div></td>
+                <td><div class="cell"><div class="avatar bg-teal-600">SC</div><span class="ml-2 text-sm">Sarah Chen</span></div></td>
+                <td><div class="cell text-sm">0423 111 234</div></td>
+                <td><div class="cell text-sm text-gray-500">&mdash;</div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">My Aged Care</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-gray-100 text-gray-500">Unknown</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Frank')">Frank O'Brien</div></td>
+                <td><div class="cell"><span class="notion-pill bg-gray-100 text-gray-600">Pre-Care</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-yellow-100 text-yellow-700">Attempted Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-primary-blue-600">DW</div><span class="ml-2 text-sm">David Williams</span></div></td>
+                <td><div class="cell text-sm">0402 987 654</div></td>
+                <td><div class="cell text-sm">19 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">GP Referral</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-yellow-100 text-yellow-700">Medium</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Helen')">Helen Nguyen</div></td>
+                <td><div class="cell"><span class="notion-pill bg-gray-100 text-gray-600">Pre-Care</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-gray-100 text-gray-600">Not Contacted</span></div></td>
+                <td><div class="cell text-sm text-gray-400">Unassigned</div></td>
+                <td><div class="cell text-sm">0411 222 333</div></td>
+                <td><div class="cell text-sm text-gray-500">&mdash;</div></td>
+                <td><div class="cell"><span class="notion-pill bg-purple-100 text-purple-700">Website Enquiry</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="new-row-btn" onclick="showToast('New lead created in Pre-Care')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Group: ACAT Booked -->
+        <div class="group-section" data-group="acat-booked">
+          <div class="group-header" onclick="toggleGroup(this)">
+            <div class="toggle">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+            ACAT Booked
+            <span class="group-count">2</span>
+          </div>
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th style="width: 28px; padding: 6px 4px;"></th>
+                <th style="width: 200px;">Lead Name</th>
+                <th style="width: 130px;">Journey Stage</th>
+                <th style="width: 130px;">Lead Status</th>
+                <th style="width: 140px;">Assigned Agent</th>
+                <th style="width: 120px;">Phone</th>
+                <th style="width: 110px;">Last Contact</th>
+                <th style="width: 120px;">Lead Source</th>
+                <th style="width: 110px;">Purchase Intent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Robert')">Robert Jenkins</div></td>
+                <td><div class="cell"><span class="notion-pill bg-yellow-100 text-yellow-700">ACAT Booked</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-pink-500">MS</div><span class="ml-2 text-sm">Maria Santos</span></div></td>
+                <td><div class="cell text-sm">0433 444 555</div></td>
+                <td><div class="cell text-sm">17 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-teal-100 text-teal-700">Hospital Referral</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Shirley')">Shirley Patterson</div></td>
+                <td><div class="cell"><span class="notion-pill bg-yellow-100 text-yellow-700">ACAT Booked</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-teal-600">SC</div><span class="ml-2 text-sm">Sarah Chen</span></div></td>
+                <td><div class="cell text-sm">0412 666 777</div></td>
+                <td><div class="cell text-sm">16 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-pink-100 text-pink-700">Word of Mouth</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-yellow-100 text-yellow-700">Medium</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="new-row-btn" onclick="showToast('New lead created in ACAT Booked')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Group: Approved -->
+        <div class="group-section" data-group="approved">
+          <div class="group-header" onclick="toggleGroup(this)">
+            <div class="toggle">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+            Approved
+            <span class="group-count">3</span>
+          </div>
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th style="width: 28px; padding: 6px 4px;"></th>
+                <th style="width: 200px;">Lead Name</th>
+                <th style="width: 130px;">Journey Stage</th>
+                <th style="width: 130px;">Lead Status</th>
+                <th style="width: 140px;">Assigned Agent</th>
+                <th style="width: 120px;">Phone</th>
+                <th style="width: 110px;">Last Contact</th>
+                <th style="width: 120px;">Lead Source</th>
+                <th style="width: 110px;">Purchase Intent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Margaret')">Margaret Wilson</div></td>
+                <td><div class="cell"><span class="notion-pill bg-blue-100 text-blue-700">Approved</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-teal-600">SC</div><span class="ml-2 text-sm">Sarah Chen</span></div></td>
+                <td><div class="cell text-sm">0412 345 678</div></td>
+                <td><div class="cell text-sm">18 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-purple-100 text-purple-700">Website Enquiry</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Arthur')">Arthur Dawson</div></td>
+                <td><div class="cell"><span class="notion-pill bg-blue-100 text-blue-700">Approved</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-primary-blue-600">DW</div><span class="ml-2 text-sm">David Williams</span></div></td>
+                <td><div class="cell text-sm">0455 888 999</div></td>
+                <td><div class="cell text-sm">15 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">GP Referral</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Edna')">Edna McAllister</div></td>
+                <td><div class="cell"><span class="notion-pill bg-blue-100 text-blue-700">Approved</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-yellow-100 text-yellow-700">Attempted Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-purple-500">JP</div><span class="ml-2 text-sm">James Park</span></div></td>
+                <td><div class="cell text-sm">0498 123 456</div></td>
+                <td><div class="cell text-sm">14 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">My Aged Care</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-yellow-100 text-yellow-700">Medium</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="new-row-btn" onclick="showToast('New lead created in Approved')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Group: Allocated -->
+        <div class="group-section" data-group="allocated">
+          <div class="group-header" onclick="toggleGroup(this)">
+            <div class="toggle">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+            Allocated
+            <span class="group-count">2</span>
+          </div>
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th style="width: 28px; padding: 6px 4px;"></th>
+                <th style="width: 200px;">Lead Name</th>
+                <th style="width: 130px;">Journey Stage</th>
+                <th style="width: 130px;">Lead Status</th>
+                <th style="width: 140px;">Assigned Agent</th>
+                <th style="width: 120px;">Phone</th>
+                <th style="width: 110px;">Last Contact</th>
+                <th style="width: 120px;">Lead Source</th>
+                <th style="width: 110px;">Purchase Intent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Patricia')">Patricia Kowalski</div></td>
+                <td><div class="cell"><span class="notion-pill bg-indigo-100 text-indigo-700">Allocated</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-amber-500">LT</div><span class="ml-2 text-sm">Lisa Thompson</span></div></td>
+                <td><div class="cell text-sm">0467 333 444</div></td>
+                <td><div class="cell text-sm">20 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-blue-100 text-blue-700">Phone Call</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('George')">George Fitzgerald</div></td>
+                <td><div class="cell"><span class="notion-pill bg-indigo-100 text-indigo-700">Allocated</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-pink-500">MS</div><span class="ml-2 text-sm">Maria Santos</span></div></td>
+                <td><div class="cell text-sm">0401 555 666</div></td>
+                <td><div class="cell text-sm">19 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-teal-100 text-teal-700">Hospital Referral</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="new-row-btn" onclick="showToast('New lead created in Allocated')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Group: Active -->
+        <div class="group-section" data-group="active">
+          <div class="group-header" onclick="toggleGroup(this)">
+            <div class="toggle">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+            Active
+            <span class="group-count">3</span>
+          </div>
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th style="width: 28px; padding: 6px 4px;"></th>
+                <th style="width: 200px;">Lead Name</th>
+                <th style="width: 130px;">Journey Stage</th>
+                <th style="width: 130px;">Lead Status</th>
+                <th style="width: 140px;">Assigned Agent</th>
+                <th style="width: 120px;">Phone</th>
+                <th style="width: 110px;">Last Contact</th>
+                <th style="width: 120px;">Lead Source</th>
+                <th style="width: 110px;">Purchase Intent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Beryl')">Beryl Sanderson</div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Active</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-amber-500">LT</div><span class="ml-2 text-sm">Lisa Thompson</span></div></td>
+                <td><div class="cell text-sm">0478 999 000</div></td>
+                <td><div class="cell text-sm">21 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-purple-100 text-purple-700">Website Enquiry</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Kenneth')">Kenneth Murray</div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Active</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-purple-500">JP</div><span class="ml-2 text-sm">James Park</span></div></td>
+                <td><div class="cell text-sm">0445 111 222</div></td>
+                <td><div class="cell text-sm">20 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">GP Referral</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Valerie')">Valerie Chang</div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Active</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-teal-600">SC</div><span class="ml-2 text-sm">Sarah Chen</span></div></td>
+                <td><div class="cell text-sm">0423 777 888</div></td>
+                <td><div class="cell text-sm">18 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-pink-100 text-pink-700">Word of Mouth</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-yellow-100 text-yellow-700">Medium</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="new-row-btn" onclick="showToast('New lead created in Active')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Group: Converted -->
+        <div class="group-section" data-group="converted">
+          <div class="group-header" onclick="toggleGroup(this)">
+            <div class="toggle">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="w-2.5 h-2.5 rounded-full bg-teal-400"></span>
+            Converted
+            <span class="group-count">2</span>
+          </div>
+          <table class="notion-table">
+            <thead>
+              <tr>
+                <th style="width: 28px; padding: 6px 4px;"></th>
+                <th style="width: 200px;">Lead Name</th>
+                <th style="width: 130px;">Journey Stage</th>
+                <th style="width: 130px;">Lead Status</th>
+                <th style="width: 140px;">Assigned Agent</th>
+                <th style="width: 120px;">Phone</th>
+                <th style="width: 110px;">Last Contact</th>
+                <th style="width: 120px;">Lead Source</th>
+                <th style="width: 110px;">Purchase Intent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Joan')">Joan Whitfield</div></td>
+                <td><div class="cell"><span class="notion-pill bg-teal-100 text-teal-700">Converted</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-primary-blue-600">DW</div><span class="ml-2 text-sm">David Williams</span></div></td>
+                <td><div class="cell text-sm">0434 222 111</div></td>
+                <td><div class="cell text-sm">10 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-blue-100 text-blue-700">Phone Call</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+              <tr>
+                <td style="padding: 0 4px;"><div class="row-checkbox" onclick="toggleCheck(this)"></div></td>
+                <td><div class="cell cell-name" onclick="openProfile('Raymond')">Raymond Hartley</div></td>
+                <td><div class="cell"><span class="notion-pill bg-teal-100 text-teal-700">Converted</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-green-100 text-green-700">Made Contact</span></div></td>
+                <td><div class="cell"><div class="avatar bg-pink-500">MS</div><span class="ml-2 text-sm">Maria Santos</span></div></td>
+                <td><div class="cell text-sm">0456 444 333</div></td>
+                <td><div class="cell text-sm">8 Feb</div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">My Aged Care</span></div></td>
+                <td><div class="cell"><span class="notion-pill bg-amber-100 text-amber-700">High</span></div></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="new-row-btn" onclick="showToast('New lead created in Converted')">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3v8M3 7h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            New
+          </div>
+        </div>
+
+        <!-- Summary bar -->
+        <div class="summary-bar flex items-center justify-between">
+          <span>15 leads &bull; 3 filtered</span>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-gray-400">Grouped by Journey Stage</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk action bar -->
+  <div class="bulk-bar" id="bulk-bar">
+    <span id="bulk-count">0 selected</span>
+    <button onclick="showToast('Agent assigned')">Assign Agent</button>
+    <button onclick="showToast('Status updated')">Update Status</button>
+    <button onclick="showToast('Exported to CSV')">Export</button>
+    <button onclick="clearSelection()" style="color: rgba(255,255,255,0.5);">Clear</button>
+  </div>
+
+  <!-- Cell dropdown (reusable) -->
+  <div class="cell-dropdown" id="cell-dropdown">
+    <!-- Populated dynamically -->
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    let selectedCount = 0;
+
+    // View tab switching
+    function switchView(tab) {
+      document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    }
+
+    // Toggle filter panel
+    function toggleFilterPanel() {
+      document.getElementById('filter-panel').classList.toggle('visible');
+    }
+
+    // Toggle group collapse
+    function toggleGroup(header) {
+      if (header instanceof HTMLElement) {
+        const toggle = header.querySelector('.toggle');
+        const section = header.parentElement;
+        const tables = section.querySelectorAll('table, .new-row-btn');
+
+        toggle.classList.toggle('collapsed');
+        tables.forEach(el => {
+          el.style.display = toggle.classList.contains('collapsed') ? 'none' : '';
+        });
+      }
+    }
+
+    // Toggle sort (visual feedback only)
+    function toggleSort() {
+      showToast('Sort applied: Last Contact (newest first)');
+    }
+
+    // Row checkbox
+    function toggleCheck(checkbox) {
+      checkbox.classList.toggle('checked');
+      updateBulkBar();
+    }
+
+    function updateBulkBar() {
+      selectedCount = document.querySelectorAll('.row-checkbox.checked').length;
+      const bar = document.getElementById('bulk-bar');
+      const count = document.getElementById('bulk-count');
+
+      if (selectedCount > 0) {
+        bar.classList.add('visible');
+        count.textContent = selectedCount + ' selected';
+      } else {
+        bar.classList.remove('visible');
+      }
+    }
+
+    function clearSelection() {
+      document.querySelectorAll('.row-checkbox.checked').forEach(cb => cb.classList.remove('checked'));
+      updateBulkBar();
+    }
+
+    // Open profile (navigation simulation)
+    function openProfile(name) {
+      showToast('Opening ' + name + "'s profile...");
+    }
+
+    // Cell dropdown for inline editing
+    function openCellDropdown(event, type) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('cell-dropdown');
+      const rect = event.currentTarget.getBoundingClientRect();
+      let html = '';
+
+      if (type === 'stage') {
+        const stages = [
+          { label: 'Pre-Care', color: 'bg-gray-100 text-gray-600', dot: 'bg-gray-400' },
+          { label: 'ACAT Booked', color: 'bg-yellow-100 text-yellow-700', dot: 'bg-yellow-400' },
+          { label: 'Approved', color: 'bg-blue-100 text-blue-700', dot: 'bg-blue-400' },
+          { label: 'Allocated', color: 'bg-indigo-100 text-indigo-700', dot: 'bg-indigo-400' },
+          { label: 'Active', color: 'bg-green-100 text-green-700', dot: 'bg-green-400' },
+          { label: 'Converted', color: 'bg-teal-100 text-teal-700', dot: 'bg-teal-400' },
+        ];
+        html = '<div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Journey Stage</div>';
+        stages.forEach(s => {
+          html += `<div class="cell-dropdown-item" onclick="selectCellValue(event, '${s.label}', '${s.color}')"><span class="w-2 h-2 rounded-full ${s.dot}"></span>${s.label}</div>`;
+        });
+      } else if (type === 'lead-status') {
+        const statuses = [
+          { label: 'Not Contacted', color: 'bg-gray-100 text-gray-600', dot: 'bg-gray-400' },
+          { label: 'Attempted Contact', color: 'bg-yellow-100 text-yellow-700', dot: 'bg-yellow-400' },
+          { label: 'Made Contact', color: 'bg-green-100 text-green-700', dot: 'bg-green-400' },
+          { label: 'Lost', color: 'bg-red-100 text-red-700', dot: 'bg-red-400' },
+        ];
+        html = '<div class="px-3 py-1.5 text-[11px] font-medium text-gray-400 uppercase tracking-wider">Lead Status</div>';
+        statuses.forEach(s => {
+          html += `<div class="cell-dropdown-item" onclick="selectCellValue(event, '${s.label}', '${s.color}')"><span class="w-2 h-2 rounded-full ${s.dot}"></span>${s.label}</div>`;
+        });
+      }
+
+      dropdown.innerHTML = html;
+      dropdown.style.left = rect.left + 'px';
+      dropdown.style.top = (rect.bottom + 4) + 'px';
+      dropdown.classList.add('visible');
+
+      // Store target cell
+      dropdown._targetCell = event.currentTarget;
+    }
+
+    function selectCellValue(event, value, classes) {
+      event.stopPropagation();
+      const dropdown = document.getElementById('cell-dropdown');
+      const cell = dropdown._targetCell;
+
+      if (cell) {
+        const pill = cell.querySelector('.notion-pill');
+        if (pill) {
+          pill.className = 'notion-pill ' + classes;
+          pill.textContent = value;
+        }
+      }
+
+      dropdown.classList.remove('visible');
+      showToast('Updated to ' + value);
+    }
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.cell-dropdown') && !e.target.closest('.cell')) {
+        document.getElementById('cell-dropdown').classList.remove('visible');
+      }
+      if (!e.target.closest('#filter-toggle') && !e.target.closest('.filter-panel')) {
+        document.getElementById('filter-panel').classList.remove('visible');
+      }
+    });
+
+    // Toast
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2000);
+    }
+  </script>
+
+</body>
+</html>

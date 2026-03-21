@@ -1,0 +1,22 @@
+jira_key: TP-1859
+title: 'Clinical And Care Plan'
+description: 'Improve clinical assessment tools, care planning capabilities, and document management for better care coordination.'
+status: active
+epic_count: 5
+last_synced: '2025-11-09T04:22:50.014Z'
+leads:
+  discovery:
+    name: 'Dr. Linda Park'
+    email: linda.park@trilogycare.com
+  design:
+    name: 'Alex Thompson'
+    email: alex.thompson@trilogycare.com
+  development:
+    name: 'Kevin Chen'
+    email: kevin.chen@trilogycare.com
+  qa:
+    name: 'Sophie Anderson'
+    email: sophie.anderson@trilogycare.com
+  release:
+    name: 'Marcus Johnson'
+    email: marcus.johnson@trilogycare.com

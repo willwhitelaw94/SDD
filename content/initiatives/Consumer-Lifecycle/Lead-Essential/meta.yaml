@@ -1,0 +1,12 @@
+jira_key: TP-2315
+title: 'Lead Essential'
+status: 'in progress'
+priority: 'p2'
+prefix: LES
+summary: "Core lead capture and intake pipeline"
+linear_project_id: 12ffae2c-58df-4b3c-90dd-c3e504b854eb
+linear_url: https://linear.app/trilogycare/project/les-lead-essential-tp-2315-aba24db4717e
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+bounty_value: 5000

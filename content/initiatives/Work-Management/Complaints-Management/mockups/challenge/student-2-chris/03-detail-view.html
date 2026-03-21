@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REF-00312 — Clinical Record Detail — Clinical Chris</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+            'triage-1': '#DC2626',
+            'triage-2': '#EA580C',
+            'triage-3': '#CA8A04',
+            'triage-4': '#16A34A',
+            'triage-5': '#2563EB',
+          },
+          fontFamily: { sans: ['Roboto Flex', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto Flex', system-ui, sans-serif; }
+    .section-header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; padding: 8px 0 6px; border-bottom: 1px solid #e2e8f0; margin-bottom: 8px; }
+    .field-label { font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.04em; }
+    .field-value { font-size: 13px; color: #1e293b; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <div class="flex min-h-screen">
+    <!-- Skeleton Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 flex-shrink-0 p-4 space-y-3">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-8 h-8 bg-tc-teal-700 rounded-lg"></div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <div class="h-3 w-32 bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-r animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="mt-6 h-3 w-28 bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col">
+      <!-- Record Identification Banner — Critical (Red) -->
+      <div class="bg-triage-1 text-white px-6 py-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl font-bold font-mono tracking-tight">REF-00312</span>
+              <span class="bg-white/20 text-white text-[11px] font-semibold px-2 py-0.5 rounded">COMPLAINT</span>
+              <span class="bg-white/30 text-white text-[11px] font-bold px-2 py-0.5 rounded">CAT 1 — CRITICAL</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs text-white/70 bg-white/10 px-2.5 py-1 rounded">
+              Created: 28 Feb 2026
+            </span>
+            <span class="text-xs text-red-200 bg-white/10 px-2.5 py-1 rounded font-semibold">
+              Due: 05 Mar 2026 (OVERDUE 5d)
+            </span>
+          </div>
+        </div>
+        <div class="text-sm text-white/90 mt-1 font-medium">Medication administered 4hrs late — fall risk</div>
+      </div>
+
+      <!-- Clinical Pathway / Stage Progression -->
+      <div class="bg-white border-b border-gray-200 px-6 py-3">
+        <div class="flex items-center gap-1">
+          <div class="flex items-center gap-0.5">
+            <span class="text-[10px] font-semibold text-white bg-tc-teal-700 px-2.5 py-1 rounded-l">0. New</span>
+            <span class="text-[10px] font-semibold text-white bg-tc-teal-700 px-2.5 py-1">1. Received</span>
+            <span class="text-[10px] font-semibold text-white bg-tc-teal-700 px-2.5 py-1">2. Triage</span>
+            <span class="text-[10px] font-semibold text-white bg-tc-teal-700 px-2.5 py-1">3. Accepted</span>
+            <span class="text-[10px] font-bold text-white bg-amber-600 px-2.5 py-1 ring-2 ring-amber-300">4. Investigation</span>
+            <span class="text-[10px] font-semibold text-gray-400 bg-gray-100 px-2.5 py-1">5. Resolution</span>
+            <span class="text-[10px] font-semibold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-r">6. Closed</span>
+          </div>
+          <div class="ml-auto">
+            <button class="bg-tc-teal-700 hover:bg-tc-teal-500 text-white text-xs font-semibold px-4 py-1.5 rounded flex items-center gap-1.5 transition">
+              Advance Stage
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Content -->
+      <div class="flex-1 overflow-auto p-6">
+        <div class="grid grid-cols-3 gap-6">
+
+          <!-- Left Column: Presentation + Assessment -->
+          <div class="col-span-2 space-y-5">
+            <!-- Presentation -->
+            <div class="bg-white rounded border border-gray-200 p-4">
+              <div class="section-header flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                Presentation
+              </div>
+              <div class="space-y-3">
+                <div>
+                  <div class="field-label">Description</div>
+                  <div class="field-value mt-0.5">Daughter reported that mother's evening medication (Paracetamol 500mg + Metformin 500mg) was administered at 10:15 PM instead of the scheduled 6:00 PM. Client is assessed as a high fall risk and requires timely medication to manage pain and mobility. Daughter concerned this may be a recurring issue.</div>
+                </div>
+                <div>
+                  <div class="field-label">Background</div>
+                  <div class="field-value mt-0.5">Client has a documented history of falls (3 in past 12 months). Pain management is critical for safe mobility. Previous remediation (REF-00287) addressed carer scheduling but did not cover medication timing protocols.</div>
+                </div>
+                <div>
+                  <div class="field-label">Source</div>
+                  <div class="field-value mt-0.5">Phone call — received by Coordinator S. Chen on 28 Feb 2026, 09:14 AM</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Assessment -->
+            <div class="bg-white rounded border border-gray-200 p-4">
+              <div class="section-header flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                Assessment
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <div class="field-label">Triage Category</div>
+                  <div class="mt-1 flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-triage-1"></span>
+                    <span class="text-sm font-semibold text-red-700">Category 1 — Critical</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="field-label">Classification</div>
+                  <div class="field-value mt-0.5">Direct Complaint</div>
+                </div>
+                <div>
+                  <div class="field-label">Categories</div>
+                  <div class="mt-1 flex flex-wrap gap-1">
+                    <span class="text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Clinical Care</span>
+                    <span class="text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Medication</span>
+                    <span class="text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded">Safety</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="field-label">Safety Concern</div>
+                  <div class="mt-1 flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 text-sm font-semibold text-red-700">
+                      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                      YES
+                    </span>
+                    <span class="text-xs text-gray-500">— Fall risk due to delayed pain medication</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Management / Stage History -->
+            <div class="bg-white rounded border border-gray-200 p-4">
+              <div class="section-header flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Management — Stage History
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="w-20 text-gray-400 font-mono">28 Feb 09:14</span>
+                  <span class="w-2 h-2 rounded-full bg-tc-teal-700"></span>
+                  <span class="text-gray-700"><span class="font-semibold">0. New</span> — Record created by S. Chen</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="w-20 text-gray-400 font-mono">28 Feb 09:22</span>
+                  <span class="w-2 h-2 rounded-full bg-tc-teal-700"></span>
+                  <span class="text-gray-700"><span class="font-semibold">1. Received</span> — Acknowledged, assigned to S. Chen</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="w-20 text-gray-400 font-mono">28 Feb 10:05</span>
+                  <span class="w-2 h-2 rounded-full bg-tc-teal-700"></span>
+                  <span class="text-gray-700"><span class="font-semibold">2. Triage</span> — Assessed as Cat 1 Critical, safety concern flagged</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="w-20 text-gray-400 font-mono">28 Feb 11:30</span>
+                  <span class="w-2 h-2 rounded-full bg-tc-teal-700"></span>
+                  <span class="text-gray-700"><span class="font-semibold">3. Owner Accepted</span> — S. Chen confirmed as owner</span>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="w-20 text-gray-400 font-mono">01 Mar 08:00</span>
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  <span class="text-gray-700"><span class="font-semibold text-amber-700">4. Investigation</span> — Investigation commenced (current)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: People + Outcome + Quick Actions -->
+          <div class="space-y-5">
+            <!-- People -->
+            <div class="bg-white rounded border border-gray-200 p-4">
+              <div class="section-header flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                People
+              </div>
+              <div class="space-y-3">
+                <div>
+                  <div class="field-label">Complainant</div>
+                  <div class="field-value mt-0.5 font-medium">Sarah Thompson</div>
+                  <div class="text-[11px] text-gray-500">Daughter of Margaret Thompson</div>
+                  <div class="text-[11px] text-gray-500">Ph: 0412 345 678</div>
+                  <div class="text-[11px] text-gray-500">sarah.t@email.com</div>
+                </div>
+                <div class="border-t border-gray-100 pt-3">
+                  <div class="field-label">Impacted Recipient</div>
+                  <div class="field-value mt-0.5 font-medium">Margaret Thompson</div>
+                  <div class="text-[11px] text-gray-500">PKG-004521 — HCP Level 4</div>
+                </div>
+                <div class="border-t border-gray-100 pt-3">
+                  <div class="field-label">Assigned Coordinator</div>
+                  <div class="field-value mt-0.5 font-medium">S. Chen</div>
+                  <div class="text-[11px] text-gray-500">Clinical Team</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Outcome -->
+            <div class="bg-white rounded border border-gray-200 p-4">
+              <div class="section-header flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                Outcome
+              </div>
+              <div class="space-y-3">
+                <div>
+                  <div class="field-label">Resolution</div>
+                  <div class="text-sm text-gray-400 italic mt-0.5">Pending — investigation in progress</div>
+                </div>
+                <div>
+                  <div class="field-label">CRM Sync</div>
+                  <div class="mt-1 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                    <span class="text-xs text-gray-600">Synced — Last: 10 Mar 2026, 08:00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded border border-gray-200 p-4">
+              <div class="section-header">Quick Actions</div>
+              <div class="space-y-2">
+                <a href="05-notes-section.html" class="flex items-center gap-2 text-xs text-tc-teal-700 hover:text-tc-teal-500 font-medium py-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                  Add Clinical Note (SOAP)
+                </a>
+                <a href="06-action-plan.html" class="flex items-center gap-2 text-xs text-tc-teal-700 hover:text-tc-teal-500 font-medium py-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                  View Action Plan (3/5 complete)
+                </a>
+                <button class="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-700 font-medium py-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                  Print Record
+                </button>
+                <button class="flex items-center gap-2 text-xs text-gray-500 hover:text-gray-700 font-medium py-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                  Share / Export
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+jira_key: TP-1864
+title: 'Invoices V2'
+status: 'Ready for QA'
+prefix: IV2
+summary: "Redesigned invoice management system"
+linear_project_id: a1d5491a-7c09-4606-962c-faa1cbb5a474
+linear_url: https://linear.app/trilogycare/project/iv2-invoices-v2-tp-1864-108009581382
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+phases:
+  -
+    key: TP-3005
+    name: 'IV2 - Discovery'
+    type: Phases
+    status: Done
+    assignee:
+      accountId: acc1
+      displayName: 'Sarah Chen'
+      email: null
+    parent: TP-1864
+    created: '2025-01-15T00:00:00Z'
+    updated: '2025-01-22T00:00:00Z'
+  -
+    key: TP-3006
+    name: 'IV2 - Design'
+    type: Phases
+    status: Done
+    assignee:
+      accountId: acc2
+      displayName: 'Mike Rodriguez'
+      email: null
+    parent: TP-1864
+    created: '2025-01-29T00:00:00Z'
+    updated: '2025-02-05T00:00:00Z'
+  -
+    key: TP-3007
+    name: 'IV2 - Development'
+    type: Phases
+    status: Done
+    assignee:
+      accountId: acc3
+      displayName: 'Emily Watson'
+      email: null
+    parent: TP-1864
+    created: '2025-02-12T00:00:00Z'
+    updated: '2025-02-19T00:00:00Z'
+  -
+    key: TP-3008
+    name: 'IV2 - QA'
+    type: Phases
+    status: Done
+    assignee:
+      accountId: acc4
+      displayName: 'David Kim'
+      email: null
+    parent: TP-1864
+    created: '2025-02-26T00:00:00Z'
+    updated: '2025-03-05T00:00:00Z'
+  -
+    key: TP-3009
+    name: 'IV2 - Release'
+    type: Phases
+    status: 'In Progress'
+    assignee: null
+    parent: TP-1864
+    created: '2025-03-12T00:00:00Z'
+    updated: '2025-03-19T00:00:00Z'

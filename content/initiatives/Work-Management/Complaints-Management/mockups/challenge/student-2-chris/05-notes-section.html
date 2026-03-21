@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REF-00312 — SOAP Notes — Clinical Chris</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+            'triage-1': '#DC2626',
+            'soap-s': '#7C3AED',
+            'soap-o': '#2563EB',
+            'soap-a': '#D97706',
+            'soap-p': '#059669',
+          },
+          fontFamily: { sans: ['Roboto Flex', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto Flex', system-ui, sans-serif; }
+    .soap-label { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; padding: 2px 6px; border-radius: 3px; display: inline-block; min-width: 18px; text-align: center; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <div class="flex min-h-screen">
+    <!-- Skeleton Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 flex-shrink-0 p-4 space-y-3">
+      <div class="flex items-center gap-2 mb-6">
+        <div class="w-8 h-8 bg-tc-teal-700 rounded-lg"></div>
+        <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+      <div class="h-3 w-32 bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-r animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="mt-6 h-3 w-28 bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded animate-pulse"></div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col">
+      <!-- Record Banner (compact) -->
+      <div class="bg-triage-1 text-white px-6 py-2 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-lg font-bold font-mono">REF-00312</span>
+          <span class="text-[11px] bg-white/20 px-2 py-0.5 rounded font-semibold">CAT 1 — CRITICAL</span>
+          <span class="text-white/70 text-sm">Medication administered 4hrs late — fall risk</span>
+        </div>
+        <a href="03-detail-view.html" class="text-xs text-white/70 hover:text-white flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Back to Record
+        </a>
+      </div>
+
+      <!-- Section Header -->
+      <div class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <svg class="w-4 h-4 text-tc-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+          <h2 class="text-sm font-semibold text-gray-700">Clinical Notes (SOAP Format)</h2>
+          <span class="text-xs text-gray-400">5 notes</span>
+        </div>
+        <div class="flex items-center gap-4 text-[10px] text-gray-400">
+          <span class="flex items-center gap-1"><span class="soap-label bg-purple-100 text-soap-s">S</span> Subjective</span>
+          <span class="flex items-center gap-1"><span class="soap-label bg-blue-100 text-soap-o">O</span> Objective</span>
+          <span class="flex items-center gap-1"><span class="soap-label bg-amber-100 text-soap-a">A</span> Assessment</span>
+          <span class="flex items-center gap-1"><span class="soap-label bg-green-100 text-soap-p">P</span> Plan</span>
+        </div>
+      </div>
+
+      <!-- Notes List -->
+      <div class="flex-1 overflow-auto p-6 space-y-4">
+
+        <!-- Note 5 (newest) -->
+        <div class="bg-white rounded border border-gray-200">
+          <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 bg-tc-teal-700 rounded-full flex items-center justify-center text-white text-[10px] font-bold">SC</div>
+              <div>
+                <span class="text-xs font-semibold text-gray-800">S. Chen</span>
+                <span class="text-[11px] text-gray-400 ml-2">Coordinator, Clinical Team</span>
+              </div>
+            </div>
+            <span class="text-[11px] text-gray-400 font-mono">10 Mar 2026 — 09:30</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex gap-3">
+              <span class="soap-label bg-purple-100 text-soap-s mt-0.5">S</span>
+              <p class="text-sm text-gray-700">Follow-up call with Sarah Thompson. She confirmed her mother has not had any further incidents of late medication since the corrective measures were put in place. She expressed satisfaction with the response speed but wants written assurance that the protocol change is permanent.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-blue-100 text-soap-o mt-0.5">O</span>
+              <p class="text-sm text-gray-700">Reviewed medication administration records for 02-09 Mar 2026. All evening medications administered within the 30-minute window (17:45-18:30) for all 7 days. No further timing deviations recorded. Carer acknowledgment forms signed by all 3 rostered evening carers.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-amber-100 text-soap-a mt-0.5">A</span>
+              <p class="text-sm text-gray-700">Corrective actions appear effective. One week of compliant medication timing provides initial evidence of sustained improvement. Recommend monitoring for an additional 2 weeks before concluding the investigation. Complainant sentiment is improving but requires formal written response.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-green-100 text-soap-p mt-0.5">P</span>
+              <p class="text-sm text-gray-700">1) Draft formal written response to Sarah Thompson. 2) Continue monitoring medication records through 24 Mar 2026. 3) Schedule final review meeting with Clinical Lead for 25 Mar. 4) Prepare resolution summary for stage advancement.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 4 -->
+        <div class="bg-white rounded border border-gray-200">
+          <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center text-white text-[10px] font-bold">KN</div>
+              <div>
+                <span class="text-xs font-semibold text-gray-800">K. Nguyen</span>
+                <span class="text-[11px] text-gray-400 ml-2">Clinical Lead</span>
+              </div>
+            </div>
+            <span class="text-[11px] text-gray-400 font-mono">05 Mar 2026 — 14:15</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex gap-3">
+              <span class="soap-label bg-purple-100 text-soap-s mt-0.5">S</span>
+              <p class="text-sm text-gray-700">Interviewed evening carer (Lisa M.) who was on shift 27 Feb. She reported being behind schedule due to an unplanned client emergency at the previous visit (fall at another client's home). She did not notify the coordinator of the delay.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-blue-100 text-soap-o mt-0.5">O</span>
+              <p class="text-sm text-gray-700">Confirmed via roster system: Lisa M. was 2.5 hours behind schedule from 4:30 PM. No delay notification was logged in the system. Medication administration record shows 10:15 PM timestamp (vs 6:00 PM scheduled). Client's fall risk assessment score: 18/25 (High Risk).</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-amber-100 text-soap-a mt-0.5">A</span>
+              <p class="text-sm text-gray-700">Root cause identified as cascade scheduling failure. The carer followed correct medication protocol (did administer) but timing was unacceptable for a high fall-risk client. Systemic issue: no automated alert when medication window is breached. Carer communication protocol was not followed.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-green-100 text-soap-p mt-0.5">P</span>
+              <p class="text-sm text-gray-700">1) Implement medication window alerts in scheduling system. 2) Retrain all evening carers on delay notification protocol. 3) Add mandatory medication timing flag for high fall-risk clients. 4) Review carer Lisa M. — counselling, not disciplinary (systemic issue).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 3 -->
+        <div class="bg-white rounded border border-gray-200">
+          <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 bg-tc-teal-700 rounded-full flex items-center justify-center text-white text-[10px] font-bold">SC</div>
+              <div>
+                <span class="text-xs font-semibold text-gray-800">S. Chen</span>
+                <span class="text-[11px] text-gray-400 ml-2">Coordinator, Clinical Team</span>
+              </div>
+            </div>
+            <span class="text-[11px] text-gray-400 font-mono">03 Mar 2026 — 10:00</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex gap-3">
+              <span class="soap-label bg-purple-100 text-soap-s mt-0.5">S</span>
+              <p class="text-sm text-gray-700">Called Sarah Thompson for scheduled update. She asked whether this is a known problem with other clients and whether the carer will continue visiting her mother. Expressed ongoing anxiety about her mother's safety.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-blue-100 text-soap-o mt-0.5">O</span>
+              <p class="text-sm text-gray-700">Reviewed past 90 days of medication records for Margaret Thompson. No other timing breaches found. Reviewed broader team data: 2 other minor timing deviations (15-20 min) across 340 administrations — within acceptable range.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-amber-100 text-soap-a mt-0.5">A</span>
+              <p class="text-sm text-gray-700">Incident appears isolated rather than systemic for this client. Broader team data does not indicate a pattern. Complainant anxiety is understandable given client's fall history. Reassurance appropriate but must be backed by concrete actions.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-green-100 text-soap-p mt-0.5">P</span>
+              <p class="text-sm text-gray-700">1) Arrange Clinical Lead (K. Nguyen) to conduct carer interview. 2) Provide Sarah with next update by 07 Mar. 3) Request IT team to review medication alert feasibility.</p>
+            </div>
+            <!-- Attachment -->
+            <div class="border-t border-gray-100 pt-3 mt-3">
+              <div class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Supporting Documents</div>
+              <div class="flex items-center gap-2 text-xs text-tc-teal-700 hover:text-tc-teal-500 cursor-pointer">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                medication-admin-record-90day-review.pdf (124 KB)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 2 -->
+        <div class="bg-white rounded border border-gray-200">
+          <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 bg-tc-teal-700 rounded-full flex items-center justify-center text-white text-[10px] font-bold">SC</div>
+              <div>
+                <span class="text-xs font-semibold text-gray-800">S. Chen</span>
+                <span class="text-[11px] text-gray-400 ml-2">Coordinator, Clinical Team</span>
+              </div>
+            </div>
+            <span class="text-[11px] text-gray-400 font-mono">01 Mar 2026 — 08:45</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex gap-3">
+              <span class="soap-label bg-purple-100 text-soap-s mt-0.5">S</span>
+              <p class="text-sm text-gray-700">Investigation initiated. Daughter's initial report reviewed. She stated: "Mum told me her tablet was given very late and she couldn't sleep because of the pain. She's already had falls and I'm terrified she'll fall again."</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-blue-100 text-soap-o mt-0.5">O</span>
+              <p class="text-sm text-gray-700">Medication chart confirms Paracetamol 500mg + Metformin 500mg due at 18:00, signed as administered at 22:15 on 27 Feb. Roster shows carer Lisa M. was assigned evening shift. Client's care plan mandates timely pain management for mobility.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-amber-100 text-soap-a mt-0.5">A</span>
+              <p class="text-sm text-gray-700">Confirmed 4-hour 15-minute delay in medication administration. Delay is clinically significant given client's high fall-risk status and pain-dependent mobility. Further investigation needed to determine root cause and whether this is an isolated incident.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-green-100 text-soap-p mt-0.5">P</span>
+              <p class="text-sm text-gray-700">1) Pull full medication records for past 90 days. 2) Contact daughter for update and reassurance. 3) Schedule carer interview with Clinical Lead. 4) Check if scheduling system captured any alerts or delays.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note 1 (oldest — intake) -->
+        <div class="bg-white rounded border border-gray-200">
+          <div class="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-7 h-7 bg-tc-teal-700 rounded-full flex items-center justify-center text-white text-[10px] font-bold">SC</div>
+              <div>
+                <span class="text-xs font-semibold text-gray-800">S. Chen</span>
+                <span class="text-[11px] text-gray-400 ml-2">Coordinator, Clinical Team</span>
+              </div>
+            </div>
+            <span class="text-[11px] text-gray-400 font-mono">28 Feb 2026 — 09:14</span>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex gap-3">
+              <span class="soap-label bg-purple-100 text-soap-s mt-0.5">S</span>
+              <p class="text-sm text-gray-700">Incoming phone call from Sarah Thompson (daughter of Margaret Thompson, PKG-004521). She reports that her mother's evening medication was given at approximately 10 PM instead of the usual 6 PM on 27 February. She is very concerned about fall risk.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-blue-100 text-soap-o mt-0.5">O</span>
+              <p class="text-sm text-gray-700">Record created. Client confirmed as Margaret Thompson, PKG-004521, HCP Level 4. Fall risk assessment: High (score 18/25). Scheduled medications: Paracetamol 500mg + Metformin 500mg at 18:00 daily.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-amber-100 text-soap-a mt-0.5">A</span>
+              <p class="text-sm text-gray-700">Triaged as Category 1 (Critical) due to safety concern — medication delay for high fall-risk client. Safety concern flagged. Immediate investigation warranted.</p>
+            </div>
+            <div class="flex gap-3">
+              <span class="soap-label bg-green-100 text-soap-p mt-0.5">P</span>
+              <p class="text-sm text-gray-700">1) Acknowledge complaint and confirm receipt to daughter. 2) Verify medication administration records. 3) Commence investigation within 24 hours. 4) Assign to self (S. Chen) as owner.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Clinical Note Form -->
+        <div class="bg-white rounded border-2 border-dashed border-tc-teal-500/40 p-5">
+          <h3 class="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-tc-teal-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Add Clinical Note
+          </h3>
+          <div class="space-y-3">
+            <div>
+              <label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <span class="soap-label bg-purple-100 text-soap-s">S</span> Subjective
+              </label>
+              <textarea class="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500" rows="2" placeholder="What was reported or said by the complainant/parties..."></textarea>
+            </div>
+            <div>
+              <label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <span class="soap-label bg-blue-100 text-soap-o">O</span> Objective
+              </label>
+              <textarea class="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500" rows="2" placeholder="Observable facts, evidence, records reviewed..."></textarea>
+            </div>
+            <div>
+              <label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <span class="soap-label bg-amber-100 text-soap-a">A</span> Assessment
+              </label>
+              <textarea class="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500" rows="2" placeholder="Professional opinion, analysis of findings..."></textarea>
+            </div>
+            <div>
+              <label class="text-[11px] font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 mb-1">
+                <span class="soap-label bg-green-100 text-soap-p">P</span> Plan
+              </label>
+              <textarea class="w-full text-sm border border-gray-300 rounded px-3 py-2 focus:ring-1 focus:ring-tc-teal-500 focus:border-tc-teal-500" rows="2" placeholder="Next steps, actions to take..."></textarea>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <button class="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                Attach Document
+              </button>
+              <button class="bg-tc-teal-700 hover:bg-tc-teal-500 text-white text-xs font-semibold px-4 py-2 rounded transition">
+                Save Clinical Note
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="viewer-toolbar.js"></script>
+</body>
+</html>

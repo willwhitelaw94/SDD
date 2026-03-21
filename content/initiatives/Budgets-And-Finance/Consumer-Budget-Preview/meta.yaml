@@ -1,0 +1,11 @@
+jira_key: TP-1910
+title: 'Consumer Budget Preview'
+status: Backlog
+prefix: CBP
+summary: "Client-facing budget visibility"
+linear_project_id: ae04e2d6-e24e-42c4-a157-807f89b94963
+linear_url: https://linear.app/trilogycare/project/cbp-consumer-budget-preview-75e1a0c68be5
+description: null
+due_date: null
+last_synced: '2026-02-02T00:00:00.000Z'
+bounty_value: 5000

@@ -1,0 +1,11 @@
+jira_key: TP-1880
+title: 'CM Activities'
+status: 'To Do'
+prefix: CMA
+summary: "Care manager activity tracking"
+linear_project_id: 97619c22-7f8c-4c4c-acd1-db7f113225b7
+linear_url: https://linear.app/trilogycare/project/cma-cm-activities-tp-1880-c6605406d328
+description: null
+due_date: null
+last_synced: '2025-11-09T00:00:00.000Z'
+bounty_value: 20000

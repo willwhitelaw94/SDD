@@ -1,0 +1,5 @@
+title: 'Care Plan PDF'
+prefix: CPP
+status: planned
+summary: 'Generate care plan PDFs for clients and families'
+bounty_value: 5000

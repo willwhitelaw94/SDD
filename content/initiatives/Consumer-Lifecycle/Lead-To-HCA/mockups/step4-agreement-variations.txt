@@ -1,0 +1,543 @@
+================================================================================
+      STEP 4: AGREEMENT & SIGNATURE — LAYOUT VARIATIONS (8 OPTIONS)
+================================================================================
+
+Step 4 has two main paths:
+  A. Full Agreement (Suitable or clinically cleared) — signature capture
+  B. Sample Agreement (Needs Clinical Attention) — no signature, send sample
+
+Signature types: Verbal (audio upload), Digital (email), Manual (PDF)
+
+================================================================================
+OPTION A: Stacked Layout — Agreement Body + Signature Below
+================================================================================
+
+--- FULL AGREEMENT (Suitable for Everything) ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 4: AGREEMENT                                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  MANAGEMENT OPTION (CONFIRMED)                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  SM+                                               ℹ Matches preferred│   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  HOME CARE AGREEMENT                                                        │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  HOME CARE AGREEMENT                                                 │   │
+│  │  Trilogy Care Pty Ltd ABN XX XXX XXX XXX                             │   │
+│  │                                                                      │   │
+│  │  This Agreement is between:                                          │   │
+│  │  Trilogy Care ("Provider") and Joan Smith ("Client")                  │   │
+│  │                                                                      │   │
+│  │  Management Option: SM+                                              │   │
+│  │  Commencement Date: 02/02/2026                                       │   │
+│  │  Primary Classification: Support@Home Ongoing                        │   │
+│  │                                                                      │   │
+│  │  1. Services                                                         │   │
+│  │  The Provider agrees to deliver services under the Home Care         │   │
+│  │  Package Program as outlined in the client's Care Plan...           │   │
+│  │                                                                      │   │
+│  │  [scrollable content...]                                             │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  SIGNATURE                                                                  │
+│                                                                             │
+│  How will the client sign this agreement?                                   │
+│                                                                             │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐          │
+│  │    📞 Verbal     │  │    ✉ Digital     │  │    📄 Manual     │          │
+│  │                  │  │                  │  │                  │          │
+│  │  Record consent  │  │  Email for       │  │  Send unsigned   │          │
+│  │  over the phone  │  │  e-signature     │  │  PDF to sign     │          │
+│  │                  │  │                  │  │                  │          │
+│  │     [● Active]   │  │     [○        ]  │  │     [○        ]  │          │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘          │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  📞 VERBAL CONSENT                                                   │   │
+│  │                                                                      │   │
+│  │  Read the following disclaimer to the client:                        │   │
+│  │  ┌──────────────────────────────────────────────────────────────┐    │   │
+│  │  │  "I, [Client Name], confirm that I have read and understood  │    │   │
+│  │  │   the Home Care Agreement dated [Date]. I consent to the     │    │   │
+│  │  │   services outlined under the [Management Option] option."   │    │   │
+│  │  └──────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                      │   │
+│  │  Upload Consent Recording *                                          │   │
+│  │  ┌──────────────────────────────────────────────────────────────┐    │   │
+│  │  │              ↑                                               │    │   │
+│  │  │  Drop audio file here, or [browse files]                     │    │   │
+│  │  │  Supported: MP3, WAV, M4A (max 50MB)                        │    │   │
+│  │  └──────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                      │   │
+│  │  ☐ Send signed agreement to client                                   │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                          [Save Draft]   [Complete Conversion →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Linear reading flow, agreement body visible, signature types as selectable cards
+**Cons:** Very long page, must scroll past agreement to reach signature
+
+================================================================================
+OPTION B: Split Panel — Agreement Left, Signature Right
+================================================================================
+
+┌───────────────────────────────────────┬─────────────────────────────────────┐
+│  HOME CARE AGREEMENT                  │  SIGNATURE                          │
+│  Joan Smith • SM+                     │                                     │
+│  ──────────────────────────────────  │  Management Option (Confirmed)      │
+│                                       │  ┌────────────────────────────────┐ │
+│  HOME CARE AGREEMENT                  │  │ SM+              ℹ = Preferred │ │
+│  Trilogy Care Pty Ltd                 │  └────────────────────────────────┘ │
+│  ABN XX XXX XXX XXX                   │                                     │
+│                                       │  How will the client sign?          │
+│  This Agreement is between:           │                                     │
+│  Trilogy Care ("Provider") and        │  ┌──────┐ ┌──────┐ ┌──────┐       │
+│  Joan Smith ("Client")                │  │📞    │ │✉    │ │📄    │       │
+│                                       │  │Verbal│ │Digi- │ │Manual│       │
+│  Management Option: SM+              │  │ [●]  │ │tal   │ │      │       │
+│  Commencement: 02/02/2026            │  └──────┘ │ [○]  │ │ [○]  │       │
+│  Classification: Support@Home        │           └──────┘ └──────┘       │
+│                                       │                                     │
+│  1. Services                          │  ──────────────────────────────── │
+│  The Provider agrees to deliver       │                                     │
+│  services under the Home Care         │  📞 VERBAL CONSENT                  │
+│  Package Program as outlined in       │                                     │
+│  the client's Care Plan...           │  Read the disclaimer:               │
+│                                       │  ┌────────────────────────────────┐ │
+│  2. Fees & Charges                    │  │ "I, Joan Smith, confirm that   │ │
+│  ...                                  │  │  I have read and understood    │ │
+│                                       │  │  the Home Care Agreement..."  │ │
+│  3. Rights & Responsibilities         │  └────────────────────────────────┘ │
+│  ...                                  │                                     │
+│                                       │  Upload Recording *                 │
+│  [scrollable]                         │  ┌────────────────────────────────┐ │
+│                                       │  │  ↑ Drop audio file or browse   │ │
+│                                       │  │  MP3, WAV, M4A (max 50MB)     │ │
+│                                       │  └────────────────────────────────┘ │
+│                                       │                                     │
+│                                       │  ☐ Send signed agreement to client  │
+│                                       │                                     │
+│                                       │  ──────────────────────────────── │
+│                                       │                                     │
+│                                       │  [Save Draft]                       │
+│                                       │  [Complete Conversion →]            │
+│                                       │                                     │
+├───────────────────────────────────────┴─────────────────────────────────────┤
+│  [← Back]                                                    [× Cancel]    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Agreement always visible while configuring signature, no scrolling past content
+**Cons:** Tight on space, requires wide viewport, small text in agreement panel
+
+================================================================================
+OPTION C: Tabbed Signature Types
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 4: AGREEMENT                                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Management Option (Confirmed): SM+                     ℹ Matches preferred │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  Agreement Preview                                     [View Full ↗] │   │
+│  │  ────────────────────────────────────────────────────────────────── │   │
+│  │  HOME CARE AGREEMENT • Trilogy Care • Joan Smith                     │   │
+│  │  SM+ • Support@Home Ongoing • Commencing 02/02/2026                 │   │
+│  │  [Collapsed preview — click "View Full" for scrollable agreement]   │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  CAPTURE SIGNATURE                                                          │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  ┌────────────────┬────────────────┬────────────────┐                      │
+│  │   📞 Verbal    │   ✉ Digital   │   📄 Manual    │                      │
+│  │   ▔▔▔▔▔▔▔▔▔▔  │                │                │                      │
+│  └────────────────┴────────────────┴────────────────┘                      │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  Read the following disclaimer to the client:                        │   │
+│  │                                                                      │   │
+│  │  ┌──────────────────────────────────────────────────────────────┐    │   │
+│  │  │  "I, Joan Smith, confirm that I have read and understood      │    │   │
+│  │  │   the Home Care Agreement dated 02/02/2026. I consent to      │    │   │
+│  │  │   the services outlined under the SM+ management option."     │    │   │
+│  │  └──────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                      │   │
+│  │  Upload Consent Recording *                                          │   │
+│  │  ┌──────────────────────────────────────────────────────────────┐    │   │
+│  │  │              ↑                                               │    │   │
+│  │  │  Drop audio file here, or [browse files]                     │    │   │
+│  │  │  Supported: MP3, WAV, M4A (max 50MB)                        │    │   │
+│  │  └──────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                      │   │
+│  │  ☐ Send signed agreement to client                                   │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                          [Save Draft]   [Complete Conversion →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- DIGITAL TAB ACTIVE ---
+
+│  ┌────────────────┬────────────────┬────────────────┐                      │
+│  │   📞 Verbal    │   ✉ Digital   │   📄 Manual    │                      │
+│  │                │   ▔▔▔▔▔▔▔▔▔▔  │                │                      │
+│  └────────────────┴────────────────┴────────────────┘                      │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  Send agreement for digital signature                                │   │
+│  │                                                                      │   │
+│  │  Recipient *                                                         │   │
+│  │  ○ Client (joan.smith@email.com)                                     │   │
+│  │  ○ Representative (mary.smith@email.com)                             │   │
+│  │  ○ Other                                                             │   │
+│  │     [Enter email address__________________]                          │   │
+│  │                                                                      │   │
+│  │                                     [Send for Signing →]             │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+
+
+--- MANUAL TAB ACTIVE ---
+
+│  ┌────────────────┬────────────────┬────────────────┐                      │
+│  │   📞 Verbal    │   ✉ Digital   │   📄 Manual    │                      │
+│  │                │                │   ▔▔▔▔▔▔▔▔▔▔  │                      │
+│  └────────────────┴────────────────┴────────────────┘                      │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  Send unsigned PDF for manual signature                              │   │
+│  │                                                                      │   │
+│  │  Recipient *                                                         │   │
+│  │  ○ Client (joan.smith@email.com)                                     │   │
+│  │  ○ Representative (mary.smith@email.com)                             │   │
+│  │  ○ Other                                                             │   │
+│  │     [Enter email address__________________]                          │   │
+│  │                                                                      │   │
+│  │                                    [Send Unsigned PDF →]             │   │
+│  │                                                                      │   │
+│  │  ─────────────────────────────────────────────────────────────────  │   │
+│  │                                                                      │   │
+│  │  Upload Signed PDF                                                   │   │
+│  │  ┌──────────────────────────────────────────────────────────────┐    │   │
+│  │  │  ↑ Drop signed PDF here, or [browse files]                   │    │   │
+│  │  │  Supported: PDF (max 10MB)                                   │    │   │
+│  │  └──────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+
+**Pros:** Familiar tabs, agreement preview is compact, clear separation of signature types
+**Cons:** Agreement preview may be too collapsed, tabs within accordion is nested
+
+================================================================================
+OPTION D: Radio Select with Inline Expansion
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 4: AGREEMENT                                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Management Option (Confirmed)                                              │
+│  SM+ • Matches preferred                                                    │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  Agreement                                                     [Preview ↗] │
+│  Home Care Agreement for Joan Smith • SM+ • Support@Home Ongoing           │
+│  Commencing 02/02/2026                                                     │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  How will the client sign? *                                                │
+│                                                                             │
+│  ○ Verbal — Record consent over the phone                                   │
+│                                                                             │
+│  ● Digital — Email agreement for e-signature                                │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  Send to *                                                           │   │
+│  │  ○ Joan Smith (joan.smith@email.com)                                  │   │
+│  │  ○ Mary Smith (mary.smith@email.com) — Representative                │   │
+│  │  ○ Other: [________________________________]                         │   │
+│  │                                                                      │   │
+│  │                                         [Send for Signing →]         │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ○ Manual — Send unsigned PDF, upload signed copy                           │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                          [Save Draft]   [Complete Conversion →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Clean progressive disclosure, only shows relevant fields, radio is familiar
+**Cons:** Agreement is just a one-liner (may feel too hidden), less visual structure
+
+================================================================================
+OPTION E: Sample Agreement Path (Needs Clinical Attention)
+================================================================================
+
+--- SAMPLE AGREEMENT (Clinical flag, not yet cleared) ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 4: AGREEMENT                                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ⚠  CLINICAL REVIEW PENDING                                         │   │
+│  │  This client requires clinical nurse review before the agreement     │   │
+│  │  can be signed. A sample agreement is available below.               │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Management Option (Confirmed)                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  Pending clinical outcome                                            │   │
+│  │  Preferred: SM+  •  May change to SM+ Required after review          │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  SAMPLE AGREEMENT                                                           │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ╔════════════════════════════════════════════════════════════════╗   │   │
+│  │  ║                         S A M P L E                           ║   │   │
+│  │  ╚════════════════════════════════════════════════════════════════╝   │   │
+│  │                                                                      │   │
+│  │  HOME CARE AGREEMENT                                                 │   │
+│  │  Trilogy Care Pty Ltd ABN XX XXX XXX XXX                             │   │
+│  │                                                                      │   │
+│  │  This Agreement is between:                                          │   │
+│  │  Trilogy Care ("Provider") and Joan Smith ("Client")                  │   │
+│  │                                                                      │   │
+│  │  Management Option: [Pending Clinical Review]                        │   │
+│  │  Commencement Date: 02/02/2026                                       │   │
+│  │                                                                      │   │
+│  │  ⚠ This is a SAMPLE agreement for review purposes only.             │   │
+│  │     It cannot be signed until clinical review is complete.           │   │
+│  │                                                                      │   │
+│  │  [scrollable content...]                                             │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  SEND SAMPLE TO CLIENT                                                      │
+│                                                                             │
+│  Send to *                                                                  │
+│  ○ Joan Smith (joan.smith@email.com)                                        │
+│  ○ Mary Smith (mary.smith@email.com) — Representative                      │
+│  ○ Other: [________________________________]                                │
+│                                                                             │
+│                                                 [Send Sample Agreement →]  │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                                [Save & Close]    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Note:** "Complete Conversion" is NOT available. Only "Save & Close" — the
+conversion completes after clinical clearance + signature.
+
+================================================================================
+OPTION F: Agreement Post-Clinical Clearance (Returning to Sign)
+================================================================================
+
+--- AFTER CLINICAL NURSE CLEARS CLIENT ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 4: AGREEMENT                                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  ✓  CLINICAL REVIEW COMPLETE                                         │   │
+│  │  Cleared by: Nurse Sarah Chen  •  02/03/2026  •  Outcome: SM+ Req   │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  Management Option (Confirmed)                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  SM+                                   ⚠ Changed from preferred (SM) │   │
+│  │  Clinical outcome requires SM+ management.                           │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  [Full agreement body — same as Option A but with SM+ confirmed]           │
+│                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────  │
+│                                                                             │
+│  SIGNATURE                                                                  │
+│  How will the client sign?                                                  │
+│                                                                             │
+│  ○ Verbal    ● Digital    ○ Manual                                          │
+│                                                                             │
+│  [Signature fields for selected type — same as first instance]             │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                          [Save Draft]   [Complete Conversion →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+OPTION G: Digital Signature — Sent & Tracking States
+================================================================================
+
+--- DIGITAL: AGREEMENT SENT, AWAITING SIGNATURE ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 4: AGREEMENT                                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Management Option: SM+                                     ℹ = Preferred   │
+│                                                                             │
+│  AGREEMENT STATUS                                                           │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  ✉ Sent for Digital Signing                                          │   │
+│  │                                                                      │   │
+│  │  Sent to:     joan.smith@email.com                                   │   │
+│  │  Sent at:     02/02/2026 3:15 PM                                     │   │
+│  │  Status:      ◌ Awaiting signature                                   │   │
+│  │                                                                      │   │
+│  │  ────────────────────────────────────────────────────────────────── │   │
+│  │                                                                      │   │
+│  │  ┌─────────────────────────────────────────────────────────────┐    │   │
+│  │  │  Day 1 ─── Day 3 (auto reminder) ─── Day 7 (escalate)      │    │   │
+│  │  │  ●──────────○─────────────────────────○                     │    │   │
+│  │  │  ▲ Today                                                    │    │   │
+│  │  └─────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                      │   │
+│  │  [Resend Agreement]         [Change Signature Type]                  │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                                [Save & Close]    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- DIGITAL: SIGNATURE RECEIVED ---
+
+│  AGREEMENT STATUS                                                           │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                                                                      │   │
+│  │  ✓ Signed Digitally                                                  │   │
+│  │                                                                      │   │
+│  │  Signed by:   Joan Smith                                             │   │
+│  │  Signed at:   03/02/2026 10:22 AM                                    │   │
+│  │  Sent to:     joan.smith@email.com                                   │   │
+│  │                                                                      │   │
+│  │  [View Signed Agreement]    [Download PDF]                           │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                        [Complete Conversion →]   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+OPTION H: Manual Signature — Send & Upload States
+================================================================================
+
+--- MANUAL: SEND UNSIGNED PDF ---
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  STEP 4: AGREEMENT                                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  Signature Type: 📄 Manual                      [Change Type]              │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  STEP 1: SEND UNSIGNED PDF                                  ● Active │   │
+│  │                                                                      │   │
+│  │  Send to *                                                           │   │
+│  │  ○ Joan Smith (joan.smith@email.com)                                  │   │
+│  │  ○ Mary Smith (mary.smith@email.com) — Representative                │   │
+│  │  ○ Other: [________________________________]                         │   │
+│  │                                                                      │   │
+│  │                                       [Send Unsigned PDF →]          │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  STEP 2: UPLOAD SIGNED COPY                             🔒 Locked    │   │
+│  │  Send the unsigned PDF first, then upload the signed copy.           │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                                                [Save & Close]    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+--- MANUAL: PDF SENT, AWAITING SIGNED COPY ---
+
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  STEP 1: SEND UNSIGNED PDF                                  ✓ Sent   │   │
+│  │  Sent to joan.smith@email.com on 02/02/2026 3:15 PM                  │   │
+│  │                                                         [Resend]     │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  STEP 2: UPLOAD SIGNED COPY                             ● Active     │   │
+│  │                                                                      │   │
+│  │  ┌──────────────────────────────────────────────────────────────┐    │   │
+│  │  │              ↑                                               │    │   │
+│  │  │  Drop signed PDF here, or [browse files]                     │    │   │
+│  │  │  Supported: PDF (max 10MB)                                   │    │   │
+│  │  └──────────────────────────────────────────────────────────────┘    │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+
+
+--- MANUAL: SIGNED COPY UPLOADED ---
+
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  STEP 1: SEND UNSIGNED PDF                                  ✓ Sent   │   │
+│  │  Sent to joan.smith@email.com on 02/02/2026 3:15 PM                  │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │  STEP 2: UPLOAD SIGNED COPY                             ✓ Uploaded   │   │
+│  │  signed-agreement-joan-smith.pdf  (2.1MB)               [View] [×]   │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  [← Back]                          [Save Draft]   [Complete Conversion →]  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+**Pros:** Clear two-step process for manual, status tracking visible
+**Cons:** More visual complexity, mini-stepper inside step 4
+
+================================================================================
+RECOMMENDATION
+================================================================================
+
+**For signature type selection:**
+- **Option C (Tabbed)** or **Option D (Radio + inline)** — both are clean
+- Option D is simpler and shows all three options at once
+
+**For the agreement body:**
+- **Option B (Split Panel)** if viewport is wide — agreement stays visible
+- **Option C (Collapsed Preview + View Full)** for narrower viewports
+
+**For the sample agreement path:**
+- **Option E** — the SAMPLE watermark and clinical pending banner are essential
+
+**For post-clinical return:**
+- **Option F** — shows clinical outcome clearly, management option change flagged
+
+**For tracking states (sent, awaiting, signed):**
+- **Options G & H** — these are essential for digital and manual flows
+
+**Overall recommendation: Combine Option D + E + G + H**
+- Radio selection for signature type (Option D)
+- Sample agreement with SAMPLE watermark (Option E)
+- Digital tracking with auto-reminder timeline (Option G)
+- Manual two-step send/upload flow (Option H)

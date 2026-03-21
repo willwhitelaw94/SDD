@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Needs Board — Margaret Thompson</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: { 500: '#43C0BE', 600: '#11998e', 700: '#007F7E' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .drag-handle { cursor: grab; }
+        .drag-handle:active { cursor: grabbing; }
+        .need-card {
+            transition: box-shadow 0.15s ease, transform 0.15s ease;
+        }
+        .need-card:hover {
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+        .swimlane::-webkit-scrollbar { height: 6px; }
+        .swimlane::-webkit-scrollbar-track { background: transparent; }
+        .swimlane::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gray-50 flex">
+
+<aside class="w-60 bg-white border-r border-gray-200 flex flex-col shrink-0 h-screen sticky top-0">
+    <div class="px-4 py-4 border-b border-gray-100">
+        <div class="flex items-center gap-2.5"><div class="h-8 w-8 rounded-lg bg-gray-200 animate-pulse"></div><div class="h-4 w-24 rounded bg-gray-200 animate-pulse"></div></div>
+        <p class="mt-2 text-[9px] text-gray-300 uppercase tracking-widest text-center">Framing only</p>
+    </div>
+    <div class="px-3 py-3"><div class="h-8 rounded-lg bg-gray-100 animate-pulse"></div></div>
+    <nav class="flex-1 overflow-y-auto px-3 py-2 space-y-1.5">
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-20 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-24 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-16 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-teal-50"><div class="h-4 w-4 rounded bg-teal-200 animate-pulse"></div><div class="h-3.5 w-18 rounded bg-teal-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-20 rounded bg-gray-200 animate-pulse"></div></div>
+        <div class="flex items-center gap-2.5 px-3 py-2"><div class="h-4 w-4 rounded bg-gray-200 animate-pulse"></div><div class="h-3.5 w-14 rounded bg-gray-200 animate-pulse"></div></div>
+    </nav>
+    <div class="border-t border-gray-100 px-3 py-3"><div class="flex items-center gap-2.5"><div class="h-8 w-8 rounded-full bg-gray-200 animate-pulse"></div><div class="flex-1 space-y-1.5"><div class="h-3 w-24 rounded bg-gray-200 animate-pulse"></div><div class="h-2.5 w-20 rounded bg-gray-100 animate-pulse"></div></div></div></div>
+</aside>
+
+<main class="flex-1 flex flex-col min-h-screen">
+    <!-- Page Header -->
+    <div class="bg-white border-b border-gray-200">
+        <div class="px-6 py-4">
+            <nav class="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
+                <a href="#" class="hover:text-teal-700">Clients</a>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <a href="#" class="hover:text-teal-700">Margaret Thompson</a>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <a href="#" class="hover:text-teal-700">Package</a>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <span class="text-gray-800 font-medium">Needs</span>
+            </nav>
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-semibold text-gray-900">Needs Board</h1>
+                <div class="flex items-center gap-3">
+                    <!-- View Toggle -->
+                    <div class="flex items-center bg-gray-100 rounded-lg p-0.5">
+                        <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white shadow-sm text-sm font-medium text-gray-900">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                            Board
+                        </button>
+                        <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-gray-500 hover:text-gray-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            List
+                        </button>
+                    </div>
+                    <button class="flex items-center gap-1.5 px-3.5 py-2 bg-teal-700 text-white text-sm font-medium rounded-lg hover:bg-teal-600 transition-colors shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Need
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Tab Bar -->
+        <div class="px-6 flex items-center gap-0">
+            <a href="#" class="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Overview</a>
+            <a href="#" class="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Services</a>
+            <a href="#" class="px-4 py-2.5 text-sm font-medium text-teal-700 border-b-2 border-teal-700">Needs</a>
+            <a href="#" class="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Risks</a>
+            <a href="#" class="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Budget</a>
+            <a href="#" class="px-4 py-2.5 text-sm text-gray-500 hover:text-gray-700 border-b-2 border-transparent">Documents</a>
+        </div>
+    </div>
+
+    <!-- Board Canvas -->
+    <div class="flex-1 p-6 space-y-4 overflow-y-auto">
+
+        <!-- Tier 1: Essential Care -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-6 rounded-full bg-rose-500"></div>
+                    <h2 class="text-sm font-semibold text-gray-900">Essential Care</h2>
+                    <span class="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Physiological</span>
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-100 text-rose-700 text-xs font-bold">3</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="text-xs text-gray-400 hover:text-teal-700 font-medium flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 swimlane flex gap-3 overflow-x-auto">
+                <!-- Card 1 -->
+                <div class="need-card flex-shrink-0 w-72 bg-white rounded-lg border border-gray-200 shadow-sm border-l-[3px] border-l-rose-500">
+                    <div class="p-3.5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="drag-handle text-gray-300 hover:text-gray-500 text-sm select-none">&#x22EE;&#x22EE;</span>
+                                <span class="text-xs font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded">Nutrition & Hydration</span>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5" title="Active"></span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1 ml-5">Requires modified diet and meal assistance</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed ml-5 line-clamp-2">Margaret needs soft/pureed food due to swallowing difficulties. Requires assistance with meal preparation and monitoring of fluid intake to prevent dehydration.</p>
+                        <div class="flex items-center gap-2 mt-3 ml-5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                HCP
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                2 services
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="need-card flex-shrink-0 w-72 bg-white rounded-lg border border-gray-200 shadow-sm border-l-[3px] border-l-rose-500">
+                    <div class="p-3.5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="drag-handle text-gray-300 hover:text-gray-500 text-sm select-none">&#x22EE;&#x22EE;</span>
+                                <span class="text-xs font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded">Personal Hygiene & Continence</span>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5" title="Active"></span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1 ml-5">Showering and continence support</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed ml-5 line-clamp-2">Requires daily assistance with showering due to limited mobility. Uses continence aids overnight — needs regular review of aid suitability.</p>
+                        <div class="flex items-center gap-2 mt-3 ml-5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                HCP
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                3 services
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="need-card flex-shrink-0 w-72 bg-white rounded-lg border border-gray-200 shadow-sm border-l-[3px] border-l-rose-500">
+                    <div class="p-3.5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="drag-handle text-gray-300 hover:text-gray-500 text-sm select-none">&#x22EE;&#x22EE;</span>
+                                <span class="text-xs font-medium text-rose-600 bg-rose-50 px-2 py-0.5 rounded">Pain & Symptom Management</span>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5" title="Active"></span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1 ml-5">Chronic lower back pain management</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed ml-5 line-clamp-2">Ongoing lumbar pain affecting mobility and sleep. Currently managed with physiotherapy and prescribed analgesics. Requires regular pain level monitoring.</p>
+                        <div class="flex items-center gap-2 mt-3 ml-5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                HCP
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                PBS
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                1 service
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Card Button -->
+                <div class="flex-shrink-0 w-72 flex items-center justify-center">
+                    <button class="w-full h-full min-h-[120px] rounded-lg border-2 border-dashed border-gray-200 hover:border-teal-400 hover:bg-teal-50/30 transition-colors flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-teal-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span class="text-xs font-medium">Add Need</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 2: Safety & Health -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-6 rounded-full bg-amber-500"></div>
+                    <h2 class="text-sm font-semibold text-gray-900">Safety & Health</h2>
+                    <span class="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Protection</span>
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">2</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="text-xs text-gray-400 hover:text-teal-700 font-medium flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 swimlane flex gap-3 overflow-x-auto">
+                <!-- Card 1 -->
+                <div class="need-card flex-shrink-0 w-72 bg-white rounded-lg border border-gray-200 shadow-sm border-l-[3px] border-l-amber-500">
+                    <div class="p-3.5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="drag-handle text-gray-300 hover:text-gray-500 text-sm select-none">&#x22EE;&#x22EE;</span>
+                                <span class="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Falls Prevention & Home Safety</span>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5" title="Active"></span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1 ml-5">High falls risk — home modifications needed</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed ml-5 line-clamp-2">History of 3 falls in past 6 months. Grab rails installed in bathroom. Requires OT assessment for additional home modifications and regular physiotherapy.</p>
+                        <div class="flex items-center gap-2 mt-3 ml-5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                HCP
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                2 services
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="need-card flex-shrink-0 w-72 bg-white rounded-lg border border-gray-200 shadow-sm border-l-[3px] border-l-amber-500">
+                    <div class="p-3.5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="drag-handle text-gray-300 hover:text-gray-500 text-sm select-none">&#x22EE;&#x22EE;</span>
+                                <span class="text-xs font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Medication Management</span>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5" title="Active"></span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1 ml-5">Complex medication regime supervision</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed ml-5 line-clamp-2">Takes 8 medications daily. Webster pack managed by pharmacy. Requires RN oversight for warfarin dosing and monthly blood test coordination.</p>
+                        <div class="flex items-center gap-2 mt-3 ml-5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                HCP
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                PBS
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                1 service
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Card Button -->
+                <div class="flex-shrink-0 w-72 flex items-center justify-center">
+                    <button class="w-full h-full min-h-[120px] rounded-lg border-2 border-dashed border-gray-200 hover:border-teal-400 hover:bg-teal-50/30 transition-colors flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-teal-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span class="text-xs font-medium">Add Need</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 3: Connection & Belonging -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-6 rounded-full bg-emerald-500"></div>
+                    <h2 class="text-sm font-semibold text-gray-900">Connection & Belonging</h2>
+                    <span class="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Social</span>
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">2</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="text-xs text-gray-400 hover:text-teal-700 font-medium flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 swimlane flex gap-3 overflow-x-auto">
+                <!-- Card 1 -->
+                <div class="need-card flex-shrink-0 w-72 bg-white rounded-lg border border-gray-200 shadow-sm border-l-[3px] border-l-emerald-500">
+                    <div class="p-3.5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="drag-handle text-gray-300 hover:text-gray-500 text-sm select-none">&#x22EE;&#x22EE;</span>
+                                <span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Social Connection & Community</span>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5" title="Active"></span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1 ml-5">Social isolation — limited community access</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed ml-5 line-clamp-2">Lives alone. Daughter visits fortnightly. Previously active in church group but stopped attending after last fall. Needs supported social outings.</p>
+                        <div class="flex items-center gap-2 mt-3 ml-5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                HCP
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                1 service
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="need-card flex-shrink-0 w-72 bg-white rounded-lg border border-gray-200 shadow-sm border-l-[3px] border-l-emerald-500">
+                    <div class="p-3.5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="drag-handle text-gray-300 hover:text-gray-500 text-sm select-none">&#x22EE;&#x22EE;</span>
+                                <span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Family & Carer Support</span>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-amber-400 mt-1.5" title="Review"></span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1 ml-5">Daughter needs respite support</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed ml-5 line-clamp-2">Daughter Susan (primary informal carer) showing signs of carer fatigue. Needs access to respite services and carer support group referral.</p>
+                        <div class="flex items-center gap-2 mt-3 ml-5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Informal
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                0 services
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Card Button -->
+                <div class="flex-shrink-0 w-72 flex items-center justify-center">
+                    <button class="w-full h-full min-h-[120px] rounded-lg border-2 border-dashed border-gray-200 hover:border-teal-400 hover:bg-teal-50/30 transition-colors flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-teal-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span class="text-xs font-medium">Add Need</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 4: Dignity & Independence -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-6 rounded-full bg-blue-500"></div>
+                    <h2 class="text-sm font-semibold text-gray-900">Dignity & Independence</h2>
+                    <span class="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Autonomy</span>
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">1</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="text-xs text-gray-400 hover:text-teal-700 font-medium flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4 swimlane flex gap-3 overflow-x-auto">
+                <!-- Card 1 -->
+                <div class="need-card flex-shrink-0 w-72 bg-white rounded-lg border border-gray-200 shadow-sm border-l-[3px] border-l-blue-500">
+                    <div class="p-3.5">
+                        <div class="flex items-start justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="drag-handle text-gray-300 hover:text-gray-500 text-sm select-none">&#x22EE;&#x22EE;</span>
+                                <span class="text-xs font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded">Daily Living & Independence</span>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 mt-1.5" title="Active"></span>
+                        </div>
+                        <h3 class="text-sm font-semibold text-gray-900 mb-1 ml-5">Domestic assistance for independent living</h3>
+                        <p class="text-xs text-gray-500 leading-relaxed ml-5 line-clamp-2">Cannot manage heavy cleaning, laundry, or garden maintenance. Wants to remain living at home as long as possible. Weekly domestic help needed.</p>
+                        <div class="flex items-center gap-2 mt-3 ml-5">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                HCP
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 text-[11px] font-medium">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                1 service
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Card Button -->
+                <div class="flex-shrink-0 w-72 flex items-center justify-center">
+                    <button class="w-full h-full min-h-[120px] rounded-lg border-2 border-dashed border-gray-200 hover:border-teal-400 hover:bg-teal-50/30 transition-colors flex flex-col items-center justify-center gap-1.5 text-gray-400 hover:text-teal-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span class="text-xs font-medium">Add Need</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier 5: Growth & Wellbeing -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-6 rounded-full bg-violet-500"></div>
+                    <h2 class="text-sm font-semibold text-gray-900">Growth & Wellbeing</h2>
+                    <span class="text-[11px] text-gray-400 font-medium uppercase tracking-wide">Self-actualisation</span>
+                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-violet-100 text-violet-700 text-xs font-bold">0</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button class="text-xs text-gray-400 hover:text-teal-700 font-medium flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-4">
+                <div class="flex items-center justify-center min-h-[100px] rounded-lg border-2 border-dashed border-gray-200 hover:border-violet-300 hover:bg-violet-50/20 transition-colors">
+                    <button class="flex flex-col items-center gap-2 text-gray-400 hover:text-violet-600 transition-colors py-4">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+                        <span class="text-sm font-medium">Add a need to get started</span>
+                        <span class="text-xs text-gray-400">Goals & Life Enrichment</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

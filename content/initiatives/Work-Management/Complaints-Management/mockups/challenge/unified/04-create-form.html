@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Feedback Record — Create</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tc-teal': { 500: '#43C0BE', 700: '#007F7E' },
+            'tc-blue': { 700: '#2C4C79' },
+          },
+          fontFamily: { sans: ['Roboto Flex', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 flex">
+
+  <!-- Skeleton Sidebar -->
+  <aside class="w-60 bg-white border-r border-gray-200 min-h-screen flex-shrink-0 p-4 space-y-3">
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-8 h-8 rounded-lg bg-tc-teal-700 flex items-center justify-center text-white text-xs font-bold">TC</div>
+      <div class="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+    </div>
+    <div class="space-y-1">
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-tc-teal-700/10 border-l-2 border-tc-teal-700 rounded-md flex items-center px-3">
+        <span class="text-sm font-medium text-tc-teal-700">Feedback Records</span>
+      </div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+      <div class="h-8 w-full bg-gray-100 rounded-md animate-pulse"></div>
+    </div>
+  </aside>
+
+  <!-- Main Content (dimmed behind modal) -->
+  <main class="flex-1 flex flex-col min-h-screen relative">
+    <!-- Dimmed Index View Behind -->
+    <div class="opacity-40 pointer-events-none">
+      <header class="bg-white border-b border-gray-200 px-6 py-4">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h1 class="text-xl font-semibold text-gray-900">Feedback Records</h1>
+            <p class="text-sm text-gray-500 mt-0.5">Manage complaints and remediation records</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-64 bg-gray-100 rounded-lg"></div>
+          <div class="h-9 w-28 bg-gray-100 rounded-lg"></div>
+          <div class="h-9 w-28 bg-gray-100 rounded-lg"></div>
+        </div>
+        <div class="flex items-center gap-4 mt-3 text-sm">
+          <span class="font-medium text-gray-700">42 Open</span>
+          <span class="text-gray-300">&middot;</span>
+          <span class="text-red-600 font-medium">8 Urgent</span>
+        </div>
+      </header>
+      <div class="p-6">
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div class="h-12 bg-gray-50 border-b border-gray-200"></div>
+          <div class="space-y-px">
+            <div class="h-14 bg-white border-b border-gray-100"></div>
+            <div class="h-14 bg-white border-b border-gray-100"></div>
+            <div class="h-14 bg-white border-b border-gray-100"></div>
+            <div class="h-14 bg-white border-b border-gray-100"></div>
+            <div class="h-14 bg-white"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL OVERLAY -->
+    <div class="fixed inset-0 z-50 flex items-start justify-center pt-12 pb-12 overflow-y-auto">
+      <!-- Backdrop -->
+      <div class="fixed inset-0 bg-black/40"></div>
+
+      <!-- Modal -->
+      <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 z-10">
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <h2 class="text-lg font-bold text-gray-900">New Feedback Record</h2>
+          <a href="01-index.html" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </a>
+        </div>
+
+        <!-- Body -->
+        <div class="px-6 py-5 space-y-5 max-h-[calc(100vh-200px)] overflow-y-auto">
+          <!-- Type Toggle -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Record Type</label>
+            <div class="flex items-center bg-gray-100 rounded-lg p-0.5 w-fit">
+              <button class="px-4 py-2 text-sm font-medium rounded-md bg-white shadow-sm text-gray-900">Complaint</button>
+              <button class="px-4 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-gray-700">Remediation</button>
+            </div>
+          </div>
+
+          <!-- Subject -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Subject <span class="text-red-500">*</span></label>
+            <input type="text" placeholder="Brief summary of the feedback..." class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 focus:border-tc-teal-500">
+          </div>
+
+          <!-- Description -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Description <span class="text-red-500">*</span></label>
+            <textarea rows="3" placeholder="Detailed description of the complaint or issue..." class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 focus:border-tc-teal-500 resize-none"></textarea>
+          </div>
+
+          <!-- Background -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Background</label>
+            <textarea rows="2" placeholder="Relevant history or context..." class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 focus:border-tc-teal-500 resize-none"></textarea>
+          </div>
+
+          <!-- Divider -->
+          <div class="border-t border-gray-200 pt-5">
+            <h3 class="text-sm font-semibold text-gray-700 mb-3">Complainant Details</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Name <span class="text-red-500">*</span></label>
+                <input type="text" placeholder="Full name" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30">
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Relationship to Recipient</label>
+                <select class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 text-gray-600">
+                  <option>Select...</option>
+                  <option>Spouse/Partner</option>
+                  <option>Son/Daughter</option>
+                  <option>Sibling</option>
+                  <option>Friend</option>
+                  <option>Advocate</option>
+                  <option>Self</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Contact</label>
+                <input type="text" placeholder="Phone or email" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30">
+              </div>
+              <div>
+                <label class="block text-xs text-gray-500 mb-1">Classification</label>
+                <div class="flex items-center gap-3 mt-1">
+                  <label class="flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
+                    <input type="radio" name="classification" checked class="text-tc-teal-700 focus:ring-tc-teal-500"> Direct
+                  </label>
+                  <label class="flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
+                    <input type="radio" name="classification" class="text-tc-teal-700 focus:ring-tc-teal-500"> Indirect
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Triage Level -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Triage Level <span class="text-red-500">*</span></label>
+            <div class="flex items-center gap-2">
+              <button class="flex-1 py-2.5 rounded-lg border-2 border-tc-teal-500 text-tc-teal-700 text-sm font-medium text-center hover:bg-tc-teal-50 transition">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-tc-teal-500 mr-1.5"></span>Standard
+              </button>
+              <button class="flex-1 py-2.5 rounded-lg border-2 border-amber-400 bg-amber-50 text-amber-700 text-sm font-medium text-center ring-2 ring-amber-200">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-500 mr-1.5"></span>Medium
+              </button>
+              <button class="flex-1 py-2.5 rounded-lg border-2 border-red-400 text-red-700 text-sm font-medium text-center hover:bg-red-50 transition">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 mr-1.5"></span>Urgent
+              </button>
+            </div>
+          </div>
+
+          <!-- Department -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Department <span class="text-red-500">*</span></label>
+            <select class="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30 text-gray-600">
+              <option>Select department...</option>
+              <option>Clinical</option>
+              <option>Nursing</option>
+              <option>Quality</option>
+              <option>Operations</option>
+              <option>Administration</option>
+            </select>
+          </div>
+
+          <!-- Categories -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Categories</label>
+            <div class="flex flex-wrap gap-2">
+              <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm text-gray-600 cursor-pointer hover:bg-gray-50 has-[:checked]:bg-tc-teal-50 has-[:checked]:border-tc-teal-500 has-[:checked]:text-tc-teal-700">
+                <input type="checkbox" class="sr-only"> Medication
+              </label>
+              <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-tc-teal-500 bg-tc-teal-50 text-sm text-tc-teal-700 cursor-pointer">
+                <input type="checkbox" checked class="sr-only"> Clinical Safety
+              </label>
+              <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm text-gray-600 cursor-pointer hover:bg-gray-50">
+                <input type="checkbox" class="sr-only"> Communication
+              </label>
+              <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm text-gray-600 cursor-pointer hover:bg-gray-50">
+                <input type="checkbox" class="sr-only"> Timeliness
+              </label>
+              <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm text-gray-600 cursor-pointer hover:bg-gray-50">
+                <input type="checkbox" class="sr-only"> Staff Conduct
+              </label>
+              <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 text-sm text-gray-600 cursor-pointer hover:bg-gray-50">
+                <input type="checkbox" class="sr-only"> Equipment
+              </label>
+            </div>
+          </div>
+
+          <!-- Safety Concern -->
+          <div class="flex items-center justify-between">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Safety Concern</label>
+              <p class="text-xs text-gray-400">Flag this record as involving a safety risk</p>
+            </div>
+            <button type="button" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors" role="switch" aria-checked="false" onclick="this.classList.toggle('bg-tc-teal-700');this.classList.toggle('bg-gray-200');this.querySelector('span').classList.toggle('translate-x-5');this.querySelector('span').classList.toggle('translate-x-0');">
+              <span class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition translate-x-0"></span>
+            </button>
+          </div>
+
+          <!-- Impacted Recipient -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Impacted Recipient</label>
+            <div class="relative">
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <input type="text" placeholder="Search recipients..." class="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-tc-teal-500/30">
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50 rounded-b-2xl">
+          <a href="01-index.html" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition">Cancel</a>
+          <button class="px-6 py-2.5 bg-tc-teal-700 text-white text-sm font-medium rounded-lg hover:bg-tc-teal-700/90 transition shadow-sm">
+            Create Record
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="viewer-toolbar.js" defer></script>
+</body>
+</html>

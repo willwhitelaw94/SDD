@@ -1,0 +1,18 @@
+jira_key: null
+title: 'Consumer Mobile V3'
+status: Backlog
+prefix: MOB3
+summary: "Marketplace and AI assistance for consumers"
+linear_project_id: b0f417ac-c1bd-48fa-81d3-ab2673082476
+linear_url: https://linear.app/trilogycare/project/mob3-consumer-mobile-v3-f6da63b3bcad
+description: 'Phase 3 of Consumer Mobile App - Discover & Grow: Marketplace, AI assistance, proactive care'
+due_date: null
+last_synced: null
+priority: low
+product_owner: Beth Poultney
+pod: Mobile
+tags:
+  - consumer-mobile
+  - marketplace
+  - ai
+  - moonmart

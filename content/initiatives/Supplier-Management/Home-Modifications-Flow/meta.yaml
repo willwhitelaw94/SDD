@@ -1,0 +1,41 @@
+jira_key: TP-3155
+title: 'Home Modifications Supplier Flow'
+status: 'Backlog'
+prefix: HMF
+summary: "Home modifications supplier workflow"
+linear_project_id: ecdd3435-7467-46bf-899a-9fb8004bd84a
+linear_url: https://linear.app/trilogycare/project/hmf-home-modifications-supplier-flow-5111ff33400f
+description: 'Complete onboarding and BAU pathway for Home Modifications suppliers under S@H'
+due_date: null
+last_synced: '2025-12-09T09:58:45.000Z'
+bounty_value: 10000
+
+stories:
+  - key: TP-3531
+    title: 'As a product supplier, I can register and select product categories'
+    local_ref: US1
+    status: Backlog
+  - key: TP-3532
+    title: 'As a home modifications contractor, I can complete verification with state-specific credentials'
+    local_ref: US2
+    status: Backlog
+  - key: TP-3533
+    title: 'As a contractor, I can receive assessment requests and submit quotes'
+    local_ref: US3
+    status: Backlog
+  - key: TP-3534
+    title: 'As a compliance team member, I can view all home modification works grouped by supplier'
+    local_ref: US4
+    status: Backlog
+  - key: TP-3536
+    title: 'As a compliance team member, I can approve or reject individual documents'
+    local_ref: US5
+    status: Backlog
+  - key: TP-3537
+    title: 'As the system, I validate product supplier is verified for Tier-3 category'
+    local_ref: US6
+    status: Backlog
+  - key: TP-3538
+    title: 'As a contractor or compliance team member, I receive automated notifications for key events'
+    local_ref: US7
+    status: Backlog
