@@ -4,6 +4,7 @@ status: design
 linear_id: null
 linear_initiative_id: c5b5d7de-81ff-4b73-8c81-b1e71aaa006d
 created: 2026-02-14
+
 gates:
   spec:
     passed: true

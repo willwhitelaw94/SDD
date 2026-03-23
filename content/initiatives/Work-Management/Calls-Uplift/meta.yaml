@@ -5,6 +5,9 @@ prefix: CUL
 summary: "Enhanced call logging and tracking"
 linear_project_id: d360e949-1680-4aa0-81f3-0cbb0cc84f6f
 linear_url: https://linear.app/trilogycare/project/cul-calls-uplift-tp-2332-745d2b501fa8
+mockup_url: https://calls-uplift-mockups.vercel.app/01-calls-table-view.html
+bounty_claimed_by: Naveen Rodrigo
+bounty_claimed_date: 2026-03-15
 description: null
 due_date: null
 last_synced: '2025-11-09T00:00:00.000Z'
