@@ -167,6 +167,41 @@ export function getDocSections(): DocSection[] {
   return getDocCategories().flatMap((c) => c.sections);
 }
 
+export type TocHeading = {
+  level: number;
+  text: string;
+  slug: string;
+};
+
+export function extractHeadings(content: string): TocHeading[] {
+  const headings: TocHeading[] = [];
+  const lines = content.split("\n");
+  let inCodeBlock = false;
+
+  for (const line of lines) {
+    if (line.startsWith("```")) {
+      inCodeBlock = !inCodeBlock;
+      continue;
+    }
+    if (inCodeBlock) continue;
+
+    const match = line.match(/^(#{2,4})\s+(.+)/);
+    if (match) {
+      const level = match[1].length;
+      const text = match[2].replace(/\*\*/g, "").trim();
+      const slug = text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .trim();
+      headings.push({ level, text, slug });
+    }
+  }
+
+  return headings;
+}
+
 export function getDocPage(
   sectionSlug: string,
   pageSlug: string

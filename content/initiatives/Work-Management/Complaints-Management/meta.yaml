@@ -9,6 +9,7 @@ linear_url: https://linear.app/trilogycare/project/com-complaints-management-eef
 linear_issues:
   - TRI-99
   - TRI-100
+
 gates:
   spec:
     passed: true

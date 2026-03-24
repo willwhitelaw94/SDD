@@ -20,7 +20,14 @@ export function InternalNav({ className }: { className?: string }) {
         const isActive =
           link.href === "/"
             ? pathname === "/"
-            : pathname.startsWith(link.href);
+            : pathname === link.href ||
+              (pathname.startsWith(link.href + "/") &&
+                !LINKS.some(
+                  (other) =>
+                    other.href !== link.href &&
+                    other.href.startsWith(link.href) &&
+                    pathname.startsWith(other.href)
+                ));
         return (
           <a
             key={link.href}

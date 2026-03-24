@@ -21,7 +21,7 @@ export function DocsHeader({ categories }: { categories: DocCategory[] }) {
 
   return (
     <header className="bg-card sticky top-0 z-50 flex h-14 items-center justify-between border-b px-4 sm:px-6">
-      <SidebarTrigger className="md:hidden" />
+      <SidebarTrigger />
       <div className="ml-auto flex items-center gap-2">
         <GlobalSearch docs={docs} />
         <ThemeToggle />

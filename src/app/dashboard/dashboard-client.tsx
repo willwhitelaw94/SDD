@@ -85,6 +85,8 @@ import {
   BarChart3Icon,
   HomeIcon,
   MenuIcon,
+  LayoutGridIcon,
+  ListIcon,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -777,7 +779,10 @@ export function DashboardShell({
   const [panelOpen, setPanelOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [epicSort, setEpicSort] = useState<"alpha" | "stage">("stage");
+  const [epicSort, setEpicSort] = useState<"alpha" | "stage" | "priority">("stage");
+  const [hideBacklog, setHideBacklog] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(true);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
 
@@ -803,7 +808,7 @@ export function DashboardShell({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Sync state to URL
+  // Sync state to URL (push so back button works)
   const updateUrl = useCallback(
     (init: Initiative | null, epic: Epic | null, artifact: string | null) => {
       const params = new URLSearchParams();
@@ -811,10 +816,50 @@ export function DashboardShell({
       if (epic) params.set("e", epic.slug);
       if (artifact) params.set("a", artifact);
       const qs = params.toString();
-      router.replace("/dashboard" + (qs ? "?" + qs : ""), { scroll: false });
+      router.push("/dashboard" + (qs ? "?" + qs : ""), { scroll: false });
     },
     [router]
   );
+
+  // Restore state from URL on popstate (back/forward)
+  const restoreFromUrl = useCallback(() => {
+    const params = new URLSearchParams(window.location.search);
+    const i = params.get("i");
+    const e = params.get("e");
+    const a = params.get("a");
+
+    if (i) {
+      const init = initiatives.find((x) => x.slug === i);
+      if (init) {
+        setSelectedInitiative(init);
+        setPanelOpen(true);
+        if (e) {
+          const epic = init.epics.find((x) => x.slug === e);
+          if (epic) {
+            setSelectedEpic(epic);
+            setSelectedArtifact(a || null);
+          } else {
+            setSelectedEpic(null);
+            setSelectedArtifact(null);
+          }
+        } else {
+          setSelectedEpic(null);
+          setSelectedArtifact(null);
+        }
+      }
+    } else {
+      setSelectedInitiative(null);
+      setSelectedEpic(null);
+      setSelectedArtifact(null);
+      setPanelOpen(false);
+    }
+  }, [initiatives]);
+
+  useEffect(() => {
+    const onPopState = () => restoreFromUrl();
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [restoreFromUrl]);
 
   function handleRailClick(initiative: Initiative) {
     if (selectedInitiative?.slug === initiative.slug && panelOpen) {
@@ -858,12 +903,30 @@ export function DashboardShell({
     active: 11,
   };
 
-  function sortEpics(epics: Epic[]): Epic[] {
-    return [...epics].sort((a, b) => {
+  const BACKLOG_STATUSES = ["backlog", "to do", "draft", "triaged"];
+
+  const COMPLETED_STATUSES = ["release", "active", "ready for implementation"];
+
+  function filterAndSortEpics(epics: Epic[]): Epic[] {
+    let filtered = epics;
+    if (hideBacklog) {
+      filtered = filtered.filter((e) => !BACKLOG_STATUSES.includes(e.status.toLowerCase()));
+    }
+    if (hideCompleted) {
+      filtered = filtered.filter((e) => !COMPLETED_STATUSES.includes(e.status.toLowerCase()));
+    }
+
+    return [...filtered].sort((a, b) => {
       if (epicSort === "stage") {
         const aOrder = stageOrder[a.status.toLowerCase()] ?? 99;
         const bOrder = stageOrder[b.status.toLowerCase()] ?? 99;
         if (aOrder !== bOrder) return aOrder - bOrder;
+        return a.title.localeCompare(b.title);
+      }
+      if (epicSort === "priority") {
+        const aPri = normalizePriority(a.priority);
+        const bPri = normalizePriority(b.priority);
+        if (aPri !== bPri) return aPri - bPri;
         return a.title.localeCompare(b.title);
       }
       return a.title.localeCompare(b.title);
@@ -970,11 +1033,72 @@ export function DashboardShell({
         <ScrollArea className="flex-1">
           {selectedInitiative && (
             <div className="px-2 py-2">
-              <p className="px-2 pb-2 text-[11px] font-medium text-sidebar-foreground/50 uppercase tracking-wider">
-                Epics
-              </p>
+              <div className="flex items-center justify-between px-2 pb-1.5">
+                <p className="text-[11px] font-medium text-sidebar-foreground/50 uppercase tracking-wider">
+                  Epics
+                </p>
+                <div className="flex items-center gap-1">
+                  {/* Sort toggle */}
+                  <div className="flex items-center rounded border border-sidebar-border/50 p-px">
+                    {(["stage", "alpha", "priority"] as const).map((mode) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        onClick={() => setEpicSort(mode)}
+                        className={cn(
+                          "rounded px-1.5 py-0.5 text-[9px] font-medium transition-colors",
+                          epicSort === mode
+                            ? "bg-sidebar-accent text-sidebar-foreground"
+                            : "text-sidebar-foreground/40 hover:text-sidebar-foreground/70"
+                        )}
+                      >
+                        {mode === "stage" ? "Stage" : mode === "alpha" ? "A-Z" : "P1→"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Filter toggles */}
+              <div className="mb-1.5 flex flex-col gap-0.5">
+                {selectedInitiative.epics.some((e) => BACKLOG_STATUSES.includes(e.status.toLowerCase())) && (
+                  <button
+                    type="button"
+                    onClick={() => setHideBacklog(!hideBacklog)}
+                    className="flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-sidebar-foreground/40 transition-colors hover:text-sidebar-foreground/70"
+                  >
+                    <span className={cn(
+                      "flex size-3 items-center justify-center rounded border transition-colors",
+                      hideBacklog
+                        ? "bg-primary border-primary text-primary-foreground"
+                        : "border-sidebar-foreground/20"
+                    )}>
+                      {hideBacklog && <CheckIcon className="size-2" />}
+                    </span>
+                    Hide backlog ({selectedInitiative.epics.filter((e) => BACKLOG_STATUSES.includes(e.status.toLowerCase())).length})
+                  </button>
+                )}
+                {selectedInitiative.epics.some((e) => COMPLETED_STATUSES.includes(e.status.toLowerCase())) && (
+                  <button
+                    type="button"
+                    onClick={() => setHideCompleted(!hideCompleted)}
+                    className="flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-sidebar-foreground/40 transition-colors hover:text-sidebar-foreground/70"
+                  >
+                    <span className={cn(
+                      "flex size-3 items-center justify-center rounded border transition-colors",
+                      hideCompleted
+                        ? "bg-primary border-primary text-primary-foreground"
+                        : "border-sidebar-foreground/20"
+                    )}>
+                      {hideCompleted && <CheckIcon className="size-2" />}
+                    </span>
+                    Hide completed ({selectedInitiative.epics.filter((e) => COMPLETED_STATUSES.includes(e.status.toLowerCase())).length})
+                  </button>
+                )}
+              </div>
+
               <div className="flex flex-col gap-0.5">
-                {sortEpicsByCompleteness(selectedInitiative.epics).map(
+                {filterAndSortEpics(selectedInitiative.epics).map(
                   (epic) => (
                     <div key={epic.slug} className="group flex items-center">
                       <button
@@ -1319,84 +1443,176 @@ export function DashboardShell({
                       </p>
                     )}
                   </div>
-                  <div className="flex items-center gap-1 rounded-lg border p-0.5">
-                    <button
-                      onClick={() => setEpicSort("stage")}
-                      className={cn(
-                        "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
-                        epicSort === "stage"
-                          ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:text-foreground"
+                  <div className="flex items-center gap-3 shrink-0">
+                    {/* Filter toggles */}
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setHideCompleted(!hideCompleted)}
+                        className={cn(
+                          "rounded-md px-2 py-1 text-xs transition-colors",
+                          hideCompleted
+                            ? "bg-emerald-500/10 text-emerald-500"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {hideCompleted ? "Show" : "Hide"} completed
+                      </button>
+                      {selectedInitiative.epics.some((e) => BACKLOG_STATUSES.includes(e.status.toLowerCase())) && (
+                        <button
+                          type="button"
+                          onClick={() => setHideBacklog(!hideBacklog)}
+                          className={cn(
+                            "rounded-md px-2 py-1 text-xs transition-colors",
+                            hideBacklog
+                              ? "bg-primary/10 text-primary"
+                              : "text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          {hideBacklog ? "Show" : "Hide"} backlog
+                        </button>
                       )}
-                    >
-                      By Stage
-                    </button>
-                    <button
-                      onClick={() => setEpicSort("alpha")}
-                      className={cn(
-                        "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
-                        epicSort === "alpha"
-                          ? "bg-primary text-primary-foreground"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      A–Z
-                    </button>
+                    </div>
+                    {/* Sort */}
+                    <div className="flex items-center rounded-lg border p-0.5">
+                      {(["stage", "alpha", "priority"] as const).map((mode) => (
+                        <button
+                          key={mode}
+                          onClick={() => setEpicSort(mode)}
+                          className={cn(
+                            "rounded-md px-2 py-1 text-xs font-medium transition-colors",
+                            epicSort === mode
+                              ? "bg-muted text-foreground"
+                              : "text-muted-foreground hover:text-foreground"
+                          )}
+                        >
+                          {mode === "stage" ? "Stage" : mode === "alpha" ? "A\u2013Z" : "Priority"}
+                        </button>
+                      ))}
+                    </div>
+                    {/* View toggle */}
+                    <div className="flex items-center rounded-lg border p-0.5">
+                      <button
+                        onClick={() => setViewMode("grid")}
+                        className={cn(
+                          "rounded-md p-1.5 transition-colors",
+                          viewMode === "grid" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <LayoutGridIcon className="size-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setViewMode("list")}
+                        className={cn(
+                          "rounded-md p-1.5 transition-colors",
+                          viewMode === "list" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <ListIcon className="size-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <motion.div
-                  className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-                  variants={containerVariants}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  {sortEpics(selectedInitiative.epics).map((epic) => (
-                    <motion.div
-                      key={epic.slug}
-                      variants={itemVariants}
-                      whileHover={{
-                        y: -2,
-                        transition: { duration: 0.15 },
-                      }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <Card
-                        className="h-full cursor-pointer shadow-none transition-shadow duration-200 hover:shadow-md"
-                        onClick={() =>
-                          selectEpic(epic, selectedInitiative)
-                        }
+                {viewMode === "grid" ? (
+                  <motion.div
+                    className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                  >
+                    {filterAndSortEpics(selectedInitiative.epics).map((epic) => (
+                      <motion.div
+                        key={epic.slug}
+                        variants={itemVariants}
+                        whileHover={{
+                          y: -2,
+                          transition: { duration: 0.15 },
+                        }}
+                        whileTap={{ scale: 0.97 }}
                       >
-                        <CardContent className="flex h-full flex-col gap-3 p-4">
-                          <div className="flex items-start justify-between gap-2">
-                            <p className="text-sm font-medium">
-                              {epic.title}
-                            </p>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              <PriorityIcon priority={epic.priority} />
-                              <StatusBadge status={epic.status} />
+                        <Card
+                          className="h-full cursor-pointer shadow-none transition-shadow duration-200 hover:shadow-md"
+                          onClick={() =>
+                            selectEpic(epic, selectedInitiative)
+                          }
+                        >
+                          <CardContent className="flex h-full flex-col gap-3 p-4">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="text-sm font-medium">
+                                {epic.title}
+                              </p>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <PriorityIcon priority={epic.priority} />
+                                <StatusBadge status={epic.status} />
+                              </div>
                             </div>
-                          </div>
-                          {epic.summary && (
-                            <p className="text-xs text-muted-foreground line-clamp-2">
-                              {epic.summary}
-                            </p>
-                          )}
-                          <div className="flex items-center justify-between mt-auto">
-                            <MiniPhaseIndicator epic={epic} />
-                            {epic.artifacts.filter((a) => a !== "index").length > 0 && (
-                              <div className="flex items-center gap-1.5">
+                            {epic.summary && (
+                              <p className="text-xs text-muted-foreground line-clamp-2">
+                                {epic.summary}
+                              </p>
+                            )}
+                            <div className="flex items-center justify-between mt-auto">
+                              <MiniPhaseIndicator epic={epic} />
+                              {epic.artifacts.filter((a) => a !== "index").length > 0 && (
                                 <span className="flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
                                   <FileTextIcon className="size-3" />
                                   {epic.artifacts.filter((a) => a !== "index").length} doc{epic.artifacts.filter((a) => a !== "index").length !== 1 ? "s" : ""}
                                 </span>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    className="space-y-1"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                  >
+                    {filterAndSortEpics(selectedInitiative.epics).map((epic) => {
+                      const docCount = epic.artifacts.filter((a) => a !== "index").length;
+                      return (
+                        <motion.div key={epic.slug} variants={itemVariants}>
+                          <button
+                            type="button"
+                            onClick={() => selectEpic(epic, selectedInitiative)}
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/50"
+                          >
+                            <StatusDot status={epic.status} />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium truncate">{epic.title}</span>
+                                {epic.bountyValue != null && epic.bountyValue > 0 && (
+                                  <span className="shrink-0 font-mono text-[10px] text-emerald-500">
+                                    ${epic.bountyValue.toLocaleString()}
+                                  </span>
+                                )}
                               </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </motion.div>
+                              {epic.summary && (
+                                <p className="text-xs text-muted-foreground truncate mt-0.5">
+                                  {epic.summary}
+                                </p>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-3 shrink-0">
+                              <MiniPhaseIndicator epic={epic} />
+                              {docCount > 0 && (
+                                <span className="text-[10px] text-muted-foreground">
+                                  {docCount} doc{docCount !== 1 ? "s" : ""}
+                                </span>
+                              )}
+                              <PriorityIcon priority={epic.priority} />
+                              <StatusBadge status={epic.status} />
+                            </div>
+                          </button>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                )}
               </motion.div>
             ) : (
               /* ── All initiatives overview ── */

@@ -114,7 +114,19 @@ export function GlobalSearch({ docs = [], epics = [], className }: GlobalSearchP
         title="Search"
         description="Search across docs and initiatives"
       >
-        <Command>
+        <Command
+          filter={(value, search) => {
+            const v = value.toLowerCase();
+            const s = search.toLowerCase().trim();
+            if (!s) return 1;
+            // Exact substring match
+            if (v.includes(s)) return 1;
+            // Match each search word independently
+            const words = s.split(/\s+/);
+            if (words.every((w) => v.includes(w))) return 1;
+            return 0;
+          }}
+        >
           <CommandInput placeholder="Search docs, initiatives, epics..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>

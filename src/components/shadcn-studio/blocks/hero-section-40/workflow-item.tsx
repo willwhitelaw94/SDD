@@ -106,19 +106,6 @@ const WorkflowItem = ({
                 {time}
               </Badge>
             )}
-            {type === 'action' && (
-              <Badge
-                variant='outline'
-                className='border-primary text-primary bg-primary/10 h-7.5 gap-1.5 rounded-sm p-1.5 font-light'
-              >
-                <img
-                  src='https://cdn.shadcnstudio.com/ss-assets/template/landing-page/orion/image-49.png'
-                  alt='ChatGPT logo'
-                  className='size-4 dark:invert'
-                />
-                <span className='text-sm font-light'>GPT-4-1 Mini</span>
-              </Badge>
-            )}
             {type === 'pending' && (
               <Button className='h-6.5 cursor-pointer rounded-lg px-2 py-1 text-xs'>Approve</Button>
             )}

@@ -6,6 +6,14 @@ export const navigationData: Navigation[] = [
     href: "/process",
   },
   {
+    title: "Skills",
+    href: "/skills",
+  },
+  {
+    title: "Releases",
+    href: "/releases",
+  },
+  {
     title: "Blog",
     href: "/blog",
   },

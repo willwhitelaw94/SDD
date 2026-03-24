@@ -19,7 +19,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
         defaultOpen
         style={{ '--sidebar-width': '15rem' } as CSSProperties}
       >
-        <Sidebar className="[&_[data-slot=sidebar-inner]]:bg-card">
+        <Sidebar collapsible="icon" className="[&_[data-slot=sidebar-inner]]:bg-card">
           <SidebarHeader className="h-14 flex-row items-center border-b px-3">
             <a href="/" className="flex items-center gap-2.5">
               <OrionLogo className="size-7" />
@@ -39,7 +39,7 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
           <DocsHeader categories={categories} />
 
           <main className="flex-1 px-4 py-8 sm:px-6 lg:px-10">
-            <div className="mx-auto max-w-3xl">
+            <div className="mx-auto max-w-4xl">
               {children}
             </div>
           </main>
