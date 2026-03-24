@@ -6,7 +6,7 @@ import {
   SidebarHeader,
   SidebarProvider,
 } from '@/components/ui/sidebar'
-import OrionLogo from '@/assets/svg/orion-logo'
+import { TcLogo } from '@/components/tc-logo'
 import { DocsSidebarNav } from './docs-sidebar'
 import { DocsHeader } from './docs-header'
 
@@ -21,11 +21,11 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
       >
         <Sidebar collapsible="icon" className="[&_[data-slot=sidebar-inner]]:bg-card">
           <SidebarHeader className="h-14 flex-row items-center border-b px-3">
-            <a href="/" className="flex items-center gap-2.5">
-              <OrionLogo className="size-7" />
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold">SDD</span>
-                <span className="text-muted-foreground text-[11px]">Documentation</span>
+            <a href="/" className="flex items-center gap-2.5 overflow-hidden">
+              <TcLogo size="sm" className="shrink-0" />
+              <div className="flex flex-col overflow-hidden group-data-[collapsible=icon]:hidden">
+                <span className="text-sm font-semibold truncate">TC-Docs</span>
+                <span className="text-muted-foreground text-[11px] truncate">Documentation</span>
               </div>
             </a>
           </SidebarHeader>

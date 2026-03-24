@@ -53,7 +53,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import LogoSvg from "@/assets/svg/logo";
+import { TcLogo } from "@/components/tc-logo";
 import {
   BanknoteIcon,
   HeartPulseIcon,
@@ -417,52 +417,65 @@ function MiniPhaseIndicator({ epic }: { epic: Epic }) {
   );
 }
 
-function PhaseProgress({ epic }: { epic: Epic }) {
+/* Phase → artifact mapping */
+const phaseArtifactMap: Record<string, string> = {
+  idea: "idea-brief",
+  spec: "spec",
+  design: "design",
+  dev: "plan",
+  qa: "tasks",
+};
+
+function PhaseProgress({
+  epic,
+  onPhaseClick,
+}: {
+  epic: Epic;
+  onPhaseClick?: (artifact: string) => void;
+}) {
   const states = getPhaseStates(epic);
 
   return (
     <Card className="shadow-none border-border/50">
       <CardContent className="px-6 py-5">
         <div className="flex items-start">
-          {states.map((state, i) => (
+          {states.map((state, i) => {
+            const artifact = phaseArtifactMap[state.id];
+            const hasDoc = artifact && epic.artifacts.includes(artifact);
+            const isClickable = hasDoc && onPhaseClick;
+
+            return (
             <Fragment key={state.id}>
               <div className="flex flex-col items-center gap-2 min-w-0">
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <div
-                        className={cn(
-                          "flex size-10 items-center justify-center rounded-full border-2 transition-all duration-300",
-                          state.completed &&
-                            "border-emerald-500 bg-emerald-500/10",
-                          state.isCurrent &&
-                            "border-blue-500 bg-blue-500/10 shadow-[0_0_12px_rgba(59,130,246,0.25)]",
-                          !state.completed &&
-                            !state.isCurrent &&
-                            "border-muted-foreground/20"
-                        )}
-                      >
-                        {state.completed ? (
-                          <CheckIcon className="size-4 text-emerald-500" />
-                        ) : (
-                          <state.icon
-                            className={cn(
-                              "size-4",
-                              state.isCurrent
-                                ? "text-blue-500"
-                                : "text-muted-foreground/30"
-                            )}
-                          />
-                        )}
-                      </div>
-                    }
-                  />
-                  {state.gate?.notes && (
-                    <TooltipContent side="bottom" className="max-w-xs text-xs">
-                      {state.gate.notes}
-                    </TooltipContent>
+                <button
+                  type="button"
+                  onClick={() => isClickable && onPhaseClick(artifact)}
+                  className={cn(
+                    "flex size-10 items-center justify-center rounded-full border-2 transition-all duration-300",
+                    state.completed &&
+                      "border-emerald-500 bg-emerald-500/10",
+                    state.isCurrent &&
+                      "border-blue-500 bg-blue-500/10 shadow-[0_0_12px_rgba(59,130,246,0.25)]",
+                    !state.completed &&
+                      !state.isCurrent &&
+                      "border-muted-foreground/20",
+                    isClickable && "cursor-pointer hover:scale-110 hover:shadow-md",
+                    !isClickable && "cursor-default"
                   )}
-                </Tooltip>
+                >
+                  {state.completed ? (
+                    <CheckIcon className="size-4 text-emerald-500" />
+                  ) : (
+                    <state.icon
+                      className={cn(
+                        "size-4",
+                        state.isCurrent
+                          ? "text-blue-500"
+                          : "text-muted-foreground/30"
+                      )}
+                    />
+                  )}
+                </button>
                 <span
                   className={cn(
                     "text-[11px] font-medium whitespace-nowrap",
@@ -496,7 +509,8 @@ function PhaseProgress({ epic }: { epic: Epic }) {
                 />
               )}
             </Fragment>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>
@@ -785,6 +799,16 @@ export function DashboardShell({
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
+  const [artifactContent, setArtifactContent] = useState<string | null>(null);
+  const [artifactLoading, setArtifactLoading] = useState(false);
+  const [mockupViewer, setMockupViewer] = useState<{
+    url: string;
+    title: string;
+    epicTitle: string;
+    initiative: string;
+    epicSlug: string;
+    allMockups: { name: string; path: string; group?: string }[];
+  } | null>(null);
 
   // Hydrate from URL params on mount
   useEffect(() => {
@@ -861,6 +885,37 @@ export function DashboardShell({
     return () => window.removeEventListener("popstate", onPopState);
   }, [restoreFromUrl]);
 
+  // Fetch artifact content on demand
+  useEffect(() => {
+    if (!selectedArtifact || !selectedEpic || !selectedInitiative) {
+      setArtifactContent(null);
+      return;
+    }
+    // Check if already cached on the epic object
+    if (selectedEpic.artifactContent[selectedArtifact]) {
+      setArtifactContent(selectedEpic.artifactContent[selectedArtifact]);
+      return;
+    }
+    let cancelled = false;
+    setArtifactLoading(true);
+    setArtifactContent(null);
+    fetch(`/api/artifact?initiative=${selectedEpic.initiative}&epic=${selectedEpic.slug}&artifact=${selectedArtifact}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data.content) {
+          // Cache it on the epic so we don't re-fetch
+          selectedEpic.artifactContent[selectedArtifact] = data.content;
+          setArtifactContent(data.content);
+        }
+        setArtifactLoading(false);
+      })
+      .catch(() => {
+        if (!cancelled) setArtifactLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [selectedArtifact, selectedEpic, selectedInitiative]);
+
   function handleRailClick(initiative: Initiative) {
     if (selectedInitiative?.slug === initiative.slug && panelOpen) {
       setPanelOpen(false);
@@ -934,6 +989,7 @@ export function DashboardShell({
   }
 
   return (
+    <>
     <SidebarProvider
       open={panelOpen}
       onOpenChange={setPanelOpen}
@@ -944,7 +1000,7 @@ export function DashboardShell({
         {/* Logo */}
         <div className="flex h-14 items-center justify-center">
           <a href="/" className="flex items-center justify-center">
-            <LogoSvg className="size-8 [&_rect]:fill-sidebar [&_rect:first-child]:fill-primary" />
+            <TcLogo />
           </a>
         </div>
         <SidebarSeparator />
@@ -1124,7 +1180,36 @@ export function DashboardShell({
                           </span>
                         )}
                       </button>
-                      <div className="flex shrink-0 items-center gap-1">
+                      <div className="flex shrink-0 items-center">
+                        {epic.mockups.length > 0 && (
+                          <Tooltip>
+                            <TooltipTrigger
+                              render={
+                                <button
+                                  type="button"
+                                  className="flex size-5 items-center justify-center rounded-md text-purple-400/50 hover:text-purple-400 hover:bg-sidebar-accent transition-colors"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    const m = epic.mockups[0];
+                                    setMockupViewer({
+                                      url: `/api/mockup?path=${m.path}`,
+                                      title: m.name,
+                                      epicTitle: epic.title,
+                                      initiative: epic.initiative,
+                                      epicSlug: epic.slug,
+                                      allMockups: epic.mockups,
+                                    });
+                                  }}
+                                >
+                                  <MonitorIcon className="size-3" />
+                                </button>
+                              }
+                            />
+                            <TooltipContent side="right" className="text-xs">
+                              View mockup ({epic.mockups.length})
+                            </TooltipContent>
+                          </Tooltip>
+                        )}
                         {epic.linearUrl ? (
                           <Tooltip>
                             <TooltipTrigger
@@ -1140,10 +1225,7 @@ export function DashboardShell({
                                 </a>
                               }
                             />
-                            <TooltipContent
-                              side="right"
-                              className="text-xs"
-                            >
+                            <TooltipContent side="right" className="text-xs">
                               Open in Linear
                             </TooltipContent>
                           </Tooltip>
@@ -1286,16 +1368,40 @@ export function DashboardShell({
                     )}
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    {selectedEpic.mockupUrl && (
+                    {/* Mockup button */}
+                    {selectedEpic.mockups.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const m = selectedEpic.mockups[0];
+                          setMockupViewer({
+                            url: `/api/mockup?path=${m.path}`,
+                            title: m.name,
+                            epicTitle: selectedEpic.title,
+                            initiative: selectedEpic.initiative,
+                            epicSlug: selectedEpic.slug,
+                            allMockups: selectedEpic.mockups,
+                          });
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-md border border-purple-500/30 bg-purple-500/10 px-2.5 py-1 text-xs font-medium text-purple-400 transition-colors hover:bg-purple-500/20"
+                      >
+                        <MonitorIcon className="size-3" />
+                        Mockup
+                        {selectedEpic.mockups.length > 1 && (
+                          <span className="text-purple-400/60">({selectedEpic.mockups.length})</span>
+                        )}
+                      </button>
+                    )}
+                    {/* Linear button */}
+                    {selectedEpic.linearUrl && (
                       <a
-                        href={selectedEpic.mockupUrl}
+                        href={selectedEpic.linearUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 rounded-md border border-border/50 bg-muted/50 px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                       >
-                        <MonitorIcon className="size-3" />
-                        View Mockup
                         <ExternalLinkIcon className="size-3" />
+                        Linear
                       </a>
                     )}
                     {selectedEpic.bountyValue != null &&
@@ -1305,7 +1411,6 @@ export function DashboardShell({
                           onClaimed={(name) => {
                             selectedEpic.bountyClaimedBy = name;
                             selectedEpic.bountyClaimedDate = new Date().toISOString().split("T")[0];
-                            // Force re-render
                             setSelectedEpic({ ...selectedEpic });
                           }}
                           onUnclaimed={() => {
@@ -1321,7 +1426,13 @@ export function DashboardShell({
                 </div>
 
                 {/* Phase progress stepper */}
-                <PhaseProgress epic={selectedEpic} />
+                <PhaseProgress
+                  epic={selectedEpic}
+                  onPhaseClick={(artifact) => {
+                    setSelectedArtifact(artifact);
+                    updateUrl(selectedInitiative, selectedEpic, artifact);
+                  }}
+                />
 
                 {/* Document grid */}
                 {selectedEpic.artifacts.filter((a) => a !== "index").length > 0 && !selectedArtifact && (
@@ -1364,8 +1475,7 @@ export function DashboardShell({
                 )}
 
                 {/* Artifact content viewer */}
-                {selectedArtifact &&
-                  selectedEpic.artifactContent[selectedArtifact] && (
+                {selectedArtifact && (
                     <motion.div
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -1396,9 +1506,17 @@ export function DashboardShell({
                           </span>
                         </div>
                       </div>
-                      {(() => {
-                        const content =
-                          selectedEpic.artifactContent[selectedArtifact!];
+                      {artifactLoading ? (
+                        <Card className="shadow-none">
+                          <CardContent className="flex items-center justify-center p-12">
+                            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                              <div className="size-4 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-primary" />
+                              Loading document...
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ) : artifactContent ? (() => {
+                        const content = artifactContent;
                         const headings = extractHeadings(content);
                         return (
                           <div className="flex gap-8">
@@ -1421,7 +1539,7 @@ export function DashboardShell({
                             )}
                           </div>
                         );
-                      })()}
+                      })() : null}
                     </motion.div>
                   )}
               </motion.div>
@@ -1793,5 +1911,104 @@ export function DashboardShell({
       </Sheet>
 
     </SidebarProvider>
+
+      {/* ── Full-screen mockup viewer ── */}
+      <AnimatePresence>
+        {mockupViewer && (() => {
+          const groups = new Map<string, typeof mockupViewer.allMockups>();
+          for (const m of mockupViewer.allMockups) {
+            const key = m.group || "Mockups";
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key)!.push(m);
+          }
+
+          return (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[100] flex flex-col bg-background"
+            >
+              {/* Top nav bar */}
+              <div className="shrink-0 border-b bg-card">
+                {/* Title row */}
+                <div className="flex h-10 items-center justify-between px-4">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <MonitorIcon className="size-4 text-purple-400 shrink-0" />
+                    <span className="text-sm font-semibold truncate">{mockupViewer.epicTitle}</span>
+                    <span className="text-border">·</span>
+                    <span className="text-xs text-muted-foreground truncate">{mockupViewer.title}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <a
+                      href={mockupViewer.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+                    >
+                      <ExternalLinkIcon className="size-3" />
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setMockupViewer(null)}
+                      className="flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
+                    >
+                      <XIcon className="size-4" />
+                    </button>
+                  </div>
+                </div>
+                {/* Grouped page tabs — one row per group */}
+                <div className="flex flex-col gap-1 px-4 pb-2.5 max-h-[40vh] overflow-y-auto">
+                  {[...groups.entries()].map(([group, items]) => (
+                    <div key={group} className="flex items-center gap-1 min-h-[24px]">
+                      <span className="shrink-0 w-28 text-[9px] font-semibold text-muted-foreground/40 uppercase tracking-wider truncate">
+                        {group}
+                      </span>
+                      <div className="flex items-center gap-0.5 overflow-x-auto">
+                        {items.map((m) => {
+                          const url = `/api/mockup?path=${m.path}`;
+                          const isActive = mockupViewer.url === url;
+                          return (
+                            <button
+                              key={m.path}
+                              type="button"
+                              onClick={() =>
+                                setMockupViewer({
+                                  ...mockupViewer,
+                                  url,
+                                  title: m.name,
+                                })
+                              }
+                              className={cn(
+                                "shrink-0 rounded-md px-2 py-0.5 text-[11px] font-medium transition-colors",
+                                isActive
+                                  ? "bg-purple-500/15 text-purple-400"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                              )}
+                            >
+                              {m.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Iframe */}
+              <div className="flex-1">
+                <iframe
+                  src={mockupViewer.url}
+                  className="h-full w-full border-0"
+                  title={`Mockup: ${mockupViewer.title}`}
+                />
+              </div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
+    </>
   );
 }

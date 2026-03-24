@@ -10,7 +10,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
-import LogoSvg from '@/assets/svg/logo'
+import { TcLogo } from '@/components/tc-logo'
 
 const MegaFooter = () => {
   return (
@@ -66,9 +66,9 @@ const MegaFooter = () => {
       <div className='mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:px-6 sm:py-16 lg:grid-cols-4 lg:px-8'>
         <div className='flex flex-col gap-8'>
           <a href='/' className="flex items-center gap-2.5">
-            <LogoSvg className="size-8 [&_rect]:fill-card [&_rect:first-child]:fill-primary" />
+            <TcLogo />
             <div className="flex flex-col">
-              <span className="font-semibold">SDD</span>
+              <span className="font-semibold">TC-Docs</span>
               <span className="text-xs text-muted-foreground">Story-Driven Development</span>
             </div>
           </a>

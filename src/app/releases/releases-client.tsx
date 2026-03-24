@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import type { Release } from "@/lib/releases";
 import { Badge } from "@/components/ui/badge";
@@ -25,10 +23,20 @@ const impactConfig: Record<
   low: { label: "Low Impact", color: "bg-blue-500/10 text-blue-500 border-blue-500/20", icon: ZapIcon },
 };
 
-export function ReleasesTimeline({ releases }: { releases: Release[] }) {
-  const [selectedRelease, setSelectedRelease] = useState<Release | null>(null);
+export function ReleasesTimeline({
+  releases,
+  renderedContent,
+}: {
+  releases: Release[];
+  renderedContent: Record<string, React.ReactNode>;
+}) {
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [impactFilter, setImpactFilter] = useState<string | null>(null);
+
+  const selectedRelease = selectedSlug
+    ? releases.find((r) => r.slug === selectedSlug) ?? null
+    : null;
 
   const filtered = releases.filter((r) => {
     if (impactFilter && r.impact !== impactFilter) return false;
@@ -56,7 +64,7 @@ export function ReleasesTimeline({ releases }: { releases: Release[] }) {
           >
             <button
               type="button"
-              onClick={() => setSelectedRelease(null)}
+              onClick={() => setSelectedSlug(null)}
               className="mb-6 flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
               <ArrowLeftIcon className="size-3.5" />
@@ -90,9 +98,7 @@ export function ReleasesTimeline({ releases }: { releases: Release[] }) {
             <Card className="shadow-none">
               <CardContent className="p-6 sm:p-8">
                 <div className="prose prose-sm prose-zinc dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-h2:text-lg prose-h3:text-base prose-p:text-muted-foreground prose-li:text-muted-foreground prose-strong:text-foreground prose-a:text-primary prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-code:before:content-none prose-code:after:content-none prose-hr:border-border prose-table:text-sm prose-th:text-left prose-th:font-medium">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {selectedRelease.content}
-                  </ReactMarkdown>
+                  {renderedContent[selectedRelease.slug]}
                 </div>
               </CardContent>
             </Card>
@@ -227,7 +233,7 @@ export function ReleasesTimeline({ releases }: { releases: Release[] }) {
 
                       <button
                         type="button"
-                        onClick={() => setSelectedRelease(release)}
+                        onClick={() => setSelectedSlug(release.slug)}
                         className="group w-full text-left"
                       >
                         <Card className="shadow-none transition-all duration-200 group-hover:-translate-y-0.5 group-hover:shadow-md">

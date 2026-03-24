@@ -2,7 +2,7 @@ import type { Navigation } from "@/components/shadcn-studio/blocks/hero-section-
 
 export const navigationData: Navigation[] = [
   {
-    title: "Process",
+    title: "SDD Process",
     href: "/process",
   },
   {
@@ -12,6 +12,10 @@ export const navigationData: Navigation[] = [
   {
     title: "Releases",
     href: "/releases",
+  },
+  {
+    title: "Design System",
+    href: "/design-system",
   },
   {
     title: "Blog",

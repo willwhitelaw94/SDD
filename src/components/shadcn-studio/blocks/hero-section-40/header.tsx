@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { LayoutDashboardIcon } from 'lucide-react'
 
-import OrionLogo from '@/assets/svg/orion-logo'
+import { TcLogo } from '@/components/tc-logo'
 
 type HeaderProps = {
   navigationData: Navigation[]
@@ -51,8 +51,8 @@ const Header = ({ navigationData, className }: HeaderProps) => {
         {/* Logo */}
         <a href='/'>
           <div className='flex items-center gap-3'>
-            <OrionLogo className='size-8' />
-            <span className='text-xl font-semibold'>SDD</span>
+            <TcLogo />
+            <span className='text-xl font-semibold'>TC-Docs</span>
           </div>
         </a>
 

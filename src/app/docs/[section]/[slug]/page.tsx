@@ -2,9 +2,8 @@ import { notFound } from 'next/navigation'
 
 import { ExternalLinkIcon, PencilIcon } from 'lucide-react'
 
-import { Badge } from '@/components/ui/badge'
 import { getDocPage, getDocSections, extractHeadings } from '@/lib/docs'
-import { DocContent } from './doc-content'
+import { renderMdxContent } from '@/lib/mdx'
 
 const GITHUB_REPO = process.env.GITHUB_REPO || 'willwhitelaw94/SDD'
 
@@ -45,6 +44,7 @@ export default async function DocPage({
   const isDev = process.env.NODE_ENV === 'development'
 
   const headings = extractHeadings(page.content)
+  const renderedContent = await renderMdxContent(page.content)
 
   return (
     <div className="flex gap-10">
@@ -93,7 +93,7 @@ export default async function DocPage({
         </div>
 
         <div className="prose prose-zinc dark:prose-invert max-w-none prose-headings:scroll-mt-20 prose-headings:font-semibold prose-a:text-primary prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:text-sm prose-code:before:content-none prose-code:after:content-none prose-pre:bg-muted prose-pre:border">
-          <DocContent content={page.content} />
+          {renderedContent}
         </div>
 
         {/* File path hint (dev only) */}

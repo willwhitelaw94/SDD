@@ -24,6 +24,8 @@ export type Epic = {
   bountyClaimedDate?: string;
   mockupUrl?: string;
   priority?: string;
+  /** Local mockup HTML files in the mockups/ directory */
+  mockups: { name: string; path: string; group?: string }[];
 };
 
 export type Initiative = {
@@ -184,6 +186,83 @@ export function getInitiatives(): Initiative[] {
             getArtifactsWithContent(epicPath);
           const gates = parseGates(rawMeta);
 
+          // Detect local mockup HTML files (top-level + one level of subdirs)
+          const mockupsDir = path.join(epicPath, "mockups");
+          const mockups: { name: string; path: string; group?: string }[] = [];
+          if (fs.existsSync(mockupsDir)) {
+            // Top-level HTML files
+            const topFiles = fs
+              .readdirSync(mockupsDir)
+              .filter((f) => f.endsWith(".html") && f !== "index.html")
+              .sort();
+            for (const file of topFiles) {
+              const name = file
+                .replace(/\.html$/, "")
+                .replace(/^\d+-/, "")
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase());
+              mockups.push({
+                name,
+                path: `${dir.name}/${epicDir.name}/${file}`,
+              });
+            }
+
+            // Subdirectory HTML files (design/, challenge/student-*/, etc.)
+            const subDirs = fs
+              .readdirSync(mockupsDir, { withFileTypes: true })
+              .filter((d) => d.isDirectory());
+            for (const sub of subDirs) {
+              const subPath = path.join(mockupsDir, sub.name);
+              // Check for HTML files directly in this subdir
+              const subFiles = fs
+                .readdirSync(subPath)
+                .filter((f) => f.endsWith(".html") && f !== "index.html")
+                .sort();
+              const groupName = sub.name
+                .replace(/-/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase());
+              for (const file of subFiles) {
+                const name = file
+                  .replace(/\.html$/, "")
+                  .replace(/^\d+-/, "")
+                  .replace(/-/g, " ")
+                  .replace(/\b\w/g, (c) => c.toUpperCase());
+                mockups.push({
+                  name,
+                  path: `${dir.name}/${epicDir.name}/${sub.name}/${file}`,
+                  group: groupName,
+                });
+              }
+
+              // One more level deep (e.g. challenge/student-1-linear/*.html)
+              const deepDirs = fs
+                .readdirSync(subPath, { withFileTypes: true })
+                .filter((d) => d.isDirectory());
+              for (const deep of deepDirs) {
+                const deepPath = path.join(subPath, deep.name);
+                const deepFiles = fs
+                  .readdirSync(deepPath)
+                  .filter((f) => f.endsWith(".html") && f !== "index.html")
+                  .sort();
+                const deepGroup = `${groupName} / ${deep.name
+                  .replace(/-/g, " ")
+                  .replace(/\b\w/g, (c) => c.toUpperCase())}`;
+                for (const file of deepFiles) {
+                  const name = file
+                    .replace(/\.html$/, "")
+                    .replace(/^\d+-/, "")
+                    .replace(/-/g, " ")
+                    .replace(/\b\w/g, (c) => c.toUpperCase());
+                  mockups.push({
+                    name,
+                    path: `${dir.name}/${epicDir.name}/${sub.name}/${deep.name}/${file}`,
+                    group: deepGroup,
+                  });
+                }
+              }
+            }
+          }
+
           return {
             slug: epicDir.name,
             title: epicTitle,
@@ -202,6 +281,7 @@ export function getInitiatives(): Initiative[] {
             bountyClaimedDate: meta.bounty_claimed_date,
             mockupUrl: meta.mockup_url,
             priority: meta.priority,
+            mockups,
           };
         })
         .sort((a, b) => a.title.localeCompare(b.title));

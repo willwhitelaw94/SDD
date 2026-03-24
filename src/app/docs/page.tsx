@@ -36,7 +36,7 @@ export default function DocsIndexPage() {
       <div>
         <Badge variant="outline" className="mb-3">Documentation</Badge>
         <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          SDD Documentation
+          TC-Docs
         </h1>
         <p className="mt-3 text-lg text-muted-foreground">
           Everything you need to understand Story-Driven Development — from process

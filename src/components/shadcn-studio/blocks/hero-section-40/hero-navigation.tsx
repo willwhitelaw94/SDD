@@ -27,7 +27,7 @@ import { PrimaryOrionButton } from '@/components/ui/orion-button'
 
 import { cn } from '@/lib/utils'
 
-import OrionLogo from '@/assets/svg/orion-logo'
+import { TcLogo } from '@/components/tc-logo'
 
 type NavigationSection = {
   type: 'section'
@@ -221,8 +221,8 @@ const HeroNavigationSmallScreen = ({
           <SheetDescription hidden />
           <a href='#' onClick={handleLinkClick} className='self-start'>
             <div className='flex items-center gap-3'>
-              <OrionLogo className='size-8' />
-              <span className='text-xl font-semibold'>Orion</span>
+              <TcLogo />
+              <span className='text-xl font-semibold'>TC-Docs</span>
             </div>
           </a>
         </SheetHeader>
