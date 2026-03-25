@@ -554,6 +554,25 @@ As an Admin, I want to send new agreements to all \~10,000 clients, coordinators
 
 **Note**: Decision register indicates Portal-native approach preferred (Asim working on it), with Zoho Sign/Forms and DocuSign as potential alternatives if needed.
 
+### Zoho Forms Fallback Channel (Transition Period)
+
+During the transition to Portal-native signing, Zoho Forms can serve as a fallback signing channel for cases where Portal access isn't available (e.g., no email, elderly client, field signing).
+
+**Flow**:
+1. Staff selects "Send via Zoho Forms" on the Agreement tab (instead of Portal magic link)
+2. Portal generates a prefilled Zoho Form URL with package/recipient data
+3. URL is sent to the recipient (email/SMS) or opened by staff during a meeting
+4. Recipient completes the form (reviews terms, captures consent)
+5. Zoho Forms webhook fires back to Portal → `Agreement` state transitions to `signed`
+6. `CreateZohoCarePlanAction` triggers (same as Portal-native path)
+
+**Integration requirements**:
+- Zoho Forms API: Generate prefilled form links with lead/package/recipient data
+- Webhook endpoint in Portal: Receives form submission, updates Agreement state
+- Feature flag: `zoho-forms-signing` — disable once Portal-native is fully live
+
+**When to retire**: Once Portal-native signing is live and adoption is >90%, Zoho Forms channel can be disabled via feature flag. Historical agreements signed via Zoho Forms retain a "Source: Zoho Forms" indicator.
+
 ---
 
 ### User Story 19 - Zoho Bridging & Historical Migration (Priority: P2)
