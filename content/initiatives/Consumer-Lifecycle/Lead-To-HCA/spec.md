@@ -8,9 +8,9 @@ title: "Feature Specification: Lead to HCA (LTH)"
 
 **Feature Branch**: `feat/lth-lead-to-hca`
 **Created**: 2026-02-09
-**Updated**: 2026-02-19
+**Updated**: 2026-03-25
 **Status**: Draft
-**Input**: Idea brief + rich context documents from Feb 2026 re-spec + Fast Lane Retrospective (Feb 10, 2026) + Figma design walkthrough (Feb 19, 2026)
+**Input**: Idea brief + rich context documents from Feb 2026 re-spec + Fast Lane Retrospective (Feb 10, 2026) + Figma design walkthrough (Feb 19, 2026) + Figma Round 2 alignment (Mar 25, 2026)
 
 ---
 
@@ -116,24 +116,39 @@ As a Sales Staff member, I need to extract or manually enter the client's ACAT/I
 
 1. **Given** I arrive at Step 3, **When** the page loads, **Then** I see a "Manual Extraction" section with an "Extract Data" button to attempt automated extraction of ACAT/IAT data.
 
-2. **Given** I click "Extract Data", **When** the extraction succeeds, **Then** the assessment detail fields are auto-populated from the extracted data.
+2. **Given** I click "Extract Data", **When** the extraction succeeds, **Then** the assessment detail fields are auto-populated from the extracted data and the Extraction Results section appears.
 
-3. **Given** the automated extraction fails or is unavailable, **When** I need to proceed, **Then** I can upload the ACAT/IAT documents and manually fill in all required assessment fields.
+3. **Given** extraction is successful, **When** I view the Extraction Results section, **Then** I see three tabs — **Needs**, **Risks**, and **Recommended Budgets** — each with a count badge and expandable accordion items showing extracted details.
 
-4. **Given** all extraction details are populated (either via extraction or manual entry), **When** I click "Continue", **Then** I proceed to Step 4 (Screening Questions).
+4. **Given** the Needs tab is active, **When** I expand an item, **Then** I see the need's category, level, frequency, and description.
+
+5. **Given** the Risks tab is active, **When** I expand an item, **Then** I see the risk's category, severity badge (High/Medium/Low colour-coded), description, and mitigation strategy.
+
+6. **Given** the Recommended Budgets tab is active, **When** I expand an item, **Then** I see the budget's category, annual amount (AUD formatted), frequency, and notes.
+
+7. **Given** the automated extraction fails or is unavailable, **When** I need to proceed, **Then** I can upload the ACAT/IAT documents and manually fill in all required assessment fields. A "Skip Extraction" option allows proceeding without extracted data.
+
+8. **Given** all extraction details are populated (either via extraction or manual entry), **When** I click "Continue", **Then** I proceed to Step 4 (Screening Questions).
 
 **Flow:**
 ```mermaid
 flowchart TD
     S3[Step 3: ACAT/IAT Extraction] --> Extract[Click 'Extract Data']
     Extract --> Success{Extraction successful?}
-    Success -->|Yes| Populated[Fields auto-populated]
+    Success -->|Yes| Results["Extraction Results
+    Tabs: Needs | Risks | Recommended Budgets
+    Accordion items per category"]
     Success -->|No| Fallback[Upload documents + fill fields manually]
-    Fallback --> Populated
-    Populated --> S4[Step 4: Screening Questions]
+    Results --> S4[Step 4: Screening Questions]
+    Fallback --> Skip{Skip Extraction?}
+    Skip -->|Yes| S4
+    Skip -->|No, manual entry| ManualFields[Enter ACAT details manually]
+    ManualFields --> S4
 ```
 
 > **Note — Extraction**: The initial proposal was for automatic extraction on page load, but this was confirmed as not feasible. Instead, the design uses a manual "Extract Data" button with a fallback to document upload and manual field entry.
+
+> **Note — Extraction Results**: On success, extraction produces three categories of structured data: **Needs** (care needs identified in the assessment), **Risks** (clinical and safety risks), and **Recommended Budgets** (funding allocations recommended by the assessor). Each category is displayed in a tab with expandable accordion items for individual entries.
 
 ---
 
@@ -147,73 +162,101 @@ As a Sales Staff member, I can answer screening questions about the client's his
 
 **Acceptance Scenarios**:
 
-1. **Given** I arrive at Step 4, **When** the page loads, **Then** I see the following screening questions:
-   - "Previously brokered by Trilogy?" (Yes / No)
-   - "Switching from a self-managed provider?" (Yes / No)
-   - "Can use online banking?" (Yes / No)
-   - "Number of previous providers" (1, 2, 3, 4, 5+, or N/A)
+1. **Given** I arrive at Step 4, **When** the page loads, **Then** I see the following screening questions in a single-column stacked layout:
+   - "Has the client been previously offboarded by Trilogy Care?" (Yes / No checkboxes)
+   - "Is the client switching from a self-managed provider?" (Yes / No checkboxes)
+   - "How many previous providers has the client had?" (dropdown: 0, 1, 2, 3, 4, 5+)
+   - "Comfort level with technology?" (dropdown: Very comfortable, Somewhat comfortable, Not comfortable, Requires assistance)
+   - "Can client/support person use online banking?" (Yes / No checkboxes)
+   - "Has support person for technology if needed?" (Yes / No checkboxes)
 
-2. **Given** I select "Yes" for "Switching from a self-managed provider?", **When** the checkbox is checked, **Then** a conditional text field appears asking "Who is that provider?" and I must specify the provider name.
+2. **Given** I select "Yes" for "Is the client switching from a self-managed provider?", **When** the checkbox is checked, **Then** a conditional dropdown appears asking "If Yes, reason for switching?" with options: Cost, Service quality, Moving location, Provider closing, Other.
 
-3. **Given** I select "No" for "Switching from a self-managed provider?", **When** the checkbox is unchecked, **Then** the "Who is that provider?" field is greyed out / disabled.
+3. **Given** I select "No" for "Is the client switching from a self-managed provider?", **When** the checkbox is unchecked, **Then** the reason for switching dropdown is hidden.
 
-4. **Given** I need to select the number of previous providers, **When** I view the provider count options, **Then** I can select from a list (1, 2, 3, 4, 5+, or N/A).
+4. **Given** I need to select the number of previous providers, **When** I view the provider count options, **Then** I can select from a dropdown (0, 1, 2, 3, 4, 5+).
 
 5. **Given** I have answered all required screening questions, **When** I click "Continue", **Then** the answers are submitted and I proceed to Step 5 (Screening Results).
 
 > **Note — Screening Questions Source**: These questions were originally part of the external Assessment Tool. The Figma design moves them into the Portal wizard as an in-Portal step, eliminating the need to switch to an external tool for this data capture.
 
+> **Note — Comfort with Technology**: This is a new field added from the Figma design (Mar 2026). It captures the client's self-assessed technology comfort level, which feeds into the screening algorithm alongside the existing online banking and tech support questions.
+
 ---
 
 ### User Story 6 — Wizard Step 5: Screening Results (Priority: P1)
 
-As a Sales Staff member, I can see the screening outcome based on the data entered throughout the wizard, so that I know whether the client is approved, rejected, or approved for self-managed plus only.
+As a Sales Staff member, I can see the screening outcome based on the data entered throughout the wizard, so that I know whether the client is approved, rejected, or eligible under the Fully Coordinated scheme only.
 
-**Why this priority**: The screening results gate the rest of the flow — they determine whether the agreement can be sent, needs clinical review, or is restricted to a specific management option.
+**Why this priority**: The screening results gate the rest of the flow — they determine whether the agreement can be sent, needs care review, or requires coordinator assignment under the Fully Coordinated model.
 
-**Independent Test**: Can be tested by completing Steps 1-4 with various screening question combinations and verifying that Step 5 displays the correct screening status, confidence percentage, risk score, and assessment date.
+**Independent Test**: Can be tested by completing Steps 1-4 with various screening question combinations and verifying that Step 5 displays the correct screening status, confidence label (High/Medium/Low), risk score (X/5), and assessment date.
 
 **Acceptance Scenarios**:
 
 **Approved (~98% of conversions):**
 
-1. **Given** the screening data indicates approval, **When** I reach Step 5, **Then** I see a status of "Approved" with a confidence percentage, a risk score (e.g., "Very Low Risk"), and the assessment date extracted from the ACAT data.
+1. **Given** the screening data indicates approval, **When** I reach Step 5, **Then** I see a centered status card with a green check icon, "Approved" label, and description "This lead is eligible for conversion to a client package."
 
-2. **Given** the screening result is "Approved", **When** I click "Continue", **Then** I proceed to Step 6 (Agreement Sending).
+2. **Given** the screening result is "Approved", **When** I view the metric cards, **Then** I see three cards: Confidence (High/Medium/Low based on data completeness), Risk score (X/5 with risk label), and Assessment date (from ACAT extraction).
+
+3. **Given** the screening result is "Approved", **When** I view the conversion summary, **Then** I see: Lead name, Package level, Management option, Financial status, Referral code, and Commencement date.
+
+4. **Given** the screening result is "Approved", **When** I click "Continue", **Then** I proceed to Step 6 (Agreement Sending).
 
 **Rejected:**
 
-3. **Given** the screening data indicates rejection, **When** I reach Step 5, **Then** I see a status of "Rejected" with an assessment reasoning explaining why the client was not approved.
+5. **Given** the screening data indicates rejection, **When** I reach Step 5, **Then** I see a centered status card with a red X icon, "Rejected" label, and description "This lead is not eligible for conversion to a client package."
 
-4. **Given** the screening result is "Rejected", **When** I view the available actions, **Then** the CTA is "Send to Clinical Team" (not "Continue"), routing the case for clinical review.
+6. **Given** the screening result is "Rejected", **When** I view the assessment reasoning, **Then** I see a red alert with specific risk flags as bullet points.
 
-**Approved for Self-Managed Plus Only:**
+7. **Given** the screening result is "Rejected", **When** I view the available actions, **Then** the CTAs are "Cancel" (outline) and "Care Review" (primary).
 
-5. **Given** the screening data indicates approval but only for self-managed plus, **When** I reach Step 5, **Then** I see a status of "Approved — Self-Managed Plus Only" with an assessment reasoning.
+8. **Given** I click "Care Review", **When** the modal opens, **Then** I see a "Send for care review" dialog with a required "Reason" dropdown and an optional "Notes" textarea.
 
-6. **Given** the screening result is "Self-Managed Plus Only", **When** I view the available actions, **Then** the CTA is "Send to Clinical Team" for the clinical team to assess eligibility for other management options.
+9. **Given** I submit the Care Review modal, **When** the review is sent, **Then** the case is routed for clinical care review with the specified reason and notes.
+
+**Fully Coordinated Only:**
+
+10. **Given** the screening data indicates the client needs additional support coordination, **When** I reach Step 5, **Then** I see a centered status card with an amber people icon, "Fully Coordinated only" label, and description "This lead is eligible for conversion to a client package under the Fully Coordinated scheme only."
+
+11. **Given** the screening result is "Fully Coordinated only", **When** I view the assessment reasoning, **Then** I see an amber alert explaining elevated risk factors.
+
+12. **Given** the screening result is "Fully Coordinated only", **When** I view the Care Coordinator assignment section, **Then** I see a searchable "Coordinator" dropdown (required) and a "Coordination fees (%)" input field.
+
+13. **Given** I select a coordinator who operates outside the client's MMM region, **When** the selection is made, **Then** I see a warning alert about the MMM region mismatch, and the CTA changes to "Care Review".
+
+14. **Given** I have assigned an in-region coordinator for an FC Only result, **When** I click "Continue", **Then** I proceed to Step 6 (Agreement Sending).
 
 **Flow:**
 ```mermaid
 flowchart TD
     S5[Step 5: Screening Results] --> Status{Screening Status}
+
     Status -->|Approved| Approved["✓ Approved
-    Confidence: X%
-    Risk Score: Very Low
-    Assessment Date: YYYY-MM-DD"]
+    Confidence: High/Medium/Low
+    Risk Score: X/5
+    Assessment Date: DD/MM/YY"]
     Status -->|Rejected| Rejected["✗ Rejected
-    Assessment Reasoning: ..."]
-    Status -->|SM+ Only| SMPlus["⚠ Approved — SM+ Only
-    Assessment Reasoning: ..."]
+    Assessment Reasoning + Risk Flags"]
+    Status -->|FC Only| FCOnly["⚠ Fully Coordinated Only
+    Assessment Reasoning
+    + Coordinator Assignment"]
 
     Approved -->|Continue| S6[Step 6: Agreement Sending]
-    Rejected -->|Send to Clinical Team| Clinical[Clinical Team Review]
-    SMPlus -->|Send to Clinical Team| Clinical
+    Rejected -->|Care Review| Modal["Care Review Modal
+    Reason (required) + Notes (optional)"]
+    Modal -->|Send For Review| Clinical[Clinical Care Review]
+    FCOnly -->|Assign Coordinator| CoordCheck{MMM Region Match?}
+    CoordCheck -->|Yes| S6
+    CoordCheck -->|No, MMM Warning| CareReview["Care Review (MMM mismatch)"]
 ```
 
-> **Note — Screening Logic**: The three screening statuses replace the earlier "Suitable for Everything" / "Needs Clinical Attention" / "Not Suited" terminology from the Assessment Tool. The logic is now computed within Portal based on the ACAT/IAT extraction data (Step 3) and screening question answers (Step 4).
+> **Note — Screening Logic**: The screening statuses are: **Approved** (green, ~98%), **Fully Coordinated only** (amber, requires coordinator assignment), and **Rejected** (red, routes to care review). These replace the earlier "Suitable for Everything" / "Needs Clinical Attention" / "Not Suited" / "SM+ Only" terminology. The logic is computed within Portal based on the ACAT/IAT extraction data (Step 3) and screening question answers (Step 4).
 
-> **Note — Clinical Team Routing**: When a case is sent to the clinical team, it is up to the clinical team to assess whether the client is eligible for Trilogy's services. This is a hand-off from the Sales wizard — the clinical team acts outside the wizard flow.
+> **Note — Care Review Modal**: When a case is rejected or has an MMM region mismatch, the CTA opens a "Send for care review" modal rather than directly routing. This requires the staff member to provide a reason, creating an audit trail. The clinical team receives the case with the reason and notes.
+
+> **Note — Coordinator Assignment on Step 5**: For Fully Coordinated Only outcomes, the coordinator is assigned at Step 5 (not Step 6) because the coordinator choice may affect the outcome (MMM region mismatch). Step 6 focuses solely on agreement confirmation and sending.
 
 ---
 
@@ -266,7 +309,7 @@ As a Sales Staff member, I can see all converted packages in Portal with their a
 
 2. **Given** I am viewing the packages index, **When** I filter by agreement status, **Then** I see only packages matching the selected status.
 
-3. **Given** a conversion has completed, **When** I check Zoho, **Then** I see the Consumer record, Care Plan, and Deal record with data matching what was entered in the wizard.
+3. **Given** a conversion has completed, **When** I check Zoho, **Then** I see the Consumer record and Deal record with data matching what was entered in the wizard. (Care Plan creation is deferred to the Client HCA epic — created when the HCA is signed, see FR-119b in Client-HCA spec.)
 
 4. **Given** a package has agreement status of "Not Signable", **When** relevant stakeholders (clinical team, coordinator assignment) view the packages index, **Then** they can see the package and its hold reason to action their respective workflows.
 
@@ -280,13 +323,15 @@ As a Sales Staff member, I can see all converted packages in Portal with their a
 
 - **What happens if Zoho API sync fails?** Conversion data is saved in Portal. Sync retries automatically. If sync fails permanently, flag for manual intervention.
 
-- **What happens if a client was previously off-boarded by Trilogy Care?** The screening questions capture "Previously brokered by Trilogy?" (Yes/No). If Yes, this feeds into the screening results which may trigger a "Rejected" or "Send to Clinical Team" outcome.
+- **What happens if a client was previously off-boarded by Trilogy Care?** The screening questions capture "Has the client been previously offboarded by Trilogy Care?" (Yes/No). If Yes, this feeds into the screening results which may trigger a "Rejected" outcome requiring care review.
 
 - **What happens if a lead has multiple funding streams?** Primary and secondary classifications are captured in Step 2. A client can have one, two, or three classifications in any combination.
 
-- **What happens if the screening result is "Rejected" or "SM+ Only"?** The case is sent to the clinical team for review. No agreement is sent. The clinical team assesses eligibility outside the wizard.
+- **What happens if the screening result is "Rejected"?** The "Care Review" button opens a modal requiring a reason and optional notes, then routes the case to the clinical team for review. No agreement is sent.
 
-- **What happens if a "Rejected" outcome is received after Steps 1-2 have already created/updated Zoho records?** The Consumer and Care Plan records remain in Zoho but are flagged as not proceeding. No package is created in Portal.
+- **What happens if the screening result is "Fully Coordinated only"?** The staff member must assign a Care Coordinator and set coordination fees. If the coordinator is in-region, the flow proceeds to Step 6. If there is an MMM region mismatch, the case is routed to care review instead.
+
+- **What happens if a "Rejected" outcome is received after Steps 1-2 have already created/updated Zoho records?** The Consumer record remains in Zoho. No Deal is created (conversion doesn't complete Step 6), no Care Plan is created (deferred to HCA signing), and no package is created in Portal.
 
 - **What happens if the switching provider question is Yes?** A conditional text field appears requiring the user to specify the provider name. This is a requirement from the business (Romi's team).
 
@@ -316,7 +361,7 @@ flowchart TD
     S3 -->|"Continue"| S4
 
     S4["US5: Step 4 — Screening Questions
-    Previously brokered, switching provider, banking, provider count"]
+    Offboarded, switching provider, tech comfort, banking, tech support"]
     S4 -->|"Continue"| S5
 
     S5["US6: Step 5 — Screening Results"]
@@ -324,8 +369,11 @@ flowchart TD
 
     Status -->|Approved| S6["US7: Step 6 — Agreement Sending
     Magic link to recipient email"]
-    Status -->|Rejected| Clinical["Send to Clinical Team"]
-    Status -->|SM+ Only| Clinical
+    Status -->|Rejected| CareReview["Care Review Modal
+    Reason + Notes → Clinical Team"]
+    Status -->|FC Only| FCOnly["Assign Coordinator
+    → Continue or Care Review (MMM)"]
+    FCOnly -->|In-region| S6
 
     S6 -->|"Send Agreement"| Confirm["Confirmation Modal
     Close or Convert New Lead"]
@@ -341,16 +389,18 @@ flowchart TD
 stateDiagram-v2
     [*] --> Draft : Wizard started
     Draft --> Sent : Send Agreement (approved path)
-    Draft --> ClinicalReview : Rejected / SM+ Only
-    ClinicalReview --> Sent : Clinical team approves
-    ClinicalReview --> Closed : Clinical team rejects
+    Draft --> CareReview : Rejected / FC Only MMM mismatch
+    Draft --> CoordinatorAssigned : FC Only (in-region coordinator)
+    CoordinatorAssigned --> Sent : Send Agreement
+    CareReview --> Sent : Clinical team approves
+    CareReview --> Closed : Clinical team rejects
     Sent --> Signed : Client signs (Client HCA)
     Signed --> [*]
 
-    note right of ClinicalReview
+    note right of CareReview
         Routing reasons:
         • Screening rejected
-        • SM+ only restriction
+        • FC Only MMM region mismatch
     end note
 
     note right of Sent
@@ -396,27 +446,36 @@ stateDiagram-v2
 - **FR-018**: System MUST provide an "Extract Data" button to attempt automated extraction of ACAT/IAT assessment data.
 - **FR-019**: System MUST allow document upload as a fallback when automated extraction fails.
 - **FR-020**: System MUST allow manual entry of all assessment fields when extraction is not possible.
-- **FR-021**: System MUST populate assessment detail fields from extracted data when extraction succeeds.
-- **FR-022**: System MUST require all assessment fields to be populated (via extraction or manual entry) before allowing progression to Step 4.
+- **FR-021**: System MUST populate assessment detail fields from extracted data when extraction succeeds, and display Extraction Results in three tabs: **Needs**, **Risks**, and **Recommended Budgets**.
+- **FR-021a**: Each extraction results tab MUST show a count badge and expandable accordion items with structured details (category, level/severity, description, etc.).
+- **FR-021b**: System MUST allow proceeding without extracted data via a "Skip Extraction" option when extraction fails.
+- **FR-022**: System MUST require all assessment fields to be populated (via extraction or manual entry) before allowing progression to Step 4, unless extraction is explicitly skipped.
 
 **Step 4 — Screening Questions**
 
-- **FR-023**: System MUST present the question "Previously brokered by Trilogy?" with Yes/No options.
-- **FR-024**: System MUST present the question "Switching from a self-managed provider?" with Yes/No options.
-- **FR-025**: When "Switching from a self-managed provider?" = Yes, system MUST display a conditional text field "Who is that provider?" requiring the provider name.
-- **FR-026**: When "Switching from a self-managed provider?" = No, system MUST grey out / disable the provider name field.
-- **FR-027**: System MUST present the question "Can use online banking?" with Yes/No options.
-- **FR-028**: System MUST present the question "Number of previous providers" with options: 1, 2, 3, 4, 5+, or N/A.
+- **FR-023**: System MUST present the question "Has the client been previously offboarded by Trilogy Care?" with Yes/No checkbox options.
+- **FR-024**: System MUST present the question "Is the client switching from a self-managed provider?" with Yes/No checkbox options.
+- **FR-025**: When "Is the client switching from a self-managed provider?" = Yes, system MUST display a conditional dropdown "If Yes, reason for switching?" with options: Cost, Service quality, Moving location, Provider closing, Other.
+- **FR-026**: When "Is the client switching from a self-managed provider?" = No, system MUST hide the reason for switching dropdown.
+- **FR-027**: System MUST present the question "Can client/support person use online banking?" with Yes/No checkbox options.
+- **FR-027a**: System MUST present the question "Comfort level with technology?" as a dropdown with options: Very comfortable, Somewhat comfortable, Not comfortable, Requires assistance.
+- **FR-027b**: System MUST present the question "Has support person for technology if needed?" with Yes/No checkbox options.
+- **FR-028**: System MUST present the question "How many previous providers has the client had?" as a dropdown with options: 0, 1, 2, 3, 4, 5+.
 - **FR-029**: System MUST require all screening questions to be answered before allowing progression to Step 5.
 
 **Step 5 — Screening Results**
 
-- **FR-030**: System MUST compute and display one of three screening statuses: Approved, Rejected, or Approved for Self-Managed Plus Only.
-- **FR-031**: When status = Approved, system MUST display: confidence percentage, risk score (e.g., "Very Low Risk"), and assessment date (from ACAT extraction).
+- **FR-030**: System MUST compute and display one of three screening statuses: **Approved** (green), **Fully Coordinated only** (amber), or **Rejected** (red).
+- **FR-031**: For all statuses, system MUST display three metric cards: Confidence (High/Medium/Low), Risk score (X/5 with risk label), and Assessment date (from ACAT extraction).
+- **FR-031a**: For all statuses, system MUST display a Conversion summary card with: Lead name, Package level, Management option, Financial status, Referral code, and Commencement date.
 - **FR-032**: When status = Approved, system MUST show a "Continue" button to proceed to Step 6.
-- **FR-033**: When status = Rejected, system MUST display an assessment reasoning explaining the rejection.
-- **FR-034**: When status = Rejected or SM+ Only, system MUST show a "Send to Clinical Team" button instead of "Continue".
-- **FR-035**: When "Send to Clinical Team" is clicked, system MUST route the case to the clinical team for eligibility assessment.
+- **FR-033**: When status = Rejected, system MUST display an assessment reasoning alert (red) with specific risk flags as bullet points.
+- **FR-034**: When status = Rejected, system MUST show "Cancel" (outline) and "Care Review" (primary) buttons instead of "Continue".
+- **FR-034a**: When "Care Review" is clicked, system MUST open a "Send for care review" modal with a required "Reason" dropdown (High-severity aggressive behaviour, Complex medical needs, Cognitive impairment concerns, Safety risk to staff, Other) and an optional "Notes" textarea.
+- **FR-034b**: When the Care Review modal is submitted, system MUST route the case to clinical care review with the specified reason and notes.
+- **FR-035**: When status = Fully Coordinated only, system MUST display an assessment reasoning alert (amber) and a "Care Coordinator assignment" section with a searchable Coordinator dropdown (required) and Coordination fees (%) input.
+- **FR-035a**: When a selected coordinator operates outside the client's MMM region, system MUST display a warning alert and change the CTA from "Continue" to "Care Review".
+- **FR-035b**: When an in-region coordinator is assigned for FC Only, system MUST allow progression to Step 6 via "Continue".
 
 **Step 6 — Agreement Sending**
 
@@ -446,7 +505,7 @@ stateDiagram-v2
 
 - **Consumer**: Post-conversion record. Created in Zoho during conversion. Becomes the client record.
 
-- **Care Plan**: Created in Zoho during conversion. Tracks funding stream, classification, dates.
+- **Care Plan**: Created in Zoho when the HCA is signed (Client HCA epic, FR-119b). Tracks funding stream, classification, dates. Not created during LTH conversion — deferred to signature event.
 
 - **Package**: Portal record created when the agreement is sent (Step 6). Represents the client's engagement. Tracks agreement status. Visible in the packages index.
 
@@ -454,7 +513,7 @@ stateDiagram-v2
 
 - **Deal**: Zoho record created when the wizard completes for legacy reporting.
 
-- **Screening Result**: Computed from ACAT/IAT extraction data (Step 3) and screening question answers (Step 4). One of: "Approved", "Rejected", "Approved — Self-Managed Plus Only". Includes confidence percentage, risk score, and assessment date.
+- **Screening Result**: Computed from ACAT/IAT extraction data (Step 3) and screening question answers (Step 4). One of: "Approved", "Rejected", or "Fully Coordinated only". Includes confidence label (High/Medium/Low), risk score (X/5), and assessment date.
 
 - **HCA Recipient**: The contact(s) who will receive the Home Care Agreement. Includes the lead (future care recipient) and optionally additional contacts (e.g., family members). Pre-filled from Zoho, can be extended in Step 2.
 
@@ -472,17 +531,17 @@ stateDiagram-v2
 
 - **SC-004**: Data syncs to Zoho within 5 seconds of each step completion.
 
-- **SC-005**: 100% of rejected/SM+ only cases are routed to the clinical team with correct assessment reasoning within 1 minute of screening completion.
+- **SC-005**: 100% of rejected cases and FC Only MMM mismatches are routed to the clinical team via care review with correct reason and assessment reasoning within 1 minute of screening completion.
 
-- **SC-006**: Zero duplicate Consumer, Care Plan, or Package records created due to sync retry issues.
+- **SC-006**: Zero duplicate Consumer, Deal, or Package records created due to sync retry issues.
 
-- **SC-007**: All converted packages visible in both Portal (packages index) and Zoho (Consumer + Care Plan + Deal) with consistent data.
+- **SC-007**: All converted packages visible in both Portal (packages index) and Zoho (Consumer + Deal) with consistent data. Care Plan visibility in Zoho is verified after HCA signing (Client HCA epic).
 
 ---
 
 ## Handoff to Client HCA
 
-LTH ends when the agreement is **sent** (approved path) or **routed to clinical team** (rejected/SM+ only path) and the Package record exists in Portal.
+LTH ends when the agreement is **sent** (approved / FC Only with in-region coordinator) or **routed to care review** (rejected / FC Only MMM mismatch) and the Package record exists in Portal.
 
 **Client HCA picks up from here and handles:**
 
@@ -536,7 +595,7 @@ LTH ends when the agreement is **sent** (approved path) or **routed to clinical 
 | Secondary classification | Explicit multi-select (1-3 classifications) | Replaces earlier opt-out consent model with direct selection |
 | ACAT/IAT extraction | Manual "Extract Data" button with upload fallback | Automatic extraction not feasible; manual trigger + fallback |
 | Screening questions | In-Portal step (not external tool) | Keeps screening data capture within the wizard flow |
-| Screening results | 3 statuses: Approved / Rejected / SM+ Only | Clear gating with clinical team routing for non-approved |
+| Screening results | 3 statuses: Approved / Rejected / Fully Coordinated only | Clear gating with care review routing for rejected, coordinator assignment for FC only |
 | Agreement sending | Magic link to recipient email + confirmation modal | Confirmation modal with "Close" or "Convert New Lead" loop |
 | Packages index | Filterable by agreement status | Sales and stakeholders need pipeline visibility |
 
@@ -563,7 +622,7 @@ The following are explicitly OUT OF SCOPE for LTH:
 | Signature capture (verbal, digital, manual PDF) | Client HCA (US02, US06, US07) | Post-send agreement lifecycle |
 | SLA reminders for unsigned agreements | Client HCA (US09) | Post-send follow-up |
 | Meeting booking (gated by signed agreement) | Client HCA / TBD | Post-signing workflow |
-| Clinical review resolution | Clinical team | LTH routes rejected/SM+ only cases; resolution is separate |
+| Clinical review resolution | Clinical team | LTH routes rejected / FC Only MMM mismatch cases via care review; resolution is separate |
 | Exit vs Terminate flows | Client HCA (US10, US15) | Post-conversion lifecycle management |
 | Existing Clients: New Funding Streams | Client HCA | Managing active consumers, not new conversions |
 | Agreement Amendments / Variations | Client HCA (US08) | Post-onboarding contract changes |
@@ -595,7 +654,7 @@ The following are explicitly OUT OF SCOPE for LTH:
 **Answer:** The codebase has `app/Http/Controllers/ZohoWebhookController.php` and Zoho sync jobs, confirming active Zoho integration. The spec requires sync after EACH step (FR-045). **If Zoho is down, in-progress wizard data should be preserved locally in Portal.** The spec already states "Conversion data is saved in Portal. Sync retries automatically" (Edge Cases section). **Recommendation:** Implement a `ConversionDraft` model that persists wizard state after each step. Zoho sync should be queued (fire-and-forget) so the wizard does not block on Zoho availability. Failed syncs should retry via Laravel Horizon with exponential backoff.
 
 ### Q2: [Scope] Where is the screening algorithm documented?
-**Answer:** The spec states screening logic is "computed within Portal based on ACAT/IAT extraction data (Step 3) and screening question answers (Step 4)." The risk score flow is documented in `context/rich_context/Risk Score First Management Option Flow.md` (referenced in Related Documents). **The screening algorithm is NOT the same as the external Assessment Tool** -- it has been simplified to 4 inputs (previously brokered, switching provider, online banking capability, provider count) plus ACAT/IAT data. The three outcomes map to: Approved (~98%), Rejected (high risk), SM+ Only (moderate risk). **The exact scoring weights need to be documented as business rules before development.**
+**Answer:** The spec states screening logic is "computed within Portal based on ACAT/IAT extraction data (Step 3) and screening question answers (Step 4)." The risk score flow is documented in `context/rich_context/Risk Score First Management Option Flow.md` (referenced in Related Documents). **The screening algorithm is NOT the same as the external Assessment Tool** -- it has been simplified to 6 inputs (previously offboarded, switching provider, comfort with technology, online banking capability, tech support availability, provider count) plus ACAT/IAT data. The three outcomes map to: Approved (~98%), Rejected (high risk), Fully Coordinated only (moderate risk requiring coordinator assignment). **The exact scoring weights need to be documented as business rules before development.**
 
 ### Q3: [Data] Are the classification models in LTH and MPS the same?
 **Answer:** The codebase has `domain/Package/Models/PackageAllocatedClassification.php` which tracks classifications per package. FR-012/FR-013 define classifications as Level 1, Level 2, Support@Home, Level 8 with up to 3 per client. The Classification Data Model is documented in `context/rich_context/Classification Data Model.md`. **These should use the same data model.** MPS tracks classifications per funding stream, while LTH captures the initial classifications at conversion time. **The `PackageAllocatedClassification` model should be the single source of truth, with LTH writing to it during Step 2.**

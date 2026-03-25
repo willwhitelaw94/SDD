@@ -826,6 +826,8 @@ After HCA is signed, system triggers:
 - **FR-115**: System MUST create Package record in "Pending" state when HCA is sent (or earlier if assessment meeting signing expected)
 - **FR-116**: System MUST log all HCA events (sent, viewed, signed) to the Lead Timeline via LTH integration
 - **FR-119**: System MUST transition Package from "Pending" to "Active" state when HCA is signed
+- **FR-119a**: When HCA is signed, system MUST update the Zoho Deal record (created by LTH Step 6 `convertLead()`) with the signed status and signed date
+- **FR-119b**: When HCA is signed, system MUST create a Care Plan record in Zoho linked to the Deal and Consumer, with package details (classification, management option, commencement/cessation dates, coordinator) from the LTH conversion data
 - **FR-121**: System MUST allow LTH conversion to complete without sending HCA for signing (HCA remains in "Draft" state)
 - **FR-122**: System MUST allow Portal invitation to be sent independently of HCA activation (client can access Portal before HCA is sent for signing)
 
