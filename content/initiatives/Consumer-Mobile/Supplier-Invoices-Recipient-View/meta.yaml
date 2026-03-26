@@ -1,0 +1,18 @@
+jira_key: null
+title: 'Supplier Invoices — Recipient View'
+status: Planned
+prefix: MOB-INV
+summary: "Client-facing supplier invoice list, detail, search, filters, and status rationale for the mobile app"
+linear_project_id: null
+linear_url: null
+description: 'Simplified billing view for clients — curated invoice list, transparent fee breakdown, On Hold/Rejected rationale, search and filters. Part of Consumer Mobile initiative.'
+due_date: null
+last_synced: null
+priority: medium
+product_owner: Will Whitelaw
+pod: Mobile
+tags:
+  - consumer-mobile
+  - billing
+  - invoices
+  - recipient-view
