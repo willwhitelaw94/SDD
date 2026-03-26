@@ -3,8 +3,8 @@ title: 'Supplier Invoices — Recipient View'
 status: Planned
 prefix: MOB-INV
 summary: "Client-facing supplier invoice list, detail, search, filters, and status rationale for the mobile app"
-linear_project_id: null
-linear_url: null
+linear_project_id: 68ef6b52-d890-4a95-81af-a42e9df26a14
+linear_url: https://linear.app/trilogycare/project/mob-inv-supplier-invoices-recipient-view-2233b0ea0264
 description: 'Simplified billing view for clients — curated invoice list, transparent fee breakdown, On Hold/Rejected rationale, search and filters. Part of Consumer Mobile initiative.'
 due_date: null
 last_synced: null
