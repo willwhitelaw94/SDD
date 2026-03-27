@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { DocCategory } from "@/lib/docs";
 import {
+  ActivityIcon,
   BookOpenIcon,
   BrainCircuitIcon,
   ChevronRightIcon,
@@ -13,6 +14,7 @@ import {
   GraduationCapIcon,
   LayersIcon,
   LibraryIcon,
+  PlugIcon,
   ServerIcon,
   TerminalIcon,
   WrenchIcon,
@@ -39,12 +41,15 @@ const sectionIcons: Record<string, React.ReactNode> = {
   "ways-of-working-4.MCPs": <BrainCircuitIcon className="size-3.5" />,
   "ways-of-working-6.linear": <LayersIcon className="size-3.5" />,
   architecture: <ServerIcon className="size-3.5" />,
+  "context-integrations": <PlugIcon className="size-3.5" />,
+  "tc-claude": <ActivityIcon className="size-3.5" />,
 };
 
 const categoryIcons: Record<string, React.ReactNode> = {
   "getting-started": <CompassIcon className="size-3.5" />,
   guides: <GraduationCapIcon className="size-3.5" />,
   reference: <LibraryIcon className="size-3.5" />,
+  "tc-claude": <ActivityIcon className="size-3.5" />,
 };
 
 export function DocsSidebarNav({ categories }: { categories: DocCategory[] }) {

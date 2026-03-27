@@ -6,6 +6,8 @@ export type DocPage = {
   title: string;
   description: string;
   content: string;
+  /** Full file content including frontmatter */
+  rawContent: string;
   order: number;
   /** Relative path from project root, e.g. "content/architecture/0.overview.md" */
   filePath: string;
@@ -73,6 +75,7 @@ function readPages(dirPath: string): DocPage[] {
       title: data.title || titleFromFilename(file),
       description: data.description || "",
       content,
+      rawContent: raw,
       order: data.order ? parseInt(data.order, 10) : orderFromFilename(file),
       filePath,
     };
@@ -150,12 +153,25 @@ export function getDocCategories(): DocCategory[] {
   const reference: DocSection[] = [
     ...loadSectionWithSubs("ways-of-working/tools", "Tools", {}),
     ...loadSectionWithSubs("architecture", "Architecture", {}),
+    ...loadSectionWithSubs("context/integrations", "Integrations", {}),
   ];
   if (reference.length > 0) {
     categories.push({
       slug: "reference",
       title: "Reference",
       sections: reference,
+    });
+  }
+
+  // 4. TC Claude
+  const tcClaude: DocSection[] = [
+    ...loadSectionWithSubs("tc-claude", "TC Claude", {}),
+  ];
+  if (tcClaude.length > 0) {
+    categories.push({
+      slug: "tc-claude",
+      title: "TC Claude",
+      sections: tcClaude,
     });
   }
 

@@ -136,6 +136,17 @@ Validates the specification follows product best practices and is ready for desi
 | Dependencies listed | What blocks us? |
 | Out of scope defined | What are we NOT building? |
 
+### Mobile (Consumer Mobile Epics)
+
+| What's Checked | Why |
+|----------------|-----|
+| API endpoints listed per story | Mobile consumes APIs — every screen needs defined endpoints |
+| Offline behaviour specified per feature | What works without network? What shows a placeholder? |
+| Push notification triggers defined | Which events send notifications? What's the payload? |
+| Deep link URLs mapped to screens | Which links open the app and where do they land? |
+| Platform differences called out | Any iOS-only or Android-only behaviour? |
+| Accessibility requirements for elderly users | Large text, high contrast, simple navigation, VoiceOver/TalkBack |
+
 ### INVEST Criteria (per story)
 
 | Criteria | Question |
@@ -173,6 +184,18 @@ Validates that the design matches what users expect before planning implementati
 | Edge cases visualized | Error states, empty states, loading |
 | Stakeholder sign-off | Has anyone approved this? |
 
+### Mobile (Consumer Mobile Epics)
+
+| What's Checked | Why |
+|----------------|-----|
+| Native mobile mockups provided (not just responsive web) | Mobile is a different form factor, not a shrunk website |
+| Tab navigation and gesture flows documented | Mobile relies on tabs, swipes, pull-to-refresh — not sidebar/breadcrumb |
+| Offline/degraded state designs exist | Mobile users lose signal — what do they see? |
+| Push notification UI designed | What do alerts look like in-app and on lock screen? |
+| Platform differences noted (iOS vs Android) | Gesture patterns, back navigation, safe areas differ |
+| Touch target sizes ≥ 44pt | Elderly users need large, easy-to-tap targets |
+| Accessibility: VoiceOver/TalkBack flows tested | Screen reader experience on native differs from web |
+
 **Owner**: Designer / Product
 
 **Skill**: `/trilogy-design-handover`
@@ -197,6 +220,20 @@ Validates that the technical plan is sound before writing code.
 | Data model understood | Where does the data live? |
 | Integration points mapped | What else does this touch? |
 | Risk areas noted | What could go wrong? |
+
+### Mobile (Consumer Mobile Epics)
+
+| What's Checked | Why |
+|----------------|-----|
+| API contract defined (`/api/v1/recipient/...`) | Mobile consumes Laravel APIs — endpoints must be versioned and documented |
+| API wraps existing domain actions (no mobile-specific business logic) | Single source of truth — portal and mobile share the same logic |
+| Authentication flow mapped (Sanctum token + Expo SecureStore) | Token lifecycle: issue, persist, refresh, revoke |
+| Offline strategy defined | What's cached locally? What requires network? Graceful degradation plan |
+| Push notification architecture (FCM/APNS) | Token registration, refresh handling, payload format |
+| Deep link routing mapped | Which URLs open which screens? Universal links vs app scheme |
+| App update/versioning strategy | API version mismatch handling, forced update thresholds |
+| Expo/EAS build pipeline understood | OTA updates vs native builds, environment configs (dev/staging/prod) |
+| Third-party SDK compatibility confirmed | Intercom, Google Places, signature canvas — all verified on React Native |
 
 **Owner**: Architect / Developer
 
@@ -240,6 +277,19 @@ Validates that code quality is sufficient before QA testing. Creates PR with str
 | Vue TypeScript standards met | `lang="ts"`, no `any`, explicit return types |
 | Dev notes for QA | Help the next person |
 
+### Mobile (Consumer Mobile Epics)
+
+| What's Checked | How | Pass Criteria |
+|----------------|-----|---------------|
+| TypeScript strict mode | `tsconfig.json` strict: true | No `any` types, no `@ts-ignore` |
+| Expo lint clean | `npx expo lint` | No violations |
+| Jest/Testing Library tests pass | `npx jest --ci` | All green, coverage on new code |
+| No direct API URL hardcoding | Grep for `http://` or `https://` in app code | All URLs from environment config |
+| Sanctum token handled correctly | Code review | Token stored in SecureStore, refresh on 401, cleared on logout |
+| Pull-to-refresh works on list screens | Manual check | Loading indicator, data refreshes, no duplicate fetches |
+| Platform-specific code isolated | Check `Platform.OS` usage | Platform switches in dedicated files, not scattered |
+| No console.log in production code | Grep | Clean — use structured logging or remove |
+
 **Owner**: Developer
 
 **Skills**:
@@ -268,6 +318,25 @@ Validates that the feature functions correctly before stakeholder review.
 | No Sev 1-3 bugs | Are there showstoppers? |
 | Performance acceptable | Is it fast enough? |
 | Test report complete | Show the evidence |
+
+### Mobile (Consumer Mobile Epics)
+
+| What's Checked | Why |
+|----------------|-----|
+| Tested on physical iOS device (iPhone) | Simulators miss gesture quirks, performance, and permissions |
+| Tested on physical Android device | Android fragmentation means real-device testing is essential |
+| Tested on iOS simulator (latest + iOS 16 minimum) | Coverage for older OS versions still in the wild |
+| Tested on Android emulator (API 28+) | Minimum Android version for Expo |
+| Pull-to-refresh works on all list screens | Core mobile UX pattern for aged care users |
+| Push notifications received and route correctly | Tap notification → lands on correct screen |
+| Deep links open correct screens | Universal links / app scheme tested |
+| Offline mode: app doesn't crash without network | Graceful degradation, cached data still shows |
+| App startup time < 3 seconds | Cold start performance on mid-range devices |
+| Touch targets ≥ 44pt verified | Elderly users — no tiny tappable areas |
+| Font sizes respect system accessibility settings | Dynamic Type (iOS) / font scale (Android) |
+| VoiceOver (iOS) and TalkBack (Android) basic pass | Screen reader announces key elements correctly |
+| No sensitive data visible in app switcher screenshot | SecureStore, not AsyncStorage for tokens |
+| Keyboard doesn't obscure inputs | KeyboardAvoidingView works on all form screens |
 
 **Output**: `test-report.md`
 
@@ -313,6 +382,19 @@ Final approval before deployment to production.
 | Environment variables ready | All production env vars configured |
 | Rollback plan exists | Can we undo this if needed? |
 | Release notes prepared | How will we announce this? |
+
+### Mobile (Consumer Mobile Epics)
+
+| What's Checked | Why |
+|----------------|-----|
+| EAS build submitted to TestFlight (iOS) | Apple review can take 24-48h — submit early |
+| EAS build submitted to Google Play internal testing | Verify on real distribution channel |
+| OTA update vs native build decision documented | Does this change require a store submission or can it go OTA? |
+| App version bumped correctly | semver: patch for fixes, minor for features, major for breaking |
+| API backwards compatibility confirmed | Older app versions still in the wild must not break |
+| App Store / Play Store listing updated | Screenshots, description, what's new |
+| Forced update threshold set (if applicable) | Minimum app version the API will accept |
+| Crash-free rate baseline captured | Know the before so you can measure the after |
 
 **Owner**: Product Owner + Stakeholders
 

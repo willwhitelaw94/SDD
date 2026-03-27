@@ -1,6 +1,4 @@
-import Header from '@/components/shadcn-studio/blocks/hero-section-40/header'
-import MegaFooter from '@/components/shadcn-studio/blocks/mega-footer-04/mega-footer-04'
-import { navigationData } from '@/lib/navigation'
+import { InternalHeader } from '@/components/internal-header'
 import { Badge } from '@/components/ui/badge'
 import { PHASES, getAllSkills } from '@/lib/skills'
 import { SkillsTimeline } from '@/components/skills-timeline'
@@ -12,8 +10,8 @@ export default function SkillsPage() {
   const contextualCount = allSkills.filter((s) => s.type === 'contextual').length
 
   return (
-    <div className="flex flex-col">
-      <Header navigationData={navigationData} />
+    <div className="min-h-screen bg-background">
+      <InternalHeader />
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
           {/* Header */}
@@ -48,7 +46,6 @@ export default function SkillsPage() {
           <SkillsTimeline phases={PHASES} />
         </div>
       </main>
-      <MegaFooter />
     </div>
   )
 }

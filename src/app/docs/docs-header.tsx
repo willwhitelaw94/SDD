@@ -1,6 +1,6 @@
 "use client";
 
-import { InternalNav } from "@/components/internal-nav";
+import { InternalHeader } from "@/components/internal-header";
 import { GlobalSearch } from "@/components/global-search";
 import type { DocCategory } from "@/lib/docs";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -20,14 +20,16 @@ export function DocsHeader({ categories }: { categories: DocCategory[] }) {
   );
 
   return (
-    <header className="bg-card sticky top-0 z-50 flex h-14 items-center justify-between border-b px-4 sm:px-6">
+    <InternalHeader
+      rightSlot={
+        <>
+          <GlobalSearch docs={docs} />
+          <ThemeToggle />
+          <span className="text-muted-foreground/30">|</span>
+        </>
+      }
+    >
       <SidebarTrigger />
-      <div className="ml-auto flex items-center gap-2">
-        <GlobalSearch docs={docs} />
-        <ThemeToggle />
-        <span className="text-muted-foreground/30">|</span>
-        <InternalNav />
-      </div>
-    </header>
+    </InternalHeader>
   );
 }

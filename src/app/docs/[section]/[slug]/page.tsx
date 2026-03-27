@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation'
 
-import { ExternalLinkIcon, PencilIcon } from 'lucide-react'
+import { ExternalLinkIcon } from 'lucide-react'
 
 import { getDocPage, getDocSections, extractHeadings } from '@/lib/docs'
 import { renderMdxContent } from '@/lib/mdx'
+import { DocsEditSheet } from '@/components/docs-edit-sheet'
 
 const GITHUB_REPO = process.env.GITHUB_REPO || 'willwhitelaw94/SDD'
 
@@ -62,14 +63,10 @@ export default async function DocPage({
             {/* Edit links */}
             <div className="flex items-center gap-2">
               {isDev && (
-                <a
-                  href={`vscode://file/${process.cwd()}/${page.filePath}`}
-                  className="flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground hover:bg-muted"
-                  title="Open in VS Code"
-                >
-                  <PencilIcon className="size-3" />
-                  Edit locally
-                </a>
+                <DocsEditSheet
+                  filePath={page.filePath}
+                  rawContent={page.rawContent}
+                />
               )}
               {githubEditUrl && (
                 <a

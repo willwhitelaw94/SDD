@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import type { TopicCategory, DomainTopic } from "@/lib/domain-topics";
-import { InternalNav } from "@/components/internal-nav";
+import { InternalHeader } from "@/components/internal-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -59,32 +59,29 @@ export function TopicsClient({
   return (
     <div className="min-h-dvh flex flex-col">
       {/* Header */}
-      <header className="bg-card sticky top-0 z-50 flex h-14 items-center justify-between border-b px-4 sm:px-6">
-        <div className="flex items-center gap-3 min-w-0">
-          {selectedTopic ? (
-            <button
-              type="button"
-              onClick={() => setSelectedTopic(null)}
-              className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+      <InternalHeader>
+        {selectedTopic ? (
+          <button
+            type="button"
+            onClick={() => setSelectedTopic(null)}
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeftIcon className="size-3.5" />
+            Topics
+          </button>
+        ) : (
+          <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+            <a
+              href="/dashboard"
+              className="rounded-md px-2 py-1 transition-colors hover:text-foreground"
             >
-              <ArrowLeftIcon className="size-3.5" />
-              Topics
-            </button>
-          ) : (
-            <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-              <a
-                href="/dashboard"
-                className="rounded-md px-2 py-1 transition-colors hover:text-foreground"
-              >
-                Initiatives
-              </a>
-              <ChevronRightIcon className="size-3.5" />
-              <span className="font-medium text-foreground">Domain Topics</span>
-            </nav>
-          )}
-        </div>
-        <InternalNav />
-      </header>
+              Initiatives
+            </a>
+            <ChevronRightIcon className="size-3.5" />
+            <span className="font-medium text-foreground">Domain Topics</span>
+          </nav>
+        )}
+      </InternalHeader>
 
       {/* Content */}
       <div className="flex-1 px-4 py-6 sm:px-6">

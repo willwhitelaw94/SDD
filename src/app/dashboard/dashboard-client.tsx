@@ -8,7 +8,7 @@ import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import type { Initiative, Epic } from "@/lib/initiatives";
 import { claimBounty, unclaimBounty, generateEpicSummary } from "./actions";
-import { InternalNav } from "@/components/internal-nav";
+import { InternalHeader } from "@/components/internal-header";
 import { GlobalSearch } from "@/components/global-search";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -87,6 +87,10 @@ import {
   MenuIcon,
   LayoutGridIcon,
   ListIcon,
+  DownloadIcon,
+  PrinterIcon,
+  Columns3Icon,
+  GripVerticalIcon,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -796,7 +800,9 @@ export function DashboardShell({
   const [epicSort, setEpicSort] = useState<"alpha" | "stage" | "priority">("stage");
   const [hideBacklog, setHideBacklog] = useState(false);
   const [hideCompleted, setHideCompleted] = useState(true);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list" | "kanban">("grid");
+  const [draggedEpicSlug, setDraggedEpicSlug] = useState<string | null>(null);
+  const [epicOrder, setEpicOrder] = useState<Record<string, string[]>>({});
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [artifactContent, setArtifactContent] = useState<string | null>(null);
@@ -986,6 +992,101 @@ export function DashboardShell({
       }
       return a.title.localeCompare(b.title);
     });
+  }
+
+  // Kanban columns for initiative detail
+  const KANBAN_COLUMNS = [
+    { id: "in progress", label: "In Progress" },
+    { id: "design", label: "Design" },
+    { id: "planning", label: "Planning" },
+    { id: "idea", label: "Idea" },
+    { id: "backlog", label: "Backlog" },
+    { id: "blocked", label: "Blocked" },
+    { id: "qa", label: "QA" },
+    { id: "release", label: "Released" },
+  ] as const;
+
+  const STATUS_ALIASES: Record<string, string> = {
+    in_progress: "in progress",
+    "peer review": "in progress",
+    planned: "planning",
+    draft: "idea",
+    triaged: "backlog",
+    "to do": "backlog",
+    "ready for qa": "qa",
+    "on hold": "blocked",
+    active: "release",
+    "ready for implementation": "release",
+  };
+
+  function normalizeStatus(status: string): string {
+    const lower = status.toLowerCase();
+    return STATUS_ALIASES[lower] ?? lower;
+  }
+
+  // Drag-to-reorder handlers for list view
+  function handleDragStart(e: React.DragEvent, slug: string) {
+    setDraggedEpicSlug(slug);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", slug);
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  }
+
+  function handleDrop(e: React.DragEvent, targetSlug: string, initSlug: string) {
+    e.preventDefault();
+    const sourceSlug = e.dataTransfer.getData("text/plain");
+    if (!sourceSlug || sourceSlug === targetSlug) {
+      setDraggedEpicSlug(null);
+      return;
+    }
+
+    setEpicOrder((prev) => {
+      const currentOrder = prev[initSlug] ?? filterAndSortEpics(
+        initiatives.find((i) => i.slug === initSlug)?.epics ?? []
+      ).map((ep) => ep.slug);
+
+      const order = [...currentOrder];
+      const fromIdx = order.indexOf(sourceSlug);
+      const toIdx = order.indexOf(targetSlug);
+      if (fromIdx === -1 || toIdx === -1) return prev;
+
+      order.splice(fromIdx, 1);
+      order.splice(toIdx, 0, sourceSlug);
+
+      return { ...prev, [initSlug]: order };
+    });
+    setDraggedEpicSlug(null);
+  }
+
+  function handleDragEnd() {
+    setDraggedEpicSlug(null);
+  }
+
+  // Get ordered epics (custom order if set, otherwise filtered/sorted)
+  function getOrderedEpics(init: Initiative): Epic[] {
+    const sorted = filterAndSortEpics(init.epics);
+    const customOrder = epicOrder[init.slug];
+    if (!customOrder) return sorted;
+
+    // Re-apply filters but use custom order
+    const slugSet = new Set(sorted.map((e) => e.slug));
+    const epicMap = new Map(sorted.map((e) => [e.slug, e]));
+    const ordered: Epic[] = [];
+    for (const slug of customOrder) {
+      if (slugSet.has(slug)) {
+        ordered.push(epicMap.get(slug)!);
+        slugSet.delete(slug);
+      }
+    }
+    // Append any new epics not in the custom order
+    for (const slug of slugSet) {
+      ordered.push(epicMap.get(slug)!);
+    }
+    return ordered;
   }
 
   return (
@@ -1249,92 +1350,92 @@ export function DashboardShell({
           panelOpen && "md:ml-[var(--sidebar-width)]"
         )}
       >
-        <header className="bg-card sticky top-0 z-50 flex h-14 items-center justify-between border-b px-4 sm:px-6">
-          <div className="flex items-center gap-3 min-w-0">
+        <InternalHeader
+          rightSlot={
+            <>
+              <GlobalSearch
+                epics={initiatives.flatMap((i) =>
+                  i.epics.map((e) => ({
+                    title: e.title,
+                    status: e.status,
+                    initiative: i.title,
+                    slug: e.slug,
+                  }))
+                )}
+              />
+              <ThemeToggle />
+              <span className="text-muted-foreground/30">|</span>
+            </>
+          }
+        >
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            className="flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors md:hidden"
+          >
+            <MenuIcon className="size-5" />
+          </button>
+          <nav className="flex items-center gap-1 text-sm text-muted-foreground">
             <button
               type="button"
-              onClick={() => setMobileOpen(true)}
-              className="flex size-8 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-foreground transition-colors md:hidden"
+              onClick={() => {
+                setSelectedInitiative(null);
+                setSelectedEpic(null);
+                setSelectedArtifact(null);
+                setPanelOpen(false);
+                updateUrl(null, null, null);
+              }}
+              className={cn(
+                "rounded-md px-2 py-1 transition-colors hover:text-foreground",
+                !selectedInitiative && "font-medium text-foreground"
+              )}
             >
-              <MenuIcon className="size-5" />
+              Initiatives
             </button>
-            <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedInitiative(null);
-                  setSelectedEpic(null);
-                  setSelectedArtifact(null);
-                  setPanelOpen(false);
-                  updateUrl(null, null, null);
-                }}
-                className={cn(
-                  "rounded-md px-2 py-1 transition-colors hover:text-foreground",
-                  !selectedInitiative && "font-medium text-foreground"
-                )}
-              >
-                Initiatives
-              </button>
-              {selectedInitiative && (
-                <>
-                  <ChevronRightIcon className="size-3.5 shrink-0" />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedEpic(null);
-                      setSelectedArtifact(null);
-                      updateUrl(selectedInitiative, null, null);
-                    }}
-                    className={cn(
-                      "max-w-[180px] truncate rounded-md px-2 py-1 transition-colors hover:text-foreground",
-                      !selectedEpic && "font-medium text-foreground"
-                    )}
-                  >
-                    {selectedInitiative.title}
-                  </button>
-                </>
-              )}
-              {selectedEpic && (
-                <>
-                  <ChevronRightIcon className="size-3.5 shrink-0 hidden sm:block" />
-                  <button
-                    type="button"
-                    onClick={() => { setSelectedArtifact(null); updateUrl(selectedInitiative, selectedEpic, null); }}
-                    className={cn(
-                      "max-w-[180px] truncate rounded-md px-2 py-1 transition-colors hover:text-foreground hidden sm:block",
-                      !selectedArtifact && "font-medium text-foreground"
-                    )}
-                  >
-                    {selectedEpic.title}
-                  </button>
-                </>
-              )}
-              {selectedArtifact && (
-                <>
-                  <ChevronRightIcon className="size-3.5 shrink-0 hidden md:block" />
-                  <span className="max-w-[180px] truncate rounded-md px-2 py-1 font-medium capitalize text-foreground hidden md:block">
-                    {selectedArtifact.replace(/-/g, " ")}
-                  </span>
-                </>
-              )}
-            </nav>
-          </div>
-          <div className="flex items-center gap-2">
-            <GlobalSearch
-              epics={initiatives.flatMap((i) =>
-                i.epics.map((e) => ({
-                  title: e.title,
-                  status: e.status,
-                  initiative: i.title,
-                  slug: e.slug,
-                }))
-              )}
-            />
-            <ThemeToggle />
-            <span className="text-muted-foreground/30">|</span>
-            <InternalNav />
-          </div>
-        </header>
+            {selectedInitiative && (
+              <>
+                <ChevronRightIcon className="size-3.5 shrink-0" />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedEpic(null);
+                    setSelectedArtifact(null);
+                    updateUrl(selectedInitiative, null, null);
+                  }}
+                  className={cn(
+                    "max-w-[180px] truncate rounded-md px-2 py-1 transition-colors hover:text-foreground",
+                    !selectedEpic && "font-medium text-foreground"
+                  )}
+                >
+                  {selectedInitiative.title}
+                </button>
+              </>
+            )}
+            {selectedEpic && (
+              <>
+                <ChevronRightIcon className="size-3.5 shrink-0 hidden sm:block" />
+                <button
+                  type="button"
+                  onClick={() => { setSelectedArtifact(null); updateUrl(selectedInitiative, selectedEpic, null); }}
+                  className={cn(
+                    "max-w-[180px] truncate rounded-md px-2 py-1 transition-colors hover:text-foreground hidden sm:block",
+                    !selectedArtifact && "font-medium text-foreground"
+                  )}
+                >
+                  {selectedEpic.title}
+                </button>
+              </>
+            )}
+            {selectedArtifact && (
+              <>
+                <ChevronRightIcon className="size-3.5 shrink-0 hidden md:block" />
+                <span className="max-w-[180px] truncate rounded-md px-2 py-1 font-medium capitalize text-foreground hidden md:block">
+                  {selectedArtifact.replace(/-/g, " ")}
+                </span>
+              </>
+            )}
+          </nav>
+        </InternalHeader>
 
         <div className="flex-1 px-4 py-6 sm:px-6">
           <AnimatePresence mode="wait">
@@ -1505,6 +1606,36 @@ export function DashboardShell({
                             {selectedArtifact.replace(/-/g, " ")}
                           </span>
                         </div>
+                        <div className="ml-auto flex items-center gap-1">
+                          <Tooltip>
+                            <TooltipTrigger
+                              render={
+                                <button
+                                  onClick={() => window.open(`/api/download?initiative=${selectedEpic.initiative}&epic=${selectedEpic.slug}&artifact=${selectedArtifact}&format=md`)}
+                                  className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                                >
+                                  <DownloadIcon className="size-3.5" />
+                                  <span className="hidden sm:inline">MD</span>
+                                </button>
+                              }
+                            />
+                            <TooltipContent side="bottom" className="text-xs">Download Markdown</TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger
+                              render={
+                                <button
+                                  onClick={() => window.open(`/api/download?initiative=${selectedEpic.initiative}&epic=${selectedEpic.slug}&artifact=${selectedArtifact}&format=html`)}
+                                  className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                                >
+                                  <PrinterIcon className="size-3.5" />
+                                  <span className="hidden sm:inline">Print</span>
+                                </button>
+                              }
+                            />
+                            <TooltipContent side="bottom" className="text-xs">Open printable version</TooltipContent>
+                          </Tooltip>
+                        </div>
                       </div>
                       {artifactLoading ? (
                         <Card className="shadow-none">
@@ -1628,6 +1759,15 @@ export function DashboardShell({
                       >
                         <ListIcon className="size-3.5" />
                       </button>
+                      <button
+                        onClick={() => setViewMode("kanban")}
+                        className={cn(
+                          "rounded-md p-1.5 transition-colors",
+                          viewMode === "kanban" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        <Columns3Icon className="size-3.5" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1683,22 +1823,35 @@ export function DashboardShell({
                       </motion.div>
                     ))}
                   </motion.div>
-                ) : (
+                ) : viewMode === "list" ? (
                   <motion.div
-                    className="space-y-1"
+                    className="space-y-0.5"
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
                   >
-                    {filterAndSortEpics(selectedInitiative.epics).map((epic) => {
+                    {getOrderedEpics(selectedInitiative).map((epic) => {
                       const docCount = epic.artifacts.filter((a) => a !== "index").length;
                       return (
-                        <motion.div key={epic.slug} variants={itemVariants}>
+                        <motion.div
+                          key={epic.slug}
+                          variants={itemVariants}
+                          draggable
+                          onDragStart={(e) => handleDragStart(e as unknown as React.DragEvent, epic.slug)}
+                          onDragOver={handleDragOver}
+                          onDrop={(e) => handleDrop(e as unknown as React.DragEvent, epic.slug, selectedInitiative.slug)}
+                          onDragEnd={handleDragEnd}
+                          className={cn(
+                            "group rounded-lg transition-colors",
+                            draggedEpicSlug === epic.slug && "opacity-40"
+                          )}
+                        >
                           <button
                             type="button"
                             onClick={() => selectEpic(epic, selectedInitiative)}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted/50"
+                            className="flex w-full items-center gap-2 rounded-lg px-2 py-2.5 text-left transition-colors hover:bg-muted/50"
                           >
+                            <GripVerticalIcon className="size-3.5 shrink-0 text-muted-foreground/30 cursor-grab group-hover:text-muted-foreground transition-colors" />
                             <StatusDot status={epic.status} />
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2">
@@ -1729,7 +1882,62 @@ export function DashboardShell({
                         </motion.div>
                       );
                     })}
+                    {epicOrder[selectedInitiative.slug] && (
+                      <p className="pt-2 text-center text-[10px] text-muted-foreground">
+                        Custom order active — drag to reorder
+                      </p>
+                    )}
                   </motion.div>
+                ) : (
+                  /* ── Kanban view ── */
+                  <div className="flex gap-3 overflow-x-auto pb-4">
+                    {KANBAN_COLUMNS.map((col) => {
+                      const colEpics = filterAndSortEpics(selectedInitiative.epics).filter(
+                        (e) => normalizeStatus(e.status) === col.id
+                      );
+                      if (colEpics.length === 0 && !["in progress", "backlog"].includes(col.id)) return null;
+                      return (
+                        <div key={col.id} className="flex w-60 shrink-0 flex-col">
+                          <div className="mb-2 flex items-center justify-between">
+                            <span className="text-xs font-medium text-muted-foreground">{col.label}</span>
+                            <Badge variant="secondary" className="text-[10px]">{colEpics.length}</Badge>
+                          </div>
+                          <div className="flex flex-1 flex-col gap-2 rounded-lg border border-dashed border-border/50 bg-muted/20 p-2 min-h-[120px]">
+                            {colEpics.map((epic) => (
+                              <Card
+                                key={epic.slug}
+                                className="cursor-pointer shadow-none transition-shadow duration-200 hover:shadow-md"
+                                onClick={() => selectEpic(epic, selectedInitiative)}
+                              >
+                                <CardContent className="flex flex-col gap-2 p-3">
+                                  <div className="flex items-start justify-between gap-1.5">
+                                    <p className="text-xs font-medium leading-tight">{epic.title}</p>
+                                    <PriorityIcon priority={epic.priority} />
+                                  </div>
+                                  {epic.summary && (
+                                    <p className="text-[10px] text-muted-foreground line-clamp-2">{epic.summary}</p>
+                                  )}
+                                  <div className="flex items-center justify-between">
+                                    <MiniPhaseIndicator epic={epic} />
+                                    {epic.bountyValue != null && epic.bountyValue > 0 && (
+                                      <span className="font-mono text-[10px] text-emerald-500">
+                                        ${epic.bountyValue.toLocaleString()}
+                                      </span>
+                                    )}
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            ))}
+                            {colEpics.length === 0 && (
+                              <div className="flex flex-1 items-center justify-center">
+                                <span className="text-[10px] text-muted-foreground/50">Empty</span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </motion.div>
             ) : (
