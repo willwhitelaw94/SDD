@@ -1,0 +1,7 @@
+title: 'AI Chatbot Sidebar'
+status: 'planned'
+priority: 'p2'
+prefix: ACS
+summary: "Context-aware AI chatbot sidebar powered by Laravel AI SDK — available app-wide, scoped to user permissions and current record"
+description: null
+due_date: null
